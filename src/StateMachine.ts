@@ -1,8 +1,5 @@
 import { assign, createMachine } from "xstate";
 import { useMachine } from "xstate-svelte";
-
-import type Component from "svelte/types/compiler/compile/Component";
-
 export interface Transaction {
     name: string
 }
@@ -23,34 +20,6 @@ export const stateMachine = createMachine<AppContext, AppEvent>({
     initial: "idle",
     context: buildContext(),
     states: {
-        idle: {
-            on: {
-                NAVIGATE: [{
-                    cond: ((context, event) => event.path == "/app"),
-                    target: "app"
-                },{
-                    cond: ((context, event) => event.path == "/about"),
-                    target: "about"
-                }]
-            }
-        },
-        app: {
-            entry: assign((ctx, evt) =>
-            {
-                console.log("App")
-                return buildContext(ctx, "AppPage");
-            })
-        },
-        about: {
-            entry: assign((ctx, evt) =>
-            {
-                console.log("About")
-                return buildContext(ctx, "About");
-            }),
-            on: {
-                NAVIGATE: "idle"
-            }
-        }
     }
 });
 
