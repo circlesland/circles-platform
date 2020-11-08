@@ -1,41 +1,10 @@
 <script lang="ts">
   import Transaction from "./Transaction.svelte";
   import { send, state } from "./StateMachine";
-  import { routerMachine } from "xstate-router";
   import dayjs from "dayjs";
 
   $: currentDate = $state.context.currentDate;
   $: currentMonth = $state.context.currentMonth;
-
-  const machineConfig = {
-    initial: "main",
-    context: { myValue: 0 },
-    states: {
-      main: { meta: { path: "/" } },
-      blog: { meta: { path: "/blog" } },
-    },
-  };
-
-  const service = routerMachine({
-    config: machineConfig,
-    options,
-    initialContext,
-  });
-
-  // The state changes on a route change and the route changes on a state change.
-  service.onTransition((state) => console.log(state.value));
-
-  // The context is enhanced with router properties.
-  service.onChange((ctx) => console.log(ctx));
-  /* Context
-    {
-        myValue: 0,
-        // Router properties:
-        match,
-        location,
-        history,
-    }
-*/
 </script>
 
 <style global>
