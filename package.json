@@ -39,7 +39,6 @@
   "dependencies": {
     "dayjs": "^1.9.5",
     "sirv-cli": "^1.0.6",
-    "svelte-spa-router": "^3.0.5",
-    "xstate-router": "^0.4.3"
+    "svelte-spa-router": "^3.0.5"
   }
 }

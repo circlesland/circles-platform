@@ -1,8 +1,11 @@
 // Components
 import Home from './routes/Home.svelte'
-import Dapps from './routes/Dapps.svelte'
-import Wallet from './routes/Wallet.svelte'
 import NotFound from './routes/NotFound.svelte'
+
+import Dapps from './dapps/Dapps.svelte'
+import Transactions from './dapps/wallet/Transactions.svelte'
+import Trusts from './dapps/wallet/Trusts.svelte'
+import Tokens from './dapps/wallet/Tokens.svelte'
 
 // Export the route definition object
 export default {
@@ -12,7 +15,9 @@ export default {
     // Wildcard parameter
     // Included twice to match both `/wild` (and nothing after) and `/wild/*` (with anything after)
     '/dapps': Dapps,
-    '/wallet': Wallet,
+    '/wallet/transactions': Transactions,
+    '/wallet/trusts': Trusts,
+    '/wallet/tokens': Tokens,
     '/dapps/*': Dapps,
 
     // Catch-all, must be last
