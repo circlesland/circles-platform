@@ -66,6 +66,6 @@ export const stateMachine = createMachine<AppContext, AppEvent>({
         },
         edit: {}
     }
-})
+});
 
 export const { state, send } = useMachine(stateMachine);

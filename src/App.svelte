@@ -2,6 +2,15 @@
   import Transaction from "./Transaction.svelte";
   import { send, state } from "./StateMachine";
   import dayjs from "dayjs";
+  import page from "page";
+
+  page.start({
+    hashbang: true,
+  });
+
+  page("*", (ctx) => {
+    send({ type: 'NAVIGATE', path: ctx.path, params: ctx.params });
+  });
 
   $: currentDate = $state.context.currentDate;
   $: currentMonth = $state.context.currentMonth;
