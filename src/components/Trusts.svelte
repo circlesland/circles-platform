@@ -6,8 +6,8 @@
   import type {Address} from "../libs/o-circles-protocol/interfaces/address";
 
   let person: Person;
-  let trusting:[] = [];
-  let trusted:[] = [];
+  let personsThatTrustMe:[] = [];
+  let personsThatITrust:[] = [];
 
   function init() {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -20,19 +20,18 @@
   }
 
   async function reload() {
-    let t1 = await person.getTrustingPersons();
-    let t2  = await person.getTrustedPersons();
+    let t1 = await person.getPersonsThatTrustMe();
+    personsThatTrustMe = Object.keys(t1).map(k => t1[k]);
 
-    trusting = Object.keys(t1).map(k => t1[k]);
-    console.log(trusting);
-    trusted = Object.keys(t2).map(k => t2[k]);
+    let t2  = await person.getPersonsITrust();
+    personsThatITrust = Object.keys(t2).map(k => t2[k]);
   }
 
   init();
 </script>
 
 <b class="text-primary">Trusting:</b>
-{#each trusting as address}
+{#each personsThatTrustMe as address}
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
@@ -43,7 +42,7 @@
 {/each}
 
 <b class="text-primary">Trusted:</b>
-{#each trusted as address}
+{#each personsThatITrust as address}
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">

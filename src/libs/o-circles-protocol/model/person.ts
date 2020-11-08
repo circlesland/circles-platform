@@ -35,11 +35,11 @@ export class Person implements Safe
 
   private _tokenAddress?: Address;
 
-  private _receivableTokens?: AddressLookup;
-  private _trustedAddresses?: AddressLookup;
+  private _tokensITrust?: AddressLookup;
+  private _personsITrust?: AddressLookup;
 
-  private _trusterTokens?: AddressLookup;
-  private _trusterAddresses?: AddressLookup;
+  private _tokensThatTrustMe?: AddressLookup;
+  private _personsThatTrustMe?: AddressLookup;
 
   constructor(circlesHub: CirclesHub, safeAddress: Address, tokenAddress?: Address)
   {
@@ -117,7 +117,7 @@ export class Person implements Safe
 
   async getOutgoingTransactions(reload?: boolean): Promise<TokenTransfer[]>
   {
-    const possibleReceivers = await this.getTrustingPersons(reload);
+    const possibleReceivers = await this.getPersonsThatTrustMe(reload);
     const myToken = await this.getOwnToken();
     const outgoingTransactions: Event[][] = await Promise.all(
       Object
@@ -146,27 +146,27 @@ export class Person implements Safe
     });
   }
 
-  async getTrustingTokens(reload?: boolean): Promise<AddressLookup>
+  async getTokensThatTrustMe(reload?: boolean): Promise<AddressLookup>
   {
-    if (this._trusterTokens && !reload)
+    if (this._tokensThatTrustMe && !reload)
     {
-      return this._trusterTokens;
+      return this._tokensThatTrustMe;
     }
 
-    await this.getTrustingPersons(reload);
+    await this.getPersonsThatTrustMe(reload);
 
-    return this._trusterTokens;
+    return this._tokensThatTrustMe;
   }
 
-  async getTrustingPersons(reload?: boolean): Promise<AddressLookup>
+  async getPersonsThatTrustMe(reload?: boolean): Promise<AddressLookup>
   {
-    if (this._trusterAddresses && !reload)
+    if (this._personsThatTrustMe && !reload)
     {
-      return this._trusterAddresses;
+      return this._personsThatTrustMe;
     }
 
-    const _trusterTokens = new Map<Address, TokenAndOwner>();
-    const _trusterAddresses = new Map<Address, TokenAndOwner>();
+    const _tokensThatTrustMe = new Map<Address, TokenAndOwner>();
+    const _personsThatTrustMe = new Map<Address, TokenAndOwner>();
 
     const canSendTo = await this.circlesHub
       .queryEvents(CirclesHub.queryPastTrusts(undefined, this.address))
@@ -193,33 +193,33 @@ export class Person implements Safe
       })
       .forEach(o =>
       {
-        _trusterTokens[o.token.address] = o;
-        _trusterAddresses[o.owner.address] = o;
+        _tokensThatTrustMe[o.token.address] = o;
+        _personsThatTrustMe[o.owner.address] = o;
       });
 
-    this._trusterTokens = _trusterTokens;
-    this._trustedAddresses = _trusterAddresses;
+    this._tokensThatTrustMe = _tokensThatTrustMe;
+    this._personsThatTrustMe = _personsThatTrustMe;
 
-    return _trusterAddresses;
+    return _personsThatTrustMe;
   }
 
-  async getTrustedPersons(reload?: boolean): Promise<AddressLookup>
+  async getPersonsITrust(reload?: boolean): Promise<AddressLookup>
   {
-    if (this._trustedAddresses && !reload)
+    if (this._personsITrust && !reload)
     {
-      return this._trustedAddresses;
+      return this._personsITrust;
     }
 
     await this.getReceivableTokens(reload);
 
-    return this._trustedAddresses;
+    return this._personsITrust;
   }
 
   async getReceivableTokens(reload?: boolean): Promise<AddressLookup>
   {
-    if (this._receivableTokens && !reload)
+    if (this._tokensITrust && !reload)
     {
-      return this._receivableTokens;
+      return this._tokensITrust;
     }
 
     const canReceiveFrom = await this.circlesHub
@@ -254,8 +254,8 @@ export class Person implements Safe
         _trustedAddresses[o.owner.address] = o;
       });
 
-    this._receivableTokens = _receivableTokens;
-    this._trustedAddresses = _trustedAddresses;
+    this._tokensITrust = _receivableTokens;
+    this._personsITrust = _trustedAddresses;
 
     return _receivableTokens;
   }
