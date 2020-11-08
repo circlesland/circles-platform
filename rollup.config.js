@@ -46,10 +46,10 @@ export default {
     file: "public/build/bundle.js",
   },
   plugins: [
-    json(),
     commonjs(),
     globals(),
     builtins(),
+    json(),
     svelte({
       // enable run-time checks when not in production
       dev: !production,
@@ -70,7 +70,7 @@ export default {
       dedupe: ["svelte"],
     }),
 
-    typescript({ sourceMap: !production }),
+    typescript({ sourceMap: true }),
     injectProcessEnv({ NODE_ENV: process.env.NODE_ENV }),
 
     // In dev mode, call `npm run start` once

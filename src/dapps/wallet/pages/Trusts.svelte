@@ -1,6 +1,7 @@
 <script lang="ts">
   import Menu from "./../../../components/Menu.svelte";
   import Actions from "../menus/Actions.svelte";
+  import Trusts from "../../../components/Trusts.svelte";
 </script>
 
 <style>
@@ -18,7 +19,7 @@
     class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
     style="position:relative;max-height: 900px">
     <div class="grid h-full">
-      <div class="h-full">Trusts</div>
+      <Trusts></Trusts>
       <Menu actions={Actions} />
     </div>
   </div>
