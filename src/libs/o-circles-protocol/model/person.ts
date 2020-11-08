@@ -54,16 +54,21 @@ export class Person implements Safe
     if (!myToken)
       throw new Error("The person has no token");
 
-    const receivableTokens = await this.getReceivableTokens(reload);
+    const receivableTokens = await this.getTokensITrust(reload);
 
     const tokenBalances = await Promise.all(
       Object
         .keys(receivableTokens)
         .map(async tokenAddress =>
         {
+          const balanceBN = await receivableTokens[tokenAddress].token.getBalanceOf(this.address);
+          let balanceString = this.circlesHub.web3.utils.fromWei(balanceBN).toString();
+          const dot = balanceString.indexOf(".");
+          balanceString = balanceString.slice(0, dot + 3);
           return {
             token: tokenAddress,
-            balance: await receivableTokens[tokenAddress].token.getBalanceOf(this.address)
+            balance: balanceBN,
+            balanceString: balanceString
           };
         }));
 
@@ -88,7 +93,7 @@ export class Person implements Safe
 
   async getIncomingTransactions(reload?: boolean): Promise<TokenTransfer[]>
   {
-    const receivableTokens = await this.getReceivableTokens(reload);
+    const receivableTokens = await this.getTokensITrust(reload);
     const incomingTransactions: Event[][] = await Promise.all(
       Object
         .keys(receivableTokens)
@@ -210,12 +215,12 @@ export class Person implements Safe
       return this._personsITrust;
     }
 
-    await this.getReceivableTokens(reload);
+    await this.getTokensITrust(reload);
 
     return this._personsITrust;
   }
 
-  async getReceivableTokens(reload?: boolean): Promise<AddressLookup>
+  async getTokensITrust(reload?: boolean): Promise<AddressLookup>
   {
     if (this._tokensITrust && !reload)
     {
