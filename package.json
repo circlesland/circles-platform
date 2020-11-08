@@ -35,13 +35,14 @@
     "tslib": "^2.0.1",
     "typescript": "^4.0.2",
     "xstate": "4.12.0",
-    "xstate-svelte": "^1.0.0",
-    "@types/page": "^1.8.0"
+    "xstate-svelte": "^1.0.0"
   },
   "dependencies": {
     "dayjs": "^1.9.5",
+    "i": "^0.3.6",
+    "npm": "^6.14.8",
     "sirv-cli": "^1.0.6",
-    "page": "^1.11.6",
+    "svelte-spa-router": "^3.0.5",
     "xstate-router": "^0.4.3"
   }
 }

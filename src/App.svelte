@@ -1,4 +1,16 @@
 <script lang="ts">
+    import Router from 'svelte-spa-router'
+    import Home from "./dapps/Home.svelte";
+    import Dapps from "./dapps/Dapps.svelte";
+    import Wallet from "./dapps/Wallet.svelte";
+    import Error404 from "./dapps/Error404.svelte";
+
+    const routes = {
+        '/': Home,
+        '/home:': Home,
+        '/dapps:': Dapps,
+        '/wallet': Wallet,
+    }
 </script>
 
 <style global>
@@ -24,4 +36,5 @@
 </style>
 
 <main class="h-full p-12 font-sans text-center text-white bg-primary">
+    <Router {routes}/>
 </main>
