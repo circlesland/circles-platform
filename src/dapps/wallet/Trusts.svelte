@@ -5,7 +5,8 @@
 <style>
   .grid {
     display: grid;
-    grid-template-rows: auto 80px;
+    grid-template-rows: 1fr auto;
+    position: relative;
   }
 </style>
 
@@ -16,7 +17,7 @@
     class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
     style="position:relative;max-height: 900px">
     <div class="grid h-full">
-      <div>Trusts</div>
+      <div class="h-full">Trusts</div>
       <Menu />
     </div>
   </div>

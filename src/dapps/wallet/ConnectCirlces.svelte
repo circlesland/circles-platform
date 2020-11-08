@@ -1,19 +1,22 @@
 <script lang="ts">
   import { mnemonicToEntropy } from "bip39";
-  import {config} from "../../libs/o-circles-protocol/config";
-  import {push} from 'svelte-spa-router'
+  import { config } from "../../libs/o-circles-protocol/config";
+  import { push } from "svelte-spa-router";
 
   let seedphrase: string;
   let safeAddress: string;
 
   function storeInputAndContinue() {
     const privateKey = mnemonicToEntropy(seedphrase);
-    const ownerAddress = config.getCurrent().web3().eth.accounts.privateKeyToAccount(privateKey);
+    const ownerAddress = config
+      .getCurrent()
+      .web3()
+      .eth.accounts.privateKeyToAccount(privateKey);
     localStorage.setItem("omo.privateKey", privateKey);
     localStorage.setItem("omo.address", ownerAddress.address);
     localStorage.setItem("omo.safeAddress", safeAddress);
 
-    push('/wallet/safe');
+    push("/wallet/safe");
   }
 </script>
 
@@ -32,7 +35,8 @@
     class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
     style="position:relative;max-height: 900px">
     <div class="grid h-full">
-      <main class="h-full p-8 overflow-y-scroll text-center bg-gray-100">
+      <main
+        class="h-full p-8 overflow-y-scroll text-center bg-gray-100">
         <h1 class="text-3xl text-center font-title text-primary">
           Connect Circle Seed
         </h1>
