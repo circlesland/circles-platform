@@ -1,3 +1,7 @@
+<script>
+  import "@fortawesome/fontawesome-free/js/all.js";
+</script>
+
 <style global>
   @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
   @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap");

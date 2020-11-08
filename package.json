@@ -37,6 +37,7 @@
     "xstate-svelte": "^1.0.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "dayjs": "^1.9.5",
     "sirv-cli": "^1.0.6",
     "svelte-spa-router": "^3.0.5"
