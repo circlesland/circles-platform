@@ -15,12 +15,10 @@
     </a>
   </div>
   <div class="flex items-center justify-center px-4 text-xs text-center">
-    <!-- <Route dapp={o.WALLET} route=""> -->
     <div>
       <i class="text-2xl fas fa-plus" />
-      <p>soon</p>
+      <p>actions</p>
     </div>
-    <!-- </Route> -->
   </div>
   <div
     class="flex items-center justify-center px-4 text-xs text-center text-primary">
