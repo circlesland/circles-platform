@@ -1,25 +1,13 @@
 import { assign, createMachine } from "xstate";
 import { useMachine } from "xstate-svelte";
 
-import {
-    addDays,
-    eachDayOfInterval,
-    endOfMonth,
-    endOfWeek,
-    startOfMonth,
-    startOfWeek,
-} from "date-fns";
-
 import type Component from "svelte/types/compiler/compile/Component";
 
 export interface Transaction {
     name: string
 }
 export interface AppContext {
-    currentDate: Date,
-    currentMonth: Date[],
-    transactions: Transaction[],
-    currentComponent: Component
+    view: string
 }
 
 export type AppEvent =
@@ -27,37 +15,38 @@ export type AppEvent =
     | { type: "EDIT" };
 
 
-const buildContext = (date: Date, transactions: Transaction[]): AppContext => ({
-    currentDate: date,
-    currentMonth: eachDayOfInterval({
-        start: startOfWeek(startOfMonth(date)),
-        end: endOfWeek(endOfMonth(date)),
-    }),
-    transactions,
-    currentComponent: null
+const buildContext = (context?:AppContext, newView?:string): AppContext => ({
+    view: newView ?? context?.view
 });
 
 export const stateMachine = createMachine<AppContext, AppEvent>({
     initial: "idle",
-    context: buildContext(new Date(), []),
+    context: buildContext(),
     states: {
         idle: {
             on: {
                 NAVIGATE: [{
-                    cond: ((context, event) => event.path == "/#!/app"),
+                    cond: ((context, event) => event.path == "/app"),
                     target: "app"
                 },{
-                    cond: ((context, event) => event.path == "/#!/about"),
+                    cond: ((context, event) => event.path == "/about"),
                     target: "about"
                 }]
             }
         },
         app: {
-            entry:() => {
-                console.log("In APP!");
-            }
+            entry: assign((ctx, evt) =>
+            {
+                console.log("App")
+                return buildContext(ctx, "AppPage");
+            })
         },
         about: {
+            entry: assign((ctx, evt) =>
+            {
+                console.log("About")
+                return buildContext(ctx, "About");
+            }),
             on: {
                 NAVIGATE: "idle"
             }

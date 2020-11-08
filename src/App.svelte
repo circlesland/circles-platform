@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Transaction from "./Transaction.svelte";
   import { send, state } from "./StateMachine";
-  import dayjs from "dayjs";
   import page from "page";
+  import AppPage from "./AppPage.svelte"
+  import List from "./List.svelte"
 
   page.start({
     hashbang: true,
@@ -10,11 +10,17 @@
 
   page("*", (ctx) => {
     console.log(ctx);
-    send({ type: 'NAVIGATE', path: ctx.canonicalPath, params: ctx.params });
+    send({ type: 'NAVIGATE', path: ctx.pathname, params: ctx.params });
   });
 
-  $: currentDate = $state.context.currentDate;
-  $: currentMonth = $state.context.currentMonth;
+  let currentComponent = AppPage;
+
+  $: {
+    switch ($state.context.view) {
+      case "AppPage": currentComponent = AppPage; break
+      case "About": currentComponent = List; break
+    }
+  }
 </script>
 
 <style global>
@@ -41,27 +47,20 @@
 
 <main class="h-full p-12 font-sans text-center text-white bg-primary">
   <h1 class="text-3xl font-title">Omo Li</h1>
-  <div class="">{dayjs(currentDate).format('MMMM - YYYY')}</div>
+
   <div class="flex justify-center">
     <div
       class="p-2 m-2 border-2 border-white rounded"
-      on:click={() => page("/back")}>
-      BACK
+      on:click={() => page("/app")}>
+      App
     </div>
     <div
       class="p-2 m-2 border-2 border-white rounded"
-      on:click={() => page("/home")}>
-      HOME
-    </div>
-    <div
-      class="p-2 m-2 border-2 border-white rounded"
-      on:click={() => page("/forward")}>
-      FORWARD
+      on:click={() => page("/about")}>
+      About
     </div>
   </div>
   <div class="h-full overflow-y-scroll">
-    {#each currentMonth as transaction}
-      <Transaction {transaction} />
-    {/each}
+    <svelte:component this={currentComponent}></svelte:component>
   </div>
 </main>
