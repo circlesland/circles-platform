@@ -1,6 +1,13 @@
 <script lang="ts">
-  import Menu from "./../../components/Menu.svelte";
+  import Menu from "../../components/Menu.svelte";
 </script>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-rows: 200px auto 80px;
+  }
+</style>
 
 <div
   class="flex flex-col items-center justify-center h-full bg-white bg-center bg-cover"
@@ -8,7 +15,7 @@
   <div
     class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
     style="position:relative;max-height: 900px">
-    <div class="h-full">
+    <div class="grid h-full">
       <div
         class="flex items-center justify-center mx-4 mt-4 mb-2 text-5xl font-bold text-center text-white border border-gray-200 rounded bg-primary">
         <!-- <p class="py-12 text-gray-100 uppercase font-title">
@@ -16,8 +23,9 @@
       ø
     </p> -->
       </div>
-      transactions
-      <main class="h-full overflow-y-scroll bg-gray-100">
+
+      <main class="overflow-y-scroll bg-gray-100">
+        transactions
         <!-- {#each viewModel.transactions as t}
       <div class="mx-4 mb-2">
         <div class="flex w-full bg-white border border-gray-300 rounded">
@@ -39,8 +47,8 @@
         </div>
       </div>
     {/each}-->
-        <Menu />
       </main>
+      <Menu />
     </div>
   </div>
 </div>

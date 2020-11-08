@@ -1,17 +1,39 @@
-<ul class="flex">
-  <li class="p-2 border-2 rounded text-primary font-title border-primary">
-    <a href="#/wallet/tokens">Tokens</a>
-  </li>
-  <li class="p-2 border-2 rounded text-primary font-title border-primary">
-    <a href="#/wallet/trusts">Trusts</a>
-  </li>
-  <li class="p-2 border-2 rounded text-primary font-title border-primary">
-    Actions
-  </li>
-  <li class="p-2 border-2 rounded text-primary font-title border-primary">
-    <a href="#/wallet/transactions">Transactions</a>
-  </li>
-  <li class="p-2 border-2 rounded text-primary font-title border-primary">
-    <a href="#/dapps">dapps</a>
-  </li>
-</ul>
+<footer
+  class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
+  <div
+    class="flex items-center justify-center px-4 text-xs text-center text-primary">
+    <a href="#/wallet/tokens">
+      <i class="text-2xl fas fa-coins" />
+      <p>Tokens</p>
+    </a>
+  </div>
+  <div
+    class="flex items-center justify-center px-4 text-xs text-center text-primary">
+    <a href="#/wallet/trusts">
+      <i class="text-2xl fas fa-exchange-alt" />
+      <p>Trust</p>
+    </a>
+  </div>
+  <div class="flex items-center justify-center px-4 text-xs text-center">
+    <!-- <Route dapp={o.WALLET} route=""> -->
+    <div>
+      <i class="text-2xl fas fa-plus" />
+      <p>soon</p>
+    </div>
+    <!-- </Route> -->
+  </div>
+  <div
+    class="flex items-center justify-center px-4 text-xs text-center text-primary">
+    <a href="#/wallet/safe">
+      <i class="text-2xl fas fa-piggy-bank" />
+      <p>Safe</p>
+    </a>
+  </div>
+  <div
+    class="flex items-center justify-center px-4 text-xs text-center text-primary">
+    <a href="#/dapps">
+      <i class="text-2xl fas fa-user-circle" />
+      <p>Home</p>
+    </a>
+  </div>
+</footer>
