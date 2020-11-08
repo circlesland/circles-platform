@@ -10,7 +10,7 @@
 
   page("*", (ctx) => {
     console.log(ctx);
-    send({ type: 'NAVIGATE', path: ctx.path, params: ctx.params });
+    send({ type: 'NAVIGATE', path: ctx.canonicalPath, params: ctx.params });
   });
 
   $: currentDate = $state.context.currentDate;

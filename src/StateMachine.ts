@@ -10,13 +10,16 @@ import {
     startOfWeek,
 } from "date-fns";
 
+import type Component from "svelte/types/compiler/compile/Component";
+
 export interface Transaction {
     name: string
 }
 export interface AppContext {
     currentDate: Date,
     currentMonth: Date[],
-    transactions: Transaction[]
+    transactions: Transaction[],
+    currentComponent: Component
 }
 
 export type AppEvent =
@@ -30,7 +33,8 @@ const buildContext = (date: Date, transactions: Transaction[]): AppContext => ({
         start: startOfWeek(startOfMonth(date)),
         end: endOfWeek(endOfMonth(date)),
     }),
-    transactions
+    transactions,
+    currentComponent: null
 });
 
 export const stateMachine = createMachine<AppContext, AppEvent>({
@@ -39,31 +43,25 @@ export const stateMachine = createMachine<AppContext, AppEvent>({
     states: {
         idle: {
             on: {
-                NAVIGATE: {
-                    actions: assign((ctx, evt) => {
-                        switch (evt.path ?? "") {
-                            case "/back":
-                                return buildContext(
-                                    addDays(ctx.currentMonth[0], -1),
-                                    ctx.transactions
-                                )
-                            case "/home":
-                                return buildContext(
-                                    new Date(),
-                                    ctx.transactions
-                                )
-                            case "/forward":
-                                return buildContext(
-                                    addDays(ctx.currentMonth[ctx.currentMonth.length - 1], 1),
-                                    ctx.transactions
-                                )
-                        }
-                    })
-                },
-                EDIT: "edit"
+                NAVIGATE: [{
+                    cond: ((context, event) => event.path == "/#!/app"),
+                    target: "app"
+                },{
+                    cond: ((context, event) => event.path == "/#!/about"),
+                    target: "about"
+                }]
             }
         },
-        edit: {}
+        app: {
+            entry:() => {
+                console.log("In APP!");
+            }
+        },
+        about: {
+            on: {
+                NAVIGATE: "idle"
+            }
+        }
     }
 });
 
