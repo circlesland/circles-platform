@@ -10,7 +10,8 @@ export const config = {
     HUB_BLOCK: new BN(""),
     ACCOUNT: {
       address: "0x528ae4B4C9E77d2F518824cfEEd361F5faD978f4",
-      privateKey: "0xf78ddb6bd35255b1e8621976d82bf4597daa1299e1a24c7f5975f11aefb2e43c"
+      privateKey: "0xf78ddb6bd35255b1e8621976d82bf4597daa1299e1a24c7f5975f11aefb2e43c",
+      safeAddress: ""
     },
     getGasPrice: (web3: Web3) => new BN(web3.utils.toWei("1", "gwei")),
     ethjs: {
@@ -37,7 +38,8 @@ export const config = {
     HUB_BLOCK: new BN("12529458"),
     ACCOUNT: {
       address: "",
-      privateKey: ""
+      privateKey: "",
+      safeAddress: ""
     },
     getGasPrice: (web3: Web3) => new BN(web3.utils.toWei("2", "gwei")),
     ethjs: {

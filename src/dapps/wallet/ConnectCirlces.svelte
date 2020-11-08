@@ -1,24 +1,19 @@
 <script lang="ts">
-  import Web3 from "web3";
   import { mnemonicToEntropy } from "bip39";
+  import {config} from "../../libs/o-circles-protocol/config";
+  import {push} from 'svelte-spa-router'
 
   let seedphrase: string;
   let safeAddress: string;
-  let web3: Web3;
 
   function storeInputAndContinue() {
-    if (!web3) throw new Error("The 'web3' property has no value.");
-
     const privateKey = mnemonicToEntropy(seedphrase);
-    const ownerAddress = web3.eth.accounts.privateKeyToAccount(privateKey);
+    const ownerAddress = config.getCurrent().web3().eth.accounts.privateKeyToAccount(privateKey);
     localStorage.setItem("omo.privateKey", privateKey);
     localStorage.setItem("omo.address", ownerAddress.address);
     localStorage.setItem("omo.safeAddress", safeAddress);
-  }
 
-  // TODO: Lock controls until the dependency is available
-  function onWeb3(event: { detail: { web3: Web3 } }) {
-    web3 = event.detail.web3;
+    push('/wallet/safe');
   }
 </script>
 
@@ -68,10 +63,7 @@
         <div class="flex">
           <button
             class="w-full bg-gray-300 text-primary"
-            on:click={() => storeInputAndContinue('SAFEADDRESS')}>Store Local</button>
-          <button
-            class="w-full bg-gray-300 text-primary"
-            onclick="storeLocal()">Store Local</button>
+            on:click={() => storeInputAndContinue()}>Store Local</button>
         </div>
       </footer>
     </div>
