@@ -41,18 +41,18 @@ export const stateMachine = createMachine<AppContext, AppEvent>({
             on: {
                 NAVIGATE: {
                     actions: assign((ctx, evt) => {
-                        switch (evt.direction) {
-                            case "BACK":
+                        switch (evt.path ?? "") {
+                            case "/back":
                                 return buildContext(
                                     addDays(ctx.currentMonth[0], -1),
                                     ctx.transactions
                                 )
-                            case "HOME":
+                            case "/home":
                                 return buildContext(
                                     new Date(),
                                     ctx.transactions
                                 )
-                            case "FORWARD":
+                            case "/forward":
                                 return buildContext(
                                     addDays(ctx.currentMonth[ctx.currentMonth.length - 1], 1),
                                     ctx.transactions

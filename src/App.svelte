@@ -9,6 +9,7 @@
   });
 
   page("*", (ctx) => {
+    console.log(ctx);
     send({ type: 'NAVIGATE', path: ctx.path, params: ctx.params });
   });
 
@@ -44,17 +45,17 @@
   <div class="flex justify-center">
     <div
       class="p-2 m-2 border-2 border-white rounded"
-      on:click={() => send({ type: 'NAVIGATE', direction: 'BACK' })}>
+      on:click={() => page("/back")}>
       BACK
     </div>
     <div
       class="p-2 m-2 border-2 border-white rounded"
-      on:click={() => send({ type: 'NAVIGATE', direction: 'HOME' })}>
+      on:click={() => page("/home")}>
       HOME
     </div>
     <div
       class="p-2 m-2 border-2 border-white rounded"
-      on:click={() => send({ type: 'NAVIGATE', direction: 'FORWARD' })}>
+      on:click={() => page("/forward")}>
       FORWARD
     </div>
   </div>
