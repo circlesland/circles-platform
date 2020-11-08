@@ -1,30 +1,25 @@
 <script lang="ts">
-  // import Web3 from "web3";
-  // import { o, Router } from "@omoearth/o-types";
-  // import Route from "../1-Atoms/Route.svelte";
-  // import { mnemonicToEntropy } from "bip39";
-  // import Web3Provider from "./Web3Provider.svelte";
+  import Web3 from "web3";
+  import { mnemonicToEntropy } from "bip39";
 
-  // let seedphrase: string;
-  // let safeAddress: string;
-  // let web3: Web3;
+  let seedphrase: string;
+  let safeAddress: string;
+  let web3: Web3;
 
-  // function storeInputAndContinue() {
-  //   if (!web3) throw new Error("The 'web3' property has no value.");
+  function storeInputAndContinue() {
+    if (!web3) throw new Error("The 'web3' property has no value.");
 
-  //   const privateKey = mnemonicToEntropy(seedphrase);
-  //   const ownerAddress = web3.eth.accounts.privateKeyToAccount(privateKey);
-  //   localStorage.setItem("omo.privateKey", privateKey);
-  //   localStorage.setItem("omo.address", ownerAddress.address);
-  //   localStorage.setItem("omo.safeAddress", safeAddress);
+    const privateKey = mnemonicToEntropy(seedphrase);
+    const ownerAddress = web3.eth.accounts.privateKeyToAccount(privateKey);
+    localStorage.setItem("omo.privateKey", privateKey);
+    localStorage.setItem("omo.address", ownerAddress.address);
+    localStorage.setItem("omo.safeAddress", safeAddress);
+  }
 
-  //   Router.navigateTo(o.WALLET, "transactions");
-  // }
-
-  // // TODO: Lock controls until the dependency is available
-  // function onWeb3(event: { detail: { web3: Web3 } }) {
-  //   web3 = event.detail.web3;
-  // }
+  // TODO: Lock controls until the dependency is available
+  function onWeb3(event: { detail: { web3: Web3 } }) {
+    web3 = event.detail.web3;
+  }
 </script>
 
 <style>
@@ -34,10 +29,6 @@
     position: relative;
   }
 </style>
-
-connect
-<!-- 
-<Web3Provider on:initialized={onWeb3} />
 
 <div
   class="flex flex-col items-center justify-center h-full bg-white bg-center bg-cover"
@@ -85,4 +76,4 @@ connect
       </footer>
     </div>
   </div>
-</div> -->
+</div>
