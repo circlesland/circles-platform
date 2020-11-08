@@ -3,4 +3,4 @@
   import dayjs from "dayjs";
 </script>
 
-<div>{dayjs(transaction).format('MMMM - YYYY')}</div>
+<div>{dayjs(transaction).format('MMMM - DD')}</div>

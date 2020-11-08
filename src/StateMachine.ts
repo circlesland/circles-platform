@@ -1,6 +1,5 @@
 import { assign, createMachine } from "xstate";
 import { useMachine } from "xstate-svelte";
-import dayjs from "dayjs";
 
 import {
     addDays,
