@@ -31,12 +31,22 @@
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
-        <b class="text-primary">{t.direction === 'in' ? 'Incoming' : 'Outgoing'}
-          {t.subject}</b>
+        <b class="text-primary">
+          {#if t.from !== "0x0000000000000000000000000000000000000000"}
+          {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
+          {t.subject}
+          {:else}
+            UBI payment
+          {/if}
+        </b>
         <p class="-mt-1 text-xs text-gray-500">
-          {t.createdAt}
-          ago from
-          {t.from}
+          {#if t.from !== "0x0000000000000000000000000000000000000000"}
+            from: {t.from}
+          {:else}
+            Circles
+          {/if}
+          <br/>
+          in block: {t.blockNo}
         </p>
       </div>
       <div
