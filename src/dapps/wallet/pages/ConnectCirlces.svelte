@@ -1,18 +1,19 @@
 <script lang="ts">
-  import { mnemonicToEntropy } from "bip39";
-  import { config } from "../../libs/o-circles-protocol/config";
-  import { push } from "svelte-spa-router";
+  import {mnemonicToEntropy} from "bip39";
+  import {config} from "../../../libs/o-circles-protocol/config";
+  import {push} from "svelte-spa-router";
 
   let seedphrase: string;
   let safeAddress: string;
 
-  function storeInputAndContinue() {
+  function storeInputAndContinue()
+  {
     const privateKey = mnemonicToEntropy(seedphrase);
     const ownerAddress = config
-      .getCurrent()
-      .web3()
-      .eth.accounts.privateKeyToAccount(privateKey);
-    localStorage.setItem("omo.privateKey", privateKey);
+            .getCurrent()
+            .web3()
+            .eth.accounts.privateKeyToAccount(privateKey);
+    localStorage.setItem("omo.privateKey", "0x" + privateKey);
     localStorage.setItem("omo.address", ownerAddress.address);
     localStorage.setItem("omo.safeAddress", safeAddress);
 

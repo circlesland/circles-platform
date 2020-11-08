@@ -1,5 +1,6 @@
 <script lang="ts">
-  import Menu from "./../../components/Menu.svelte";
+  import Menu from "./../../../components/Menu.svelte";
+  import Actions from "../menus/Actions.svelte";
 </script>
 
 <style>
@@ -18,7 +19,7 @@
     style="position:relative;max-height: 900px">
     <div class="grid h-full">
       <div class="h-full">Tokens</div>
-      <Menu />
+      <Menu actions={Actions} />
     </div>
   </div>
 </div>

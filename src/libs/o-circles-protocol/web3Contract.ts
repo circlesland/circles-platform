@@ -133,7 +133,9 @@ export abstract class Web3Contract implements Addressable
       : {};
 
     const tx = new Transaction(rawTx, txOptions);
-    tx.sign(Buffer.from(account.privateKey.slice(2), "hex"));
+    const pkBuf = Buffer.from(account.privateKey.slice(2), "hex");
+    console.log(pkBuf);
+    tx.sign(pkBuf);
 
     return '0x' + tx.serialize().toString('hex');
   }

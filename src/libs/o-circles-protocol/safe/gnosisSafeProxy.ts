@@ -92,6 +92,8 @@ export class GnosisSafeProxy extends Web3Contract
       nonce: nonce
     };
 
+    console.log("Transaction:", executableTransaction);
+
     const transactionHash = await this.getTransactionHash(executableTransaction);
     const signatures = GnosisSafeProxy.signTransactionHash(this.web3, account.privateKey, transactionHash);
 

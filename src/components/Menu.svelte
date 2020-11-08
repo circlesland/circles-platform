@@ -1,8 +1,11 @@
 <script>
-  import Actions from "./Actions.svelte";
+  export let isOpen;
+  export let actions;
 </script>
 <div>
-  <Actions></Actions>
+  {#if isOpen}
+  <svelte:component this={actions}></svelte:component>
+  {/if}
   <footer
     class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
     <div
@@ -19,7 +22,7 @@
         <p>Trust</p>
       </a>
     </div>
-    <div class="flex items-center justify-center px-4 text-xs text-center">
+    <div class="flex items-center justify-center px-4 text-xs text-center" on:click={() => isOpen = !isOpen}>
       <div>
         <i class="text-2xl fas fa-plus" />
         <p>actions</p>

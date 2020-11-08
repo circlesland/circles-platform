@@ -73,6 +73,7 @@ export class Person implements Safe
   async getUBI(account:Account, safe:GnosisSafeProxy): Promise<any>
   {
     const owntoken = await this.getOwnToken();
+    console.log(owntoken);
     return await owntoken.getUBI(account, safe);
   }
 

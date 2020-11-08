@@ -1,11 +1,14 @@
 <script lang="ts">
-  import Menu from "./../../components/Menu.svelte";
+  import Menu from "../../../components/Menu.svelte";
+  import Balance from "../../../components/Balance.svelte";
+  import Transactions from "../../../components/Transactions.svelte";
+  import Actions from "../menus/Actions.svelte";
 </script>
 
 <style>
   .grid {
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 200px 1fr auto;
     position: relative;
   }
 </style>
@@ -17,8 +20,12 @@
     class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
     style="position:relative;max-height: 900px">
     <div class="grid h-full">
-      <div class="h-full">Trusts</div>
-      <Menu />
+      <Balance />
+
+      <main class="h-full overflow-y-scroll bg-gray-100">
+        <Transactions />
+      </main>
+      <Menu actions={Actions} />
     </div>
   </div>
 </div>

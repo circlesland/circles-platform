@@ -3,10 +3,10 @@ import Home from './routes/Home.svelte'
 import NotFound from './routes/NotFound.svelte'
 
 import Dapps from './dapps/Dapps.svelte'
-import Transactions from './dapps/wallet/Safe.svelte'
-import ConnectCirlces from './dapps/wallet/ConnectCirlces.svelte'
-import Trusts from './dapps/wallet/Trusts.svelte'
-import Tokens from './dapps/wallet/Tokens.svelte'
+import Safe from './dapps/wallet/pages/Safe.svelte'
+import ConnectCirlces from './dapps/wallet/pages/ConnectCirlces.svelte'
+import Trusts from './dapps/wallet/pages/Trusts.svelte'
+import Tokens from './dapps/wallet/pages/Tokens.svelte'
 
 // Export the route definition object
 export default {
@@ -17,7 +17,7 @@ export default {
     // Included twice to match both `/wild` (and nothing after) and `/wild/*` (with anything after)
     '/dapps': Dapps,
     '/wallet/connect': ConnectCirlces,
-    '/wallet/safe': Transactions,
+    '/wallet/safe': Safe,
     '/wallet/trusts': Trusts,
     '/wallet/tokens': Tokens,
     '/dapps/*': Dapps,
