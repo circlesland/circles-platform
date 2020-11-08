@@ -21,7 +21,7 @@ export interface AppContext {
 }
 
 export type AppEvent =
-    | { type: "NAVIGATE"; direction: "BACK" | "HOME" | "FORWARD" }
+    | { type: "NAVIGATE"; path?:string; params?:any; direction: "BACK" | "HOME" | "FORWARD" }
     | { type: "EDIT" };
 
 
