@@ -1,32 +1,43 @@
 <script lang="ts">
   import { requestUbi } from "../processes/requestUbi";
   import type { Process } from "../../../main";
-  import {ProcessEvent} from "../../../processes/processEvent";
+  import {ProcessEvent, PromptField} from "../../../processes/processEvent";
 
   function sendMoney() {}
   function setTrust() {}
 
+  let statusType:"none"|"message"|"notification"|"success"|"error"|"prompt" = "none";
   let status:string = "";
 
+  let prompFields:{[id:string]:PromptField} = {};
+  let prompTrigger:{[id:string]:() => ProcessEvent} = {};
+
+  let process:Process = null;
+
   function getUBI() {
-    const process: Process = window.stateMachines.run(requestUbi);
+    process = window.stateMachines.run(requestUbi);
 
     process.events.subscribe((next) => {
       if (next.event?.type === "omo.notification") {
-        console.log("RECEIVED NOTIFICATION:", next.event);
+        statusType = "notification";
         status = next.event.message;
       } else if (next.event?.type === "omo.prompt") {
-        console.log("RECEIVED PROMPT:", next.event);
+        statusType = "prompt";
+        prompFields = next.event.data.fields;
+        prompTrigger = next.event.data.trigger;
       } else if (next.event?.type === "omo.error") {
-        console.log("RECEIVED ERROR:", next.event);
+        statusType = "error";
         status = next.event.message;
       } else if (next.event?.type === "omo.success") {
+        statusType = "success";
         status = "The process completed successfully.";
       } else if (next.event?.type === "omo.continue") {
-        console.log("RECEIVED CONTINUE:", next.event);
+        statusType = "message";
         status = next.event.message ?? "Continue";
       } else if (next.stopped) {
-        console.log("COMPLETED - END");
+        setTimeout(() => {
+          process = null;
+        }, 2000);
       }
     });
 
@@ -44,14 +55,32 @@
 </style>
 
 <div class="p-4 iphonex">
-  <h1>{status}</h1>
-  <div class="w-full p-3 mb-3 border-2 border-primary" on:click={sendMoney}>
-    Send Money
-  </div>
-  <div class="w-full p-3 border-2 border-primary" on:click={setTrust}>
-    Trust
-  </div>
-  <div class="w-full p-3 border-2 border-primary" on:click={getUBI}>
-    Get UBI
-  </div>
+  {#if process}
+    {#if statusType === "message"}
+      Message:<br/>
+      <h1 class="bg-white">{status}</h1>
+    {:else if statusType === "notification"}
+      Notification:<br/>
+      <h1 class="bg-yellow">{status}</h1>
+    {:else if statusType === "error"}
+      Error:<br/>
+      <h1 class="bg-red">{status}</h1>
+    {:else if statusType === "success"}
+      Success:<br/>
+      <h1 class="bg-green">{status}</h1>
+    {:else if statusType === "prompt"}
+      Prompt:<br/>
+    {:else}
+    {/if}
+  {:else}
+    <div class="w-full p-3 mb-3 border-2 border-primary" on:click={sendMoney}>
+      Send Money
+    </div>
+    <div class="w-full p-3 border-2 border-primary" on:click={setTrust}>
+      Trust
+    </div>
+    <div class="w-full p-3 border-2 border-primary" on:click={getUBI}>
+      Get UBI
+    </div>
+  {/if}
 </div>

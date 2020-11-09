@@ -1,28 +1,68 @@
-import {createMachine} from "xstate";
-import {useMachine} from "xstate-svelte";
+import {createMachine, send} from "xstate";
+import {ProcessContext} from "../../../processes/processContext";
+import {ProcessEvent} from "../../../processes/processEvent";
+import {ProcessDefinition} from "../../../processes/processManifest";
 
-export type ConnectSafeEvent =
-    | { type: "CONNECT_NEW" }
-    | { type: "CONNECT_EXISTING" }
-    | { type: "ACCOUNT_KEY" }
-    | { type: "SAFE_ADDRESS" }
-    | { type: "VALIDATE" };
-
-export interface ConnectSafeContext {
-    view: string
-}
-const buildContext = (context?: ConnectSafeContext, newView?: string): ConnectSafeContext => ({
-    view: newView ?? context?.view
-});
-const machineDefinition = createMachine<ConnectSafeContext, ConnectSafeEvent>({
-    initial: "idle",
-    context: buildContext(),
+/**
+ * Connect safe
+ */
+const processDefinition = createMachine<ProcessContext, ProcessEvent>({
+    initial: "ready",
     states: {
+        ready: {
+            on: {
+                "omo.trigger": [{
+                    cond: "?",
+                    actions: [
+                        send({
+                            type: "omo.notification",
+                            message: "Condition failed."
+                        })
+                    ]
+                }, {
+                    cond: "?",
+                    actions: [
+                        send({
+                            type: "omo.continue",
+                            message: "Condition met. Continuing .."
+                        })
+                    ]
+                }],
+                "omo.stop": "stop",
+                "omo.notification": "stop",
+                "omo.continue": "setTrust"
+            }
+        },
+        connectSafe: {
+            invoke: {
+                id: 'connectSafe',
+                src: async (context) => null,
+                onError: {
+                    actions: [
+                    ]
+                },
+                onDone: {
+                    actions: [
+                    ]
+                }
+            },
+            on: {
+                "omo.error": "stop",
+                "omo.success": "stop"
+            }
+        },
+        stop: {
+            type: "final"
+        }
+    }
+}, {
+    guards: {
+    },
+    actions: {
     }
 });
 
-export const run = (initialEvent?:ConnectSafeEvent) => {
-    const machine = useMachine(machineDefinition);
-    if (initialEvent)
-        machine.send(initialEvent);
-}
+export const connectSafe:ProcessDefinition = {
+    name:"connectSafe",
+    stateMachine: processDefinition
+};

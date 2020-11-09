@@ -1,6 +1,15 @@
 import {BN} from "ethereumjs-util";
 import {Address} from "../libs/o-circles-protocol/interfaces/address";
 
+export type PromptField = {
+    type: string,
+    icon?: string,
+    label: string,
+    description?: string,
+    triggers?: string,
+    value?: string // Default value
+};
+
 export type ProcessEvent =
     | { type: "omo.trigger" }
     | { type: "omo.stop" }
@@ -16,14 +25,7 @@ export type ProcessEvent =
         message: string,
         data: {
             fields: {
-                [id: string]: {
-                    type: string,
-                    icon?: string,
-                    label: string,
-                    description?: string,
-                    triggers?: string,
-                    value?: string // Default value
-                }
+                [id: string]: PromptField
             },
             trigger?: {
                 // Save/Delete/..
