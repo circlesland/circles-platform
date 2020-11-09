@@ -19,7 +19,8 @@
 
   async function reload() {
     let t2  = await person.getTokenBalances();
-    tokensITrust = Object.keys(t2).map(k => t2[k]).filter(o => o.balanceString !== "0");
+    tokensITrust = Object.keys(t2).map(k => t2[k]).filter(o => o.balanceString && o.balanceString !== "0");
+    tokensITrust.sort((a,b) => -(a.balance.cmp(b.balance)));
   }
 
   $:{
@@ -32,12 +33,6 @@
 
 <b class="text-primary mx-4">Token balance:</b>
 {#each tokensITrust as token}
-  <div class="mx-4 mb- 2">
-    <div class="flex w-full bg-white border border-gray-300 rounded">
-      <div class="flex-1 px-4 py-2 text-base">
-      </div>
-    </div>
-  </div>
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
