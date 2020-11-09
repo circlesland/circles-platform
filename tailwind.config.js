@@ -32,8 +32,5 @@ module.exports = {
   plugins: [],
   future: {
     removeDeprecatedGapUtilities: true,
-  },
-  experimental: {
-    uniformColorPalette: true,
-  },
+  }
 };

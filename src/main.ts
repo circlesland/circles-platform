@@ -1,33 +1,30 @@
 import App from "./App.svelte";
-import type {Observable} from "rxjs";
-import type {StateMachine} from "xstate";
-import {useMachine} from "xstate-svelte";
-import {Subject} from "rxjs";
+import type { Observable } from "rxjs";
+import type { StateMachine } from "xstate";
+import { useMachine } from "xstate-svelte";
+import { Subject } from "rxjs";
 
-export interface Process
-{
+export interface Process {
   id: number;
   events: Observable<any>;
-  sendEvent(event:any);
+  sendEvent(event: any);
 }
 
-declare global
-{
-  interface Window
-  {
+declare global {
+  interface Window {
     stateMachines: {
-      start: (definition:{context:any, machineDefinition:StateMachine<any,any,any>}) => Process,
-      get: (id:number) => Process
+      start: (definition: { context: any, machineDefinition: StateMachine<any, any, any> }) => Process,
+      get: (id: number) => Process
     }
   }
 }
 
 window.stateMachines = {
-  start:(definition:{context:any, machineDefinition:StateMachine<any,any,any>}) => {
+  start: (definition: { context: any, machineDefinition: StateMachine<any, any, any> }) => {
 
-    const {service,state,send} = useMachine(
-        definition.machineDefinition,
-        {context: definition.context});
+    const { service, state, send } = useMachine(
+      definition.machineDefinition,
+      { context: definition.context });
 
     const processEvents = new Subject();
 
@@ -55,17 +52,17 @@ window.stateMachines = {
       console.log("service.onStop");
     });
 
-    const process:Process = {
+    const process: Process = {
       id: 0,
       events: processEvents,
-      sendEvent:(event: any) => send(event)
+      sendEvent: (event: any) => send(event)
     };
 
     service.start();
 
     return process;
   },
-  get:(id:number) => {
+  get: (id: number) => {
     return null;
   }
 };

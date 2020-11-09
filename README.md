@@ -1,55 +1,120 @@
-# Svelte Template with TypeScript and Tailwind
+# Svelte Webpack Starter
+This is my personal starter template for creating [Svelte](https://svelte.dev) apps. It's preconfigured out of the box with Webpack, TypeScript, SASS, Babel, Autoprefixer, and hot module replacement. I've kept it minimal and organized so it's easy to build upon and/or customize.
 
-This is a project template for [Svelte](https://svelte.dev) apps written in TypeScript. It lives under [https://github.com/martinbeentjes/svelte-typescript-tailwind](https://github.com/martinbeentjes/svelte-typescript-tailwind). A big thanks goes to [@glorykatende](https://levelup.gitconnected.com/how-to-use-svelte-js-with-tailwind-css-f0554187eca1) on writing a blogpost about adding tailwind to a Svelte project.
+---
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+- [Getting started](#getting-started)
+	- [Installation](#installation)
+	- [Starting the development server](#starting-the-development-server)
+	- [Building for production](#building-for-production)
+- [Usage](#usage)
+	- [Global styles](#global-styles)
+	- [Single page applications](#single-page-applications)
+	- [Targeting browsers](#targeting-browsers)
+	- [Disabling Babel](#disabling-babel)
+	- [Enabling source maps in production](#enabling-source-maps-in-production)
+	- [Path mapping](#path-mapping)
+
+---
+
+## Getting started
+
+### Installation
+To quickly get started with this template, use [degit](https://github.com/Rich-Harris/degit):
 
 ```bash
-npx degit martinbeentjes/svelte-typescript-tailwind svelte-app
+npx degit baileyherbert/svelte-webpack-starter svelte-app
 cd svelte-app
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
-
-
-## Get started
-
-Install the dependencies...
+Then, install dependencies.
 
 ```bash
-cd svelte-app
 npm install
 ```
 
-...then start [Rollup](https://rollupjs.org):
+### Starting the development server
+The `dev` script will compile the app, start the development server, and enable hot replacement for components and styles. Open [http://localhost:8080](http://localhost:8080) in your browser to see the app.
 
 ```bash
 npm run dev
 ```
 
-Navigate to [localhost:5000](http://localhost:5000). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
-
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
-
-
-## Building and running in production mode
-
-To create an optimised version of the app:
+### Building for production
+The `build` script will compile the app for production. By default, the bundle will be created at `/public/build/`, which means your public directory will contain everything you need to run the app.
 
 ```bash
 npm run build
 ```
 
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
+To run the production build, use the `start` command and open [http://localhost:8080](http://localhost:8080) in your browser.
 
-
-## Single-page app mode
-
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
-
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
-
-```js
-"start": "sirv public --single"
+```bash
+npm run start
 ```
 
+## Usage
+
+### Global styles
+The `/src/styles/index.scss` file will be compiled and embedded at the top of the bundled CSS, effectively making it a global stylesheet. You can easily add additional stylesheets to the bundle by editing the `stylesheets` variable at the top of `webpack.config.js`:
+
+```js
+const stylesheets = [
+    './src/styles/index.scss'
+];
+```
+
+### Single page applications
+If you're building a single page application (which needs multiple routes), edit your package.json file:
+
+- Add the `--history-api-fallback` flag to the `"dev"` command
+- Add the `--single` flag to the `"start"` command.
+
+```json
+"scripts": {
+    "dev": "webpack-dev-server [...] --history-api-fallback",
+    "start": "serve [...] --single",
+}
+```
+
+### Targeting browsers
+[Babel](https://babeljs.io/docs/en/) and [Autoprefixer](https://www.npmjs.com/package/autoprefixer) will be used to make bundles work in your target browsers, which are listed under `browserslist` in your package.json file. Check out the list of [browserslist queries](https://github.com/browserslist/browserslist#full-list) to customize this.
+
+```json
+{
+    "browserslist": [
+        "defaults"
+    ]
+}
+```
+
+Note that Babel is only active for production builds by default, so it won't slow down your development.
+
+### Disabling Babel
+If you don't need to support older browsers, you can reduce your bundle size by disabling Babel. Just change the `useBabel` variable at the top of `webpack.config.js`:
+
+```js
+const useBabel = false;
+```
+
+### Enabling source maps in production
+By default, this template won't generate source maps for production bundles in order to avoid exposing your source code. If you need to enable source maps in production (such as for debugging), update the `sourceMapsInProduction` variable at the top of `webpack.config.js`.
+
+```js
+const sourceMapsInProduction = true;
+```
+
+### Path mapping
+By default, the `src` alias is mapped to your `src/` directory, which means you can import like this:
+
+```js
+import Navbar from 'src/components/Navbar.svelte';
+```
+
+If you wish to add additional aliases, you only need to edit the `paths` property in your `tsconfig.json`, and they will be automatically applied to Webpack:
+
+```json
+"paths": {
+    "src": ["src"]
+}
+```
