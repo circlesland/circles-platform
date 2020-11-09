@@ -16,7 +16,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
                     target: "ready",
                     actions: [
                         "setNextPossibleUbiRetrieval",
-                        send({ type: "omo.message", message: "You recently requested your UBI. You can send only one request every 12 hours." })
+                        send({ type: "omo.notification", message: "You recently requested your UBI. You can send only one request every 12 hours." })
                     ]
                 }, {
                     cond: "canRetrieveNewUbi?",
@@ -26,7 +26,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
                     target: "ready",
                     actions: [
                         "setNextPossibleUbiRetrieval",
-                        send({ type: "omo.message", message: "You must wait at least 20 seconds before you can try again." })
+                        send({ type: "omo.notification", message: "You must wait at least 20 seconds before you can try again." })
                     ]
                 }],
                 "omo.stop": {

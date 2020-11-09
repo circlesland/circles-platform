@@ -1,27 +1,37 @@
 <script lang="ts">
-  import { ubiService } from "../processes/ubiService";
-  import type { Account } from "../../../libs/o-circles-protocol/interfaces/account";
+  import { requestUbi } from "../processes/requestUbi";
   import type { Process } from "../../../main";
-  import {ProcessContext} from "../../../processes/processContext";
-  import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
-  import {config} from "../../../libs/o-circles-protocol/config";
-  import {Person} from "../../../libs/o-circles-protocol/model/person";
-  import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
-  import {useMachine} from "xstate-svelte";
+  import {ProcessEvent} from "../../../processes/processEvent";
 
   function sendMoney() {}
   function setTrust() {}
 
-  let status: string = "-";
+  let status:string = "";
 
   function getUBI() {
-    const process: Process = window.stateMachines.run(ubiService);
+    const process: Process = window.stateMachines.run(requestUbi);
+
     process.events.subscribe((next) => {
-      console.log("STATUS UPDATE:", next);
-      status = next.message;
+      if (next.event?.type === "omo.notification") {
+        console.log("RECEIVED NOTIFICATION:", next.event);
+        status = next.event.message;
+      } else if (next.event?.type === "omo.prompt") {
+        console.log("RECEIVED PROMPT:", next.event);
+      } else if (next.event?.type === "omo.error") {
+        console.log("RECEIVED ERROR:", next.event);
+        status = next.event.message;
+      } else if (next.event?.type === "omo.success") {
+        status = "The process completed successfully.";
+      } else if (next.event?.type === "omo.continue") {
+        console.log("RECEIVED CONTINUE:", next.event);
+        status = next.event.message ?? "Continue";
+      } else if (next.stopped) {
+        console.log("COMPLETED - END");
+      }
     });
-    process.sendEvent(<ServiceEvents>{
-      type: "TRIGGER",
+
+    process.sendEvent(<ProcessEvent>{
+      type: "omo.trigger",
     });
   }
 </script>
