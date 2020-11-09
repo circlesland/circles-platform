@@ -1,87 +1,77 @@
 import {createMachine, send} from "xstate";
-import {BN} from "ethereumjs-util";
 import {ProcessContext} from "../../../processes/processContext";
 import {ProcessEvent} from "../../../processes/processEvent";
+import {ProcessDefinition} from "../../../processes/processManifest";
 
 const TwelveHours = 12 * 60 * 60 * 60 * 1000;
 const TwentySeconds = 20 * 1000;
 
 /**
- * A state machine that runs as service and requests the UBI for the user.
+ * Requests UBI
  */
-const serviceDefinition = createMachine<ProcessContext, ProcessEvent>({
+const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     initial: "ready",
     states: {
         ready: {
             on: {
                 "omo.trigger": [{
                     cond: "recentlyGotUbi?",
-                    target: "ready",
                     actions: [
                         "setNextPossibleUbiRetrieval",
                         send({
-                            type: "omo.message",
+                            type: "omo.notification",
                             message: "You recently requested your UBI. You can send only one request every 12 hours."
                         })
                     ]
                 }, {
                     cond: "canRetrieveNewUbi?",
-                    target: "requestUbi",
-                    actions: "setNextPossibleUbiRetrieval"
-                }, {
-                    target: "ready",
                     actions: [
                         "setNextPossibleUbiRetrieval",
                         send({
-                            type: "omo.message",
-                            message: "You must wait at least 20 seconds before you can try again."
+                            type: "omo.continue",
+                            message: "Requesting UBI .."
                         })
                     ]
+                }, {
+                    actions: send({
+                        type: "omo.notification",
+                        message: "You must wait at least 20 seconds before you can try again."
+                    })
                 }],
-                "omo.stop": {
-                    target: "stop"
-                }
+                "omo.stop": "stop",
+                "omo.notification": "stop",
+                "omo.continue": "requestUbi"
             }
         },
         requestUbi: {
             invoke: {
                 id: 'requestingUbi',
-                src: async (context) => context.person.getUBI(context.account, context.safe),
+                src: async (context) => (await context.person.getUBI(context.account, context.safe)),
                 onError: {
-                    target: 'error'
+                    actions: send({
+                        type: "omo.error",
+                        message: "An error occurred during the UBI request. Please try again later."
+                    })
                 },
                 onDone: {
-                    actions: ["setLastSuccessfulUbiRetrieval"],
-                    target: 'success'
+                    actions: [
+                        "setLastSuccessfulUbiRetrieval",
+                         send({
+                            type: "omo.success",
+                            data: {
+                                type: "ubi"
+                            }
+                        })
+                    ]
                 }
+            },
+            on: {
+                "omo.error": "stop",
+                "omo.success": "stop"
             }
         },
-        error: {
-            always: "ready",
-            entry: send({
-                type: "omo.error",
-                message: "An error occurred during the UBI request. Please try again later."
-            })
-        },
-        success: {
-            always: "ready",
-            entry: ((context1, event) =>
-            {
-                /* TODO: Fill the response event with meaningful values */
-                return send({
-                    type: "omo.success",
-                    data: {
-                        type: "ubi",
-                        blockNo: new BN("0"),
-                        to: context1.safe.address,
-                        value: new BN("0")
-                    }
-                });
-            })
-        },
         stop: {
-            type: "final",
-            entry: send({type: "omo.stopped"})
+            type: "final"
         }
     }
 }, {
@@ -126,4 +116,7 @@ const serviceDefinition = createMachine<ProcessContext, ProcessEvent>({
     }
 });
 
-export const ubiService = serviceDefinition;
+export const requestUbi:ProcessDefinition = {
+    name:"requestUbi",
+    stateMachine: processDefinition
+};

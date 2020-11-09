@@ -13,6 +13,7 @@ import type {Event} from "./interfaces/event";
 import {isArray} from "rxjs/internal-compatibility";
 import {EventQuery} from "./eventQuery";
 import type {Account} from "./interfaces/account";
+import type {TransactionReceipt} from "web3-core";
 
 export abstract class Web3Contract implements Addressable
 {
@@ -140,28 +141,29 @@ export abstract class Web3Contract implements Addressable
 
   async sendSignedRawTransaction(serializedTx: ByteString)
   {
-    return this.web3.eth.sendSignedTransaction(serializedTx)
-      .once('transactionHash', (hash) =>
-      {
-        console.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);
-      })
-      .once('receipt', (receipt) =>
-      {
-        console.log("web3.eth.sendSignedTransaction | Got receipt:", receipt);
-      })
-      .once('confirmation', (confNumber) =>
-      {
-        console.log("web3.eth.sendSignedTransaction | Got confirmation. Conf No.: " + confNumber);
-      })
-      .once('error', (error) =>
-      {
-        console.log("web3.eth.sendSignedTransaction | Got error");
-        console.error(error);
-      })
-      .then(function (receipt)
-      {
-        console.log("web3.eth.sendSignedTransaction | Transaction was mined.");
-        return receipt;
-      });
+    return new Promise<TransactionReceipt>((resolve, reject) => {this.web3.eth.sendSignedTransaction(serializedTx)
+        .once('transactionHash', (hash) =>
+        {
+          console.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);
+        })
+        .once('receipt', (receipt) =>
+        {
+          console.log("web3.eth.sendSignedTransaction | Got receipt:", receipt);
+        })
+        .once('confirmation', (confNumber) =>
+        {
+          console.log("web3.eth.sendSignedTransaction | Got confirmation. Conf No.: " + confNumber);
+        })
+        .once('error', (error) =>
+        {
+          console.log("web3.eth.sendSignedTransaction | Got error:", error);
+          reject(error);
+        })
+        .then(function (receipt)
+        {
+          console.log("web3.eth.sendSignedTransaction | Transaction was mined.");
+          resolve(receipt);
+        });
+    });
   }
 }

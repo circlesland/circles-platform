@@ -1,10 +1,10 @@
 import {createMachine, send} from "xstate";
-import {BN} from "ethereumjs-util";
 import {ProcessContext} from "../../../processes/processContext";
 import {ProcessEvent} from "../../../processes/processEvent";
+import {ProcessDefinition} from "../../../processes/processManifest";
 
 /**
- * A state machine that runs as service and requests the UBI for the user.
+ * Transfer circles
  */
 const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     initial: "ready",
@@ -12,52 +12,47 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
         ready: {
             on: {
                 "omo.trigger": [{
-                    cond: "recentlyGotUbi?",
-                    target: "ready",
+                    cond: "?",
                     actions: [
-                        "setNextPossibleUbiRetrieval",
-                        send({ type: "omo.message", message: "You recently requested your UBI. You can send only one request every 12 hours." })
+                        send({
+                            type: "omo.notification",
+                            message: "Condition failed."
+                        })
                     ]
                 }, {
-                    cond: "canRetrieveNewUbi?",
-                    target: "requestUbi",
-                    actions: "setNextPossibleUbiRetrieval"
-                }, {
-                    target: "ready",
+                    cond: "?",
                     actions: [
-                        "setNextPossibleUbiRetrieval",
-                        send({ type: "omo.message", message: "You must wait at least 20 seconds before you can try again." })
+                        send({
+                            type: "omo.continue",
+                            message: "Condition met. Continuing .."
+                        })
                     ]
                 }],
-                "omo.stop": {
-                    target: "stop"
-                }
+                "omo.stop": "stop",
+                "omo.notification": "stop",
+                "omo.continue": "transferCircles"
             }
         },
-        requestUbi: {
+        transferCircles: {
             invoke: {
-                id: 'requestingUbi',
-                src: async (context) => context.person.getUBI(context.account, context.safe),
+                id: 'transferCircles',
+                src: async (context) => null,
                 onError: {
-                    target: 'error'
+                    actions: [
+                    ]
                 },
                 onDone: {
-                    actions: ["setLastSuccessfulUbiRetrieval"],
-                    target: 'success'
+                    actions: [
+                    ]
                 }
+            },
+            on: {
+                "omo.error": "stop",
+                "omo.success": "stop"
             }
         },
-        error: {
-            always: "stop",
-            entry: send({ type: "omo.error", message: "An error occurred during the transfer. Please check your gas and try again." })
-        },
-        success: {
-            always: "stop",
-            entry: send({ type: "omo.success", receivedUbi: new BN("0")}) /* TODO: Get received UBI from response */
-        },
         stop: {
-            type: "final",
-            entry: send({ type: "omo.stopped" })
+            type: "final"
         }
     }
 }, {
@@ -67,4 +62,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     }
 });
 
-export const transferCircles = processDefinition;
+export const transferCircles:ProcessDefinition = {
+    name:"transferCircles",
+    stateMachine: processDefinition
+};
