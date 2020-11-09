@@ -61,12 +61,14 @@ export class Person implements Safe
         .keys(receivableTokens)
         .map(async tokenAddress =>
         {
-          const balanceBN = await receivableTokens[tokenAddress].token.getBalanceOf(this.address);
+          const token = receivableTokens[tokenAddress];
+          const balanceBN = await token.token.getBalanceOf(this.address);
           let balanceString = this.circlesHub.web3.utils.fromWei(balanceBN).toString();
           const dot = balanceString.indexOf(".");
           balanceString = balanceString.slice(0, dot + 3);
           return {
             token: tokenAddress,
+            owner: token.owner,
             balance: balanceBN,
             balanceString: balanceString
           };
