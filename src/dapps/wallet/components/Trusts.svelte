@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { CirclesHub } from "../libs/o-circles-protocol/circles/circlesHub";
-  import {Person} from "../libs/o-circles-protocol/model/person";
-  import { config } from "../libs/o-circles-protocol/config";
+  import { CirclesHub } from "../../../libs/o-circles-protocol/circles/circlesHub";
+  import {Person} from "../../../libs/o-circles-protocol/model/person";
+  import { config } from "../../../libs/o-circles-protocol/config";
 
   let person: Person;
   let personsThatTrustMe:[] = [];

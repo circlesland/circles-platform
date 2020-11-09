@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {CirclesHub} from "../libs/o-circles-protocol/circles/circlesHub";
-    import {Person} from "../libs/o-circles-protocol/model/person";
-    import {config} from "../libs/o-circles-protocol/config";
+    import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
+    import {Person} from "../../../libs/o-circles-protocol/model/person";
+    import {config} from "../../../libs/o-circles-protocol/config";
     import {BN} from "ethereumjs-util";
 
     let person: Person;
@@ -30,8 +30,8 @@
     init()
 </script>
 
-<div class="grid h-full">
-    <div class="flex items-center justify-center mx-4 mt-4 mb-2 text-5xl font-bold text-center text-white border border-gray-200 rounded bg-primary">
+<div class="grid w-full">
+    <div class="flex items-center justify-center mx-4 mt-2 mb-2 text-5xl font-bold text-center text-white border border-gray-200 rounded bg-primary">
         <p class="py-12 text-gray-100 uppercase font-title">{balanceString} ø</p>
     </div>
 </div>

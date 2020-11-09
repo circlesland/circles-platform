@@ -1,7 +1,7 @@
 <script lang="ts">
 
   import {getUbi} from "../processes/getUBI";
-  import type {Account} from "../../../libs/o-circles-protocol/interfaces/account";
+  import type {Account} from "../../../../../libs/o-circles-protocol/interfaces/account";
   import {Observable} from "rxjs";
 
   function sendMoney() {

@@ -1,6 +1,6 @@
 <script lang="ts">
     import {BN} from "ethereumjs-util";
-    import {config} from "../libs/o-circles-protocol/config";
+    import {config} from "../../../libs/o-circles-protocol/config";
     import {createEventDispatcher} from "svelte";
 
     let text:string = "0";
