@@ -8,7 +8,10 @@
 
     let person: Person;
     let balance: BN;
-    let balanceString: string;
+    let ethBalance: BN;
+
+    let circlesBalance: string;
+    let etherBalance: string;
 
     function init(address:string)
     {
@@ -25,7 +28,12 @@
         balance = await person.getBalance();
         const balanceStr = config.getCurrent().web3().utils.fromWei(balance, "ether");
         const dot = balanceStr.indexOf(".");
-        balanceString = balanceStr.slice(0, dot + 3);
+        circlesBalance = balanceStr.slice(0, dot + 3);
+
+        ethBalance = await person.getEthBalance();
+        const ethBalanceStr = config.getCurrent().web3().utils.fromWei(ethBalance, "ether");
+        const ethDot = ethBalanceStr.indexOf(".");
+        etherBalance = ethBalanceStr.slice(0, ethDot + 7);
     }
 
     $:{
@@ -38,6 +46,8 @@
 
 <div class="grid w-full">
     <div class="flex items-center justify-center mx-4 mt-2 mb-2 text-5xl font-bold text-center text-white border border-gray-200 rounded bg-primary">
-        <p class="py-12 text-gray-100 uppercase font-title">{balanceString} ø</p>
+            <p style="line-height: 1em;" class="py-12 text-gray-100 uppercase font-title">{circlesBalance} ø<br/>
+                <span class="-mt-1 text-sm">{etherBalance} xDai</span>
+            </p>
     </div>
 </div>

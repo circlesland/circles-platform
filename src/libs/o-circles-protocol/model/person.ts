@@ -48,6 +48,11 @@ export class Person implements Safe
     this._tokenAddress = tokenAddress;
   }
 
+  async getEthBalance(reload?: boolean) : Promise<BN>
+  {
+    return new BN(await this.circlesHub.web3.eth.getBalance(this.address));
+  }
+
   async getTokenBalances(reload?: boolean): Promise<{ balance: BN, token: Address }[]>
   {
     const myToken = await this.getOwnToken();
