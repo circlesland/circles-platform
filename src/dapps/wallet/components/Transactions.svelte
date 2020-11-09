@@ -3,11 +3,22 @@
   import { Person } from "../../../libs/o-circles-protocol/model/person";
   import { config } from "../../../libs/o-circles-protocol/config";
   import type {Address} from "../../../libs/o-circles-protocol/interfaces/address";
+  import {BN} from "ethereumjs-util";
 
   export let address:string;
 
   let person: Person;
   let transactions = [];
+
+  let latestBlockOnChain;
+  let timePerBlock;
+  let now;
+
+  let timeInfo: {
+    now: number,
+    latestChainBlockNo:BN,
+    secondsPerBlock: number
+  } = {}
 
   function init(address:Address) {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -19,15 +30,63 @@
   }
 
   async function reload() {
+
     const incomingTransactions = await person.getIncomingTransactions();
     const outgoingTransactions = await person.getOutgoingTransactions();
     const allTransactions = incomingTransactions.concat(outgoingTransactions);
     allTransactions.sort((a, b) => -a.blockNo.cmp(b.blockNo));
-    transactions = allTransactions;
+
+    const web3 = config.getCurrent().web3();
+    const latestBlockNo = await web3.eth.getBlockNumber();
+
+    //
+    // Get the measures for a time estimation from the latest 2 block of the chain.
+    //
+    const probes = [0, 1];
+    const blocks = await Promise.all(
+            probes.map(async i => await web3.eth.getBlock(latestBlockNo - i))
+    );
+
+    let lastTimestamp = 0;
+    let delta = 0;
+    for (let block of blocks) {
+      if (lastTimestamp == 0)
+      {
+        delta += 0
+      } else {
+        delta += lastTimestamp - block.timestamp;
+      }
+      lastTimestamp = block.timestamp;
+    }
+
+    latestBlockOnChain = new BN(latestBlockNo.toString());
+    timePerBlock = delta / probes.length;
+    now = Date.now() / 1000;
+
+    transactions = allTransactions.map(o => {
+      o.timestamp = getTimeFromBlockNo(timePerBlock, o.blockNo);
+      return o;
+    });
+  }
+
+  function getTimeFromBlockNo(timePerBlock:number, blockNo:BN) {
+    const blockDelta = latestBlockOnChain.sub(blockNo);
+    const timeDelta = timePerBlock * blockDelta.toNumber();
+    const thenTime = (now - timeDelta).toFixed(0);
+    const estimatedBlockTime = new Date((thenTime * 1000));
+    return estimatedBlockTime.getUTCFullYear()
+            + "-" + ("0" + estimatedBlockTime.getDate()).slice(-2)
+            + "-" + ("0" + estimatedBlockTime.getUTCMonth()).slice(-2)
+            + " " + ("0" + estimatedBlockTime.getUTCHours()).slice(-2)
+            + ":" + ("0" + estimatedBlockTime.getUTCMinutes()).slice(-2)
+            + ":" + ("0" + estimatedBlockTime.getUTCSeconds()).slice(-2);
   }
 
   $:{
-    init(address);
+    if (config.getCurrent().web3().utils.isAddress(address))
+    {
+      init(address);
+    }
   }
 </script>
 
@@ -44,6 +103,7 @@
           {/if}
         </b>
         <p class="-mt-1 text-xs text-gray-500">
+          at: {t.timestamp}<br/>
           {#if t.direction === 'in'}
             {#if t.from !== "0x0000000000000000000000000000000000000000"}
               from: <a href="#/wallet/{t.from}/safe">{t.from}</a>
@@ -54,7 +114,6 @@
             to: <a href="#/wallet/{t.to}/safe">{t.to}</a>
           {/if}
           <br/>
-          in block: {t.blockNo}
         </p>
       </div>
       {#if t.direction === 'out'}

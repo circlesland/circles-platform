@@ -10,13 +10,12 @@
     let balance: BN;
     let balanceString: string;
 
-    function init(nonDefaultSafeAddress?:string)
+    function init(address:string)
     {
         const hubAddress = config.getCurrent().HUB_ADDRESS;
         const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-        const safeAddress = localStorage.getItem("omo.safeAddress");
 
-        person = new Person(circlesHub, nonDefaultSafeAddress ?? safeAddress);
+        person = new Person(circlesHub, address);
 
         reload();
     }
@@ -30,7 +29,10 @@
     }
 
     $:{
-        init(address);
+        if (config.getCurrent().web3().utils.isAddress(address))
+        {
+            init(address);
+        }
     }
 </script>
 

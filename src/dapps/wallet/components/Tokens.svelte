@@ -23,7 +23,10 @@
   }
 
   $:{
-    init(address);
+    if (config.getCurrent().web3().utils.isAddress(address))
+    {
+      init(address);
+    }
   }
 </script>
 
