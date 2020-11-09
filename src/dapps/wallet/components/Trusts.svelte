@@ -3,6 +3,8 @@
   import {Person} from "../../../libs/o-circles-protocol/model/person";
   import { config } from "../../../libs/o-circles-protocol/config";
 
+  export let address:string;
+
   let person: Person;
   let personsThatTrustMe:[] = [];
   let personsITrust:[] = [];
@@ -10,9 +12,8 @@
   function init() {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-    const safeAddress = localStorage.getItem("omo.safeAddress");
 
-    person = new Person(circlesHub, safeAddress);
+    person = new Person(circlesHub, address);
 
     reload();
   }
@@ -33,7 +34,7 @@
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
-        <b class="text-primary">{personThatTrustMe.owner.address}</b>
+        <b class="text-primary"><a href="#/wallet/{personThatTrustMe.owner.address}/safe">{personThatTrustMe.owner.address}</a></b>
       </div>
     </div>
   </div>
@@ -44,7 +45,7 @@
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
-        <b class="text-primary">{personITrust.owner.address}</b>
+        <b class="text-primary"><a href="#/wallet/{personITrust.owner.address}/safe">{personITrust.owner.address}</a></b>
       </div>
     </div>
   </div>

@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
   export let isOpen;
   export let actions;
+
+  export let address:string = null;
 </script>
 <div>
   {#if isOpen}
@@ -10,14 +12,14 @@
     class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
     <div
       class="flex items-center justify-center px-4 text-xs text-center text-primary">
-      <a href="#/wallet/tokens">
+      <a href="#/wallet/{address}/tokens">
         <i class="text-2xl fas fa-coins" />
         <p>Tokens</p>
       </a>
     </div>
     <div
       class="flex items-center justify-center px-4 text-xs text-center text-primary">
-      <a href="#/wallet/trusts">
+      <a href="#/wallet/{address}/trusts">
         <i class="text-2xl fas fa-exchange-alt" />
         <p>Trust</p>
       </a>
@@ -30,7 +32,7 @@
     </div>
     <div
       class="flex items-center justify-center px-4 text-xs text-center text-primary">
-      <a href="#/wallet/safe">
+      <a href="#/wallet/{address}/safe">
         <i class="text-2xl fas fa-piggy-bank" />
         <p>Safe</p>
       </a>

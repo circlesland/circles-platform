@@ -1,7 +1,8 @@
 <script lang="ts">
   import {mnemonicToEntropy} from "bip39";
   import {config} from "../../../libs/o-circles-protocol/config";
-  import {push} from "svelte-spa-router";
+  import {loc, push} from "svelte-spa-router";
+  import {onMount} from "svelte";
 
   let seedphrase: string;
   let safeAddress: string;
@@ -13,12 +14,20 @@
             .getCurrent()
             .web3()
             .eth.accounts.privateKeyToAccount(privateKey);
+
     localStorage.setItem("omo.privateKey", "0x" + privateKey);
     localStorage.setItem("omo.address", ownerAddress.address);
     localStorage.setItem("omo.safeAddress", safeAddress);
 
-    push("/wallet/safe");
+    push("/wallet/" + safeAddress + "/safe");
   }
+
+  onMount(() => {
+    safeAddress = localStorage.getItem("omo.safeAddress");
+    if (safeAddress) {
+      push("/wallet/" + safeAddress + "/safe");
+    }
+  });
 </script>
 
 <style>

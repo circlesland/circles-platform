@@ -2,16 +2,18 @@
   import { CirclesHub } from "../../../libs/o-circles-protocol/circles/circlesHub";
   import { Person } from "../../../libs/o-circles-protocol/model/person";
   import { config } from "../../../libs/o-circles-protocol/config";
+  import type {Address} from "../../../libs/o-circles-protocol/interfaces/address";
+
+  export let address:string;
 
   let person: Person;
   let transactions = [];
 
-  function init() {
+  function init(address:Address) {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-    const safeAddress = localStorage.getItem("omo.safeAddress");
 
-    person = new Person(circlesHub, safeAddress);
+    person = new Person(circlesHub, address);
 
     reload();
   }
@@ -24,7 +26,9 @@
     transactions = allTransactions;
   }
 
-  init();
+  $:{
+    init(address);
+  }
 </script>
 
 {#each transactions as t}
@@ -41,7 +45,7 @@
         </b>
         <p class="-mt-1 text-xs text-gray-500">
           {#if t.from !== "0x0000000000000000000000000000000000000000"}
-            from: {t.from}
+            from: <a href="#/wallet/{t.from}/safe">{t.from}</a>
           {:else}
             Circles
           {/if}

@@ -3,15 +3,16 @@
   import {Person} from "../../../libs/o-circles-protocol/model/person";
   import { config } from "../../../libs/o-circles-protocol/config";
 
+  export let address:string;
+
   let person: Person;
   let tokensITrust:[] = [];
 
   function init() {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-    const safeAddress = localStorage.getItem("omo.safeAddress");
 
-    person = new Person(circlesHub, safeAddress);
+    person = new Person(circlesHub, address);
 
     reload();
   }

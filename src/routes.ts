@@ -17,9 +17,9 @@ export default {
     // Included twice to match both `/wild` (and nothing after) and `/wild/*` (with anything after)
     '/dapps': Dapps,
     '/wallet/connect': ConnectCirlces,
-    '/wallet/safe': Safe,
-    '/wallet/trusts': Trusts,
-    '/wallet/tokens': Tokens,
+    '/wallet/:address/safe': Safe,
+    '/wallet/:address/trusts': Trusts,
+    '/wallet/:address/tokens': Tokens,
     '/dapps/*': Dapps,
 
     // Catch-all, must be last

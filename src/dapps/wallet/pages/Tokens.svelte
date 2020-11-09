@@ -4,6 +4,17 @@
   import Balance from "../components/Balance.svelte";
   import Tokens from "../components/Tokens.svelte";
   import Account from "../components/Account.svelte";
+
+  export let params = {}
+
+  let address:string = null;
+
+  $:{
+    if (params.address)
+    {
+      address = params.address;
+    }
+  }
 </script>
 
 <style>
@@ -21,13 +32,13 @@
           class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
           style="position:relative;max-height: 900px">
     <div class="grid h-full">
-      <Account />
-      <Balance />
+      <Account {address} />
+      <Balance {address} />
 
       <main class="h-full overflow-y-scroll bg-gray-100">
-        <Tokens />
+        <Tokens {address} />
       </main>
-      <Menu actions={Actions} />
+      <Menu {address} actions={Actions} />
     </div>
   </div>
 </div>

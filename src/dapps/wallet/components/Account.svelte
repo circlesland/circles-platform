@@ -4,20 +4,23 @@
     import {config} from "../../../libs/o-circles-protocol/config";
     import {BN} from "ethereumjs-util";
 
-    let person: Person;
-    let balance: BN;
-    let balanceString: string;
 
-    function init()
+    export let address:string;
+
+    let person: Person;
+
+    function init(nonDefaultSafeAddress?:string)
     {
         const hubAddress = config.getCurrent().HUB_ADDRESS;
         const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
         const safeAddress = localStorage.getItem("omo.safeAddress");
 
-        person = new Person(circlesHub, safeAddress);
+        person = new Person(circlesHub, nonDefaultSafeAddress ?? safeAddress);
     }
 
-    init()
+    $:{
+        init(address);
+    }
 </script>
 
 <div class="grid w-full">
