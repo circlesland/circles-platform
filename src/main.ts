@@ -1,9 +1,9 @@
 import App from "./App.svelte";
-import {Observable} from "rxjs";
+import { Observable } from "rxjs";
 
 (<any>window).stateMachines = {
-  start:(factory:() => {state, send, service}) => {
-    const sm =  factory();
+  start: (factory: () => { state, send, service }) => {
+    const sm = factory();
     return new Observable((observer) => {
       sm.service.onTransition(transition => {
         console.log("ON TRANSITION");
@@ -11,7 +11,7 @@ import {Observable} from "rxjs";
       });
     });
   },
-  get:(id:number) => {
+  get: (id: number) => {
     return null;
   }
 };

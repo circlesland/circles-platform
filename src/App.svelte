@@ -6,8 +6,6 @@
 
 <Tailwind />
 
-<!-- <Menu /> -->
-
 <main class="h-full font-sans">
   <Router {routes} />
 </main>
