@@ -20,7 +20,7 @@
   async function reload() {
     let t2  = await person.getTokenBalances();
     tokensITrust = Object.keys(t2).map(k => t2[k]).filter(o => o.balanceString && o.balanceString !== "0");
-    tokensITrust.sort((a,b) => a.balance.cmp(b.balance));
+    tokensITrust.sort((a,b) => -(a.balance.cmp(b.balance)));
   }
 
   $:{

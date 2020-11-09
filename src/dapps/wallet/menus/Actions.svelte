@@ -1,8 +1,13 @@
 <script lang="ts">
-  import { getUbi } from "../processes/getUBI";
-  import type { GetUBIEvent } from "../processes/getUBI";
+  import { ubiService } from "../processes/ubiService";
   import type { Account } from "../../../libs/o-circles-protocol/interfaces/account";
   import type { Process } from "../../../main";
+  import {ProcessContext} from "../../../processes/processContext";
+  import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
+  import {config} from "../../../libs/o-circles-protocol/config";
+  import {Person} from "../../../libs/o-circles-protocol/model/person";
+  import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
+  import {useMachine} from "xstate-svelte";
 
   function sendMoney() {}
   function setTrust() {}
@@ -10,19 +15,12 @@
   let status: string = "-";
 
   function getUBI() {
-    const safeAddress = localStorage.getItem("omo.safeAddress");
-    const account: Account = {
-      privateKey: localStorage.getItem("omo.privateKey"),
-      address: localStorage.getItem("omo.address"),
-    };
-    const machineDefinition = getUbi(account, safeAddress);
-
-    const process: Process = window.stateMachines.start(machineDefinition);
+    const process: Process = window.stateMachines.run(ubiService);
     process.events.subscribe((next) => {
       console.log("STATUS UPDATE:", next);
       status = next.message;
     });
-    process.sendEvent(<GetUBIEvent>{
+    process.sendEvent(<ServiceEvents>{
       type: "TRIGGER",
     });
   }

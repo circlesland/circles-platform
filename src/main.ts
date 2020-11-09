@@ -3,6 +3,12 @@ import type { Observable } from "rxjs";
 import type { StateMachine } from "xstate";
 import { useMachine } from "xstate-svelte";
 import { Subject } from "rxjs";
+import {Account} from "./libs/o-circles-protocol/interfaces/account";
+import {config} from "./libs/o-circles-protocol/config";
+import {CirclesHub} from "./libs/o-circles-protocol/circles/circlesHub";
+import {ProcessContext} from "./processes/processContext";
+import {GnosisSafeProxy} from "./libs/o-circles-protocol/safe/gnosisSafeProxy";
+import {Person} from "./libs/o-circles-protocol/model/person";
 
 export interface Process {
   id: number;
@@ -13,18 +19,34 @@ export interface Process {
 declare global {
   interface Window {
     stateMachines: {
-      start: (definition: { context: any, machineDefinition: StateMachine<any, any, any> }) => Process,
+      run: (definition: StateMachine<any, any, any>) => Process,
       get: (id: number) => Process
     }
   }
 }
 
+function getServiceContext() : ProcessContext {
+  const safeAddress = localStorage.getItem("omo.safeAddress");
+  const account: Account = {
+    privateKey: localStorage.getItem("omo.privateKey"),
+    address: localStorage.getItem("omo.address"),
+  };
+  const web3 = config.getCurrent().web3();
+  const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
+  const processContext:ProcessContext = {
+    safe: new GnosisSafeProxy(web3, account.address, safeAddress),
+    account: account,
+    person: new Person(circlesHub, safeAddress)
+  };
+  return processContext;
+}
+
 window.stateMachines = {
-  start: (definition: { context: any, machineDefinition: StateMachine<any, any, any> }) => {
+  run: (definition: StateMachine<any, any, any>) => {
 
     const { service, state, send } = useMachine(
-      definition.machineDefinition,
-      { context: definition.context });
+      definition,
+      { context: getServiceContext() });
 
     const processEvents = new Subject();
 
