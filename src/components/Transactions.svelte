@@ -49,11 +49,15 @@
           in block: {t.blockNo}
         </p>
       </div>
-      <div
-        class="h-12 px-3 py-1 text-3xl text-green-500"
-        class:saldo={t.amount < 0}>
+      {#if t.direction === 'out'}
+      <div class="h-12 px-3 py-1 text-3xl text-red-500">
+        - {t.amount}
+      </div>
+      {:else}
+      <div class="h-12 px-3 py-1 text-3xl text-green-500">
         {t.amount}
       </div>
+      {/if}
     </div>
   </div>
 {/each}

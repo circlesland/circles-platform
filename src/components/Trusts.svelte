@@ -28,7 +28,7 @@
   init();
 </script>
 
-<b class="text-primary">Trusting:</b>
+<b class="m-4 text-primary">People that trust me:</b>
 {#each personsThatTrustMe as personThatTrustMe}
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
@@ -39,7 +39,7 @@
   </div>
 {/each}
 
-<b class="text-primary">Trusted:</b>
+<b class="m-4 text-primary">People I trust:</b>
 {#each personsITrust as personITrust}
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
