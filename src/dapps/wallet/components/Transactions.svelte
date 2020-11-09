@@ -1,130 +1,137 @@
 <script lang="ts">
-  import { CirclesHub } from "../../../libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "../../../libs/o-circles-protocol/model/person";
-  import { config } from "../../../libs/o-circles-protocol/config";
-  import type {Address} from "../../../libs/o-circles-protocol/interfaces/address";
-  import {BN} from "ethereumjs-util";
+    import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
+    import {Person} from "../../../libs/o-circles-protocol/model/person";
+    import {config} from "../../../libs/o-circles-protocol/config";
+    import type {Address} from "../../../libs/o-circles-protocol/interfaces/address";
+    import {BN} from "ethereumjs-util";
 
-  export let address:string;
+    export let address: string;
 
-  let person: Person;
-  let transactions = [];
+    let person: Person;
+    let transactions = [];
 
-  let latestBlockOnChain;
-  let timePerBlock;
-  let now;
+    let timeInfo: {
+        now: number,
+        latestChainBlockNo: BN,
+        secondsPerBlock: number
+    } = {}
 
-  let timeInfo: {
-    now: number,
-    latestChainBlockNo:BN,
-    secondsPerBlock: number
-  } = {}
+    function init(address: Address)
+    {
+        const hubAddress = config.getCurrent().HUB_ADDRESS;
+        const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
-  function init(address:Address) {
-    const hubAddress = config.getCurrent().HUB_ADDRESS;
-    const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
+        person = new Person(circlesHub, address);
 
-    person = new Person(circlesHub, address);
-
-    reload();
-  }
-
-  async function reload() {
-
-    const incomingTransactions = await person.getIncomingTransactions();
-    const outgoingTransactions = await person.getOutgoingTransactions();
-    const allTransactions = incomingTransactions.concat(outgoingTransactions);
-    allTransactions.sort((a, b) => -a.blockNo.cmp(b.blockNo));
-
-    const web3 = config.getCurrent().web3();
-    const latestBlockNo = await web3.eth.getBlockNumber();
-
-    //
-    // Get the measures for a time estimation from the latest 2 block of the chain.
-    //
-    const probes = [0, 1];
-    const blocks = await Promise.all(
-            probes.map(async i => await web3.eth.getBlock(latestBlockNo - i))
-    );
-
-    let lastTimestamp = 0;
-    let delta = 0;
-    for (let block of blocks) {
-      if (lastTimestamp == 0)
-      {
-        delta += 0
-      } else {
-        delta += lastTimestamp - block.timestamp;
-      }
-      lastTimestamp = block.timestamp;
+        reload();
     }
 
-    latestBlockOnChain = new BN(latestBlockNo.toString());
-    timePerBlock = delta / probes.length;
-    now = Date.now() / 1000;
+    async function reload()
+    {
 
-    transactions = allTransactions.map(o => {
-      o.timestamp = getTimeFromBlockNo(timePerBlock, o.blockNo);
-      return o;
-    });
-  }
+        const incomingTransactions = await person.getIncomingTransactions();
+        const outgoingTransactions = await person.getOutgoingTransactions();
+        const allTransactions = incomingTransactions.concat(outgoingTransactions);
+        allTransactions.sort((a, b) => -a.blockNo.cmp(b.blockNo));
 
-  function getTimeFromBlockNo(timePerBlock:number, blockNo:BN) {
-    const blockDelta = latestBlockOnChain.sub(blockNo);
-    const timeDelta = timePerBlock * blockDelta.toNumber();
-    const thenTime = (now - timeDelta).toFixed(0);
-    const estimatedBlockTime = new Date((thenTime * 1000));
-    return estimatedBlockTime.getUTCFullYear()
+        const web3 = config.getCurrent().web3();
+        const latestBlockNo = await web3.eth.getBlockNumber();
+
+        //
+        // Get the measures for a time estimation from the latest 2 block of the chain.
+        //
+        const probes = [0, 1];
+        const blocks = await Promise.all(
+            probes.map(async i => await web3.eth.getBlock(latestBlockNo - i))
+        );
+
+        let lastTimestamp = 0;
+        let delta = 0;
+        for (let block of blocks)
+        {
+            if (lastTimestamp == 0)
+            {
+                delta += 0
+            }
+            else
+            {
+                delta += lastTimestamp - block.timestamp;
+            }
+            lastTimestamp = block.timestamp;
+        }
+
+        const latestBlockOnChain = new BN(latestBlockNo.toString());
+        const timePerBlock = delta / probes.length;
+
+        transactions = allTransactions.map(o =>
+        {
+            o.timestamp = getTimeFromBlockNo(
+                blocks[0].timestamp,
+                latestBlockOnChain,
+                timePerBlock,
+                o.blockNo);
+
+            return o;
+        });
+    }
+
+    function getTimeFromBlockNo(now: number, latestBlockOnChain: BN, timePerBlock: number, blockNo: BN)
+    {
+        const blockDelta = latestBlockOnChain.sub(blockNo);
+        const timeDelta = timePerBlock * blockDelta.toNumber();
+        const thenTime = (now - timeDelta).toFixed(0);
+        const estimatedBlockTime = new Date((thenTime * 1000));
+        return estimatedBlockTime.getUTCFullYear()
             + "-" + ("0" + estimatedBlockTime.getDate()).slice(-2)
             + "-" + ("0" + estimatedBlockTime.getUTCMonth()).slice(-2)
             + " " + ("0" + estimatedBlockTime.getUTCHours()).slice(-2)
             + ":" + ("0" + estimatedBlockTime.getUTCMinutes()).slice(-2)
             + ":" + ("0" + estimatedBlockTime.getUTCSeconds()).slice(-2);
-  }
-
-  $:{
-    if (config.getCurrent().web3().utils.isAddress(address))
-    {
-      init(address);
     }
-  }
+
+    $:{
+        if (config.getCurrent().web3().utils.isAddress(address))
+        {
+            init(address);
+        }
+    }
 </script>
 
 {#each transactions as t}
-  <div class="mx-4 mb- 2">
-    <div class="flex w-full bg-white border border-gray-300 rounded">
-      <div class="flex-1 px-4 py-2 text-base">
-        <b class="text-primary">
-          {#if t.from !== "0x0000000000000000000000000000000000000000"}
-          {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
-          {t.subject}
-          {:else}
-            UBI payment
-          {/if}
-        </b>
-        <p class="-mt-1 text-xs text-gray-500">
-          at: {t.timestamp}<br/>
-          {#if t.direction === 'in'}
-            {#if t.from !== "0x0000000000000000000000000000000000000000"}
-              from: <a href="#/wallet/{t.from}/safe">{t.from}</a>
+    <div class="mx-4 mb- 2">
+        <div class="flex w-full bg-white border border-gray-300 rounded">
+            <div class="flex-1 px-4 py-2 text-base">
+                <b class="text-primary">
+                    {#if t.from !== "0x0000000000000000000000000000000000000000"}
+                        {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
+                        {t.subject}
+                    {:else}
+                        UBI payment
+                    {/if}
+                </b>
+                <p class="-mt-1 text-xs text-gray-500">
+                    at: {t.timestamp}<br/>
+                    {#if t.direction === 'in'}
+                        {#if t.from !== "0x0000000000000000000000000000000000000000"}
+                            from: <a href="#/wallet/{t.from}/safe">{t.from}</a>
+                        {:else}
+                            Circles
+                        {/if}
+                    {:else}
+                        to: <a href="#/wallet/{t.to}/safe">{t.to}</a>
+                    {/if}
+                    <br/>
+                </p>
+            </div>
+            {#if t.direction === 'out'}
+                <div class="h-12 px-3 py-1 text-3xl text-red-500">
+                    - {t.amount}
+                </div>
             {:else}
-              Circles
+                <div class="h-12 px-3 py-1 text-3xl text-green-500">
+                    {t.amount}
+                </div>
             {/if}
-          {:else}
-            to: <a href="#/wallet/{t.to}/safe">{t.to}</a>
-          {/if}
-          <br/>
-        </p>
-      </div>
-      {#if t.direction === 'out'}
-      <div class="h-12 px-3 py-1 text-3xl text-red-500">
-        - {t.amount}
-      </div>
-      {:else}
-      <div class="h-12 px-3 py-1 text-3xl text-green-500">
-        {t.amount}
-      </div>
-      {/if}
+        </div>
     </div>
-  </div>
 {/each}
