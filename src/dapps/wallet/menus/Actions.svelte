@@ -1,8 +1,8 @@
 <script lang="ts">
 
   import {getUbi} from "../processes/getUBI";
-  import type {Account} from "../../../../../libs/o-circles-protocol/interfaces/account";
-  import {Observable} from "rxjs";
+  import type {Account} from "../../../libs/o-circles-protocol/interfaces/account";
+  import type {Process} from "../../../main";
 
   function sendMoney() {
   }
@@ -18,9 +18,10 @@
       privateKey: localStorage.getItem("omo.privateKey"),
       address: localStorage.getItem("omo.address"),
     }
-    const machineFactory = getUbi(account, safeAddress);
-    const observable:Observable<{message:string}> = window.stateMachines.start(machineFactory);
-    observable.subscribe(next => {
+    const machineDefinition = getUbi(account, safeAddress);
+
+    const process:Process = window.stateMachines.start(machineDefinition);
+    process.events.subscribe(next => {
       console.log("STATUS UPDATE:", next);
       status = next.message;
     });

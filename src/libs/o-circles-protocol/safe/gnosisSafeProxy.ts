@@ -10,6 +10,7 @@ import type {Account} from "../interfaces/account";
 import type {GnosisSafeTransaction} from "../interfaces/gnosisSafeTransaction";
 import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
 import type {ByteString} from "../interfaces/byteString";
+import type {TransactionReceipt} from "web3-core";
 
 export class GnosisSafeProxy extends Web3Contract
 {
@@ -68,7 +69,7 @@ export class GnosisSafeProxy extends Web3Contract
     return await this.execTransaction(account, safeTransaction);
   }
 
-  async execTransaction(account: Account, safeTransaction: GnosisSafeTransaction)
+  async execTransaction(account: Account, safeTransaction: GnosisSafeTransaction) : Promise<TransactionReceipt>
   {
     this.validateSafeTransaction(safeTransaction);
 

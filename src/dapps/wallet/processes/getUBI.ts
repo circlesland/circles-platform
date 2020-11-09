@@ -1,5 +1,4 @@
 import {createMachine} from "xstate";
-import {useMachine} from "xstate-svelte";
 import {Person} from "../../../libs/o-circles-protocol/model/person";
 import type {Account} from "../../../libs/o-circles-protocol/interfaces/account";
 import type {Address} from "../../../libs/o-circles-protocol/interfaces/address";
@@ -14,89 +13,99 @@ export interface GetUBIContext {
 }
 
 export type GetUBIEvent =
-    | { type: "START" };
+    | { type: "TRIGGER" }
+    | { type: "STOP" };
 
-const buildContext = (context?: GetUBIContext): GetUBIContext => context;
+/**
+ * A state machine that runs as a service and
+ */
 const machineDefinition = createMachine<GetUBIContext, GetUBIEvent>({
-    initial: "idle",
-    context: buildContext(),
+    initial: "ready",
     states: {
-        idle: {
-            entry: (context) => console.log("IDLE", context),
-            always: [{
-                cond:"tooFrequent?",
-                target: "error"
-            }, {
-                target: "requestUbi"
-            }],
-            meta: {
-                message: "Starting .."
+        ready: {
+            on: {
+                TRIGGER: [{
+                    cond: "tooFrequent?",
+                    target: "error",
+                    meta: {
+                        message: "The UBI request can only be executed every 12 hours."
+                    }
+                }, {
+                    target: "requestUbi"
+                }],
+                STOP: {
+                    target: "stop"
+                }
             }
         },
         requestUbi: {
-            entry: ["requestUbi"],
-            always: "success",
+            invoke: {
+                id: 'requestingUbi',
+                src: async (context) => context.person.getUBI(context.account, context.safe),
+                onError: {
+                    target: 'error'
+                },
+                onDone: {
+                    target: 'success'
+                }
+            },
             meta: {
                 message: "Requesting UBI .."
             }
         },
         error: {
-            entry: () => console.log("ERROR"),
-            type: "final",
+            entry: () => {
+                // Delay the next attempt for 10 seconds
+                localStorage.setItem("omo.nextPossibleUbiRetrieval", (Date.now() + 10 * 60 * 1000).toString())
+            },
+            always: "ready",
             meta: {
-                message: "Couldn't request your UBI."
+                message: "ERROR: Couldn't request your UBI."
             }
         },
         success: {
-            type: "final",
-            entry: ["saveLastUbiRetrieval"],
+            entry: () => {
+                // Delay the next attempt for 12 hours
+                localStorage.setItem("omo.nextPossibleUbiRetrieval", (Date.now() + 12 * 60 * 60 * 60 * 1000).toString())
+            },
+            always: "ready",
             meta: {
-                message: "Successfully requested UBI."
+                message: "SUCCESS: Successfully requested UBI."
+            }
+        },
+        stop: {
+            type: "final",
+            meta: {
+                message: "STOPPED"
             }
         }
     }
 }, {
     guards: {
         "tooFrequent?": (context, event) => {
-            const lastUbiRetrieval = localStorage.getItem("omo.lastUbiRetrieval");
-            if (!lastUbiRetrieval) {
+            const nextPossibleUbiRetrieval = localStorage.getItem("omo.nextPossibleUbiRetrieval");
+            if (!nextPossibleUbiRetrieval) {
                 return false;
             }
-            const diffInMilliseconds = Date.now() - parseInt(lastUbiRetrieval);
-            const diffInHours = diffInMilliseconds / 1000 / 60 / 60 / 60;
-            return diffInHours < 12;
+            return Date.now() < parseInt(nextPossibleUbiRetrieval);
         }
     },
     actions: {
-        "requestUbi": async (context, event) => {
-            console.log("REQUEST UBI");
-            await context.person.getUBI(context.account, context.safe);
-        },
-        "saveLastUbiRetrieval": async (context, event) => {
-            console.log("SUCCESS");
-            localStorage.setItem("omo.lastUbiRetrieval", Date.now().toString());
-        }
     }
 });
 
 export const getUbi = (account:Account, safeAddress:Address) => {
-    return () =>
-    {
-        console.log("Account: ", account);
-        const web3 = config.getCurrent().web3();
-        const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
-        const {send, state, service} = useMachine(machineDefinition, {
-            context: {
-                account,
-                person: new Person(circlesHub, safeAddress),
-                safe: new GnosisSafeProxy(web3, account.address, safeAddress)
-            }
-        });
+    const web3 = config.getCurrent().web3();
+    const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
 
-        return {
-            send,
-            state,
-            service
-        };
-    }
+    const context = {
+        account,
+        person: new Person(circlesHub, safeAddress),
+        safe: new GnosisSafeProxy(web3, account.address, safeAddress)
+    };
+
+    return {
+        context,
+        machineDefinition
+    };
 }

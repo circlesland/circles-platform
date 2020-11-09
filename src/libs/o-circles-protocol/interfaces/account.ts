@@ -3,5 +3,5 @@ import type {Addressable} from "./addressable";
 
 export interface Account extends Addressable
 {
-  privateKey: ByteString
+  privateKey?: ByteString
 }
