@@ -44,10 +44,14 @@
           {/if}
         </b>
         <p class="-mt-1 text-xs text-gray-500">
-          {#if t.from !== "0x0000000000000000000000000000000000000000"}
-            from: <a href="#/wallet/{t.from}/safe">{t.from}</a>
+          {#if t.direction === 'in'}
+            {#if t.from !== "0x0000000000000000000000000000000000000000"}
+              from: <a href="#/wallet/{t.from}/safe">{t.from}</a>
+            {:else}
+              Circles
+            {/if}
           {:else}
-            Circles
+            to: <a href="#/wallet/{t.to}/safe">{t.to}</a>
           {/if}
           <br/>
           in block: {t.blockNo}
