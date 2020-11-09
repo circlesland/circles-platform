@@ -1,18 +1,24 @@
 <script lang="ts">
   import { requestUbi } from "../processes/requestUbi";
   import type { Process } from "../../../main";
-  import {ProcessEvent, PromptField} from "../../../processes/processEvent";
+  import { ProcessEvent, PromptField } from "../../../processes/processEvent";
 
   function sendMoney() {}
   function setTrust() {}
 
-  let statusType:"none"|"message"|"notification"|"success"|"error"|"prompt" = "none";
-  let status:string = "";
+  let statusType:
+    | "none"
+    | "message"
+    | "notification"
+    | "success"
+    | "error"
+    | "prompt" = "none";
+  let status: string = "";
 
-  let prompFields:{[id:string]:PromptField} = {};
-  let prompTrigger:{[id:string]:() => ProcessEvent} = {};
+  let prompFields: { [id: string]: PromptField } = {};
+  let prompTrigger: { [id: string]: () => ProcessEvent } = {};
 
-  let process:Process = null;
+  let process: Process = null;
 
   function getUBI() {
     process = window.stateMachines.run(requestUbi);
@@ -37,7 +43,7 @@
       } else if (next.stopped) {
         setTimeout(() => {
           process = null;
-        }, 2000);
+        }, 4000);
       }
     });
 
@@ -56,22 +62,19 @@
 
 <div class="p-4 iphonex">
   {#if process}
-    {#if statusType === "message"}
-      Message:<br/>
+    {#if statusType === 'message'}
+      Message:<br />
       <h1 class="bg-white">{status}</h1>
-    {:else if statusType === "notification"}
-      Notification:<br/>
+    {:else if statusType === 'notification'}
+      Notification:<br />
       <h1 class="bg-yellow">{status}</h1>
-    {:else if statusType === "error"}
-      Error:<br/>
+    {:else if statusType === 'error'}
+      Error:<br />
       <h1 class="bg-red">{status}</h1>
-    {:else if statusType === "success"}
-      Success:<br/>
+    {:else if statusType === 'success'}
+      Success:<br />
       <h1 class="bg-green">{status}</h1>
-    {:else if statusType === "prompt"}
-      Prompt:<br/>
-    {:else}
-    {/if}
+    {:else if statusType === 'prompt'}Prompt:<br />{:else}{/if}
   {:else}
     <div class="w-full p-3 mb-3 border-2 border-primary" on:click={sendMoney}>
       Send Money
