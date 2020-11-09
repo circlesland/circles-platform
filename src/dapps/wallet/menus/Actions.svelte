@@ -1,6 +1,7 @@
 <script lang="ts">
 
-  import {getUbi} from "../processes/getUBI";
+  import {getUbi, } from "../processes/getUBI";
+  import type {GetUBIEvent } from "../processes/getUBI";
   import type {Account} from "../../../libs/o-circles-protocol/interfaces/account";
   import type {Process} from "../../../main";
 
@@ -24,6 +25,9 @@
     process.events.subscribe(next => {
       console.log("STATUS UPDATE:", next);
       status = next.message;
+    });
+    process.sendEvent(<GetUBIEvent>{
+      type:"TRIGGER"
     });
   }
 </script>
