@@ -24,6 +24,7 @@ export type ProcessEvent =
         type: "omo.prompt",
         message: string,
         data: {
+            id: string,
             fields: {
                 [id: string]: PromptField
             },
@@ -37,10 +38,10 @@ export type ProcessEvent =
         type: "omo.answer",
         message: string,
         data: {
+            id: string,
             fields: {
-                id: string,
-                value: string
-            }[]
+                [id: string]:any
+            }
         }
       }
     | { type: "omo.error", message: string }

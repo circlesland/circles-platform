@@ -5,5 +5,8 @@ import {GnosisSafeProxy} from "../libs/o-circles-protocol/safe/gnosisSafeProxy";
 export interface ProcessContext {
     account:Account,
     person: Person,
-    safe: GnosisSafeProxy
+    safe: GnosisSafeProxy,
+    other: {
+        [key:string]:any
+    }
 }
