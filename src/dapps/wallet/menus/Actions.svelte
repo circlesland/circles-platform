@@ -60,30 +60,50 @@
   }
 </style>
 
-<div class="p-4 iphonex">
+<div class="p-4 space-y-2 border-t border-gray-300 iphonex">
   {#if process}
     {#if statusType === 'message'}
-      Message:<br />
-      <h1 class="bg-white">{status}</h1>
+      <h1 class="px-4 py-8 mb-4 text-center rounded text-primary bg-light-100">
+        {status}
+      </h1>
     {:else if statusType === 'notification'}
-      Notification:<br />
-      <h1 class="bg-yellow">{status}</h1>
+      <h1 class="px-4 py-8 mb-4 text-center text-white bg-orange-300 rounded">
+        {status}
+      </h1>
     {:else if statusType === 'error'}
-      Error:<br />
-      <h1 class="bg-red">{status}</h1>
+      <h1 class="px-4 py-8 mb-4 text-center text-white bg-red-400 rounded">
+        {status}
+      </h1>
     {:else if statusType === 'success'}
-      Success:<br />
-      <h1 class="bg-green">{status}</h1>
+      <h1 class="px-4 py-8 mb-4 text-center text-white rounded bg-action">
+        {status}
+      </h1>
     {:else if statusType === 'prompt'}Prompt:<br />{:else}{/if}
   {:else}
-    <div class="w-full p-3 mb-3 border-2 border-primary" on:click={sendMoney}>
-      Send Money
+    <div
+      class="w-full p-3 mb-3 text-center uppercase border-2 rounded border-primary text-primary hover:bg-primary hover:text-white"
+      on:click={getUBI}>
+      Get Universal basic income
     </div>
-    <div class="w-full p-3 border-2 border-primary" on:click={setTrust}>
-      Trust
+    <div
+      class="w-full p-3 mb-3 text-center uppercase border-2 rounded border-primary text-primary hover:bg-primary hover:text-white">
+      invite friend (send 0.01 xdai)
     </div>
-    <div class="w-full p-3 border-2 border-primary" on:click={getUBI}>
-      Get UBI
+    <div
+      class="w-full p-3 mb-3 text-center uppercase border-2 rounded border-primary text-primary hover:bg-primary hover:text-white"
+      on:click={setTrust}>
+      add trusted friend
+    </div>
+    <div class="flex space-x-2">
+      <div
+        class="w-full p-3 mb-3 text-center uppercase border-2 rounded border-primary text-primary hover:bg-primary hover:text-white">
+        Receive Money
+      </div>
+      <div
+        class="w-full p-3 mb-3 text-center uppercase border-2 rounded border-primary text-primary hover:bg-primary hover:text-white"
+        on:click={sendMoney}>
+        Send Money
+      </div>
     </div>
   {/if}
 </div>
