@@ -11,9 +11,13 @@
   @tailwind utilities;
   @tailwind components;
 
-  html,
+  html {
+    height: -webkit-fill-available;
+  }
   body {
-    height: 100%;
+    min-height: 100vh;
+    /* mobile viewport bug fix */
+    min-height: -webkit-fill-available;
     overflow: hidden;
     width: 100%;
     position: fixed;
