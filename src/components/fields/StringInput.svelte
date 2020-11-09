@@ -1,27 +1,21 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
 
-    let text:string = "0";
-
     const dispatch = createEventDispatcher();
 
-    export let isValid = true;
-    export let data:string = "";
+    let isValid = true;
+    let line:string;
 
     $:{
-        if (text && text.length > 0) {
-            isValid = true;
-            try
-            {
-                data = text;
-                dispatch('data', {
-                    type: "string",
-                    data: data
-                });
-            } catch (e) {
-                isValid = false;
-            }
-        }
+        dispatch('value', {
+            type: "string",
+            data: line
+        });
     }
 </script>
-<input type="text" bind:value={text} />
+{#if !isValid}
+    Invalid value:<br/>
+{/if}
+<input placeholder="Bla bla bla .."
+       type="string"
+       bind:value={line} />

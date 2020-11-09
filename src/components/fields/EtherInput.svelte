@@ -1,29 +1,28 @@
 <script lang="ts">
-    import {BN} from "ethereumjs-util";
-    import {config} from "../../../libs/o-circles-protocol/config";
+    import {config} from "../../libs/o-circles-protocol/config";
     import {createEventDispatcher} from "svelte";
-
-    let text:string = "0";
 
     const dispatch = createEventDispatcher();
 
-    export let isValid = true;
-    export let data:BN = new BN("0");
+    let isValid = true;
+    let bigNumberString:string;
 
     $:{
-        if (text && text.length > 0) {
-            isValid = true;
-            try
-            {
-                data = config.getCurrent().web3().utils.toWei(text.toString(), "ether");
-                dispatch('data', {
-                    type: "wei",
-                    data: data
-                });
-            } catch (e) {
-                isValid = false;
-            }
+        isValid = config.getCurrent().web3().utils.isBigNumber(bigNumberString);
+        if (isValid)
+        {
+            const wei = config.getCurrent().web3().utils.toWei(bigNumberString);
+
+            dispatch('value', {
+                type: "wei",
+                data: wei
+            });
         }
     }
 </script>
-<input type="number" bind:value={text} />
+{#if !isValid}
+    Invalid value:<br/>
+{/if}
+<input placeholder="1"
+       type="string"
+       bind:value={bigNumberString} />

@@ -1,7 +1,21 @@
-import {createMachine, send} from "xstate";
+import {assign, createMachine, send} from "xstate";
 import {ProcessContext} from "../../../processes/processContext";
 import {ProcessEvent} from "../../../processes/processEvent";
 import {ProcessDefinition} from "../../../processes/processManifest";
+
+const promptTrustReceiver : ProcessEvent = {
+    type: "omo.prompt",
+    message: "Enter the address of the person that you want ot trust",
+    data: {
+        id: "promptTrustReceiver",
+        fields: {
+            "trustReceiver": {
+                type: "address",
+                label: "I trust"
+            }
+        }
+    }
+};
 
 /**
  * Set trust
@@ -11,44 +25,43 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     states: {
         ready: {
             on: {
-                "omo.trigger": [{
-                    cond: "?",
+                "omo.trigger": {
                     actions: [
-                        send({
-                            type: "omo.notification",
-                            message: "Condition failed."
+                        send(promptTrustReceiver),
+                        assign({
+                            other: (context) => {
+                                context.other["omo.prompt"] = promptTrustReceiver.data;
+                                return context.other;
+                            }
                         })
-                    ]
-                }, {
-                    cond: "?",
-                    actions: [
-                        send({
-                            type: "omo.continue",
-                            message: "Condition met. Continuing .."
-                        })
-                    ]
-                }],
-                "omo.stop": "stop",
-                "omo.notification": "stop",
-                "omo.continue": "setTrust"
-            }
-        },
-        setTrust: {
-            invoke: {
-                id: 'setTrust',
-                src: async (context) => null,
-                onError: {
-                    actions: [
                     ]
                 },
-                onDone: {
-                    actions: [
-                    ]
-                }
-            },
+                "omo.prompt": {
+                    target: "prompt"
+                },
+                "omo.cancel": "stop",
+                "omo.stop": "stop"
+            }
+        },
+        prompt: {
             on: {
-                "omo.error": "stop",
-                "omo.success": "stop"
+                "omo.answer": {
+                    actions: [
+                        assign({
+                            other: (context, event) => {
+                                context.other["omo.answer"] = event.data;
+                                return context.other;
+                            }
+                        }),
+                        send(<ProcessEvent> {
+                            type: "omo.continue",
+                        })
+                    ]
+                },
+                "omo.continue": {
+                },
+                "omo.cancel": "stop",
+                "omo.stop": "stop"
             }
         },
         stop: {

@@ -41,7 +41,8 @@ function getServiceContext(): ProcessContext {
   const processContext: ProcessContext = {
     safe: new GnosisSafeProxy(web3, account.address, safeAddress),
     account: account,
-    person: new Person(circlesHub, safeAddress)
+    person: new Person(circlesHub, safeAddress),
+    other: {}
   };
   return processContext;
 }
