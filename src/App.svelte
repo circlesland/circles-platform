@@ -6,6 +6,6 @@
 
 <Tailwind />
 
-<main class="h-full font-sans">
+<div class="h-full font-sans">
   <Router {routes} />
-</main>
+</div>

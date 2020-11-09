@@ -1,37 +1,31 @@
 <script lang="ts">
-    import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
-    import {Person} from "../../../libs/o-circles-protocol/model/person";
-    import {config} from "../../../libs/o-circles-protocol/config";
-    import type {Address} from "../../../libs/o-circles-protocol/interfaces/address";
+  import { CirclesHub } from "../../../libs/o-circles-protocol/circles/circlesHub";
+  import { Person } from "../../../libs/o-circles-protocol/model/person";
+  import { config } from "../../../libs/o-circles-protocol/config";
+  import type { Address } from "../../../libs/o-circles-protocol/interfaces/address";
 
+  export let address: string;
 
-    export let address:string;
+  let person: Person;
+  let mySafeAddress: Address;
 
-    let person: Person;
-    let mySafeAddress: Address;
+  function init(safeAddress?: string) {
+    const hubAddress = config.getCurrent().HUB_ADDRESS;
+    const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
+    mySafeAddress = localStorage.getItem("omo.safeAddress");
+    person = new Person(circlesHub, safeAddress ?? mySafeAddress);
+  }
 
-    function init(safeAddress?:string)
-    {
-        const hubAddress = config.getCurrent().HUB_ADDRESS;
-        const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-        mySafeAddress = localStorage.getItem("omo.safeAddress");
-
-        person = new Person(circlesHub, safeAddress ?? mySafeAddress);
-    }
-
-    $:{
-        init(address);
-    }
+  $: {
+    init(address);
+  }
 </script>
 
-<div class="grid w-full">
-    <div class="flex items-center justify-center p-4 mx-4 mt-4 text-2 font-bold text-center text-white border border-gray-200 rounded bg-primary">
-        {#if mySafeAddress === address}
-            <p>My safe<br/>
-            <span class="-mt-1 text-xs">{person.address}</span>
-            </p>
-        {:else}
-            {person.address}
-        {/if}
-    </div>
+<div
+  class="flex items-center justify-center font-bold text-center text-gray-500 bg-gray-100">
+  {#if mySafeAddress === address}
+    <p class="text-xs">
+      <span class="uppercase">my safe address</span><br />{person.address}
+    </p>
+  {:else}{person.address}{/if}
 </div>

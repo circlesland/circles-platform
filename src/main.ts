@@ -3,7 +3,10 @@ import type { Observable } from "rxjs";
 import type { StateMachine } from "xstate";
 import { useMachine } from "xstate-svelte";
 import { Subject } from "rxjs";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"
 
+dayjs.extend(relativeTime)
 export interface Process {
   id: number;
   events: Observable<any>;
