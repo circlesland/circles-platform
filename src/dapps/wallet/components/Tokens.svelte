@@ -42,13 +42,13 @@
             <b class="text-primary">
               <a
                 href="#/wallet/{token.owner.address}/tokens"
-                class="">{token.owner.address}</a>
+                class="">{token.owner.address.slice(0, 25)}...</a>
             </b>
           {:else}
             <b class="text-primary">
               <span class="text-gray-500">safe address of owner:</span>
               <a
-                href="#/wallet/{token.owner.address}/tokens">{token.owner.address}</a>
+                href="#/wallet/{token.owner.address}/tokens">{token.owner.address.slice(0, 25)}...</a>
             </b>
           {/if}
         </p>
