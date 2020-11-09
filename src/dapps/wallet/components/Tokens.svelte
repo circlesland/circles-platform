@@ -42,8 +42,16 @@
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
         <b class="text-primary">{token.token}</b>
-        <p class="-mt-1 text-xs text-gray-500">
+        <p class="-mt-1 text-xs">
+          {#if !token.limit || token.limit == 0}
+            <b class="text-gray-300">
             owner: <a href="#/wallet/{token.owner.address}/tokens">{token.owner.address}</a>
+            </b>
+          {:else}
+            <b class="text-gray-500">
+              owner: <a href="#/wallet/{token.owner.address}/tokens">{token.owner.address}</a>
+            </b>
+          {/if}
         </p>
       </div>
       <div class="h-12 px-3 py-1 text-3xl text-green-500">

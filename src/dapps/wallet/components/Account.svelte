@@ -25,9 +25,11 @@
 </script>
 
 <div class="grid w-full">
-    <div class="flex items-center justify-center mx-4 mt-4 text-2 font-bold text-center text-white border border-gray-200 rounded bg-primary">
+    <div class="flex items-center justify-center p-4 mx-4 mt-4 text-2 font-bold text-center text-white border border-gray-200 rounded bg-primary">
         {#if mySafeAddress === address}
-            My safe
+            <p>My safe<br/>
+            <span class="-mt-1 text-xs">{person.address}</span>
+            </p>
         {:else}
             {person.address}
         {/if}

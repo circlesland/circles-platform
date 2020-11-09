@@ -68,11 +68,11 @@
             const estimatedBlockTime = new Date(thenTime * 1000);
 
             o.timestamp = estimatedBlockTime.getUTCFullYear()
-                + "-" + ("0" + estimatedBlockTime.getUTCMonth()).slice(-2)
-                + "-" + ("0" + estimatedBlockTime.getUTCDate()).slice(-2)
-                + " " + ("0" + estimatedBlockTime.getUTCHours()).slice(-2)
-                + ":" + ("0" + estimatedBlockTime.getUTCMinutes()).slice(-2)
-                + ":" + ("0" + estimatedBlockTime.getUTCSeconds()).slice(-2);
+                + "-" + ("0" + estimatedBlockTime.getMonth()).slice(-2)
+                + "-" + ("0" + estimatedBlockTime.getDate()).slice(-2)
+                + " " + ("0" + estimatedBlockTime.getHours()).slice(-2)
+                + ":" + ("0" + estimatedBlockTime.getMinutes()).slice(-2)
+                + ":" + ("0" + estimatedBlockTime.getSeconds()).slice(-2);
 
             return o;
         });
@@ -98,8 +98,7 @@
                         UBI payment
                     {/if}
                 </b>
-                <p class="-mt-1 text-xs text-gray-500">
-                    at: {t.timestamp}<br/>
+                <p class="text-xs text-gray-500">
                     {#if t.direction === 'in'}
                         {#if t.from !== "0x0000000000000000000000000000000000000000"}
                             from: <a href="#/wallet/{t.from}/safe">{t.from}</a>
@@ -110,6 +109,7 @@
                         to: <a href="#/wallet/{t.to}/safe">{t.to}</a>
                     {/if}
                     <br/>
+                    at: {t.timestamp}
                 </p>
             </div>
             {#if t.direction === 'out'}

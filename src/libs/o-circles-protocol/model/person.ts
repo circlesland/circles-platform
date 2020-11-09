@@ -70,7 +70,8 @@ export class Person implements Safe
             token: tokenAddress,
             owner: token.owner,
             balance: balanceBN,
-            balanceString: balanceString
+            balanceString: balanceString,
+            limit: token.limit
           };
         }));
 
