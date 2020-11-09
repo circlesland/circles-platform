@@ -90,7 +90,7 @@ export class Person implements Safe
     return await owntoken.getUBI(account, safe);
   }
 
-  async getBalance(reload?: boolean): Promise<BN>
+  async getTokenBalance(reload?: boolean): Promise<BN>
   {
     const tokenBalances = await this.getTokenBalances(reload);
 

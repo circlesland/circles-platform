@@ -8,10 +8,12 @@
 
     let person: Person;
     let balance: BN;
-    let ethBalance: BN;
+    let safeEthBalance: BN;
+    let personalEthBalance: BN;
 
     let circlesBalance: string;
-    let etherBalance: string;
+    let safeEtherBalance: string;
+    let personalEtherBalance: string;
 
     function init(address:string)
     {
@@ -25,15 +27,20 @@
 
     async function reload()
     {
-        balance = await person.getBalance();
+        balance = await person.getTokenBalance();
         const balanceStr = config.getCurrent().web3().utils.fromWei(balance, "ether");
         const dot = balanceStr.indexOf(".");
         circlesBalance = balanceStr.slice(0, dot + 3);
 
-        ethBalance = await person.getEthBalance();
-        const ethBalanceStr = config.getCurrent().web3().utils.fromWei(ethBalance, "ether");
+        safeEthBalance = await person.getEthBalance();
+        const ethBalanceStr = config.getCurrent().web3().utils.fromWei(safeEthBalance, "ether");
         const ethDot = ethBalanceStr.indexOf(".");
-        etherBalance = ethBalanceStr.slice(0, ethDot + 7);
+        safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
+
+        personalEtherBalance = await person.circlesHub.web3.eth.getBalance(localStorage.getItem("omo.address"));
+        const personalEthBalanceStr = config.getCurrent().web3().utils.fromWei(personalEtherBalance, "ether");
+        const personalEthDot = personalEthBalanceStr.indexOf(".");
+        personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
     }
 
     $:{
@@ -47,7 +54,8 @@
 <div class="grid w-full">
     <div class="flex items-center justify-center mx-4 mt-2 mb-2 text-5xl font-bold text-center text-white border border-gray-200 rounded bg-primary">
             <p style="line-height: 1em;" class="py-12 text-gray-100 uppercase font-title">{circlesBalance} ø<br/>
-                <span class="-mt-1 text-sm">{etherBalance} xDai</span>
+                <span class="-mt-1 text-sm">Safe: {safeEtherBalance} xDai</span><br/>
+                <span class="-mt-1 text-sm">Owner: {personalEtherBalance} xDai</span><br/>
             </p>
     </div>
 </div>
