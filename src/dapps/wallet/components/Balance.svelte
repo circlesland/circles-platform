@@ -27,18 +27,20 @@
 
     async function reload()
     {
+        const web3 = config.getCurrent().web3();
+
         balance = await person.getTokenBalance();
-        const balanceStr = config.getCurrent().web3().utils.fromWei(balance, "ether");
+        const balanceStr = web3.utils.fromWei(balance, "ether");
         const dot = balanceStr.indexOf(".");
         circlesBalance = balanceStr.slice(0, dot + 3);
 
         safeEthBalance = await person.getEthBalance();
-        const ethBalanceStr = config.getCurrent().web3().utils.fromWei(safeEthBalance, "ether");
+        const ethBalanceStr = web3.utils.fromWei(safeEthBalance, "ether");
         const ethDot = ethBalanceStr.indexOf(".");
         safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
 
-        personalEtherBalance = await person.circlesHub.web3.eth.getBalance(localStorage.getItem("omo.address"));
-        const personalEthBalanceStr = config.getCurrent().web3().utils.fromWei(personalEtherBalance, "ether");
+        personalEthBalance = await web3.eth.getBalance(localStorage.getItem("omo.address"));
+        const personalEthBalanceStr = web3.utils.fromWei(personalEthBalance, "ether");
         const personalEthDot = personalEthBalanceStr.indexOf(".");
         personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
     }

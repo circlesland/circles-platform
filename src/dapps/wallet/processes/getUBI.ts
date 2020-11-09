@@ -1,4 +1,4 @@
-import {createMachine} from "xstate";
+import {assign, createMachine, send} from "xstate";
 import {Person} from "../../../libs/o-circles-protocol/model/person";
 import type {Account} from "../../../libs/o-circles-protocol/interfaces/account";
 import type {Address} from "../../../libs/o-circles-protocol/interfaces/address";
@@ -14,10 +14,17 @@ export interface GetUBIContext {
 
 export type GetUBIEvent =
     | { type: "TRIGGER" }
-    | { type: "STOP" };
+    | { type: "STOP" }
+    | { type: "ERROR_YOU_RECENTLY_REQUESTED_UBI" }
+    | { type: "ERROR_TOO_FREQUENT" }
+    | { type: "ERROR_REQUEST_FAILED" }
+    | { type: "SUCCESS" };
+
+const TwelveHours = 12 * 60 * 60 * 60 * 1000;
+const TwentySeconds = 20 * 1000;
 
 /**
- * A state machine that runs as a service and
+ * A state machine that runs as service and requests the UBI for the user.
  */
 const machineDefinition = createMachine<GetUBIContext, GetUBIEvent>({
     initial: "ready",
@@ -25,13 +32,22 @@ const machineDefinition = createMachine<GetUBIContext, GetUBIEvent>({
         ready: {
             on: {
                 TRIGGER: [{
-                    cond: "tooFrequent?",
-                    target: "error",
-                    meta: {
-                        message: "The UBI request can only be executed every 12 hours."
-                    }
+                    cond: "recentlyGotUbi?",
+                    target: "ready",
+                    actions: [
+                        "setNextPossibleUbiRetrieval",
+                        send({ type: "ERROR_YOU_RECENTLY_REQUESTED_UBI" })
+                    ]
                 }, {
-                    target: "requestUbi"
+                    cond: "canRetrieveNewUbi?",
+                    target: "requestUbi",
+                    actions: ["setNextPossibleUbiRetrieval"]
+                }, {
+                    target: "ready",
+                    actions: [
+                        "setNextPossibleUbiRetrieval",
+                        send({ type: "ERROR_TOO_FREQUENT" })
+                    ]
                 }],
                 STOP: {
                     target: "stop"
@@ -46,51 +62,59 @@ const machineDefinition = createMachine<GetUBIContext, GetUBIEvent>({
                     target: 'error'
                 },
                 onDone: {
+                    actions: ["setLastSuccessfulUbiRetrieval"],
                     target: 'success'
                 }
-            },
-            meta: {
-                message: "Requesting UBI .."
             }
         },
         error: {
-            entry: () => {
-                // Delay the next attempt for 10 seconds
-                localStorage.setItem("omo.nextPossibleUbiRetrieval", (Date.now() + 10 * 60 * 1000).toString())
-            },
             always: "ready",
-            meta: {
-                message: "ERROR: Couldn't request your UBI."
-            }
+            entry: send({ type: "ERROR_REQUEST_FAILED" })
         },
         success: {
-            entry: () => {
-                // Delay the next attempt for 12 hours
-                localStorage.setItem("omo.nextPossibleUbiRetrieval", (Date.now() + 12 * 60 * 60 * 60 * 1000).toString())
-            },
             always: "ready",
-            meta: {
-                message: "SUCCESS: Successfully requested UBI."
-            }
+            entry: send({ type: "SUCCESS" })
         },
         stop: {
-            type: "final",
-            meta: {
-                message: "STOPPED"
-            }
+            type: "final"
         }
     }
 }, {
     guards: {
-        "tooFrequent?": (context, event) => {
-            const nextPossibleUbiRetrieval = localStorage.getItem("omo.nextPossibleUbiRetrieval");
-            if (!nextPossibleUbiRetrieval) {
+        "recentlyGotUbi?": () => {
+            const lastSuccessfulUbiRetrieval = localStorage.getItem("omo.lastSuccessfulUbiRetrieval");
+            return lastSuccessfulUbiRetrieval
+                ? Date.now() - parseInt(lastSuccessfulUbiRetrieval) < TwelveHours
+                : false;
+        },
+        "canRetrieveNewUbi?": (context, event) =>
+        {
+            const now = Date.now();
+
+            // A User can retrieve new UBI when:
+            // 1. At least 12 hours after the last successful retrieval passed by
+            const lastSuccessfulUbiRetrieval = localStorage.getItem("omo.lastSuccessfulUbiRetrieval");
+            const recentlyGotUbi = !lastSuccessfulUbiRetrieval
+                ? false
+                : Date.now() - parseInt(lastSuccessfulUbiRetrieval) < TwelveHours;
+
+            if (recentlyGotUbi)
                 return false;
-            }
-            return Date.now() < parseInt(nextPossibleUbiRetrieval);
+
+            // 2. The omo.nextPossibleUbiRetrieval time is in the past or not set
+            const nextPossibleUbiRetrieval = localStorage.getItem("omo.nextPossibleUbiRetrieval");
+            return !nextPossibleUbiRetrieval
+                ? true
+                : now > parseInt(nextPossibleUbiRetrieval);
         }
     },
     actions: {
+        "setNextPossibleUbiRetrieval":()=> {
+            localStorage.setItem("omo.nextPossibleUbiRetrieval", (Date.now() + TwentySeconds).toString());
+        },
+        "setLastSuccessfulUbiRetrieval":()=> {
+            localStorage.setItem("omo.lastSuccessfulUbiRetrieval", Date.now().toString());
+        }
     }
 });
 
