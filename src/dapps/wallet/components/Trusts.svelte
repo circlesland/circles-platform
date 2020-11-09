@@ -36,19 +36,50 @@
 </script>
 
 {#if address === mySafeAddress}
+  <b class="m-4 text-primary">Mututal trust:</b>
+  <div class="mx-4 mb-2">
+    <div class="flex w-full bg-white border border-gray-300 rounded">
+      <img src="https://avatars.dicebear.com/api/human/1.svg" class="h-16" />
+      <div class="flex-1 px-4 py-2 text-base">
+        <b class="text-xs text-primary">0x76asdfidtuadks</b>
+        <p class="text-xs text-gray-500">
+          <i class="fas fa-exchange-alt" /><span class="ml-2">mututal trust -
+            trusted by 10 friends</span>
+        </p>
+      </div>
+      <div class="w-12 h-16 px-4 py-5 text-white bg-gray-300">
+        <i class="fas fa-minus" />
+      </div>
+    </div>
+  </div>
+
   <b class="m-4 text-primary">People that trust me:</b>
 {:else}<b class="m-4 text-primary">People that trust {address}:</b>{/if}
 {#each personsThatTrustMe as personThatTrustMe}
   <div class="mx-4 mb-2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
+      <img
+        src="https://avatars.dicebear.com/api/human/{personThatTrustMe.owner.address}.svg"
+        class="h-16" />
       <div class="flex-1 px-4 py-2 text-base">
         {#if !personThatTrustMe.limit || personThatTrustMe.limit == 0}
-          <b class="text-gray-300"><a
+          <b class="text-xs text-gray-300"><a
               href="#/wallet/{personThatTrustMe.owner.address}/trusts">{personThatTrustMe.owner.address}</a></b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
+              trusted by 10 friends</span>
+          </p>
         {:else}
-          <b class="text-primary"><a
+          <b class="text-xs text-primary"><a
               href="#/wallet/{personThatTrustMe.owner.address}/trusts">{personThatTrustMe.owner.address}</a></b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
+              trusted by 10 friends</span>
+          </p>
         {/if}
+      </div>
+      <div class="w-12 h-16 px-4 py-5 text-white bg-action">
+        <i class="fas fa-plus" />
       </div>
     </div>
   </div>
@@ -58,16 +89,30 @@
   <b class="m-4 text-primary">People I trust:</b>
 {:else}<b class="m-4 text-primary">People that {address} trusts:</b>{/if}
 {#each personsITrust as personITrust}
-  <div class="mx-4 mb- 2">
+  <div class="mx-4 mb-2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
+      <img
+        src="https://avatars.dicebear.com/api/human/{personITrust.owner.address}.svg"
+        class="h-16" />
       <div class="flex-1 px-4 py-2 text-base">
         {#if !personITrust.limit || personITrust.limit == 0}
-          <b class="text-gray-300"><a
+          <b class="text-xs text-gray-300"><a
               href="#/wallet/{personITrust.owner.address}/trusts">{personITrust.owner.address}</a></b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
+              trusted by 10 friends</span>
+          </p>
         {:else}
-          <b class="text-primary"><a
+          <b class="text-xs text-primary"><a
               href="#/wallet/{personITrust.owner.address}/trusts">{personITrust.owner.address}</a></b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-left" /><span class="ml-2">trusted by you -
+              trusted by 10 friends</span>
+          </p>
         {/if}
+      </div>
+      <div class="w-12 h-16 px-4 py-5 text-white bg-gray-300">
+        <i class="fas fa-minus" />
       </div>
     </div>
   </div>

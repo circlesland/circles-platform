@@ -12,7 +12,10 @@
                 src="/images/"
                 class="w-32 h-32 mx-auto mt-6 border-4 rounded-full border-light-300"
                 alt="name" /> -->
-          <p class="py-6 text-lg uppercase font-title">(SafeAddress)</p>
+          <p class="py-6 text-lg uppercase font-title">
+            Welcome Home,
+            <br /><span class="text-4xl">Omo Sapien</span>
+          </p>
         </div>
       </div>
       <div class="flex flex-wrap mx-2">
@@ -34,6 +37,7 @@
               <div class="text-primary">
                 <i class="text-5xl fas fa-piggy-bank" />
                 <p class="pt-3">Safe</p>
+                <span class="text-xs text-red-400">(alpha testing)</span>
               </div></a>
           </div>
         </div>
@@ -44,6 +48,7 @@
               <div class="text-primary">
                 <i class="text-5xl fas fa-address-book" />
                 <p class="pt-3">°Friends</p>
+                 <span class="text-xs">(coming soon)</span>
               </div>
             </Route>
           </div>

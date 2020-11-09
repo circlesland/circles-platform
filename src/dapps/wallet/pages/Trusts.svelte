@@ -19,7 +19,7 @@
 <style>
   .grid {
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 40px 1fr auto;
   }
 </style>
 
@@ -30,6 +30,10 @@
     class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
     style="max-height: 900px">
     <div class="grid h-full">
+      <header
+        class="px-3 py-2 font-bold bg-white border-b border-gray-300 text-primary">
+        Trusted friends
+      </header>
       <main class="h-full overflow-x-hidden overflow-y-scroll bg-gray-100">
         <Trusts {address} />
       </main>

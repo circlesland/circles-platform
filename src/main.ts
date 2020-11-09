@@ -3,16 +3,19 @@ import type { Observable } from "rxjs";
 import type { StateMachine } from "xstate";
 import { useMachine } from "xstate-svelte";
 import { Subject } from "rxjs";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime"
-import { Account } from "./libs/o-circles-protocol/interfaces/account";
+
+import type { Account } from "./libs/o-circles-protocol/interfaces/account";
 import { config } from "./libs/o-circles-protocol/config";
 import { CirclesHub } from "./libs/o-circles-protocol/circles/circlesHub";
-import { ProcessContext } from "./processes/processContext";
+import type { ProcessContext } from "./processes/processContext";
 import { GnosisSafeProxy } from "./libs/o-circles-protocol/safe/gnosisSafeProxy";
 import { Person } from "./libs/o-circles-protocol/model/person";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"
+
 dayjs.extend(relativeTime)
+
 export interface Process {
   id: number;
   events: Observable<any>;

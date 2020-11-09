@@ -81,7 +81,7 @@
           {#if t.from !== '0x0000000000000000000000000000000000000000'}
             {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
             {t.subject}
-          {:else}UBI payment{/if}
+          {:else}Universal basic income{/if}
         </b>
         <p class="text-xs text-gray-500">
           {dayjs(t.timestamp).fromNow()}
@@ -89,7 +89,7 @@
             {#if t.from !== '0x0000000000000000000000000000000000000000'}
               from
               <a href="#/wallet/{t.from}/safe">{t.from}</a>
-            {:else}Circles{/if}
+            {:else}from MamaOmo{/if}
           {:else}to <a href="#/wallet/{t.to}/safe">{t.to}</a>{/if}
         </p>
       </div>

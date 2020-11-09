@@ -46,10 +46,11 @@
     <div class="grid h-full">
       <main class="h-full p-8 overflow-y-scroll text-center bg-gray-100">
         <h1 class="text-3xl text-center font-title text-primary">
-          Connect Circle Seed
+          Connect your Circles account
         </h1>
         <p class="py-4 text-sm text-center text-gray-700">
-          Store with textile or only in localstore
+          This is a non-custodial wallet, your private key will be stored in
+          your browsers localstorage
         </p>
       </main>
 
@@ -60,7 +61,8 @@
           </p>
           <input
             placeholder="Your safe address"
-            class="w-full h-24 p-2 mb-2 bg-transparent border border-gray-300 rounded text-primary"
+            type="text"
+            class="w-full p-2 mb-2 bg-transparent border border-gray-300 rounded text-primary"
             bind:value={safeAddress} />
         </div>
         <div>
@@ -74,8 +76,8 @@
         </div>
         <div class="flex">
           <button
-            class="w-full bg-gray-300 text-primary"
-            on:click={() => storeInputAndContinue()}>Store Local</button>
+            class="w-full py-2 text-white uppercase rounded bg-primary font-title"
+            on:click={() => storeInputAndContinue()}>Login</button>
         </div>
       </footer>
     </div>
