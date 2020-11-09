@@ -1,39 +1,49 @@
 <script lang="ts">
+  import { getUbi } from "../processes/getUBI";
+  import type { GetUBIEvent } from "../processes/getUBI";
+  import type { Account } from "../../../libs/o-circles-protocol/interfaces/account";
+  import type { Process } from "../../../main";
 
-  import {getUbi, } from "../processes/getUBI";
-  import type {GetUBIEvent } from "../processes/getUBI";
-  import type {Account} from "../../../libs/o-circles-protocol/interfaces/account";
-  import type {Process} from "../../../main";
+  function sendMoney() {}
+  function setTrust() {}
 
-  function sendMoney() {
-  }
-  function setTrust() {
-
-  }
-
-  let status:string = "-";
+  let status: string = "-";
 
   function getUBI() {
     const safeAddress = localStorage.getItem("omo.safeAddress");
-    const account:Account = {
+    const account: Account = {
       privateKey: localStorage.getItem("omo.privateKey"),
       address: localStorage.getItem("omo.address"),
-    }
+    };
     const machineDefinition = getUbi(account, safeAddress);
 
-    const process:Process = window.stateMachines.start(machineDefinition);
-    process.events.subscribe(next => {
+    const process: Process = window.stateMachines.start(machineDefinition);
+    process.events.subscribe((next) => {
       console.log("STATUS UPDATE:", next);
       status = next.message;
     });
     process.sendEvent(<GetUBIEvent>{
-      type:"TRIGGER"
+      type: "TRIGGER",
     });
   }
 </script>
-<div class="p-4">
+
+<style>
+  .iphonex {
+    padding-bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+</style>
+
+<div class="p-4 iphonex">
   <h1>{status}</h1>
-  <div class="w-full p-3 mb-3 border-2 border-primary" on:click={sendMoney}>Send Money</div>
-  <div class="w-full p-3 border-2 border-primary" on:click={setTrust}>Trust</div>
-  <div class="w-full p-3 border-2 border-primary" on:click={getUBI}>Get UBI</div>
+  <div class="w-full p-3 mb-3 border-2 border-primary" on:click={sendMoney}>
+    Send Money
+  </div>
+  <div class="w-full p-3 border-2 border-primary" on:click={setTrust}>
+    Trust
+  </div>
+  <div class="w-full p-3 border-2 border-primary" on:click={getUBI}>
+    Get UBI
+  </div>
 </div>
