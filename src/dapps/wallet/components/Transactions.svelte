@@ -10,12 +10,6 @@
     let person: Person;
     let transactions = [];
 
-    let timeInfo: {
-        now: number,
-        latestChainBlockNo: BN,
-        secondsPerBlock: number
-    } = {}
-
     function init(address: Address)
     {
         const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -28,7 +22,6 @@
 
     async function reload()
     {
-
         const incomingTransactions = await person.getIncomingTransactions();
         const outgoingTransactions = await person.getOutgoingTransactions();
         const allTransactions = incomingTransactions.concat(outgoingTransactions);
@@ -45,6 +38,7 @@
             probes.map(async i => await web3.eth.getBlock(latestBlockNo - i))
         );
 
+        let latestTimestamp;
         let lastTimestamp = 0;
         let delta = 0;
         for (let block of blocks)
@@ -57,36 +51,31 @@
             {
                 delta += lastTimestamp - block.timestamp;
             }
+            if (!latestTimestamp) {
+                latestTimestamp = block.timestamp;
+            }
             lastTimestamp = block.timestamp;
         }
 
-        const latestBlockOnChain = new BN(latestBlockNo.toString());
-        const timePerBlock = delta / probes.length;
+        const latestBlockNoOnChain = new BN(latestBlockNo.toString());
+        const timePerBlock = delta / (probes.length - 1);
 
         transactions = allTransactions.map(o =>
         {
-            o.timestamp = getTimeFromBlockNo(
-                blocks[0].timestamp,
-                latestBlockOnChain,
-                timePerBlock,
-                o.blockNo);
+            const blockDelta = latestBlockNoOnChain.sub(o.blockNo);
+            const timeDelta = timePerBlock * blockDelta.toNumber();
+            const thenTime = (latestTimestamp - timeDelta).toFixed(0);
+            const estimatedBlockTime = new Date(thenTime * 1000);
+
+            o.timestamp = estimatedBlockTime.getUTCFullYear()
+                + "-" + ("0" + estimatedBlockTime.getUTCMonth()).slice(-2)
+                + "-" + ("0" + estimatedBlockTime.getUTCDate()).slice(-2)
+                + " " + ("0" + estimatedBlockTime.getUTCHours()).slice(-2)
+                + ":" + ("0" + estimatedBlockTime.getUTCMinutes()).slice(-2)
+                + ":" + ("0" + estimatedBlockTime.getUTCSeconds()).slice(-2);
 
             return o;
         });
-    }
-
-    function getTimeFromBlockNo(now: number, latestBlockOnChain: BN, timePerBlock: number, blockNo: BN)
-    {
-        const blockDelta = latestBlockOnChain.sub(blockNo);
-        const timeDelta = timePerBlock * blockDelta.toNumber();
-        const thenTime = (now - timeDelta).toFixed(0);
-        const estimatedBlockTime = new Date((thenTime * 1000));
-        return estimatedBlockTime.getUTCFullYear()
-            + "-" + ("0" + estimatedBlockTime.getUTCMonth()).slice(-2)
-            + "-" + ("0" + estimatedBlockTime.getUTCDate()).slice(-2)
-            + " " + ("0" + estimatedBlockTime.getUTCHours()).slice(-2)
-            + ":" + ("0" + estimatedBlockTime.getUTCMinutes()).slice(-2)
-            + ":" + ("0" + estimatedBlockTime.getUTCSeconds()).slice(-2);
     }
 
     $:{
