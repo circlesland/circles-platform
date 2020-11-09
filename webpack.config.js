@@ -130,6 +130,8 @@ module.exports = {
     },
     devServer: {
         hot: true,
+        port: 5000,
+        host: "0.0.0.0",
         stats: 'minimal',
         contentBase: 'public',
         watchContentBase: true,
