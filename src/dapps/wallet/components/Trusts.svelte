@@ -45,7 +45,11 @@
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
-        <b class="text-primary"><a href="#/wallet/{personThatTrustMe.owner.address}/trusts">{personThatTrustMe.owner.address}</a></b>
+        {#if !personThatTrustMe.limit || personThatTrustMe.limit == 0}
+          <b class="text-gray-300"><a href="#/wallet/{personThatTrustMe.owner.address}/trusts">{personThatTrustMe.owner.address}</a></b>
+        {:else}
+          <b class="text-primary"><a href="#/wallet/{personThatTrustMe.owner.address}/trusts">{personThatTrustMe.owner.address}</a></b>
+        {/if}
       </div>
     </div>
   </div>
@@ -60,7 +64,11 @@
   <div class="mx-4 mb- 2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <div class="flex-1 px-4 py-2 text-base">
-        <b class="text-primary"><a href="#/wallet/{personITrust.owner.address}/trusts">{personITrust.owner.address}</a></b>
+        {#if !personITrust.limit || personITrust.limit == 0}
+          <b class="text-gray-300"><a href="#/wallet/{personITrust.owner.address}/trusts">{personITrust.owner.address}</a></b>
+        {:else}
+          <b class="text-primary"><a href="#/wallet/{personITrust.owner.address}/trusts">{personITrust.owner.address}</a></b>
+        {/if}
       </div>
     </div>
   </div>
