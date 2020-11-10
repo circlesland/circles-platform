@@ -75,14 +75,7 @@
   }
 </script>
 
-<style>
-  .iphonex {
-    padding-bottom: 0;
-    padding-bottom: env(safe-area-inset-bottom, 0);
-  }
-</style>
-
-<div class="w-full p-4 space-y-2 border-t border-gray-300 rounded-t-xl iphonex">
+<div class="w-full p-4 space-y-2 border-t border-gray-300 rounded-t-xl">
   {#if process}
     {#if statusType === 'message'}
       <h1 class="px-4 py-8 mb-4 text-center rounded text-primary bg-light-100">
