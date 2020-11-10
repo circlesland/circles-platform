@@ -1,4 +1,5 @@
 <script lang="ts">
+  import PageTransition from "../../../transitions/PageTransition.svelte";
   import MobileLayout from "../../../layouts/MobileLayout.svelte";
 
   import Menu from "../../../components/Menu.svelte";
@@ -26,12 +27,14 @@
 </style>
 
 <MobileLayout>
-  <div class="grid h-full">
-    <Balance {address} />
-    <Account {address} />
-    <main class="overflow-x-hidden overflow-y-scroll bg-gray-100">
-      <Transactions {address} />
-    </main>
-    <Menu {address} actions={Actions} />
-  </div>
+  <PageTransition>
+    <div class="grid h-full">
+      <Balance {address} />
+      <Account {address} />
+      <main class="overflow-x-hidden overflow-y-scroll bg-gray-100">
+        <Transactions {address} />
+      </main>
+      <Menu {address} actions={Actions} />
+    </div>
+  </PageTransition>
 </MobileLayout>

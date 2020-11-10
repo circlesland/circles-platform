@@ -1,10 +1,11 @@
-<div
-  class="flex flex-col items-center justify-center h-full bg-white bg-center bg-cover"
-  style="background-image: url(/images/background.webp)">
-  <div
-    class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
-    style="position:relative;max-height: 900px">
-    <main class="h-full overflow-y-scroll bg-light-100">
+<script>
+  import MobileLayout from "../layouts/MobileLayout.svelte";
+  import PageTransition from "../transitions/PageTransition.svelte";
+</script>
+
+<MobileLayout>
+  <PageTransition>
+    <div class="overflow-y-scroll bg-light-100">
       <div
         class="flex justify-center mx-4 mt-4 mb-2 text-4xl font-bold text-center bg-white border border-gray-200 rounded text-primary">
         <div>
@@ -127,6 +128,6 @@
           </div>
         </div>
       </div>
-    </main>
-  </div>
-</div>
+    </div>
+  </PageTransition>
+</MobileLayout>
