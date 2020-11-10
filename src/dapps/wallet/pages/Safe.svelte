@@ -1,6 +1,7 @@
 <script lang="ts">
   import PageTransition from "../../../transitions/PageTransition.svelte";
-  import MobileLayout from "../../../layouts/MobileLayout.svelte";
+  import MobileLayout from "../../../templates/MobileLayout.svelte";
+  import TemplatetNavBottom from "src/templates/TemplatetNavBottom.svelte";
 
   import Menu from "../../../components/Menu.svelte";
   import Balance from "../components/Balance.svelte";
@@ -22,19 +23,23 @@
 <style>
   .grid {
     display: grid;
-    grid-template-rows: 150px 60px 1fr auto;
+    grid-template-rows: 150px 60px 1fr;
   }
 </style>
 
 <MobileLayout>
-  <PageTransition>
-    <div class="grid h-full">
+  <TemplatetNavBottom>
+    <!-- <PageTransition> -->
+    <div slot="content" class="grid h-full overflow-hidden">
       <Balance {address} />
       <Account {address} />
-      <main class="overflow-x-hidden overflow-y-scroll bg-gray-100">
+      <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
         <Transactions {address} />
-      </main>
+      </div>
+    </div>
+    <!-- </PageTransition> -->
+    <div slot="nav">
       <Menu {address} actions={Actions} />
     </div>
-  </PageTransition>
+  </TemplatetNavBottom>
 </MobileLayout>

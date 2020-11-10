@@ -82,15 +82,14 @@
   }
 </style>
 
-<div
-  class="p-4 space-y-2 border-t border-gray-300 shadow-xl rounded-t-xl iphonex">
+<div class="w-full p-4 space-y-2 border-t border-gray-300 rounded-t-xl iphonex">
   {#if process}
     {#if statusType === 'message'}
       <h1 class="px-4 py-8 mb-4 text-center rounded text-primary bg-light-100">
         {status}
       </h1>
     {:else if statusType === 'notification'}
-      <h1 class="px-4 py-8 mb-4 text-center text-white bg-orange-300 rounded">
+      <h1 class="px-4 py-8 mb-4 text-center bg-orange-300 rounded text-primary">
         {status}
       </h1>
     {:else if statusType === 'error'}

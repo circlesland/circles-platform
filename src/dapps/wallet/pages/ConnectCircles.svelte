@@ -1,5 +1,5 @@
 <script lang="ts">
-  import MobileLayout from "../../../layouts/MobileLayout.svelte";
+  import MobileLayout from "../../../templates/MobileLayout.svelte";
   import PageTransition from "../../../transitions/PageTransition.svelte";
 
   import { mnemonicToEntropy } from "bip39";

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import MobileLayout from "../../../layouts/MobileLayout.svelte";
+  import MobileLayout from "../../../templates/MobileLayout.svelte";
   import { push } from "svelte-spa-router";
 
   import dayjs from "dayjs";

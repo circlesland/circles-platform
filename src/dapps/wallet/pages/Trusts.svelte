@@ -1,6 +1,6 @@
 <script lang="ts">
   import PageTransition from "./../../../transitions/PageTransition.svelte";
-  import MobileLayout from "../../../layouts/MobileLayout.svelte";
+  import MobileLayout from "../../../templates/MobileLayout.svelte";
 
   import Menu from "../../../components/Menu.svelte";
   import Actions from "../menus/Actions.svelte";
