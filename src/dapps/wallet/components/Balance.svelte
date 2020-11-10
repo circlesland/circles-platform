@@ -56,9 +56,9 @@
 </script>
 
 <div
-  class="flex items-center justify-center text-4xl font-bold text-center text-white bg-primary">
-  <div class="text-gray-100 uppercase font-title">
-    <p class="pt-10">
+  class="flex items-center justify-center font-bold text-center text-white bg-primary">
+  <div class="font-bold text-gray-100 uppercase">
+    <p class="pt-10 text-5xl">
       {circlesBalance}
       <span class="text-xl text-gray-300">CRC</span>
     </p>

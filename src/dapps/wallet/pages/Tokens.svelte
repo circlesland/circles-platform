@@ -1,9 +1,7 @@
 <script lang="ts">
   import Menu from "../../../components/Menu.svelte";
   import Actions from "../menus/Actions.svelte";
-  import Balance from "../components/Balance.svelte";
   import Tokens from "../components/Tokens.svelte";
-  import Account from "../components/Account.svelte";
 
   export let params = {};
 
@@ -34,7 +32,7 @@
         class="px-3 py-2 font-bold bg-white border-b border-gray-300 text-primary">
         Circles token balances
       </header>
-      <main class="h-full pt-4 overflow-x-hidden overflow-y-scroll bg-gray-100">
+      <main class="pt-4 overflow-x-hidden overflow-y-scroll bg-gray-100">
         <Tokens {address} />
       </main>
       <Menu {address} actions={Actions} />

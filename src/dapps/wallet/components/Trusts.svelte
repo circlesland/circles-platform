@@ -39,7 +39,10 @@
   <b class="m-4 text-primary">Mututal trust:</b>
   <div class="mx-4 mb-2">
     <div class="flex w-full bg-white border border-gray-300 rounded">
-      <img src="https://avatars.dicebear.com/api/human/1.svg" class="h-16" />
+      <img
+        src="https://avatars.dicebear.com/api/human/1.svg"
+        alt="profile"
+        class="h-16" />
       <div class="flex-1 px-4 py-2 text-base">
         <b class="text-xs text-primary">0x76asdfidtuadks</b>
         <p class="text-xs text-gray-500">
@@ -60,6 +63,7 @@
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <img
         src="https://avatars.dicebear.com/api/human/{personThatTrustMe.owner.address}.svg"
+        alt="profile"
         class="h-16" />
       <div class="flex-1 px-4 py-2 text-base">
         {#if !personThatTrustMe.limit || personThatTrustMe.limit == 0}
@@ -93,6 +97,7 @@
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <img
         src="https://avatars.dicebear.com/api/human/{personITrust.owner.address}.svg"
+        alt="profile"
         class="h-16" />
       <div class="flex-1 px-4 py-2 text-base">
         {#if !personITrust.limit || personITrust.limit == 0}

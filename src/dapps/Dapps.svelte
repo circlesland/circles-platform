@@ -19,26 +19,28 @@
         </div>
       </div>
       <div class="flex flex-wrap mx-2">
-        <!-- <div class="w-1/2 p-2">
-            <div
-              class="flex items-center justify-center h-48 p-8 text-center text-gray-800 bg-white border border-gray-200 rounded">
-              <Route dapp={o.DENTITY} route="odentity">
-                <div class="text-primary">
-                  <i class="text-5xl fas fa-user-astronaut" />
-                  <p class="pt-3">°Identity</p>
-                </div>
-              </Route>
-            </div>
-          </div> -->
+        <div class="w-1/2 p-2">
+          <div
+            class="flex items-center justify-center h-48 p-8 text-center text-gray-800 bg-white border border-gray-200 rounded">
+            <a href="#/identity/settings">
+              <div class="text-primary">
+                <i class="text-5xl fas fa-user-astronaut" />
+                <p class="pt-3">°Identity</p>
+                <span class="text-xs text-red-400">(alpha testing)</span>
+              </div>
+            </a>
+          </div>
+        </div>
         <div class="w-1/2 p-2">
           <div
             class="flex items-center justify-center h-48 p-6 text-center text-gray-800 bg-white border border-gray-200 rounded">
             <a href="#/wallet/connect">
               <div class="text-primary">
                 <i class="text-5xl fas fa-piggy-bank" />
-                <p class="pt-3">Safe</p>
+                <p class="pt-3">°Safe</p>
                 <span class="text-xs text-red-400">(alpha testing)</span>
-              </div></a>
+              </div>
+            </a>
           </div>
         </div>
         <!-- <div class="w-1/2 p-2">

@@ -101,10 +101,10 @@
       <h1 class="px-4 py-8 mb-4 text-center text-white rounded bg-action">
         {status}
       </h1>
-    {:else if statusType === 'prompt'}Prompt:<br />{:else}{/if}
+    {:else if statusType === 'prompt'}Prompt:<br />{/if}
   {:else}
     <div
-      class="w-full p-3 mb-3 text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
+      class="w-full p-3 text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
       on:click={runRequestUbi}>
       Get Universal basic income
     </div>

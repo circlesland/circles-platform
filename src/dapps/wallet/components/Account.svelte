@@ -7,6 +7,7 @@
   export let address: string;
 
   let person: Person;
+
   let mySafeAddress: Address;
 
   function init(safeAddress?: string) {

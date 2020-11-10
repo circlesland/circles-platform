@@ -2,8 +2,6 @@
   import Menu from "../../../components/Menu.svelte";
   import Actions from "../menus/Actions.svelte";
   import Trusts from "../components/Trusts.svelte";
-  import Balance from "../components/Balance.svelte";
-  import Account from "../components/Account.svelte";
 
   export let params = {};
 
@@ -34,7 +32,7 @@
         class="px-3 py-2 font-bold bg-white border-b border-gray-300 text-primary">
         Trusted friends
       </header>
-      <main class="h-full overflow-x-hidden overflow-y-scroll bg-gray-100">
+      <main class="overflow-x-hidden overflow-y-scroll bg-gray-100">
         <Trusts {address} />
       </main>
       <Menu {address} actions={Actions} />
