@@ -10,6 +10,7 @@
   let privateKey: string;
   let lastUbiRetrieval: string;
   let lastSuccessfulUbiRetrieval: string;
+  let nextPossibleUbiRetrieval: string;
 
   safeOwner = localStorage.getItem("omo.address");
   safeAddress = localStorage.getItem("omo.safeAddress");
@@ -17,6 +18,9 @@
   lastUbiRetrieval = localStorage.getItem("omo.lastUbiRetrieval");
   lastSuccessfulUbiRetrieval = localStorage.getItem(
     "omo.ubiService.lastSuccessfulUbiRetrieval"
+  );
+  nextPossibleUbiRetrieval = localStorage.getItem(
+    "omo.ubiService.nextPossibleUbiRetrieval"
   );
 
   function logout() {
@@ -63,9 +67,11 @@
         {#if safeAddress}{safeAddress}{/if}
       </p>
       <br />
-      <div class="uppercase">Last Ubi Call:</div>
+      <div class="uppercase">Next Possible Ubi Call:</div>
       <p>
-        {#if lastUbiRetrieval}{dayjs(lastUbiRetrieval).fromNow()}{/if}
+        {#if nextPossibleUbiRetrieval}
+          {dayjs(nextPossibleUbiRetrieval).fromNow()}
+        {/if}
       </p>
       <br />
       <div class="uppercase">Last Successfull Ubi Call:</div>

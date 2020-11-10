@@ -4,6 +4,8 @@
   import { config } from "../../../libs/o-circles-protocol/config";
   import type { BN } from "ethereumjs-util";
 
+  import { Jumper } from "svelte-loading-spinners";
+
   export let address: string;
 
   let person: Person;
@@ -58,11 +60,23 @@
 <div
   class="flex items-center justify-center font-bold text-center text-white bg-primary">
   <div class="font-bold text-gray-100 uppercase">
-    <p class="pt-10 text-5xl">
-      {circlesBalance}
-      <span class="text-xl text-gray-300">CRC</span>
-    </p>
+    {#if circlesBalance != undefined}
+      <p class="pt-4 text-5xl">
+        {circlesBalance}
+        <span class="text-xl text-gray-300">CRC</span>
+      </p>
+    {:else}
+      <div class="flex items-center justify-center mx-auto">
+        <Jumper size="60" color="#fff" unit="px" />
+      </div>
+    {/if}
     <!-- <span class="-mt-1 text-sm">Safe: {safeEtherBalance} xDai</span><br/> -->
-    <p class="text-sm text-gray-400">{personalEtherBalance} xDai</p><br />
+    {#if personalEtherBalance != undefined}
+      <p class="text-sm text-gray-400">{personalEtherBalance} xDai</p><br />
+    {:else}
+      <div class="flex items-center justify-center mx-auto">
+        <Jumper size="30" color="#fff" unit="px" />
+      </div>
+    {/if}
   </div>
 </div>
