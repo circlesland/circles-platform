@@ -5,7 +5,7 @@ import NotFound from './routes/NotFound.svelte'
 import Dapps from './dapps/Dapps.svelte'
 // Wallet Dapp
 import Safe from './dapps/wallet/pages/Safe.svelte'
-import ConnectCirlces from './dapps/wallet/pages/ConnectCirlces.svelte'
+import ConnectCircles from './dapps/wallet/pages/ConnectCircles.svelte'
 import Trusts from './dapps/wallet/pages/Trusts.svelte'
 import Tokens from './dapps/wallet/pages/Tokens.svelte'
 // Identity Dapp
@@ -19,7 +19,7 @@ export default {
     // Included twice to match both `/wild` (and nothing after) and `/wild/*` (with anything after)
     '/dapps': Dapps,
     // Wallet
-    '/wallet/connect': ConnectCirlces,
+    '/wallet/connect': ConnectCircles,
     '/wallet/:address/safe': Safe,
     '/wallet/:address/trusts': Trusts,
     '/wallet/:address/tokens': Tokens,

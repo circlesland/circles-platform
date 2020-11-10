@@ -1,8 +1,8 @@
 <script lang="ts">
-  import MobileLayout from "../../../layouts/MobileLayout.svelte"
+  import MobileLayout from "../../../layouts/MobileLayout.svelte";
   import { mnemonicToEntropy } from "bip39";
   import { config } from "../../../libs/o-circles-protocol/config";
-  import { loc, push } from "svelte-spa-router";
+  import { push } from "svelte-spa-router";
   import { onMount } from "svelte";
 
   let seedphrase: string;
@@ -70,9 +70,12 @@
           class="w-full h-24 p-2 mb-2 bg-transparent border border-gray-300 rounded text-primary"
           bind:value={seedphrase} />
       </div>
-      <div class="flex">
+      <div class="flex space-x-4">
+        <a
+          href="#/dapps"
+          class="px-4 py-2 uppercase border border-gray-300 rounded text-primary">Back</a>
         <button
-          class="w-full py-2 text-white uppercase rounded bg-primary font-title"
+          class="w-full py-2 text-white uppercase rounded bg-primary"
           on:click={() => storeInputAndContinue()}>Login</button>
       </div>
     </footer>
