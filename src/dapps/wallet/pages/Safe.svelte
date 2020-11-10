@@ -1,4 +1,6 @@
 <script lang="ts">
+  import MobileLayout from "../../../layouts/MobileLayout.svelte";
+
   import Menu from "../../../components/Menu.svelte";
   import Balance from "../components/Balance.svelte";
   import Transactions from "../components/Transactions.svelte";
@@ -23,19 +25,13 @@
   }
 </style>
 
-<div
-  class="flex flex-col items-center justify-center h-full bg-white bg-center bg-cover"
-  style="background-image: url(/images/background.webp)">
-  <div
-    class="justify-center w-full h-full max-w-lg bg-white shadow-2xl wrap md:m-12"
-    style="max-height: 900px">
-    <div class="grid h-full">
-      <Balance {address} />
-      <Account {address} />
-      <main class="overflow-x-hidden overflow-y-scroll bg-gray-100">
-        <Transactions {address} />
-      </main>
-      <Menu {address} actions={Actions} />
-    </div>
+<MobileLayout>
+  <div class="grid h-full">
+    <Balance {address} />
+    <Account {address} />
+    <main class="overflow-x-hidden overflow-y-scroll bg-gray-100">
+      <Transactions {address} />
+    </main>
+    <Menu {address} actions={Actions} />
   </div>
-</div>
+</MobileLayout>
