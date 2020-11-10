@@ -67,15 +67,23 @@
         class="h-16" />
       <div class="flex-1 px-4 py-2 text-base">
         {#if !personThatTrustMe.limit || personThatTrustMe.limit == 0}
-          <b class="text-xs text-gray-300"><a
-              href="#/wallet/{personThatTrustMe.owner.address}/trusts">{personThatTrustMe.owner.address.slice(0, 20)}...</a></b>
+          <b class="text-xs text-gray-300">
+            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
+            {personThatTrustMe.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
           <p class="text-xs text-gray-500">
             <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
               trusted by 10 friends</span>
           </p>
         {:else}
-          <b class="text-xs text-primary"><a
-              href="#/wallet/{personThatTrustMe.owner.address}/trusts">{personThatTrustMe.owner.address.slice(0, 20)}...</a></b>
+          <b class="text-xs text-primary">
+            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
+            {personThatTrustMe.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
           <p class="text-xs text-gray-500">
             <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
               trusted by 10 friends</span>
@@ -101,15 +109,23 @@
         class="h-16" />
       <div class="flex-1 px-4 py-2 text-base">
         {#if !personITrust.limit || personITrust.limit == 0}
-          <b class="text-xs text-gray-300"><a
-              href="#/wallet/{personITrust.owner.address}/trusts">{personITrust.owner.address.slice(0, 20)}...</a></b>
+          <b class="text-xs text-gray-300">
+            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
+            {personITrust.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
           <p class="text-xs text-gray-500">
             <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
               trusted by 10 friends</span>
           </p>
         {:else}
-          <b class="text-xs text-primary"><a
-              href="#/wallet/{personITrust.owner.address}/trusts">{personITrust.owner.address.slice(0, 20)}...</a></b>
+          <b class="text-xs text-primary">
+            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
+            {personITrust.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
           <p class="text-xs text-gray-500">
             <i class="fas fa-arrow-left" /><span class="ml-2">trusted by you -
               trusted by 10 friends</span>

@@ -88,11 +88,17 @@
           {#if t.direction === 'in'}
             {#if t.from !== '0x0000000000000000000000000000000000000000'}
               from
-              <a href="#/wallet/{t.from}/safe">{t.from.slice(0, 12)}...</a>
+              <!-- <a href="#/wallet/{t.from}/safe">-->
+              {t.from.slice(0, 12)}...
+
+              <!-- </a> -->
             {:else}from MamaOmo{/if}
           {:else}
             to
-            <a href="#/wallet/{t.to}/safe">{t.to.slice(0, 12)}...</a>
+            <!-- <a href="#/wallet/{t.to}/safe"> -->
+            {t.to.slice(0, 12)}...
+
+            <!-- </a> -->
           {/if}
         </p>
       </div>

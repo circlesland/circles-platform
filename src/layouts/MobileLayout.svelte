@@ -3,8 +3,8 @@
   style="background-image: url(/images/background.webp)">
   <div
     class="justify-center w-full max-w-lg bg-white shadow-2xl wrap md:m-12"
-    style="max-height: 900px; height:100%">
-    <slot class="bg-pink-600">
+    style="min-height:100%; max-height: 900px;">
+    <slot>
       <p>Dapp Screen</p>
     </slot>
   </div>
