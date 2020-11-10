@@ -5,7 +5,7 @@
 
 <MobileLayout>
   <PageTransition>
-    <div class="overflow-y-scroll bg-light-100">
+    <div class="h-full overflow-y-scroll bg-light-100">
       <div
         class="flex justify-center mx-4 mt-4 mb-2 text-4xl font-bold text-center bg-white border border-gray-200 rounded text-primary">
         <div>
