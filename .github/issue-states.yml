@@ -1,0 +1,21 @@
+
+# Configuration for Issue States - https://github.com/dessant/issue-states
+
+# Open issues that are moved to these project columns. Set to `[]` to disable
+openIssueColumns: 
+  - OPEN
+  - TODAY
+  - THIS WEEK
+  - THIS MONTH
+  - THIS QUARTER
+  - THIS YEAR
+  - 3 YEARS
+  - THIS DECADE
+
+# Close issues that are moved to these project columns. Set to `[]` to disable
+closedIssueColumns:
+  - DONE
+  - CLOSED
+
+# Repository to extend settings from
+# _extends: repo
