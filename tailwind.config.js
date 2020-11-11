@@ -24,6 +24,12 @@ module.exports = {
         'light-200': '#EDEDED',
         'light-300': '#F1F1E4'
       },
+      height: {
+        '14': '3.5rem' 
+      },
+      width: {
+        '14': '3.5rem' 
+      }
     }
   },
   variants: {

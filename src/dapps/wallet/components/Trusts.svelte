@@ -37,26 +37,99 @@
 </script>
 
 {#if address === mySafeAddress}
-  <b class="m-4 text-primary">Mututal trust:</b>
-  <div class="mx-4 mb-2">
-    <div class="flex w-full bg-white border border-gray-300 rounded">
-      <img
-        src="https://avatars.dicebear.com/api/human/1.svg"
-        alt="profile"
-        class="h-16" />
-      <div class="flex-1 px-4 py-2 text-base">
-        <b class="text-xs text-primary">0x76asdfidtuadks</b>
-        <p class="text-xs text-gray-500">
-          <i class="fas fa-exchange-alt" /><span class="ml-2">mututal trust -
-            trusted by 10 friends</span>
-        </p>
+  <div class="m-4 space-y-2">
+    <div class="font-bold text-primary">Design placeholder for daniel</div>
+
+    <div class="flex w-full space-x-2 h-14">
+      <div
+        class="flex items-center justify-center bg-white border border-gray-300 rounded w-14 h-14">
+        <img
+          src="https://avatars.dicebear.com/api/human/2.svg"
+          alt="profile"
+          class="w-12" />
       </div>
-      <div class="w-12 h-16 px-4 py-5 text-white bg-gray-300">
-        <i class="fas fa-minus" />
+      <div class="flex flex-1 bg-white border border-gray-300 rounded">
+        <div class="flex-1">
+          <div class="flex items-center px-4 h-14">
+            <div>
+              <b class="text-sm leading-none text-primary">0x7698689d...</b>
+              <p class="text-xs text-gray-500 ">
+                <i class="fas fa-heart text-primary" /><span class="pr-1" /><i
+                  class="fas fa-heart text-primary" /><span class="ml-2">mutual
+                  trust</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center content-end justify-center">
+          <div
+            class="flex items-center content-end justify-center p-3 border-l border-gray-300 rounded h-14 w-14 ">
+            <img src="icons/send.svg" alt="add" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full space-x-2 h-14">
+      <div
+        class="flex items-center justify-center bg-white border border-gray-300 rounded w-14 h-14">
+        <img
+          src="https://avatars.dicebear.com/api/human/3.svg"
+          alt="profile"
+          class="w-12" />
+      </div>
+      <div class="flex flex-1 bg-white border border-gray-300 rounded">
+        <div class="flex-1">
+          <div class="flex items-center px-4 h-14">
+            <div>
+              <b class="-mt-1 text-sm text-primary">0x769a8689d...</b>
+              <p class="-mt-1 text-xs text-gray-500 ">
+                <i class="fas fa-heart text-primary" /><span class="pr-1" /><i
+                  class="fas fa-heart" /><span class="ml-2">trusts you</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center content-end justify-center">
+          <div
+            class="flex items-center justify-center p-4 text-white border-l border-gray-300 rounded-r h-14 w-14">
+            <img src="icons/addTrust.svg" alt="send" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex w-full space-x-2 h-14">
+      <div
+        class="flex items-center justify-center bg-white border border-gray-300 rounded w-14 h-14">
+        <img
+          src="https://avatars.dicebear.com/api/human/4.svg"
+          alt="profile"
+          class="w-12" />
+      </div>
+      <div class="flex flex-1 bg-white border border-gray-300 rounded">
+        <div class="flex-1">
+          <div class="flex items-center px-4 h-14">
+            <div>
+              <b class="text-sm text-primary">0x769a8689d...</b>
+              <p class="text-xs text-gray-500 ">
+                <i class="fas fa-heart " /><span class="pr-1" /><i
+                  class="fas fa-heart text-primary" /><span class="ml-2">trusted
+                  by you</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center content-end justify-center">
+          <div
+            class="flex items-center justify-center p-4 text-white border-l border-gray-300 rounded-r h-14 w-14">
+            <img src="icons/removeTrust.svg" alt="send" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
+  <div class="h-20" />
   <b class="m-4 text-primary">People that trust me:</b>
 {:else}<b class="m-4 text-primary">People that trust {address}:</b>{/if}
 {#each personsThatTrustMe as personThatTrustMe}
@@ -86,13 +159,10 @@
             <!-- </a> -->
           </b>
           <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
-              trusted by 10 friends</span>
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you
+            </span>
           </p>
         {/if}
-      </div>
-      <div class="w-12 h-16 px-4 py-5 text-white bg-action">
-        <i class="fas fa-plus" />
       </div>
     </div>
   </div>
@@ -128,13 +198,9 @@
             <!-- </a> -->
           </b>
           <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-left" /><span class="ml-2">trusted by you -
-              trusted by 10 friends</span>
+            <i class="fas fa-arrow-left" /><span class="ml-2">trusted by you</span>
           </p>
         {/if}
-      </div>
-      <div class="w-12 h-16 px-4 py-5 text-white bg-gray-300">
-        <i class="fas fa-minus" />
       </div>
     </div>
   </div>
