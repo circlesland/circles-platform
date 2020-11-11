@@ -1,4 +1,7 @@
-# Omo Li (Circles Light Wallet)
+# Omo Li
+Building with Omo.Li a lightweight and serverless decentralized wallet and marketplace on top of the CirclesUBI protocol
+
+- DAPP (early alpha WIP): https://omoearth.eth.link/
 
 ## Overview
 
