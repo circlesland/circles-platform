@@ -1,6 +1,28 @@
-# Svelte Webpack Starter
-This is my personal starter template for creating [Svelte](https://svelte.dev) apps. It's preconfigured out of the box with Webpack, TypeScript, SASS, Babel, Autoprefixer, and hot module replacement. I've kept it minimal and organized so it's easy to build upon and/or customize.
+# Omo Li (Circles Light Wallet)
 
+## Overview
+
+- Website: https://omo.earth
+- Chat: https://discord.gg/Rbhy4j9
+- Feedback: https://github.com/omoearth/omo/issues
+- Roadmap: https://github.com/omoearth/omo/projects/1
+- Twitter: https://twitter.com/OmoEarth
+
+
+## Install
+
+Clone Repo 
+`git clone https://github.com/omoearth/omo-li.git`
+
+Enter directory 
+`cd omo-li`
+
+Start
+`npm run dev`
+
+Go to your browser and open https://0.0.0.0.5000
+
+## Svelte typescript, tebpack, tailwind starter 
 ---
 
 - [Getting started](#getting-started)
@@ -16,29 +38,6 @@ This is my personal starter template for creating [Svelte](https://svelte.dev) a
 	- [Path mapping](#path-mapping)
 
 ---
-
-## Getting started
-
-### Installation
-To quickly get started with this template, use [degit](https://github.com/Rich-Harris/degit):
-
-```bash
-npx degit baileyherbert/svelte-webpack-starter svelte-app
-cd svelte-app
-```
-
-Then, install dependencies.
-
-```bash
-npm install
-```
-
-### Starting the development server
-The `dev` script will compile the app, start the development server, and enable hot replacement for components and styles. Open [http://localhost:8080](http://localhost:8080) in your browser to see the app.
-
-```bash
-npm run dev
-```
 
 ### Building for production
 The `build` script will compile the app for production. By default, the bundle will be created at `/public/build/`, which means your public directory will contain everything you need to run the app.
