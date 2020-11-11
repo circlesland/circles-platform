@@ -9,7 +9,7 @@ openIssueColumns:
   - THIS MONTH
   - THIS QUARTER
   - THIS YEAR
-  - 3 YEARS
+  - NEXT YEAR
   - THIS DECADE
 
 # Close issues that are moved to these project columns. Set to `[]` to disable
