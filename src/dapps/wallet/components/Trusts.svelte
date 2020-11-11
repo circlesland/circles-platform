@@ -37,7 +37,83 @@
 </script>
 
 {#if address === mySafeAddress}
-  <div class="m-4 space-y-2">
+  <b class="m-4 text-primary">People that trust me:</b>
+{:else}<b class="m-4 text-primary">People that trust {address}:</b>{/if}
+{#each personsThatTrustMe as personThatTrustMe}
+  <div class="mx-4 mb-2">
+    <div class="flex w-full bg-white border border-gray-300 rounded">
+      <img
+        src="https://avatars.dicebear.com/api/human/{personThatTrustMe.owner.address}.svg"
+        alt="profile"
+        class="h-16" />
+      <div class="flex-1 px-4 py-2 text-base">
+        {#if !personThatTrustMe.limit || personThatTrustMe.limit == 0}
+          <b class="text-xs text-gray-300">
+            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
+            {personThatTrustMe.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
+              trusted by 10 friends</span>
+          </p>
+        {:else}
+          <b class="text-xs text-primary">
+            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
+            {personThatTrustMe.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you
+            </span>
+          </p>
+        {/if}
+      </div>
+    </div>
+  </div>
+{/each}
+
+{#if address === mySafeAddress}
+  <b class="m-4 text-primary">People I trust:</b>
+{:else}<b class="m-4 text-primary">People that {address} trusts:</b>{/if}
+{#each personsITrust as personITrust}
+  <div class="mx-4 mb-2">
+    <div class="flex w-full bg-white border border-gray-300 rounded">
+      <img
+        src="https://avatars.dicebear.com/api/human/{personITrust.owner.address}.svg"
+        alt="profile"
+        class="h-16" />
+      <div class="flex-1 px-4 py-2 text-base">
+        {#if !personITrust.limit || personITrust.limit == 0}
+          <b class="text-xs text-gray-300">
+            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
+            {personITrust.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
+              trusted by 10 friends</span>
+          </p>
+        {:else}
+          <b class="text-xs text-primary">
+            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
+            {personITrust.owner.address.slice(0, 20)}...
+
+            <!-- </a> -->
+          </b>
+          <p class="text-xs text-gray-500">
+            <i class="fas fa-arrow-left" /><span class="ml-2">trusted by you</span>
+          </p>
+        {/if}
+      </div>
+    </div>
+  </div>
+{/each}
+
+<!-- <div class="m-4 space-y-2">
     <div class="font-bold text-primary">Design placeholder for daniel</div>
 
     <div class="flex w-full space-x-2 h-14">
@@ -128,80 +204,4 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="h-20" />
-  <b class="m-4 text-primary">People that trust me:</b>
-{:else}<b class="m-4 text-primary">People that trust {address}:</b>{/if}
-{#each personsThatTrustMe as personThatTrustMe}
-  <div class="mx-4 mb-2">
-    <div class="flex w-full bg-white border border-gray-300 rounded">
-      <img
-        src="https://avatars.dicebear.com/api/human/{personThatTrustMe.owner.address}.svg"
-        alt="profile"
-        class="h-16" />
-      <div class="flex-1 px-4 py-2 text-base">
-        {#if !personThatTrustMe.limit || personThatTrustMe.limit == 0}
-          <b class="text-xs text-gray-300">
-            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
-            {personThatTrustMe.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </b>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
-              trusted by 10 friends</span>
-          </p>
-        {:else}
-          <b class="text-xs text-primary">
-            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
-            {personThatTrustMe.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </b>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you
-            </span>
-          </p>
-        {/if}
-      </div>
-    </div>
-  </div>
-{/each}
-
-{#if address === mySafeAddress}
-  <b class="m-4 text-primary">People I trust:</b>
-{:else}<b class="m-4 text-primary">People that {address} trusts:</b>{/if}
-{#each personsITrust as personITrust}
-  <div class="mx-4 mb-2">
-    <div class="flex w-full bg-white border border-gray-300 rounded">
-      <img
-        src="https://avatars.dicebear.com/api/human/{personITrust.owner.address}.svg"
-        alt="profile"
-        class="h-16" />
-      <div class="flex-1 px-4 py-2 text-base">
-        {#if !personITrust.limit || personITrust.limit == 0}
-          <b class="text-xs text-gray-300">
-            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
-            {personITrust.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </b>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
-              trusted by 10 friends</span>
-          </p>
-        {:else}
-          <b class="text-xs text-primary">
-            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
-            {personITrust.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </b>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-left" /><span class="ml-2">trusted by you</span>
-          </p>
-        {/if}
-      </div>
-    </div>
-  </div>
-{/each}
+  </div> -->
