@@ -5,7 +5,6 @@ Building with Omo.Li a lightweight and serverless decentralized wallet and marke
 
 ## Overview
 
-- Website: https://omo.earth
 - Chat: https://discord.gg/Rbhy4j9
 - Feedback: https://github.com/omoearth/omo/issues
 - Roadmap: https://github.com/omoearth/omo/projects/1
