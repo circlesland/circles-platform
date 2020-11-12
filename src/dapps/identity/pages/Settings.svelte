@@ -82,12 +82,17 @@
             {dayjs(lastSuccessfulUbiRetrieval).fromNow()}
           {/if}
         </p>
+
+        <a
+          href="#/identity/login"
+          class="w-full px-4 py-2 font-bold uppercase bg-gray-300 rounded text-primary">login</a>
       </div>
       <div
         class="flex justify-center w-full p-4 space-x-3 text-center border-t border-gray-300">
         <a
           href="#/dapps"
           class="w-full px-4 py-2 font-bold uppercase bg-gray-300 rounded text-primary">back</a>
+
         <div
           on:click={() => logout()}
           class="w-full px-4 py-2 font-bold text-white uppercase bg-pink-800 rounded">

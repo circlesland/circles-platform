@@ -36,7 +36,6 @@
   .grid {
     display: grid;
     grid-template-rows: 1fr auto;
-    position: relative;
   }
 </style>
 
@@ -77,9 +76,11 @@
           <a
             href="#/dapps"
             class="px-4 py-2 uppercase border border-gray-300 rounded text-primary">Back</a>
-          <button
-            class="w-full py-2 text-white uppercase rounded bg-primary"
-            on:click={() => storeInputAndContinue()}>Login</button>
+          <div
+            class="w-full py-2 text-center text-white uppercase rounded bg-primary"
+            on:click={() => storeInputAndContinue()}>
+            Login
+          </div>
         </div>
       </footer>
     </div>
