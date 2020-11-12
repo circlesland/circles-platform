@@ -1,25 +1,62 @@
+<script>
+  import "css-doodle";
+  import Notifications from "src/libs/o-views/molecules/Notifications.svelte";
+</script>
+
 <style>
-  .note {
+  :global(css-doodle) {
+    margin: auto;
+  }
+  .dapp {
     display: grid;
     grid-template-rows: auto 1fr;
+    max-height: 900px;
   }
 </style>
 
 <div
-  class="flex flex-col items-center justify-center h-full bg-white bg-center bg-cover">
+  class="z-10 flex flex-col items-center justify-center h-full overflow-hidden bg-center bg-cover">
   <div
-    class="justify-center w-full h-full max-w-lg overflow-hidden bg-white wrap">
-    <div class="h-full overflow-hidden border note">
-      <div class="p-2 text-xs text-white bg-pink-800">
-        This dapp is an early alpha test version. For wishes and feedback join
-        our
-        <a
-          href="https://discord.gg/Rbhy4j9"
-          class="px-2 py-1 text-white rounded bg-primary">chat</a>
-      </div>
+    class="flex items-center justify-center w-full h-full max-w-lg overflow-hidden wrap">
+    <div class="w-full h-full overflow-hidden dapp">
+      <Notifications />
       <slot>
         <p>Dapp Screen</p>
       </slot>
     </div>
   </div>
+</div>
+
+<div
+  class="absolute z-0 flex items-center justify-center w-full h-full position bg-dark">
+  <css-doodle>
+    {`
+    
+      :doodle { 
+        @grid: 1x15 / 61.8vmin; 
+      }
+    
+      @place-cell: center; 
+      @size: calc(@index() * 10%);
+      
+      border-radius: 50%;
+      border-style: dashed;
+      border-width: calc(@index() * 1vmin); 
+      border-color: hsla(
+        calc(20 * @index()), 75%, 70%, 
+        calc(3 / @index() * .5)
+      );
+      
+      --d: @rand(20s, 40s); 
+      --rf: @rand(360deg);
+      --rt: calc(var(--rf) + @pick(1turn, -1turn));
+    
+      animation: spin var(--d) linear infinite;
+      @keyframes spin {
+        from { transform: rotate(var(--rf)) }
+        to   { transform: rotate(var(--rt)) }
+      }
+    
+    `}
+  </css-doodle>
 </div>

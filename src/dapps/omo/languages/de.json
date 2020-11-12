@@ -1,3 +1,7 @@
 {
-    "omo_dashboard_title": "Willkommen"
+    "omo_dashboard_title": "Willkommen",
+    "omo_dapp_name_identity": "Identität",
+    "omo_dapp_name_wallet": "Konto",
+    "omo_dapp_alpha_testing": "alpha testphase",
+    "omo_dapp_coming_soon": "bald"
 }
