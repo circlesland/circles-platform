@@ -17,9 +17,6 @@
   :global(a.active) {
     color: #0c266a;
   }
-  .test {
-    background-color: turquoise;
-  }
 </style>
 
 <Modal {triggerRef} bind:isOpen>

@@ -27,7 +27,7 @@
               <div class="text-primary">
                 <i class="text-5xl fas fa-user-astronaut" />
                 <p class="pt-3">°Identity</p>
-                <span class="text-xs text-red-400">(alpha testing)</span>
+                <span class="text-xs text-pink-800">(alpha testing)</span>
               </div>
             </a>
           </div>
@@ -39,7 +39,7 @@
               <div class="text-primary">
                 <i class="text-5xl fas fa-piggy-bank" />
                 <p class="pt-3">°Safe</p>
-                <span class="text-xs text-red-400">(alpha testing)</span>
+                <span class="text-xs text-pink-800">(alpha testing)</span>
               </div>
             </a>
           </div>
