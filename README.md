@@ -21,7 +21,7 @@ Enter directory
 Start
 `npm run dev`
 
-Go to your browser and open https://0.0.0.0.5000
+Go to your browser and open https://0.0.0.0:5000
 
 ## Svelte typescript, tebpack, tailwind starter 
 ---
