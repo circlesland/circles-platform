@@ -1,9 +1,9 @@
-import {assign, createMachine, send} from "xstate";
-import {ProcessContext} from "../../../processes/processContext";
-import {ProcessEvent} from "../../../processes/processEvent";
-import {ProcessDefinition} from "../../../processes/processManifest";
+import { assign, createMachine, send } from "xstate";
+import { ProcessContext } from "src/processes/processContext";
+import { ProcessEvent } from "src/processes/processEvent";
+import { ProcessDefinition } from "src/processes/processManifest";
 
-const promptTrustReceiver : ProcessEvent = {
+const promptTrustReceiver: ProcessEvent = {
     type: "omo.prompt",
     message: "Enter the address of the person that you want ot trust",
     data: {
@@ -53,7 +53,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
                                 return context.other;
                             }
                         }),
-                        send(<ProcessEvent> {
+                        send(<ProcessEvent>{
                             type: "omo.continue",
                         })
                     ]
@@ -75,7 +75,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     }
 });
 
-export const setTrust:ProcessDefinition = {
-    name:"setTrust",
+export const setTrust: ProcessDefinition = {
+    name: "setTrust",
     stateMachine: processDefinition
 };

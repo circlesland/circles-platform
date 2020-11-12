@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Modal from "./Modal.svelte";
+  import Modal from "src/components/Modal.svelte";
   import { link } from "svelte-spa-router";
   import active from "svelte-spa-router/active";
 

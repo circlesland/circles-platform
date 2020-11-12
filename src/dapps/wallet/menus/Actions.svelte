@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { requestUbi } from "../processes/requestUbi";
-  import type { Process } from "../../../main";
-  import { ProcessEvent, PromptField } from "../../../processes/processEvent";
-  import { ProcessDefinition } from "../../../processes/processManifest";
-  import { transferCircles } from "../processes/transferCircles";
-  import { setTrust } from "../processes/setTrust";
+  import { requestUbi } from "src/dapps/wallet/processes/requestUbi";
+  import type { Process } from "src/main";
+  import { ProcessEvent, PromptField } from "src/processes/processEvent";
+  import { ProcessDefinition } from "src/processes/processManifest";
+  import { transferCircles } from "src/dapps/wallet/processes/transferCircles";
+  import { setTrust } from "src/dapps/wallet/processes/setTrust";
 
   let statusType:
     | "none"

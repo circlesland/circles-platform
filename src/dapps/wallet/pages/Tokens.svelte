@@ -1,9 +1,9 @@
 <script lang="ts">
-  import MobileLayout from "../../../templates/MobileLayout.svelte";
+  import MobileLayout from "src/templates/MobileLayout.svelte";
 
-  import Menu from "../../../components/Menu.svelte";
-  import Actions from "../menus/Actions.svelte";
-  import Tokens from "../components/Tokens.svelte";
+  import Menu from "src/components/Menu.svelte";
+  import Actions from "src/dapps/wallet/menus/Actions.svelte";
+  import Tokens from "src/dapps/wallet/components/Tokens.svelte";
   import TemplatetNavBottom from "src/templates/TemplatetNavBottom.svelte";
 
   export let params = {};

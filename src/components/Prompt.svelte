@@ -1,67 +1,77 @@
 <script lang="ts">
-    import {ProcessEvent, PromptField} from "../processes/processEvent";
-    import AccountInput from "./fields/AddressInput.svelte";
-    import EtherInput from "./fields/EtherInput.svelte";
-    import StringInput from "./fields/StringInput.svelte";
-    import TextInput from "./fields/TextInput.svelte";
-    import {Process} from "../main";
+  import { ProcessEvent, PromptField } from "src/processes/processEvent";
+  import AccountInput from "src/components/fields/AddressInput.svelte";
+  import EtherInput from "src/components/fields/EtherInput.svelte";
+  import StringInput from "src/components/fields/StringInput.svelte";
+  import TextInput from "src/components/fields/TextInput.svelte";
+  import { Process } from "src/main";
 
-    export let process:Process;
-    export let promptFields: { [id: string]: PromptField } = {};
+  export let process: Process;
+  export let promptFields: { [id: string]: PromptField } = {};
 
-    function submit() {
-        if (!process)
-            throw new Error("No process!");
+  function submit() {
+    if (!process) throw new Error("No process!");
 
-        const filledFields = Object.keys(promptFields)
-            .map(id => {
-                return {
-                    id,
-                    field: promptFields[id]
-                };
-            })
-            .filter(item => item.field.value)
-            .map(item => {
-                return {
-                    id: item.id,
-                    value: item.field.value
-                };
-            });
+    const filledFields = Object.keys(promptFields)
+      .map((id) => {
+        return {
+          id,
+          field: promptFields[id],
+        };
+      })
+      .filter((item) => item.field.value)
+      .map((item) => {
+        return {
+          id: item.id,
+          value: item.field.value,
+        };
+      });
 
-        process.sendEvent(<ProcessEvent>{
-            type:"omo.answer",
-            data: {
-                fields: filledFields
-            }
-        });
-    }
+    process.sendEvent(<ProcessEvent>{
+      type: "omo.answer",
+      data: {
+        fields: filledFields,
+      },
+    });
+  }
 
-    function cancel() {
-        if (!process)
-            throw new Error("No process!");
+  function cancel() {
+    if (!process) throw new Error("No process!");
 
-        process.sendEvent(<ProcessEvent>{
-            type:"omo.cancel",
-            message: "The process was cancelled from a user dialog."
-        });
-    }
+    process.sendEvent(<ProcessEvent>{
+      type: "omo.cancel",
+      message: "The process was cancelled from a user dialog.",
+    });
+  }
 </script>
 
 {#each promptFields as promptField}
-    <Label>
-        <p>{promptField.label}:</p>
-        {#if promptField.type === "account"}
-            <AccountInput on:value={(event) => {promptFields[promptField.id].value = event.detail.data}} />
-        {:else if promptField.type === "ether"}
-            <EtherInput on:value={() => {promptFields[promptField.id].value = event.detail.data}} />
-        {:else if promptField.type === "string"}
-            <StringInput on:value={() => {promptFields[promptField.id].value = event.detail.data}} />
-        {:else if promptField.type === "text"}
-            <TextInput on:value={() => {promptFields[promptField.id].value = event.detail.data}} />
-        {/if}
-    </Label>
+  <Label>
+    <p>{promptField.label}:</p>
+    {#if promptField.type === 'account'}
+      <AccountInput
+        on:value={(event) => {
+          promptFields[promptField.id].value = event.detail.data;
+        }} />
+    {:else if promptField.type === 'ether'}
+      <EtherInput
+        on:value={() => {
+          promptFields[promptField.id].value = event.detail.data;
+        }} />
+    {:else if promptField.type === 'string'}
+      <StringInput
+        on:value={() => {
+          promptFields[promptField.id].value = event.detail.data;
+        }} />
+    {:else if promptField.type === 'text'}
+      <TextInput
+        on:value={() => {
+          promptFields[promptField.id].value = event.detail.data;
+        }} />
+    {/if}
+  </Label>
 {/each}
 <p>
-    <button on:click={submit}>Submit</button><br/>
-    <button on:click={cancel}>Cancel</button>
+  <button on:click={submit}>Submit</button><br />
+  <button on:click={cancel}>Cancel</button>
 </p>

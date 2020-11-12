@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { CirclesHub } from "../../../libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "../../../libs/o-circles-protocol/model/person";
-  import { config } from "../../../libs/o-circles-protocol/config";
-  import type { Address } from "../../../libs/o-circles-protocol/interfaces/address";
+  import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
+  import { Person } from "src/libs/o-circles-protocol/model/person";
+  import { config } from "src/libs/o-circles-protocol/config";
+  import type { Address } from "src/libs/o-circles-protocol/interfaces/address";
   import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";

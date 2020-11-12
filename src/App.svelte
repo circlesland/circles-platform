@@ -1,7 +1,7 @@
 <script lang="ts">
   import Router from "svelte-spa-router";
-  import routes from "./routes";
-  import Tailwind from "./Tailwind.svelte";
+  import routes from "src/routes";
+  import Tailwind from "src/Tailwind.svelte";
 </script>
 
 <Tailwind />

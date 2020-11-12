@@ -1,13 +1,12 @@
 <script lang="ts">
-  import PageTransition from "../../../transitions/PageTransition.svelte";
-  import MobileLayout from "../../../templates/MobileLayout.svelte";
+  import MobileLayout from "src/templates/MobileLayout.svelte";
   import TemplatetNavBottom from "src/templates/TemplatetNavBottom.svelte";
 
-  import Menu from "../../../components/Menu.svelte";
-  import Balance from "../components/Balance.svelte";
-  import Transactions from "../components/Transactions.svelte";
-  import Actions from "../menus/Actions.svelte";
-  import Account from "../components/Account.svelte";
+  import Menu from "src/components/Menu.svelte";
+  import Balance from "src/dapps/wallet/components/Balance.svelte";
+  import Transactions from "src/dapps/wallet/components/Transactions.svelte";
+  import Actions from "src/dapps/wallet/menus/Actions.svelte";
+  import Account from "src/dapps/wallet/components/Account.svelte";
 
   export let params = {};
 

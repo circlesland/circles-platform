@@ -1,5 +1,5 @@
-import {BN} from "ethereumjs-util";
-import {Address} from "../libs/o-circles-protocol/interfaces/address";
+import { BN } from "ethereumjs-util";
+import { Address } from "src/libs/o-circles-protocol/interfaces/address";
 
 export type PromptField = {
     type: string,
@@ -17,10 +17,10 @@ export type ProcessEvent =
     | { type: "omo.notification", message: string }
     | { type: "omo.cancel", message: string }
     | {
-    // Prompts the user to take an action on the given fields.
-    // Some fields (button types etc.) can link to a 'trigger'.
-    // Triggers are declared outside of the fields to allow them
-    // to access all fields.
+        // Prompts the user to take an action on the given fields.
+        // Some fields (button types etc.) can link to a 'trigger'.
+        // Triggers are declared outside of the fields to allow them
+        // to access all fields.
         type: "omo.prompt",
         message: string,
         data: {
@@ -33,17 +33,17 @@ export type ProcessEvent =
                 [id: string]: () => ProcessEvent
             }
         }
-      }
+    }
     | {
         type: "omo.answer",
         message: string,
         data: {
             id: string,
             fields: {
-                [id: string]:any
+                [id: string]: any
             }
         }
-      }
+    }
     | { type: "omo.error", message: string }
     | {
         type: "omo.success",
@@ -63,5 +63,5 @@ export type ProcessEvent =
             to: Address,
             limit: number
         }
-      }
+    }
     | { type: "omo.stopped" };

@@ -1,7 +1,7 @@
-import {createMachine, send} from "xstate";
-import {ProcessContext} from "../../../processes/processContext";
-import {ProcessEvent} from "../../../processes/processEvent";
-import {ProcessDefinition} from "../../../processes/processManifest";
+import { createMachine, send } from "xstate";
+import { ProcessContext } from "src/processes/processContext";
+import { ProcessEvent } from "src/processes/processEvent";
+import { ProcessDefinition } from "src/processes/processManifest";
 
 /**
  * Connect safe
@@ -62,7 +62,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     }
 });
 
-export const connectSafe:ProcessDefinition = {
-    name:"connectSafe",
+export const connectSafe: ProcessDefinition = {
+    name: "connectSafe",
     stateMachine: processDefinition
 };

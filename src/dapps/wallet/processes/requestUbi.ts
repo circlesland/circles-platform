@@ -1,7 +1,7 @@
-import {createMachine, send} from "xstate";
-import {ProcessContext} from "../../../processes/processContext";
-import {ProcessEvent} from "../../../processes/processEvent";
-import {ProcessDefinition} from "../../../processes/processManifest";
+import { createMachine, send } from "xstate";
+import { ProcessContext } from "src/processes/processContext";
+import { ProcessEvent } from "src/processes/processEvent";
+import { ProcessDefinition } from "src/processes/processManifest";
 
 const TwelveHours = 12 * 60 * 60 * 60 * 1000;
 const TwentySeconds = 20 * 1000;
@@ -56,7 +56,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
                 onDone: {
                     actions: [
                         "setLastSuccessfulUbiRetrieval",
-                         send({
+                        send({
                             type: "omo.success",
                             data: {
                                 type: "ubi"
@@ -76,15 +76,13 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     }
 }, {
     guards: {
-        "recentlyGotUbi?": () =>
-        {
+        "recentlyGotUbi?": () => {
             const lastSuccessfulUbiRetrieval = localStorage.getItem("omo.ubiService.lastSuccessfulUbiRetrieval");
             return lastSuccessfulUbiRetrieval
                 ? Date.now() - parseInt(lastSuccessfulUbiRetrieval) < TwelveHours
                 : false;
         },
-        "canRetrieveNewUbi?": (context, event) =>
-        {
+        "canRetrieveNewUbi?": (context, event) => {
             const now = Date.now();
 
             // A User can retrieve new UBI when:
@@ -105,18 +103,16 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
         }
     },
     actions: {
-        "setNextPossibleUbiRetrieval": () =>
-        {
+        "setNextPossibleUbiRetrieval": () => {
             localStorage.setItem("omo.ubiService.nextPossibleUbiRetrieval", (Date.now() + TwentySeconds).toString());
         },
-        "setLastSuccessfulUbiRetrieval": () =>
-        {
+        "setLastSuccessfulUbiRetrieval": () => {
             localStorage.setItem("omo.ubiService.lastSuccessfulUbiRetrieval", Date.now().toString());
         }
     }
 });
 
-export const requestUbi:ProcessDefinition = {
-    name:"requestUbi",
+export const requestUbi: ProcessDefinition = {
+    name: "requestUbi",
     stateMachine: processDefinition
 };
