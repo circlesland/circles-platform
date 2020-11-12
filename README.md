@@ -1,11 +1,12 @@
 # Omo Li
-Building with Omo.Li a lightweight and serverless decentralized wallet and marketplace on top of the CirclesUBI protocol
+Building with Omo.Li a lightweight and hostless decentralized wallet and marketplace on top of the CirclesUBI protocol, ipfs and the fission Webnative SDK
 
-- DAPP (early alpha WIP): https://omo.earth
+- DAPP (early alpha WIP): https://universal-oval-wizard.fission.app/
+
 ## Overview
 
 - Chat: https://discord.gg/Rbhy4j9
-- Feedback: https://github.com/omoearth/omo/issues
+- Wishes & Bugs: https://github.com/omoearth/omo/issues
 - Roadmap: https://github.com/omoearth/omo/projects/1
 - Twitter: https://twitter.com/OmoEarth
 
@@ -16,14 +17,62 @@ Clone Repo
 `git clone https://github.com/omoearth/omo-li.git`
 
 Enter directory 
-`cd omo-li`
+```bash
+cd omo-li
+```
+
+Install with npm
+```bash
+npm i
+```
 
 Start
-`npm run dev`
+```bash
+npm run dev
+```
+Go to your browser and open https://0.0.0.0:5000
 
-Go to your browser and open https://0.0.0.0.5000
 
-## Svelte typescript, tebpack, tailwind starter 
+### Building for production
+The `build` script will compile the app for production. By default, the bundle will be created at `/public/build/`, which means your public directory will contain everything you need to run the app.
+
+```bash
+npm run build
+```
+
+To run the production build, use the `start` command and open [http://localhost:8080](http://localhost:8080) in your browser.
+
+```bash
+npm run start
+```
+
+### Hostless deployment to ipfs via fission
+For more information about fission, read the docs: 
+https://guide.fission.codes/
+
+Install
+```bash
+brew install fission-suite/fission/fission-cli
+```
+
+Setup your account keys with fission
+```bash
+fission setup --verbose
+```
+
+Register your dapp and enter path of build folder (./public)
+```bash
+fission app register --verbose
+```
+
+Publish and delpoy your dapp
+```bash
+npm run deploy
+```
+This will first build and then publish your dapp to ipfs via the fission service
+
+
+## Svelte typescript, webpack, tailwind
 ---
 
 - [Getting started](#getting-started)
@@ -39,19 +88,6 @@ Go to your browser and open https://0.0.0.0.5000
 	- [Path mapping](#path-mapping)
 
 ---
-
-### Building for production
-The `build` script will compile the app for production. By default, the bundle will be created at `/public/build/`, which means your public directory will contain everything you need to run the app.
-
-```bash
-npm run build
-```
-
-To run the production build, use the `start` command and open [http://localhost:8080](http://localhost:8080) in your browser.
-
-```bash
-npm run start
-```
 
 ## Usage
 
