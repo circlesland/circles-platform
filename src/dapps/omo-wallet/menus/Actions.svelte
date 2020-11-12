@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { requestUbi } from "src/dapps/wallet/processes/requestUbi";
+  import { requestUbi } from "src/dapps/omo-wallet/processes/requestUbi";
   import type { Process } from "src/main";
   import { ProcessEvent, PromptField } from "src/processes/processEvent";
-  import { ProcessDefinition } from "src/processes/processManifest";
-  import { transferCircles } from "src/dapps/wallet/processes/transferCircles";
-  import { setTrust } from "src/dapps/wallet/processes/setTrust";
+  // import { ProcessDefinition } from "src/processes/processManifest";
+  // import { transferCircles } from "src/dapps/omo-wallet/processes/transferCircles";
+  // import { setTrust } from "src/dapps/omo-wallet/processes/setTrust";
 
   let statusType:
     | "none"

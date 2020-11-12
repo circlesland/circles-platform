@@ -21,6 +21,7 @@
 		"rxjs": "^6.6.3",
 		"serve": "^11.3.2",
 		"solc": "0.5.17",
+		"svelte-i18n": "^3.2.5",
 		"svelte-loading-spinners": "^0.1.1",
 		"svelte-qrcode": "0.0.2",
 		"svelte-spa-router": "^3.0.5",

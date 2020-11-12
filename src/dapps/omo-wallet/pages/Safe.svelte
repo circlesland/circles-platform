@@ -1,10 +1,12 @@
 <script lang="ts">
   import MobileLayout from "src/templates/MobileLayout.svelte";
+  import TemplatetNavBottom from "src/templates/TemplatetNavBottom.svelte";
 
   import Menu from "src/components/Menu.svelte";
-  import Actions from "src/dapps/wallet/menus/Actions.svelte";
-  import Trusts from "src/dapps/wallet/components/Trusts.svelte";
-  import TemplatetNavBottom from "src/templates/TemplatetNavBottom.svelte";
+  import Balance from "src/dapps/omo-wallet/components/Balance.svelte";
+  import Transactions from "src/dapps/omo-wallet/components/Transactions.svelte";
+  import Actions from "src/dapps/omo-wallet/menus/Actions.svelte";
+  import Account from "src/dapps/omo-wallet/components/Account.svelte";
 
   export let params = {};
 
@@ -20,19 +22,17 @@
 <style>
   .grid {
     display: grid;
-    grid-template-rows: 40px 1fr auto;
+    grid-template-rows: 150px 60px 1fr;
   }
 </style>
 
 <MobileLayout>
   <TemplatetNavBottom>
     <div slot="content" class="grid overflow-hidden">
-      <header
-        class="px-3 py-2 font-bold bg-white border-b border-gray-300 text-primary">
-        Trusted friends
-      </header>
+      <Balance {address} />
+      <Account {address} />
       <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
-        <Trusts {address} />
+        <Transactions {address} />
       </div>
     </div>
     <div slot="nav">

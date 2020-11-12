@@ -2,8 +2,8 @@
   import MobileLayout from "src/templates/MobileLayout.svelte";
 
   import Menu from "src/components/Menu.svelte";
-  import Actions from "src/dapps/wallet/menus/Actions.svelte";
-  import Tokens from "src/dapps/wallet/components/Tokens.svelte";
+  import Actions from "src/dapps/omo-wallet/menus/Actions.svelte";
+  import Trusts from "src/dapps/omo-wallet/components/Trusts.svelte";
   import TemplatetNavBottom from "src/templates/TemplatetNavBottom.svelte";
 
   export let params = {};
@@ -29,11 +29,11 @@
     <div slot="content" class="grid overflow-hidden">
       <header
         class="px-3 py-2 font-bold bg-white border-b border-gray-300 text-primary">
-        Circles token balances
+        Trusted friends
       </header>
-      <main class="pt-4 overflow-x-hidden overflow-y-scroll bg-gray-100">
-        <Tokens {address} />
-      </main>
+      <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
+        <Trusts {address} />
+      </div>
     </div>
     <div slot="nav">
       <Menu {address} actions={Actions} />
