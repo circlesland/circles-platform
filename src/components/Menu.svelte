@@ -1,8 +1,10 @@
 <script lang="ts">
   import Modal from "./Modal.svelte";
+  import { link } from "svelte-spa-router";
+  import active from "svelte-spa-router/active";
 
   let triggerRef;
-  export let isOpen;
+  export let isOpen: Boolean;
   export let actions;
 
   export let address: string = null;
@@ -12,6 +14,12 @@
   .action {
     z-index: 1001;
   }
+  :global(a.active) {
+    color: #0c266a;
+  }
+  .test {
+    background-color: turquoise;
+  }
 </style>
 
 <Modal {triggerRef} bind:isOpen>
@@ -19,16 +27,16 @@
 </Modal>
 <footer
   class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
-  <div
-    class="flex items-center justify-center w-16 px-2 text-xs text-center text-primary">
-    <a href="#/wallet/{address}/safe">
+  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+    <a href="#/wallet/{address}/safe" use:active={{ path: '/wallet/*/safe' }}>
       <i class="text-2xl fas fa-piggy-bank" />
       <p>Safe</p>
     </a>
   </div>
-  <div
-    class="flex items-center justify-center w-16 px-2 text-xs text-center text-primary">
-    <a href="#/wallet/{address}/tokens">
+  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+    <a
+      href="#/wallet/{address}/tokens"
+      use:active={{ path: '/wallet/*/tokens' }}>
       <i class="text-2xl fas fa-coins" />
       <p>Tokens</p>
     </a>
@@ -36,23 +44,29 @@
   <div
     class="flex items-center justify-center text-xs text-center action"
     on:click={() => (isOpen = !isOpen)}>
-    <div
-      class="relative w-16 h-16 -mt-5 text-white rounded-full {isOpen ? 'bg-primary' : 'bg-action'}">
-      <!-- <img src="images/logo_white.png" /> -->
-      <i class="mt-4 text-3xl fas fa-plus" />
-    </div>
+    {#if isOpen}
+      <div
+        class="relative w-16 h-16 -mt-5 border-2 rounded-full text-light-300 border-light-300 ">
+        <i class="mt-4 text-3xl fas fa-minus" />
+      </div>
+    {:else}
+      <div class="relative w-16 h-16 -mt-5 text-white rounded-full bg-action">
+        <i class="mt-4 text-3xl fas fa-plus " />
+      </div>
+    {/if}
   </div>
-  <div
-    class="flex items-center justify-center w-16 px-2 text-xs text-center text-primary">
-    <a href="#/wallet/{address}/trusts">
+  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+    <a
+      href="/wallet/{address}/trusts"
+      use:link
+      use:active={{ path: '/wallet/*/trusts' }}>
       <i class="text-2xl fas fa-user-friends" />
       <p>Friends</p>
     </a>
   </div>
 
-  <div
-    class="flex items-center justify-center w-16 px-2 text-xs text-center text-primary">
-    <a href="#/dapps">
+  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+    <a href="/dapps" use:link>
       <i class="text-2xl fas fa-user-circle" />
       <p>Home</p>
     </a>
