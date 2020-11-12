@@ -39,7 +39,7 @@ module.exports = {
   },
   plugins: [],
   future: {
-    purgeLayersByDefault: true,
+    // purgeLayersByDefault: true,
     removeDeprecatedGapUtilities: true,
   }
 };
