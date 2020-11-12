@@ -1,12 +1,13 @@
 <script lang="ts">
   import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
-  import TemplatetNavBottom from "src/libs/o-views/templates/TemplatetNavBottom.svelte";
+  import HeaderMainFooter from "src/libs/o-views/templates/HeaderMainFooter.svelte";
 
   import Menu from "src/libs/o-views/molecules/Menu.svelte";
   import Balance from "src/dapps/wallet/components/Balance.svelte";
   import Transactions from "src/dapps/wallet/components/Transactions.svelte";
   import Actions from "src/dapps/wallet/menus/Actions.svelte";
   import Account from "src/dapps/wallet/components/Account.svelte";
+  import Header from "src/libs/o-views/molecules/Header.svelte";
 
   export let params = {};
 
@@ -17,6 +18,9 @@
       address = params.address;
     }
   }
+  let header = {
+    title: "Safe",
+  };
 </script>
 
 <style>
@@ -27,16 +31,19 @@
 </style>
 
 <MobileLayout>
-  <TemplatetNavBottom>
-    <div slot="content" class="grid overflow-hidden">
+  <HeaderMainFooter>
+    <header slot="header">
+      <Header data={header} />
+    </header>
+    <main slot="main" class="grid overflow-hidden">
       <Balance {address} />
       <Account {address} />
       <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
         <Transactions {address} />
       </div>
-    </div>
-    <div slot="nav">
+    </main>
+    <footer slot="footer">
       <Menu {address} actions={Actions} />
-    </div>
-  </TemplatetNavBottom>
+    </footer>
+  </HeaderMainFooter>
 </MobileLayout>

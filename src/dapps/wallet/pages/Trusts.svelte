@@ -1,12 +1,16 @@
 <script lang="ts">
   import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
-  import TemplatetNavBottom from "src/libs/o-views/templates/TemplatetNavBottom.svelte";
-
+  import HeaderMainFooter from "src/libs/o-views/templates/HeaderMainFooter.svelte";
+  import Header from "src/libs/o-views/molecules/Header.svelte";
   import Menu from "src/libs/o-views/molecules/Menu.svelte";
   import Actions from "src/dapps/wallet/menus/Actions.svelte";
   import Trusts from "src/dapps/wallet/components/Trusts.svelte";
 
   export let params = {};
+
+  let header = {
+    title: "Friends",
+  };
 
   let address: string = null;
 
@@ -20,23 +24,22 @@
 <style>
   .grid {
     display: grid;
-    grid-template-rows: 40px 1fr auto;
+    grid-template-rows: 1fr;
   }
 </style>
 
 <MobileLayout>
-  <TemplatetNavBottom>
-    <div slot="content" class="grid overflow-hidden">
-      <header
-        class="px-3 py-2 font-bold bg-white border-b border-gray-300 text-primary">
-        Trusted friends
-      </header>
+  <HeaderMainFooter>
+    <header slot="header">
+      <Header data={header} />
+    </header>
+    <main slot="main" class="grid overflow-hidden">
       <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
         <Trusts {address} />
       </div>
-    </div>
-    <div slot="nav">
+    </main>
+    <footer slot="footer">
       <Menu {address} actions={Actions} />
-    </div>
-  </TemplatetNavBottom>
+    </footer>
+  </HeaderMainFooter>
 </MobileLayout>

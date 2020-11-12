@@ -62,7 +62,7 @@
             {/if}
           </p> -->
         </div>
-        <div class="w-1/3 h-12 px-3 py-1 text-2xl text-right text-primary">
+        <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
           {token.balanceString}
         </div>
       </div>

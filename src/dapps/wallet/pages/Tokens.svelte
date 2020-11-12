@@ -1,10 +1,10 @@
 <script lang="ts">
   import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
-
+  import Header from "src/libs/o-views/molecules/Header.svelte";
   import Menu from "src/libs/o-views/molecules/Menu.svelte";
   import Actions from "src/dapps/wallet/menus/Actions.svelte";
   import Tokens from "src/dapps/wallet/components/Tokens.svelte";
-  import TemplatetNavBottom from "src/libs/o-views/templates/TemplatetNavBottom.svelte";
+  import HeaderMainFooter from "src/libs/o-views/templates/HeaderMainFooter.svelte";
 
   export let params = {};
 
@@ -15,28 +15,31 @@
       address = params.address;
     }
   }
+  let header = {
+    title: "Tokens",
+  };
 </script>
 
 <style>
   .grid {
     display: grid;
-    grid-template-rows: 40px 1fr auto;
+    grid-template-rows: 1fr;
   }
 </style>
 
 <MobileLayout>
-  <TemplatetNavBottom>
-    <div slot="content" class="grid overflow-hidden">
-      <header
-        class="px-3 py-2 font-bold bg-white border-b border-gray-300 text-primary">
-        Circles token balances
-      </header>
-      <main class="pt-4 overflow-x-hidden overflow-y-scroll bg-gray-100">
+  <HeaderMainFooter>
+    <headre slot="header">
+      <Header data={header} />
+    </headre>
+    <main slot="main" class="grid overflow-hidden">
+      <main
+        class="h-full pt-4 overflow-x-hidden overflow-y-scroll bg-gray-100 ">
         <Tokens {address} />
       </main>
-    </div>
-    <div slot="nav">
+    </main>
+    <footer slot="footer">
       <Menu {address} actions={Actions} />
-    </div>
-  </TemplatetNavBottom>
+    </footer>
+  </HeaderMainFooter>
 </MobileLayout>

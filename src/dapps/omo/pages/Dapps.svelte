@@ -62,7 +62,7 @@
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
             <i class="text-5xl fas fa-comments" />
-            <p class="pt-3">°Talk</p>
+            <p class="pt-3">{$_('omo_dapp_name_talk')}</p>
             <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
           </div>
         </div>
@@ -72,7 +72,7 @@
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
             <i class="text-5xl fas fa-store" />
-            <p class="pt-3">°Market</p>
+            <p class="pt-3">{$_('omo_dapp_name_market')}</p>
             <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
           </div>
         </div>
@@ -82,7 +82,7 @@
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
             <i class="text-5xl fas fa-user-friends" />
-            <p class="pt-3">°Teams</p>
+            <p class="pt-3">{$_('omo_dapp_name_teams')}</p>
             <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
           </div>
         </div>
@@ -92,7 +92,7 @@
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
             <i class="text-5xl fas fa-film" />
-            <p class="pt-3">°Movies</p>
+            <p class="pt-3">{$_('omo_dapp_name_movies')}</p>
             <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
           </div>
         </div>
@@ -102,7 +102,7 @@
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
             <i class="text-5xl fas fa-headphones" />
-            <p class="pt-3">°Music</p>
+            <p class="pt-3">{$_('omo_dapp_name_music')}</p>
             <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
           </div>
         </div>
@@ -112,7 +112,7 @@
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
             <i class="text-5xl fas fa-book" />
-            <p class="pt-3">°Books</p>
+            <p class="pt-3">{$_('omo_dapp_name_books')}</p>
             <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
           </div>
         </div>
@@ -122,7 +122,7 @@
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
             <i class="text-5xl fas fa-file-alt" />
-            <p class="pt-3">°Files</p>
+            <p class="pt-3">{$_('omo_dapp_name_files')}</p>
             <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
           </div>
         </div>

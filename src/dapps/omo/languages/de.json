@@ -1,7 +1,14 @@
 {
     "omo_dashboard_title": "Willkommen",
+    "omo_dapp_alpha_testing": "alpha testphase",
+    "omo_dapp_coming_soon": "bald",
     "omo_dapp_name_identity": "Identität",
     "omo_dapp_name_wallet": "Konto",
-    "omo_dapp_alpha_testing": "alpha testphase",
-    "omo_dapp_coming_soon": "bald"
+    "omo_dapp_name_talk": "Talk",
+    "omo_dapp_name_market": "Marktplatz",
+    "omo_dapp_name_teams": "Teams",
+    "omo_dapp_name_movies": "Filme",
+    "omo_dapp_name_music": "Musik",
+    "omo_dapp_name_books": "Bücher",
+    "omo_dapp_name_files": "Daten"
 }
