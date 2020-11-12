@@ -78,7 +78,7 @@
   {#each transactions as t}
     <div class="mx-4 mb-2">
       <div class="flex w-full bg-white border border-gray-300 rounded">
-        <div class="flex-1 w-2/3 px-4 py-2 text-base">
+        <div class="flex-1 w-2/3 px-4 py-2 text-sm">
           <b class="text-primary">
             {#if t.from !== '0x0000000000000000000000000000000000000000'}
               {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
@@ -105,12 +105,12 @@
           </p>
         </div>
         {#if t.direction === 'out'}
-          <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-red-500">
+          <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
             -
             {t.amount}
           </div>
         {:else}
-          <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-green-500">
+          <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-action">
             {t.amount}
           </div>
         {/if}

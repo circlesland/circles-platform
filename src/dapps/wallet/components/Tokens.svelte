@@ -37,9 +37,16 @@
   {#each tokensITrust as token}
     <div class="mx-4 mb-2">
       <div class="flex w-full bg-white border border-gray-300 rounded">
-        <div class="flex-1 w-2/3 px-4 py-2 text-base">
+        <div class="flex-1 w-2/3 px-4 py-2 text-sm">
+          <div class="text-primary">
+            <a
+              href="#/wallet/{token.owner.address}/tokens">{token.owner.address.slice(0, 25)}...</a>
+          </div>
+          <p class="text-xs text-gray-500">
+            <span class="text-gray-500">safe address of token owner</span>
+          </p>
           <!-- <b class="text-primary">{token.token}</b> -->
-          <p class="-mt-1 text-xs">
+          <!-- <p class="text-primary">
             {#if !token.limit || token.limit == 0}
               <b class="text-primary">
                 <a
@@ -53,7 +60,7 @@
                   href="#/wallet/{token.owner.address}/tokens">{token.owner.address.slice(0, 25)}...</a>
               </b>
             {/if}
-          </p>
+          </p> -->
         </div>
         <div class="w-1/3 h-12 px-3 py-1 text-2xl text-right text-primary">
           {token.balanceString}

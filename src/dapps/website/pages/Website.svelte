@@ -1,12 +1,3 @@
-<!--<script ✂prettier:content✂="CiAgaW1wb3J0IHsgXyB9IGZyb20gInN2ZWx0ZS1pMThuIjsK" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=" ✂prettier:content✂="e30=">{}</script><div class="flex items-center justify-center h-full">
-  <div class="mx-auto text-center">
-    <img src="images/logo_with_font.png" alt="omo" class="w-40 mx-auto" />
-    <br />
-    <p class="px-4 py-2 border rounded border-primary text-primary font-title">
-      <a href="#/omo/dapps">{$_('button_gotoapp')}</a>
-    </p>
-  </div>
-</div> -->
 <script>
   import "css-doodle";
   import { _ } from "svelte-i18n";
@@ -26,7 +17,7 @@
 
 <div class="absolute z-10 flex items-end justify-center w-full h-full py-16">
   <div>
-    <div class="text-white uppercase font-title">empowering your abundance</div>
+    <div class="text-2xl text-white font-title">empowering your abundance</div>
     <div class="flex justify-center pt-8">
       <a
         href="#/omo/dapps"
