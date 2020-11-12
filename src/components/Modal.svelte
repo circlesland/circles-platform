@@ -38,22 +38,6 @@
     justify-content: center;
     overflow-y: hidden;
   }
-  aside .box {
-    background: #fff;
-    position: relative;
-    box-sizing: 0 0 20px 0px rgba(0, 0, 0, 0.3);
-  }
-  aside .box header button {
-    background: none;
-    border: none;
-    padding: 0;
-    font-size: 20px;
-    position: absolute;
-    right: 20px;
-    color: #ccc;
-    font-weight: lighter;
-    cursor: pointer;
-  }
 </style>
 
 {#if isOpen}
@@ -75,9 +59,9 @@
           bind:this={buttonRef}
           on:click={handleClose} />
       </header>
-      <main class="pb-16">
+      <div class="pb-16">
         <slot>No content provided</slot>
-      </main>
+      </div>
     </div>
   </aside>
 {/if}

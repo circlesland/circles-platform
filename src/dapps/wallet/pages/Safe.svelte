@@ -29,15 +29,13 @@
 
 <MobileLayout>
   <TemplatetNavBottom>
-    <!-- <PageTransition> -->
-    <div slot="content" class="grid h-full overflow-hidden">
+    <div slot="content" class="grid overflow-hidden">
       <Balance {address} />
       <Account {address} />
       <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
         <Transactions {address} />
       </div>
     </div>
-    <!-- </PageTransition> -->
     <div slot="nav">
       <Menu {address} actions={Actions} />
     </div>

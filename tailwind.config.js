@@ -20,9 +20,11 @@ module.exports = {
         'smoke-light': 'rgba(0, 0, 0, 0.4)',
         'smoke-lighter': 'rgba(0, 0, 0, 0.25)',
         'smoke-lightest': 'rgba(0, 0, 0, 0.1)',
-        'light-100': '#F5F5F5',
-        'light-200': '#EDEDED',
-        'light-300': '#F1F1E4'
+        'light-100': '#F4F6F9',
+        'light-200': '#E9EDF1',
+        'light-300': '#D0D6DF',
+        'light-400': "#BBC4CC",
+        'light-500': '#97A3B1'
       },
       height: {
         '14': '3.5rem' 
@@ -37,6 +39,7 @@ module.exports = {
   },
   plugins: [],
   future: {
+    purgeLayersByDefault: true,
     removeDeprecatedGapUtilities: true,
   }
 };
