@@ -7,7 +7,8 @@
 		"validate": "svelte-check",
 		"deploy": "npm run build && fission app publish --verbose",
 		"watch:tailwind": "postcss public/tailwind.css -o public/index.css -w",
-		"build:tailwind": "cross-env NODE_ENV=production postcss public/tailwind.css -o public/index.css"
+		"build:tailwind": "cross-env NODE_ENV=production postcss public/tailwind.css -o public/index.css",
+		"postinstall": "husky install"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.15.1",
@@ -32,17 +33,21 @@
 		"@babel/plugin-transform-runtime": "^7.11.5",
 		"@babel/preset-env": "^7.11.5",
 		"@babel/runtime": "^7.11.2",
+		"@tsconfig/svelte": "^1.0.10",
+		"@types/web3": "^1.2.2",
 		"autoprefixer": "^9.8.6",
 		"babel-loader": "^8.1.0",
 		"clean-webpack-plugin": "^3.0.0",
 		"cross-env": "^7.0.2",
 		"css-loader": "^4.2.0",
+		"husky": "^5.0.0-beta.0",
 		"mini-css-extract-plugin": "^0.9.0",
 		"optimize-css-assets-webpack-plugin": "^5.0.3",
 		"postcss-cli": "^8.2.0",
 		"postcss-loader": "^3.0.0",
 		"sass": "^1.29.0",
 		"sass-loader": "^10.0.1",
+		"sirv-cli": "^1.0.8",
 		"svelte": "^3.24.1",
 		"svelte-check": "^1.1.11",
 		"svelte-loader-hot": "^0.3.1",
@@ -50,16 +55,13 @@
 		"tailwindcss": "^1.9.6",
 		"terser-webpack-plugin": "^4.0.0",
 		"ts-loader": "^8.0.2",
+		"tslib": "^2.0.3",
 		"typescript": "^4.0.5",
 		"webpack": "^4.44.1",
 		"webpack-cli": "^3.3.12",
 		"webpack-dev-server": "^3.11.0",
-		"@tsconfig/svelte": "^1.0.10",
-		"tslib": "^2.0.3",
 		"xstate": "^4.14.0",
-		"xstate-svelte": "^1.0.1",
-		"sirv-cli": "^1.0.8",
-		"@types/web3": "^1.2.2"
+		"xstate-svelte": "^1.0.1"
 	},
 	"browserslist": [
 		"defaults"
