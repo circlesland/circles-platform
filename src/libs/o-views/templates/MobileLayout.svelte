@@ -6,11 +6,10 @@
 </style>
 
 <div
-  class="flex flex-col items-center justify-center h-full bg-white bg-center bg-cover"
-  style="background-image: url(/images/background.webp)">
+  class="flex flex-col items-center justify-center h-full bg-white bg-center bg-cover">
   <div
     class="justify-center w-full h-full max-w-lg overflow-hidden bg-white wrap">
-    <div class="h-full overflow-hidden note">
+    <div class="h-full overflow-hidden border note">
       <div class="p-2 text-xs text-white bg-pink-800">
         This dapp is an early alpha test version. For wishes and feedback join
         our

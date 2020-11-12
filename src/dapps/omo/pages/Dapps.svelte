@@ -13,7 +13,7 @@
                 class="w-32 h-32 mx-auto mt-6 border-4 rounded-full border-light-300"
                 alt="name" /> -->
         <p class="py-6 text-lg uppercase font-title">
-          <span class="text-4xl">{$_('omo_welcome')}</span>
+          <span class="text-4xl">{$_('omo_dashboard_title')}</span>
         </p>
       </div>
     </div>
