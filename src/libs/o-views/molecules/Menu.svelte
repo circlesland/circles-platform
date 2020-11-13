@@ -24,13 +24,15 @@
 </Modal>
 <footer
   class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
-  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+  <div
+    class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a href="#/wallet/{address}/safe" use:active={{ path: '/wallet/*/safe' }}>
       <i class="text-2xl fas fa-piggy-bank" />
       <p>Safe</p>
     </a>
   </div>
-  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+  <div
+    class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a
       href="#/wallet/{address}/tokens"
       use:active={{ path: '/wallet/*/tokens' }}>
@@ -47,12 +49,14 @@
         <i class="mt-4 text-3xl fas fa-minus" />
       </div>
     {:else}
-      <div class="relative w-16 h-16 -mt-5 text-white rounded-full bg-action">
+      <div
+        class="relative w-16 h-16 -mt-5 text-white rounded-full bg-secondary hover:bg-primary">
         <i class="mt-4 text-3xl fas fa-plus " />
       </div>
     {/if}
   </div>
-  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+  <div
+    class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a
       href="/wallet/{address}/trusts"
       use:link
@@ -62,7 +66,8 @@
     </a>
   </div>
 
-  <div class="flex items-center justify-center w-16 px-2 text-xs text-center">
+  <div
+    class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a href="/omo/dapps" use:link>
       <i class="text-2xl fas fa-user-circle" />
       <p>Home</p>

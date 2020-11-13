@@ -75,8 +75,8 @@
 </script>
 
 {#if transactions.length > 0}
-  {#each transactions as t}
-    <div class="mx-4 mb-2">
+  <div class="m-4 space-y-2">
+    {#each transactions as t}
       <div class="flex w-full bg-white border border-gray-300 rounded">
         <div class="flex-1 w-2/3 px-4 py-2 text-sm">
           <b class="text-primary">
@@ -115,8 +115,8 @@
           </div>
         {/if}
       </div>
-    </div>
-  {/each}
+    {/each}
+  </div>
 {:else}
   <div class="flex items-center justify-center h-full mx-auto">
     <Jumper size="150" color="#071D69" unit="px" />

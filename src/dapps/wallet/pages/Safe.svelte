@@ -26,7 +26,7 @@
 <style>
   .grid {
     display: grid;
-    grid-template-rows: 150px 60px 1fr;
+    grid-template-rows: 150px 1fr;
   }
 </style>
 
@@ -34,11 +34,11 @@
   <HeaderMainFooter>
     <header slot="header">
       <Header data={header} />
+      <Account {address} />
     </header>
     <main slot="main" class="grid overflow-hidden">
       <Balance {address} />
-      <Account {address} />
-      <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
+      <div class="overflow-x-hidden overflow-y-scroll bg-light-100">
         <Transactions {address} />
       </div>
     </main>

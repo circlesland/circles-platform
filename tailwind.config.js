@@ -1,5 +1,13 @@
 module.exports = {
-  purge: ["./src/**/*.svelte"],
+  future: {
+    purgeLayersByDefault: true,
+    removeDeprecatedGapUtilities: true,
+  },
+  purge: {
+    mode: 'layers',
+    layers: ['base', 'components', 'utilities'],
+    content: ["./src/**/*.svelte","./src/**/*.html"]
+  },
   theme: {
     fontFamily: {
       'title': ['Montserrat', 'sans-serif'],
@@ -8,7 +16,6 @@ module.exports = {
     },
     extend: {
       colors: {
-        light: "#F5FAFF",
         dark: "#051F45",
         primary: '#0C266A',
         secondary: '#247ACA',
@@ -38,8 +45,5 @@ module.exports = {
     backgroundClip: ["responsive"],
   },
   plugins: [],
-  future: {
-    // purgeLayersByDefault: true,
-    removeDeprecatedGapUtilities: true,
-  }
+ 
 };

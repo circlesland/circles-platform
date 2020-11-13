@@ -61,7 +61,7 @@
   class="flex items-center justify-center font-bold text-center text-white bg-primary">
   <div class="font-bold text-gray-100 uppercase">
     {#if circlesBalance != undefined}
-      <p class="pt-4 text-5xl">
+      <p class="pt-2 text-5xl">
         {circlesBalance}
         <span class="text-xl text-gray-300">CRC</span>
       </p>

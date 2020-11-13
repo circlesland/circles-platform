@@ -26,7 +26,7 @@
               <i class="text-5xl fas fa-user-astronaut" />
               <p class="pt-3">{$_('omo_dapp_name_identity')}</p>
               <span
-                class="text-xs text-pink-800">({$_('omo_dapp_alpha_testing')})</span>
+                class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
             </div>
           </a>
         </div>
@@ -39,7 +39,7 @@
               <i class="text-5xl fas fa-piggy-bank" />
               <p class="pt-3">{$_('omo_dapp_name_wallet')}</p>
               <span
-                class="text-xs text-pink-800">({$_('omo_dapp_alpha_testing')})</span>
+                class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
             </div>
           </a>
         </div>

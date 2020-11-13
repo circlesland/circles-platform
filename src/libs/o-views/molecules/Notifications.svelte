@@ -15,7 +15,7 @@
 
 <a
   href="https://discord.gg/Rbhy4j9"
-  class="p-2 text-xs text-white text-pink-300 bg-pink-800">
+  class="p-2 text-xs text-white text-blue-300 bg-secondary">
   {$_('notes_text')}
   <span class="text-white uppercase rounded ">-- {$_('notes_button')} -- </span>
 </a>

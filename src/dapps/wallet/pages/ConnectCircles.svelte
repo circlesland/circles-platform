@@ -44,7 +44,7 @@
         browsers localstorage
       </p>
     </main>
-    <footer slot="footer" class="p-4 border-t bg-light-300">
+    <footer slot="footer" class="p-4 bg-white border-t">
       <div>
         <p class="mb-1 text-xs text-gray-700 uppercase">
           Enter safeaddress to recover
@@ -66,7 +66,7 @@
       </div>
       <div class="flex space-x-4">
         <a
-          href="#/dapps"
+          href="#/omo/dapps"
           class="px-4 py-2 uppercase border border-gray-300 rounded text-primary">Back</a>
         <div
           class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"
