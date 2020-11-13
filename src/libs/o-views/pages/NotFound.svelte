@@ -4,7 +4,7 @@
 
 <style>
   :root {
-    --bg: #051626;
+    --bg: #051f45;
   }
 </style>
 
@@ -16,7 +16,7 @@
     </div>
     <div class="flex justify-center ">
       <a
-        href="/"
+        href="#/omo/dapps"
         class="px-4 py-2 text-center text-white uppercase border-2 border-white rounded">go
         back to home</a>
     </div>

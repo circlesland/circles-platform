@@ -5,7 +5,7 @@
 
 <style>
   :root {
-    --bg: #051626;
+    --bg: #051f45;
   }
 </style>
 
@@ -17,11 +17,14 @@
 
 <div class="absolute z-10 flex items-end justify-center w-full h-full py-16">
   <div>
-    <div class="text-2xl text-white font-title">empowering your abundance</div>
-    <div class="flex justify-center pt-8">
+    <div class="text-2xl text-center text-white font-title">
+      empowering your
+      <br />abundance
+    </div>
+    <div class="flex justify-center pt-24">
       <a
         href="#/omo/dapps"
-        class="px-4 py-2 text-center text-white uppercase border-2 border-white rounded">{$_('button_gotoapp')}</a>
+        class="px-4 py-2 text-center text-white uppercase border border-white rounded">{$_('button_gotoapp')}</a>
     </div>
   </div>
 </div>

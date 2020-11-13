@@ -29,14 +29,13 @@
 
 <MobileLayout>
   <HeaderMainFooter>
-    <headre slot="header">
+    <header slot="header">
       <Header data={header} />
-    </headre>
+    </header>
     <main slot="main" class="grid overflow-hidden">
-      <main
-        class="h-full pt-4 overflow-x-hidden overflow-y-scroll bg-gray-100 ">
+      <div class="h-full pt-4 overflow-x-hidden overflow-y-scroll bg-gray-100 ">
         <Tokens {address} />
-      </main>
+      </div>
     </main>
     <footer slot="footer">
       <Menu {address} actions={Actions} />

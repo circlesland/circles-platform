@@ -83,7 +83,7 @@
       class="flex justify-center w-full p-4 space-x-3 text-center border-t border-gray-300">
       <a
         href="#/omo/dapps"
-        class="w-full px-4 py-2 font-bold uppercase bg-gray-300 rounded text-primary">back</a>
+        class="px-4 py-2 font-bold uppercase bg-gray-300 rounded  text-primary">back</a>
 
       <a
         on:click={() => logout()}
