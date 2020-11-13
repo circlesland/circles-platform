@@ -1,5 +1,6 @@
 <script lang="ts">
   import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
+  import MainFooter from "src/libs/o-views/templates/MainFooter.svelte";
   import { mnemonicToEntropy } from "bip39";
   import { config } from "src/libs/o-circles-protocol/config";
   import { push } from "svelte-spa-router";
@@ -30,16 +31,11 @@
   });
 </script>
 
-<style>
-  .grid {
-    display: grid;
-    grid-template-rows: 1fr auto;
-  }
-</style>
-
 <MobileLayout>
-  <div class="grid h-full">
-    <main class="h-full p-8 overflow-y-scroll text-center bg-gray-100">
+  <MainFooter>
+    <main
+      slot="main"
+      class="grid p-8 overflow-hidden overflow-y-scroll text-center bg-light-100">
       <h1 class="text-3xl text-center font-title text-primary">
         Connect your Circles account
       </h1>
@@ -48,8 +44,7 @@
         browsers localstorage
       </p>
     </main>
-
-    <footer class="p-4 border-t border-gray-300">
+    <footer slot="footer" class="p-4 border-t bg-light-300">
       <div>
         <p class="mb-1 text-xs text-gray-700 uppercase">
           Enter safeaddress to recover
@@ -74,11 +69,11 @@
           href="#/dapps"
           class="px-4 py-2 uppercase border border-gray-300 rounded text-primary">Back</a>
         <div
-          class="w-full py-2 text-center text-white uppercase rounded bg-primary"
+          class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"
           on:click={() => storeInputAndContinue()}>
           Login
         </div>
       </div>
     </footer>
-  </div>
+  </MainFooter>
 </MobileLayout>

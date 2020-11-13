@@ -21,7 +21,7 @@
       empowering your
       <br />abundance
     </div>
-    <div class="flex justify-center pt-24">
+    <div class="flex justify-center pt-20">
       <a
         href="#/omo/dapps"
         class="px-4 py-2 text-center text-white uppercase border border-white rounded">{$_('button_gotoapp')}</a>
