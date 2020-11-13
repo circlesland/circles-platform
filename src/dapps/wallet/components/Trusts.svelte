@@ -4,6 +4,9 @@
   import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
 
+  import Avatars from "@dicebear/avatars";
+  import sprites from "@dicebear/avatars-avataaars-sprites";
+
   export let address: string;
   let mySafeAddress: string;
 
@@ -39,7 +42,7 @@
 <div class="m-4 space-y-2">
   <div class="flex w-full bg-white border border-gray-300 rounded">
     <img
-      src="https://avatars.dicebear.com/api/human/mutual.svg"
+      src="https://avatars.dicebear.com/api/avataaars/mutual.svg"
       alt="profile"
       class="h-12" />
     <div class="flex-1 px-2 py-2 text-base">
@@ -67,7 +70,7 @@
   {#each personsThatTrustMe as personThatTrustMe}
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <img
-        src="https://avatars.dicebear.com/api/human/{personThatTrustMe.owner.address}.svg"
+        src="https://avatars.dicebear.com/api/avataaars/{personThatTrustMe.owner.address}.svg"
         alt="profile"
         class="h-12" />
       <div class="flex-1 px-2 py-2 text-base">
@@ -114,7 +117,7 @@
   {#each personsITrust as personITrust}
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <img
-        src="https://avatars.dicebear.com/api/human/{personITrust.owner.address}.svg"
+        src="https://avatars.dicebear.com/api/avataaars/{personITrust.owner.address}.svg"
         alt="profile"
         class="h-12" />
       <div class="flex-1 px-2 py-2 text-base">

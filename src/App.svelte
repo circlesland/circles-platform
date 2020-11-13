@@ -7,6 +7,7 @@
 
   import omo_en from "src/dapps/omo/languages/en.json";
   import omo_de from "src/dapps/omo/languages/de.json";
+
   import website_en from "src/dapps/website/languages/en.json";
   import website_de from "src/dapps/website/languages/de.json";
   import wallet_de from "src/dapps/wallet/languages/de.json";

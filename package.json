@@ -11,6 +11,8 @@
 		"postinstall": "husky install"
 	},
 	"dependencies": {
+		"@dicebear/avatars": "^4.4.0",
+		"@dicebear/avatars-avataaars-sprites": "^4.4.0",
 		"@fortawesome/fontawesome-free": "^5.15.1",
 		"@types/web3": "^1.2.2",
 		"bip39": "^3.0.2",

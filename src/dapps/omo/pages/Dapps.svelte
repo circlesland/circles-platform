@@ -19,30 +19,31 @@
     </div>
     <div class="flex flex-wrap mx-2">
       <div class="w-1/2 p-2">
-        <div
-          class="flex items-center justify-center h-48 p-8 text-center text-gray-800 bg-white border border-gray-200 rounded">
-          <a href="#/identity/settings">
+        <a href="#/identity/settings">
+          <div
+            class="flex items-center justify-center h-48 p-8 text-center text-gray-800 bg-white border border-gray-200 rounded">
             <div class="text-primary">
               <i class="text-5xl fas fa-user-astronaut" />
               <p class="pt-3">{$_('omo_dapp_name_identity')}</p>
               <span
                 class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
             </div>
-          </a>
-        </div>
+          </div>
+        </a>
       </div>
+
       <div class="w-1/2 p-2">
-        <div
-          class="flex items-center justify-center h-48 p-6 text-center text-gray-800 bg-white border border-gray-200 rounded">
-          <a href="#/wallet/connect">
+        <a href="#/wallet/connect">
+          <div
+            class="flex items-center justify-center h-48 p-6 text-center text-gray-800 bg-white border border-gray-200 rounded">
             <div class="text-primary">
               <i class="text-5xl fas fa-piggy-bank" />
               <p class="pt-3">{$_('omo_dapp_name_wallet')}</p>
               <span
                 class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
             </div>
-          </a>
-        </div>
+          </div>
+        </a>
       </div>
       <!-- <div class="w-1/2 p-2">
           <div
