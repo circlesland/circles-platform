@@ -59,7 +59,7 @@
           bind:this={buttonRef}
           on:click={handleClose} />
       </header>
-      <div class="pb-16">
+      <div style="padding-bottom: 5rem">
         <slot>No content provided</slot>
       </div>
     </div>
