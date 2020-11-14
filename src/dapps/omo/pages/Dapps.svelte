@@ -1,9 +1,10 @@
 <script>
-  import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
+  import LayoutMobileWrapper from "src/libs/o-views/layouts/LayoutMobileWrapper.svelte";
+
   import { _ } from "svelte-i18n";
 </script>
 
-<MobileLayout>
+<LayoutMobileWrapper>
   <div class="h-full overflow-y-scroll bg-light-100">
     <div
       class="flex justify-center mx-4 mt-4 mb-2 text-4xl font-bold text-center bg-white border border-gray-200 rounded text-primary">
@@ -130,4 +131,4 @@
       </div>
     </div>
   </div>
-</MobileLayout>
+</LayoutMobileWrapper>

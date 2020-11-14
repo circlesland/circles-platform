@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
   import { push } from "svelte-spa-router";
 
   import dayjs from "dayjs";
+  import LayoutMobileWrapper from "src/libs/o-views/layouts/LayoutMobileWrapper.svelte";
 
   let safeOwner: string;
   let safeAddress: string;
@@ -46,7 +46,7 @@
   }
 </style>
 
-<MobileLayout>
+<LayoutMobileWrapper>
   <div class="grid w-full h-full overflow-y-scroll bg-light-100">
     <div class="mx-6 my-4 overflow-x-hidden">
       <h1 class="text-xl">My Odentity</h1>
@@ -93,4 +93,4 @@
       </p>
     </div>
   </div>
-</MobileLayout>
+</LayoutMobileWrapper>

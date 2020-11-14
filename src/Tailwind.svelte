@@ -11,20 +11,14 @@
   @tailwind utilities;
   @tailwind components;
 
-  html {
+  /* html {
     height: -webkit-fill-available;
-  }
+  } */
+  html,
   body {
-    min-height: 100vh;
-    /* mobile viewport bug fix */
-    min-height: -webkit-fill-available;
-    overflow: hidden;
+    height: 100%;
+    overflow: hidden !important;
     width: 100%;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    @apply font-sans;
   }
 </style>

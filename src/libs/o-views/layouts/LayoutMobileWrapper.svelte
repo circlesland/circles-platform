@@ -28,7 +28,7 @@
 </div>
 
 <div
-  class="absolute z-0 flex items-center justify-center w-full h-full position bg-dark">
+  class="fixed z-0 flex items-center justify-center w-full h-full position bg-dark">
   <css-doodle>
     {`
     

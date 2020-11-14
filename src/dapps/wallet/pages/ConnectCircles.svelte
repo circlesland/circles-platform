@@ -1,10 +1,10 @@
 <script lang="ts">
-  import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
-  import MainFooter from "src/libs/o-views/templates/MainFooter.svelte";
   import { mnemonicToEntropy } from "bip39";
   import { config } from "src/libs/o-circles-protocol/config";
   import { push } from "svelte-spa-router";
   import { onMount } from "svelte";
+  import LayoutMainActionFooter from "src/libs/o-views/layouts/LayoutMainActionFooter.svelte";
+  import LayoutMobileWrapper from "src/libs/o-views/layouts/LayoutMobileWrapper.svelte";
 
   let seedphrase: string;
   let safeAddress: string;
@@ -31,8 +31,8 @@
   });
 </script>
 
-<MobileLayout>
-  <MainFooter>
+<LayoutMobileWrapper>
+  <LayoutMainActionFooter>
     <main
       slot="main"
       class="grid p-8 overflow-hidden overflow-y-scroll text-center bg-light-100">
@@ -76,5 +76,5 @@
         </div>
       </div>
     </footer>
-  </MainFooter>
-</MobileLayout>
+  </LayoutMainActionFooter>
+</LayoutMobileWrapper>

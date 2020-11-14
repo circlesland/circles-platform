@@ -1,6 +1,6 @@
 <script lang="ts">
-  import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
-  import HeaderMainFooter from "src/libs/o-views/templates/HeaderMainFooter.svelte";
+  import LayoutMobileWrapper from "src/libs/o-views/layouts/LayoutMobileWrapper.svelte";
+  import LayoutHeaderMainFooter from "src/libs/o-views/layouts/LayoutHeaderMainFooter.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import Menu from "src/libs/o-views/molecules/Menu.svelte";
   import Actions from "src/dapps/wallet/menus/Actions.svelte";
@@ -21,25 +21,16 @@
   }
 </script>
 
-<style>
-  .grid {
-    display: grid;
-    grid-template-rows: 1fr;
-  }
-</style>
-
-<MobileLayout>
-  <HeaderMainFooter>
+<LayoutMobileWrapper>
+  <LayoutHeaderMainFooter>
     <header slot="header">
       <Header data={header} />
     </header>
-    <main slot="main" class="grid overflow-hidden">
-      <div class="overflow-x-hidden overflow-y-scroll bg-gray-100">
-        <Trusts {address} />
-      </div>
+    <main slot="main" class="overflow-y-scroll bg-light-100">
+      <Trusts {address} />
     </main>
     <footer slot="footer">
       <Menu {address} actions={Actions} />
     </footer>
-  </HeaderMainFooter>
-</MobileLayout>
+  </LayoutHeaderMainFooter>
+</LayoutMobileWrapper>

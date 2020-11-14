@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import Router from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
@@ -14,6 +14,10 @@
   import wallet_en from "src/dapps/wallet/languages/en.json";
   import identity_de from "src/dapps/identity/languages/de.json";
   import identity_en from "src/dapps/identity/languages/en.json";
+  import LayoutHeadMainFoot from "./libs/o-views/layouts/LayoutHeaderMainFooter.svelte";
+  import LayoutMainFoot from "./libs/o-views/layouts/LayoutHeaderMainFooter.svelte";
+  import Composite from "src/libs/o-views/atoms/Composite.svelte";
+  import Leaf from "./libs/o-views/atoms/Leaf.svelte";
 
   let notes_en = {
     notes_text:
@@ -33,18 +37,33 @@
     fallbackLocale: "en",
     initialLocale: getLocaleFromNavigator(),
   });
+
+  let layout1 = {
+    areas: "'top''bottom'",
+    columns: "1fr",
+    rows: "1fr 1fr",
+  };
+  let layout2 = { areas: "'top''bottom'", columns: "1fr", rows: "200px 1fr" };
 </script>
 
 <style>
   .app {
-    display: grid;
-    grid-template-rows: minmax(1fr);
-    height: 100%;
     overflow: hidden;
+    height: 100%;
   }
 </style>
 
 <Tailwind />
+
 <div class="font-sans app">
-  <Router {routes} />
+  <Composite layout={layout1}>
+    <Composite layout={layout2} area="top">
+      <Leaf area="top" overflow>
+        <div class="py-24 m-4 bg-indigo-500">area B1a</div>
+        <div class="py-24 m-4 bg-indigo-500">area B1b</div>
+      </Leaf>
+    </Composite>
+    <Leaf area="bottom">bottom</Leaf>
+  </Composite>
+  <!-- <Router {routes} /> -->
 </div>
