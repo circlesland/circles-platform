@@ -1,6 +1,11 @@
-<script>
+<script lang="ts">
   import "css-doodle";
   import { _ } from "svelte-i18n";
+  // import { MamaOmo, SpanishMamaOmo } from "src/libs/mama-omo";
+
+  // function clickMe() {
+  //   new MamaOmo("Samuel").greetMe();
+  // }
 </script>
 
 <style>
@@ -17,6 +22,11 @@
 
 <div class="absolute z-10 flex items-end justify-center w-full h-full py-16">
   <div>
+    <!-- <div
+      class="p-2 text-center text-white bg-orange-300 cursor-pointer"
+      on:click={clickMe}>
+      GreetMe
+    </div> -->
     <div class="text-2xl text-center text-white font-title">
       empowering your
       <br />abundance

@@ -38,7 +38,7 @@
 <style>
   .app {
     display: grid;
-    grid-template-rows: 1fr;
+    grid-template-rows: minmax(1fr);
     height: 100%;
     overflow: hidden;
   }
