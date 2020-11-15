@@ -1,0 +1,33 @@
+<script lang="ts">
+  import { Layout } from "src/libs/o-types/interfaces/Layout";
+  import Composite from "../atoms/Composite.svelte";
+  import Leaf from "../atoms/Leaf.svelte";
+  import Notifications from "../molecules/Notifications.svelte";
+  import TemplateMobileWrapper from "./TemplateMobileWrapper.svelte";
+
+  let layout: Layout = {
+    areas: "'notifications''header''balance''main' 'footer'",
+    columns: "1fr",
+    rows: "auto 40px 160px 1fr 68px",
+  };
+</script>
+
+<TemplateMobileWrapper>
+  <Composite {layout} bg="bg-light-100">
+    <Leaf area="notifications">
+      <Notifications />
+    </Leaf>
+    <Leaf area="header">
+      <slot name="header" />
+    </Leaf>
+    <Leaf area="balance">
+      <slot name="balance" />
+    </Leaf>
+    <Leaf area="main" overflowY>
+      <slot name="main" />
+    </Leaf>
+    <Leaf area="footer">
+      <slot name="footer" />
+    </Leaf>
+  </Composite>
+</TemplateMobileWrapper>

@@ -1,20 +1,18 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   export let area: string = "";
   export let m: string = "0";
   export let p: string = "0";
   export let bg: string = "";
-  export let space: string = "space-y-0 space-x-0";
+  export let space: string = "";
   export let overflowX: Boolean = false;
   export let overflowY: Boolean = false;
 </script>
 
 <style>
   .scrollX {
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;
     -webkit-transform: translate3d(0, 0, 0);
+    -webkit-overflow-scrolling: touch;
+    overflow-x: scroll;
   }
   .scrollY {
     -webkit-transform: translate3d(0, 0, 0);
@@ -37,15 +35,15 @@
 
 <div class="leaf" style="grid-area: {area}">
   {#if overflowX}
-    <div class="fullgrid scrollX overflow-y-hidden {m} {p} {bg} {space}">
+    <div class="fullgrid scrollX overflow-y-hidden {m} {p} {bg} {space} ">
       <slot />
     </div>
   {:else if overflowY}
-    <div class="fullgrid scrollY overflow-x-hidden {m} {p} {bg} {space}">
+    <div class="fullgrid scrollY overflow-x-hidden {m} {p} {bg} {space} ">
       <slot />
     </div>
   {:else}
-    <div class="fullgrid {m} {p} {bg} {space}">
+    <div class="fullgrid {m} {p} {bg} {space} ">
       <slot />
     </div>
   {/if}

@@ -4,6 +4,7 @@
   };
 </script>
 
-<div class="py-1 font-bold text-center text-white uppercase bg-primary">
+<div
+  class="flex items-center justify-center w-full h-full py-1 text-xl font-bold text-center text-white uppercase bg-primary">
   {data.title}
 </div>

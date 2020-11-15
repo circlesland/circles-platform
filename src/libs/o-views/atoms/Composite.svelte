@@ -1,11 +1,13 @@
 <script lang="ts">
-  export let layout = {
-    areas: "'main'",
-    columns: "1fr",
-    rows: "1fr",
-  };
+  import { Layout } from "src/libs/o-types";
+  export let layout: Layout;
   export let area: string = "";
+  export let m: string = "0";
+  export let p: string = "0";
+  export let bg: string = "";
+  export let space: string = "space-y-0 space-x-0";
 
+  // Fix iOS body scroll bumps and overflow issues
   var scrollX = 0;
   var scrollY = 0;
   var scrollMinX = 0;
@@ -53,13 +55,13 @@
 
 {#if area == ''}
   <div
-    class="h-full composite"
+    class="h-full composite {m} {p} {bg} {space}"
     style="grid-area: {area}; --areas: {layout.areas}; --columns: {layout.columns}; --rows: {layout.rows};">
     <slot />
   </div>
 {:else}
   <div
-    class="composite"
+    class="composite {m} {p} {bg} {space}"
     style="grid-area: {area}; --areas: {layout.areas}; --columns: {layout.columns}; --rows: {layout.rows};">
     <slot />
   </div>

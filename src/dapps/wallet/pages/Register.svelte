@@ -1,12 +1,10 @@
 <script lang="ts">
-  import LayoutMainActionFooter from "src/libs/o-views/layouts/LayoutMainActionFooter.svelte";
-  import LayoutMobileWrapper from "src/libs/o-views/layouts/LayoutMobileWrapper.svelte";
-
   import QrCode from "svelte-qrcode";
 
   let waitingForFunding: Boolean = true;
 </script>
 
+<!-- 
 <LayoutMobileWrapper>
   <LayoutMainActionFooter>
     <main
@@ -46,4 +44,4 @@
       </div>
     </footer>
   </LayoutMainActionFooter>
-</LayoutMobileWrapper>
+</LayoutMobileWrapper> -->

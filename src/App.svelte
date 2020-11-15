@@ -14,8 +14,6 @@
   import wallet_en from "src/dapps/wallet/languages/en.json";
   import identity_de from "src/dapps/identity/languages/de.json";
   import identity_en from "src/dapps/identity/languages/en.json";
-  import Composite from "src/libs/o-views/atoms/Composite.svelte";
-  import Leaf from "./libs/o-views/atoms/Leaf.svelte";
 
   let notes_en = {
     notes_text:
@@ -56,48 +54,5 @@
 <Tailwind />
 
 <div class="font-sans app">
-  <Composite layout={layout1}>
-    <Composite layout={layout1} area="top">
-      <Leaf area="top" overflowY>
-        <div class="py-16 bg-indigo-500">area B1a</div>
-        <div class="py-24 bg-blue-500 ">area B1b</div>
-        <div class="py-24 bg-green-500 ">area B1b</div>
-        <div class="py-24 bg-green-300 ">area B1b</div>
-        <div class="py-24 bg-yellow-300 ">area B1b</div>
-        <div class="py-24 bg-orange-300 ">area B1b</div>
-        <div class="py-24 bg-red-300 ">area B1b</div>
-        <div class="py-24 bg-pink-500 ">area B1b</div>
-        <div class="py-24 bg-pink-700 ">area B1b</div>
-        <div class="py-24 bg-pink-900 ">area B1b</div>
-      </Leaf>
-      <Leaf area="bottom" overflowX>
-        <div class="flex" style="">
-          <div class="w-24 py-16 bg-indigo-500">area B1a</div>
-          <div class="w-24 py-24 bg-blue-500 ">area B1b</div>
-          <div class="py-24 bg-green-500 ">area B1b</div>
-          <div class="py-24 bg-green-300 ">area B1b</div>
-          <div class="py-24 bg-yellow-300 ">area B1b</div>
-          <div class="py-24 bg-orange-300 ">area B1b</div>
-          <div class="py-24 bg-red-300 ">area B1b</div>
-          <div class="py-24 bg-pink-500 ">area B1b</div>
-          <div class="py-24 bg-pink-700 ">area B1b</div>
-          <div class="py-24 bg-pink-900 ">area B1b</div>
-        </div>
-      </Leaf>
-    </Composite>
-    <Leaf area="bottom" overflowY>
-      <div class="py-16 bg-indigo-500">area B1a</div>
-      <div class="py-24 bg-blue-500 ">area B1b</div>
-      <div class="py-24 bg-green-500 ">area B1b</div>
-      <div class="py-24 bg-green-300 ">area B1b</div>
-      <div class="py-24 bg-yellow-300 ">area B1b</div>
-      <div class="py-24 bg-orange-300 ">area B1b</div>
-      <div class="py-24 bg-red-300 ">area B1b</div>
-      <div class="py-24 bg-pink-500 ">area B1b</div>
-      <div class="py-24 bg-pink-700 ">area B1b</div>
-      <div class="py-24 bg-pink-900 ">area B1b</div>
-    </Leaf>
-  </Composite>
+  <Router {routes} />
 </div>
-
-<!-- <Router {routes} />  -->
