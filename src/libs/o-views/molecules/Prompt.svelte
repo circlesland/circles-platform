@@ -16,7 +16,8 @@
   let promptFieldValues: { [key: string]: { type: string; data: any } } = {};
 </script>
 
-<h1 class="w-full px-4 py-8 mb-4 text-center text-white rounded bg-action">
+<h1
+  class="w-full px-4 py-8 mb-4 text-center bg-white border rounded text-primary border-light-300">
   {status}
 </h1>
 {#each promptFields as promptField}
