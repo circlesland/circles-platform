@@ -5,6 +5,8 @@ import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {ByteString} from "../../../../libs/o-circles-protocol/interfaces/byteString";
 import {config} from "../../../../libs/o-circles-protocol/config";
+import {mnemonicToEntropy} from "bip39";
+import {push} from "svelte-spa-router";
 
 export interface TransferCirclesContext extends ProcessContext
 {
@@ -88,7 +90,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                             data: config.getCurrent().web3()
                                 .eth
                                 .accounts
-                                .privateKeyToAccount(context.connectSafe.safeOwnerPrivateKey.data)
+                                .privateKeyToAccount("0x" + context.connectSafe.safeOwnerPrivateKey.data)
                                 .address
                         };
                     }),
@@ -102,29 +104,36 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             {
                 return {
                     type: "omo.prompt",
-                    message: "Enter 'Deine Mudda oida' and click 'Next' to confirm the transaction",
+                    message: "Press 'Next' to confirm the values and connect your safe.",
                     data: {
                         id: "connectSafe",
                         fields: {
                             "safeOwnerAddress": {
+                                isReadonly: true,
                                 type: "ethereumAddress",
                                 label: "Safe owner address",
                                 value: context.connectSafe.safeOwnerAddress
                             },
                             "safeAddress": {
+                                isReadonly: true,
                                 type: "ethereumAddress",
                                 label: "Safe address",
                                 value: context.connectSafe.safeAddress
-                            },
-                            "confirmation": {
-                                type: "string",
-                                label: "Confirmation phrase"
                             }
                         }
                     }
                 }
             }),
             on: {
+                "omo.answer": {
+                    actions:(context) => {
+                        localStorage.setItem("omo.privateKey", "0x" + context.connectSafe.safeOwnerPrivateKey.data);
+                        localStorage.setItem("omo.address", context.connectSafe.safeOwnerAddress.data);
+                        localStorage.setItem("omo.safeAddress", context.connectSafe.safeAddress.data);
+
+                        push("/wallet/" + context.connectSafe.safeAddress.data + "/safe");
+                    }
+                },
                 "omo.cancel": "stop"
             }
         },

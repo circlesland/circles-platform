@@ -40,9 +40,9 @@ function getServiceContext(): ProcessContext {
   const web3 = config.getCurrent().web3();
   const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
   const processContext: ProcessContext = {
-    safe: new GnosisSafeProxy(web3, account.address, safeAddress),
+    safe: !account.address ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
     account: account,
-    person: new Person(circlesHub, safeAddress),
+    person: !safeAddress ? null : new Person(circlesHub, safeAddress),
     other: {}
   };
   return processContext;

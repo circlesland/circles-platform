@@ -5,11 +5,12 @@
     import {onMount} from "svelte";
     import Process from "../../../libs/o-views/molecules/Process.svelte";
     import {ProcessContext} from "../../../libs/o-processes/processContext";
-    import {transferXDai} from "../processes/transferXDai/transferXDai";
-    import {BN} from "ethereumjs-util";
     import {config} from "../../../libs/o-circles-protocol/config";
+    import {jumpstart} from "../processes/jumpstart/jumpstart";
 
     // http://localhost:5000/#/wallet/jumpstart/0x9B74661e83F6696AdF872576f886Dc5Eb569B0bD
+
+    // TODO: Check if the recipient account already has enough xDai (jumpstart only if the battery is flat)
 
     export let params = {};
 
@@ -35,20 +36,16 @@
         {
             address = params.address;
             contextInitializer = (processContext:ProcessContext) => {
-                const transferXDaiContext = {
+                const jumpstartContext = {
                     ...processContext,
-                    transfer: {
+                    jumpstart: {
                         recipient: {
                             type: "ethereumAddress",
                             data: params.address
-                        },
-                        value: {
-                            type: "wei",
-                            data: config.getCurrent().JUMPSTART_MONEY
                         }
                     }
                 };
-                return transferXDaiContext;
+                return jumpstartContext;
             }
         }
     }
@@ -60,7 +57,7 @@
 
     function yes()
     {
-        process = transferXDai;
+        process = jumpstart;
     }
 
     function no()

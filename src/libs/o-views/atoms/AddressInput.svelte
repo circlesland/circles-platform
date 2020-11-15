@@ -6,6 +6,7 @@
 
   let isValid = true;
   export let hexByteString: string;
+  export let isReadonly:boolean = false;
 
   $: {
     isValid = hexByteString && hexByteString.startsWith("0x");
@@ -23,6 +24,7 @@
 
 <div>
     <input
+      readonly="{isReadonly ? 'readonly' : ''}"
       class:border={!isValid}
       class:border-red-500={!isValid}
       placeholder="0x1234..."

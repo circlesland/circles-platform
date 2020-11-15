@@ -23,6 +23,7 @@
         {#if promptField.field.type === "ethereumAddress"}
             <span class="mr-3">{promptField.field.label}: </span>
             <AddressInput
+                    isReadonly={promptField.field.isReadonly}
                     hexByteString={(promptField.field.value ? promptField.field.value.data : "")}
                     on:value={(event) => {
                                 const key = promptField.key;
@@ -31,6 +32,7 @@
         {:else if promptField.field.type === "wei"}
             <span class="mr-3">{promptField.field.label}: </span>
             <EtherInput
+                    isReadonly={promptField.field.isReadonly}
                     weiValueBN={(promptField.field.value ?  promptField.field.value.data : new BN(0))}
                     on:value={(event) => {
                                 const key = promptField.key;
@@ -39,6 +41,7 @@
         {:else if promptField.field.type === "string"}
             <span class="mr-3">{promptField.field.label}: </span>
             <StringInput
+                    isReadonly={promptField.field.isReadonly}
                     line={(promptField.field.value ?  promptField.field.value.data : "")}
                     on:value={(event) => {
                                     const key = promptField.key;
@@ -47,6 +50,7 @@
         {:else if promptField.field.type === "text"}
             <span class="mr-3">{promptField.field.label}: </span>
             <TextInput
+                    isReadonly={promptField.field.isReadonly}
                     text={(promptField.field.value ?  promptField.field.value.data : "")}
                     on:value={(event) => {
                                     const key = promptField.key;
@@ -55,6 +59,7 @@
         {:else if promptField.field.type === "bytestring"}
             <span class="mr-3">{promptField.field.label}: </span>
             <PrivateKeyInput
+                    isReadonly={promptField.field.isReadonly}
                     on:value={(event) => {
                                     const key = promptField.key;
                                     promptFieldValues[key] = event.detail;
@@ -62,6 +67,7 @@
         {:else if promptField.field.type === "percent"}
             <span class="mr-3">{promptField.field.label}: </span>
             <PercentInput
+                    isReadonly={promptField.field.isReadonly}
                     percentValue={(promptField.field.value ?  promptField.field.value.data : 0)}
                     on:value={(event) => {
                                     const key = promptField.key;

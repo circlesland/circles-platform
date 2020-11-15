@@ -20,7 +20,7 @@ export interface TransferXDaiContext extends ProcessContext
 }
 
 /**
- * Transfer circles
+ * Transfer xDai
  */
 const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
     initial: "ready",

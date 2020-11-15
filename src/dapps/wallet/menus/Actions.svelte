@@ -3,6 +3,7 @@
     import {transferCircles} from "../processes/transferCircles/transferCircles";
     import {setTrust} from "../processes/setTrust/setTrust";
     import {connectSafe} from "../processes/connectSafe/connectSafe";
+    import {transferXDai} from "../processes/transferXDai/transferXDai";
     import Process from "../../../libs/o-views/molecules/Process.svelte";
     import {ProcessDefinition} from "../../../libs/o-processes/processManifest";
 
@@ -51,7 +52,15 @@
                     process = transferCircles;
                     contextInitializer = null;
                 }}>
-                Send Money
+                Send Circles
+            </div>
+            <div
+                    class="w-full p-2 font-bold text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
+                    on:click={() => {
+                    process = transferXDai;
+                    contextInitializer = null;
+                }}>
+                Send xDai
             </div>
         </div>
         <div class="flex space-x-2">
