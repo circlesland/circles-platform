@@ -49,13 +49,14 @@
   .app {
     height: 100%;
     overflow: hidden !important;
+    position: relative;
   }
 </style>
 
 <Tailwind />
 
 <div class="font-sans app">
-  <Composite layout={layout1} area="app">
+  <Composite layout={layout1}>
     <Composite layout={layout1} area="top">
       <Leaf area="top" overflowY>
         <div class="py-16 bg-indigo-500">area B1a</div>
@@ -70,9 +71,9 @@
         <div class="py-24 bg-pink-900 ">area B1b</div>
       </Leaf>
       <Leaf area="bottom" overflowX>
-        <div class="flex" style="width: 1000px">
-          <div class="py-16 bg-indigo-500">area B1a</div>
-          <div class="py-24 bg-blue-500 ">area B1b</div>
+        <div class="flex" style="">
+          <div class="w-24 py-16 bg-indigo-500">area B1a</div>
+          <div class="w-24 py-24 bg-blue-500 ">area B1b</div>
           <div class="py-24 bg-green-500 ">area B1b</div>
           <div class="py-24 bg-green-300 ">area B1b</div>
           <div class="py-24 bg-yellow-300 ">area B1b</div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { lock, unlock, clearBodyLocks } from "tua-body-scroll-lock";
+  import { onMount } from "svelte";
 
   export let area: string = "";
   export let m: string = "0";
@@ -26,6 +26,7 @@
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
     overflow: hidden;
+    position: relative;
   }
   .fullgrid {
     display: grid;
