@@ -4,7 +4,7 @@
     const dispatch = createEventDispatcher();
 
     let isValid = true;
-    let text:string;
+    export let text:string;
 
     $:{
         dispatch('value', {
@@ -13,7 +13,7 @@
         });
     }
 </script>
-{#if !isValid}
-    Invalid value:<br/>
-{/if}
-<textarea bind:value={text}></textarea>
+<textarea
+        class:border={!isValid}
+        class:border-red-500={!isValid}
+        bind:value={text}></textarea>

@@ -4,7 +4,7 @@
     const dispatch = createEventDispatcher();
 
     let isValid = true;
-    let line:string;
+    export let line:string;
 
     $:{
         dispatch('value', {
@@ -13,9 +13,8 @@
         });
     }
 </script>
-{#if !isValid}
-    Invalid value:<br/>
-{/if}
 <input placeholder="Bla bla bla .."
        type="string"
+       class:border={!isValid}
+       class:border-red-500={!isValid}
        bind:value={line} />

@@ -1,24 +1,46 @@
 <script lang="ts">
-  import { config } from "src/libs/o-circles-protocol/config";
-  import { createEventDispatcher } from "svelte";
+    import {config} from "src/libs/o-circles-protocol/config";
+    import {createEventDispatcher} from "svelte";
+    import {BN} from "ethereumjs-util";
 
-  const dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher();
 
-  let isValid = true;
-  let bigNumberString: string;
+    let isValid = false;
 
-  $: {
-    isValid = config.getCurrent().web3().utils.isBigNumber(bigNumberString);
-    if (isValid) {
-      const wei = config.getCurrent().web3().utils.toWei(bigNumberString);
+    export let ethValueString: string = "";
+    export let weiValueBN: BN;
 
-      dispatch("value", {
-        type: "wei",
-        data: wei,
-      });
+    let lastEthValue:string = "";
+    let lastWeiValue:BN = new BN("0");
+
+    $: {
+        try
+        {
+            if (!weiValueBN.eq(lastWeiValue) && ethValueString == lastEthValue) {
+                ethValueString = config.getCurrent().web3().utils.fromWei(weiValueBN);
+            }
+
+            const bn = new BN(ethValueString);
+            weiValueBN = config.getCurrent().web3().utils.toWei(bn);
+
+            dispatch("value", {
+                type: "wei",
+                data: weiValueBN,
+            });
+
+            isValid = true;
+        }
+        catch
+        {
+            isValid = false;
+        }
+        lastWeiValue = weiValueBN;
+        lastEthValue = ethValueString;
     }
-  }
 </script>
 
-{#if !isValid}Invalid value:<br />{/if}
-<input placeholder="1" type="string" bind:value={bigNumberString} />
+<input placeholder="1"
+       type="string"
+       class:border={!isValid}
+       class:border-red-500={!isValid}
+       bind:value={ethValueString}/>
