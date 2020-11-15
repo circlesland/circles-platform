@@ -28,7 +28,12 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
     states: {
         ready: {
             on: {
-                "omo.trigger": "promptRecipient",
+                "omo.trigger": [{
+                    cond: (context) => context.transfer !== undefined,
+                    target:"summarize"
+                },{
+                    target:"promptRecipient"
+                }],
                 "omo.cancel": "stop"
             }
         },

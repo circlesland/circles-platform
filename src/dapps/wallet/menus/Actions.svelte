@@ -7,21 +7,36 @@
     import {ProcessDefinition} from "../../../libs/o-processes/processManifest";
 
     let process:ProcessDefinition;
+    let contextInitializer;
 </script>
 {#if process}
-    <Process definition={process}/>
+    <Process {contextInitializer} definition={process}/>
 {:else}
 <div class="w-full p-4 space-y-2 border-t border-gray-300 rounded-t-xl">
     <div class="space-y-2">
         <div
                 class="w-full p-2 font-bold text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
-                on:click={() => process = requestUbi}>
+                on:click={() => {
+                    process = requestUbi;
+                    contextInitializer = null;
+                }}>
             Get Universal basic income
         </div>
         <div class="flex space-x-2">
             <div
                     class="w-full p-2 text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
-                    on:click={() => process = setTrust}>
+                    on:click={() => {
+                    contextInitializer = (context) => {
+                        context.setTrust = {
+                            trustLimit: {
+                                type: "percent",
+                                data: 100
+                            }
+                        };
+                        return context;
+                    };
+                    process = setTrust;
+                }}>
                 add friend
             </div>
         </div>
@@ -32,14 +47,20 @@
             </div>
             <div
                     class="w-full p-2 font-bold text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
-                    on:click={() => process = transferCircles}>
+                    on:click={() => {
+                    process = transferCircles;
+                    contextInitializer = null;
+                }}>
                 Send Money
             </div>
         </div>
         <div class="flex space-x-2">
             <div
                     class="w-full p-2 font-bold text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
-                    on:click={() => process = connectSafe}>
+                    on:click={() => {
+                    process = connectSafe;
+                    contextInitializer = null;
+                }}>
                 Connect Safe
             </div>
         </div>

@@ -10,12 +10,12 @@ export interface SetTrustContext extends ProcessContext
 {
     setTrust?: {
         trustReceiver: {
-            type:"ethereumAddress",
-            data:Address
+            type: "ethereumAddress",
+            data: Address
         },
         trustLimit: {
-            type:"percent",
-            data:any
+            type: "percent",
+            data: any
         }
     }
 }
@@ -28,11 +28,11 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
     states: {
         ready: {
             on: {
-                "omo.trigger": "prompttrustReceiver",
+                "omo.trigger": "promptTrustReceiver",
                 "omo.cancel": "stop"
             }
         },
-        prompttrustReceiver: {
+        promptTrustReceiver: {
             entry: send({
                 type: "omo.prompt",
                 message: "Please enter the address of the person you want to trust and click 'Next'",
@@ -47,7 +47,19 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                 }
             }),
             on: {
-                "omo.answer": {
+                "omo.answer": [{
+                    cond: (ctx) => !!ctx.setTrust.trustLimit,
+                    actions: assign((context: any, event: any) =>
+                    {
+                        if (!context.setTrust)
+                        {
+                            context.setTrust = {};
+                        }
+                        context.setTrust.trustReceiver = event.data.fields.trustReceiver;
+                    }),
+                    target: "summarize"
+                }, {
+                    cond: (ctx) => !ctx.setTrust.trustLimit,
                     actions: assign((context: any, event: any) =>
                     {
                         if (!context.setTrust)
@@ -57,7 +69,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                         context.setTrust.trustReceiver = event.data.fields.trustReceiver;
                     }),
                     target: "promptTrustLimit"
-                },
+                }],
                 "omo.cancel": "stop"
             }
         },

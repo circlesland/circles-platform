@@ -3,11 +3,11 @@
     import MainFooter from "src/libs/o-views/templates/MainFooter.svelte";
     import {push} from "svelte-spa-router";
     import {onMount} from "svelte";
-    import {transferCircles} from "../processes/transferCircles/transferCircles";
     import Process from "../../../libs/o-views/molecules/Process.svelte";
     import {ProcessContext} from "../../../libs/o-processes/processContext";
-    import {transferXDai, TransferXDaiContext} from "../processes/transferXDai/transferXDai";
+    import {transferXDai} from "../processes/transferXDai/transferXDai";
     import {BN} from "ethereumjs-util";
+    import {config} from "../../../libs/o-circles-protocol/config";
 
     // http://localhost:5000/#/wallet/jumpstart/0x9B74661e83F6696AdF872576f886Dc5Eb569B0bD
 
@@ -44,7 +44,7 @@
                         },
                         value: {
                             type: "wei",
-                            data: new BN("10000000000000000")
+                            data: config.getCurrent().JUMPSTART_MONEY
                         }
                     }
                 };
@@ -79,7 +79,7 @@
             </h1>
             <p class="py-4 text-sm text-center text-gray-700">
                 {address} asks you to pay for the required transactions fees to set everything up.<br/><br/>
-                <b>Do you want to send 0.01 xDai to {address}?</b>
+                <b>Do you want to send {config.getCurrent().web3().utils.fromWei(config.getCurrent().JUMPSTART_MONEY).slice(0, 5)} xDai to {address}?</b>
             </p>
             <img src="https://thumbs.dreamstime.com/z/two-people-trying-to-jump-start-car-vector-illustration-41549471.jpg">
         </main>

@@ -41,6 +41,7 @@ export const config = {
       privateKey: "",
       safeAddress: ""
     },
+    JUMPSTART_MONEY: new BN("9938662113959919"),
     getGasPrice: (web3: Web3) => new BN(web3.utils.toWei("2", "gwei")),
     ethjs: {
       getCommon: async function (web3: Web3)
