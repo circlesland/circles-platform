@@ -35,7 +35,7 @@
 
 {#if tokensITrust.length > 0}
   {#each tokensITrust as token}
-    <div class="mx-4 mb-2">
+    <div class="mb-2">
       <div class="flex w-full bg-white border border-gray-300 rounded">
         <div class="flex-1 w-2/3 px-4 py-2 text-sm">
           <div class="text-primary">

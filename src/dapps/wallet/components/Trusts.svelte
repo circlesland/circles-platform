@@ -39,7 +39,7 @@
   }
 </script>
 
-<div class="m-4 space-y-2">
+<div class="space-y-2">
   <div class="flex w-full bg-white border border-gray-300 rounded">
     <img
       src="https://avatars.dicebear.com/api/avataaars/mutual.svg"

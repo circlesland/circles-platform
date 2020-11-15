@@ -20,6 +20,7 @@
 		"dayjs": "^1.9.5",
 		"eth-lib": "^0.1.29",
 		"ethereumjs-util": "^7.0.7",
+		"html-body-scroll-lock": "^1.0.1",
 		"rollup-plugin-node-globals": "^1.4.0",
 		"rxjs": "^6.6.3",
 		"serve": "^11.3.2",

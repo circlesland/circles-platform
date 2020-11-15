@@ -11,20 +11,18 @@
   @tailwind utilities;
   @tailwind components;
 
-  html {
-    height: -webkit-fill-available;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   }
+  html,
   body {
-    min-height: 100vh;
-    /* mobile viewport bug fix */
-    min-height: -webkit-fill-available;
-    overflow: hidden;
+    height: 100%;
     width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    @apply font-sans;
+    overflow: hidden !important;
+    position: relative;
   }
 </style>

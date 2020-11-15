@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import Router from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
@@ -33,18 +33,26 @@
     fallbackLocale: "en",
     initialLocale: getLocaleFromNavigator(),
   });
+
+  let layout1 = {
+    areas: "'top''bottom'",
+    columns: "1fr",
+    rows: "1fr 1fr",
+  };
+  let layout2 = { areas: "'top''bottom'", columns: "1fr", rows: "50px 1fr" };
+  let layout3 = { areas: "'full'", columns: "1fr", rows: "1fr " };
 </script>
 
 <style>
   .app {
-    display: grid;
-    grid-template-rows: minmax(1fr);
     height: 100%;
-    overflow: hidden;
+    overflow: hidden !important;
+    position: relative;
   }
 </style>
 
 <Tailwind />
+
 <div class="font-sans app">
   <Router {routes} />
 </div>

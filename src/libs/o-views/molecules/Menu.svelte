@@ -11,9 +11,6 @@
 </script>
 
 <style>
-  .action {
-    z-index: 1001;
-  }
   :global(a.active) {
     color: #0c266a;
   }
@@ -22,6 +19,7 @@
 <Modal {triggerRef} bind:isOpen>
   <svelte:component this={actions} />
 </Modal>
+
 <footer
   class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
   <div
@@ -40,21 +38,21 @@
       <p>Tokens</p>
     </a>
   </div>
-  <div
-    class="flex items-center justify-center text-xs text-center action"
+  <button
+    class="z-50 flex items-center justify-center text-xs text-center "
     on:click={() => (isOpen = !isOpen)}>
     {#if isOpen}
       <div
-        class="relative w-16 h-16 -mt-5 border-2 rounded-full text-light-300 border-light-300 ">
+        class="w-16 h-16 -mt-5 border-2 rounded-full text-light-300 border-light-300">
         <i class="mt-4 text-3xl fas fa-minus" />
       </div>
     {:else}
       <div
-        class="relative w-16 h-16 -mt-5 text-white rounded-full bg-secondary hover:bg-primary">
+        class="w-16 h-16 -mt-5 text-white rounded-full bg-secondary hover:bg-primary">
         <i class="mt-4 text-3xl fas fa-plus " />
       </div>
     {/if}
-  </div>
+  </button>
   <div
     class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a

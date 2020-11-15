@@ -1,12 +1,12 @@
 <script>
-  import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
+  import TemplateDapp from "src/libs/o-views/templates/TemplateDapps.svelte";
   import { _ } from "svelte-i18n";
 </script>
 
-<MobileLayout>
-  <div class="h-full overflow-y-scroll bg-light-100">
+<TemplateDapp>
+  <header slot="header">
     <div
-      class="flex justify-center mx-4 mt-4 mb-2 text-4xl font-bold text-center bg-white border border-gray-200 rounded text-primary">
+      class="flex items-center justify-center h-full text-4xl font-bold text-center bg-white border rounded border-light-200 text-primary">
       <div>
         <!-- <img
                 src="/images/"
@@ -17,48 +17,34 @@
         </p>
       </div>
     </div>
-    <div class="flex flex-wrap mx-2">
-      <div class="w-1/2 p-2">
-        <a href="#/identity/settings">
-          <div
-            class="flex items-center justify-center h-48 p-8 text-center text-gray-800 bg-white border border-gray-200 rounded">
-            <div class="text-primary">
-              <i class="text-5xl fas fa-user-astronaut" />
-              <p class="pt-3">{$_('omo_dapp_name_identity')}</p>
-              <span
-                class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <div class="w-1/2 p-2">
-        <a href="#/wallet/connect">
-          <div
-            class="flex items-center justify-center h-48 p-6 text-center text-gray-800 bg-white border border-gray-200 rounded">
-            <div class="text-primary">
-              <i class="text-5xl fas fa-piggy-bank" />
-              <p class="pt-3">{$_('omo_dapp_name_wallet')}</p>
-              <span
-                class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
-            </div>
-          </div>
-        </a>
-      </div>
-      <!-- <div class="w-1/2 p-2">
-          <div
-            class="flex items-center justify-center h-48 p-8 text-center text-gray-800 bg-white border border-gray-200 rounded">
-            <Route dapp={o.FRIENDS} route="index"></Route>
-              <div class="text-primary">
-                <i class="text-5xl fas fa-address-book" />
-                <p class="pt-3">°Friends</p>
-                 <span class="text-xs">({$_('omo_dapp_coming_soon')})</span>
-              </div>
-            </Route>
+  </header>
+  <main slot="main">
+    <div class="grid grid-cols-2 gap-2 -mt-4">
+      <a href="#/identity/settings">
+        <div
+          class="flex items-center justify-center h-48 p-8 text-center text-gray-800 bg-white border border-gray-200 rounded">
+          <div class="text-primary">
+            <i class="text-5xl fas fa-user-astronaut" />
+            <p class="pt-3">{$_('omo_dapp_name_identity')}</p>
+            <span
+              class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
           </div>
         </div>
-   -->
-      <div class="w-1/2 p-2">
+      </a>
+
+      <a href="#/wallet/connect">
+        <div
+          class="flex items-center justify-center h-48 p-6 text-center text-gray-800 bg-white border border-gray-200 rounded">
+          <div class="text-primary">
+            <i class="text-5xl fas fa-piggy-bank" />
+            <p class="pt-3">{$_('omo_dapp_name_wallet')}</p>
+            <span
+              class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_dapp_alpha_testing')}</span>
+          </div>
+        </div>
+      </a>
+
+      <div>
         <div
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
@@ -68,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="w-1/2 p-2">
+      <div>
         <div
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
@@ -78,7 +64,7 @@
           </div>
         </div>
       </div>
-      <div class="w-1/2 p-2">
+      <div>
         <div
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
@@ -88,7 +74,7 @@
           </div>
         </div>
       </div>
-      <div class="w-1/2 p-2">
+      <div>
         <div
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
@@ -98,7 +84,7 @@
           </div>
         </div>
       </div>
-      <div class="w-1/2 p-2">
+      <div>
         <div
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
@@ -108,7 +94,7 @@
           </div>
         </div>
       </div>
-      <div class="w-1/2 p-2">
+      <div>
         <div
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
@@ -118,7 +104,7 @@
           </div>
         </div>
       </div>
-      <div class="w-1/2 p-2">
+      <div>
         <div
           class="flex items-center justify-center h-48 p-6 text-center text-gray-400 bg-white border border-gray-200 rounded">
           <div class="text-gray-500">
@@ -129,5 +115,5 @@
         </div>
       </div>
     </div>
-  </div>
-</MobileLayout>
+  </main>
+</TemplateDapp>
