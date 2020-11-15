@@ -2,7 +2,7 @@ import { BN } from "ethereumjs-util";
 import { Address } from "src/libs/o-circles-protocol/interfaces/address";
 
 export type PromptField = {
-    type: string,
+    type: "ethereumAddress",
     icon?: string,
     label: string,
     description?: string,
@@ -22,7 +22,7 @@ export type ProcessEvent =
         // Triggers are declared outside of the fields to allow them
         // to access all fields.
         type: "omo.prompt",
-        message: string,
+        message?: string,
         data: {
             id: string,
             fields: {
@@ -36,11 +36,14 @@ export type ProcessEvent =
     }
     | {
         type: "omo.answer",
-        message: string,
+        message?: string,
         data: {
             id: string,
             fields: {
-                [id: string]: any
+                [id: string]: {
+                    type: string,
+                    data: any
+                }
             }
         }
     }

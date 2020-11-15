@@ -5,7 +5,7 @@
   const dispatch = createEventDispatcher();
 
   let isValid = true;
-  let hexByteString: string;
+  export let hexByteString: string;
 
   $: {
     isValid = hexByteString && hexByteString.startsWith("0x");
@@ -14,17 +14,20 @@
     }
     if (isValid) {
       dispatch("value", {
-        type: "address",
+        type: "ethereumAddress",
         data: hexByteString,
       });
     }
   }
 </script>
 
-{#if !isValid}Invalid value:<br />{/if}
-<input
-  placeholder="0x1234..."
-  type="string"
-  minlength="42"
-  maxlength="42"
-  bind:value={hexByteString} />
+<div>
+    <input
+      class:border={!isValid}
+      class:border-red-500={!isValid}
+      placeholder="0x1234..."
+      type="string"
+      minlength="42"
+      maxlength="42"
+      bind:value={hexByteString} />
+</div>

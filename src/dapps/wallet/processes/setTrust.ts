@@ -10,7 +10,7 @@ const promptTrustReceiver: ProcessEvent = {
         id: "promptTrustReceiver",
         fields: {
             "trustReceiver": {
-                type: "address",
+                type: "ethereumAddress",
                 label: "I trust"
             }
         }
