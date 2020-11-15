@@ -5,6 +5,9 @@
     import {onMount} from "svelte";
     import {transferCircles} from "../processes/transferCircles/transferCircles";
     import Process from "../../../libs/o-views/molecules/Process.svelte";
+    import {ProcessContext} from "../../../libs/o-processes/processContext";
+    import {transferXDai, TransferXDaiContext} from "../processes/transferXDai/transferXDai";
+    import {BN} from "ethereumjs-util";
 
     // http://localhost:5000/#/wallet/jumpstart/0x9B74661e83F6696AdF872576f886Dc5Eb569B0bD
 
@@ -25,11 +28,28 @@
      * The address that should be funded
      */
     let address: string = null;
+    let contextInitializer;
 
     $: {
         if (params.address)
         {
             address = params.address;
+            contextInitializer = (processContext:ProcessContext) => {
+                const transferXDaiContext = {
+                    ...processContext,
+                    transfer: {
+                        recipient: {
+                            type: "ethereumAddress",
+                            data: params.address
+                        },
+                        value: {
+                            type: "wei",
+                            data: new BN("10000000000000000")
+                        }
+                    }
+                };
+                return transferXDaiContext;
+            }
         }
     }
     let header = {
@@ -40,7 +60,7 @@
 
     function yes()
     {
-        process = transferCircles;
+        process = transferXDai;
     }
 
     function no()
@@ -65,7 +85,7 @@
         </main>
         <footer slot="footer" class="p-4 bg-white border-t">
             {#if process}
-                <Process definition={process}/>
+                <Process contextInitializer={contextInitializer} definition={process}/>
             {:else}
             <div class="flex space-x-4">
                 <div

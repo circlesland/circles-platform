@@ -49,11 +49,14 @@ function getServiceContext(): ProcessContext {
 }
 
 window.stateMachines = {
-  run: (definition: ProcessDefinition) => {
-
+  run<TContext>(definition: ProcessDefinition, contextModifier?:(processContext:ProcessContext)=>TContext) {
     const { service, state, send } = useMachine(
       definition.stateMachine,
-      { context: getServiceContext() });
+      {
+        context: contextModifier
+            ? contextModifier(getServiceContext())
+            : getServiceContext()
+      });
 
     const processEvents = new Subject<{
       stopped: boolean,

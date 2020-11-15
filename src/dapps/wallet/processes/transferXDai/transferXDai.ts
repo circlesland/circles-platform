@@ -5,7 +5,7 @@ import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 
-export interface TransferCirclesContext extends ProcessContext
+export interface TransferXDaiContext extends ProcessContext
 {
     transfer?: {
         recipient: {
@@ -22,12 +22,17 @@ export interface TransferCirclesContext extends ProcessContext
 /**
  * Transfer circles
  */
-const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
+const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
     initial: "ready",
     states: {
         ready: {
             on: {
-                "omo.trigger": "promptRecipient",
+                "omo.trigger": [{
+                    cond: (context) => context.transfer !== undefined,
+                    target:"summarize"
+                },{
+                    target:"promptRecipient"
+                }],
                 "omo.cancel": "stop"
             }
         },
@@ -63,7 +68,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         promptValue: {
             entry: send({
                 type: "omo.prompt",
-                message: "Please enter the Value you want to transfer and click 'Next'",
+                message: "Please enter the xDai value you want to transfer and click 'Next'",
                 data: {
                     id: "value",
                     fields: {
@@ -84,7 +89,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }
         },
         summarize: {
-            entry: send((context: TransferCirclesContext) =>
+            entry: send((context: TransferXDaiContext) =>
             {
                 return {
                     type: "omo.prompt",
@@ -114,9 +119,9 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                 "omo.cancel": "stop"
             }
         },
-        transferCircles: {
+        transferXDai: {
             invoke: {
-                id: 'transferCircles',
+                id: 'transferXDai',
                 src: async (context) => null,
                 onError: {
                     actions: []

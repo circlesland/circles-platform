@@ -3,6 +3,7 @@
     import {ProcessEvent, PromptField} from "../../o-processes/processEvent";
     import {ProcessDefinition} from "../../o-processes/processManifest";
     import Prompt from "./Prompt.svelte";
+    import {ProcessContext} from "../../o-processes/processContext";
 
     let statusType:
         | "none"
@@ -19,10 +20,11 @@
     let process: Process = null;
 
     export let definition: ProcessDefinition;
+    export let contextInitializer: (processContext:ProcessContext) => ProcessContext;
 
     $:{
         if (definition) {
-            process = runProcess(definition);
+            process = runProcess();
 
             process.sendEvent(<ProcessEvent>{
                 type: "omo.trigger",
@@ -30,14 +32,14 @@
         }
     }
 
-    function runProcess(definition: ProcessDefinition)
+    function runProcess()
     {
         if (process)
         {
             throw new Error("There is already a running process.");
         }
 
-        process = window.stateMachines.run(definition);
+        process = window.stateMachines.run(definition, contextInitializer);
         process.events.subscribe((next) =>
         {
             if (next.event?.type === "omo.notification")
