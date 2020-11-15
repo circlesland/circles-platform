@@ -74,51 +74,53 @@
   }
 </script>
 
-{#if transactions.length > 0}
-  <div class="m-4 space-y-2">
-    {#each transactions as t}
-      <div class="flex w-full bg-white border border-gray-300 rounded">
-        <div class="flex-1 w-2/3 px-4 py-2 text-sm">
-          <b class="text-primary">
-            {#if t.from !== '0x0000000000000000000000000000000000000000'}
-              {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
-              {t.subject}
-            {:else}Universal basic income{/if}
-          </b>
-          <p class="text-xs text-gray-500">
-            {dayjs(t.timestamp).fromNow()}
-            {#if t.direction === 'in'}
+<div class="overflow-scroll">
+  {#if transactions.length > 0}
+    <div class="m-4 space-y-2">
+      {#each transactions as t}
+        <div class="flex w-full bg-white border border-gray-300 rounded">
+          <div class="flex-1 w-2/3 px-4 py-2 text-sm">
+            <b class="text-primary">
               {#if t.from !== '0x0000000000000000000000000000000000000000'}
-                from
-                <!-- <a href="#/wallet/{t.from}/safe">-->
-                {t.from.slice(0, 12)}...
+                {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
+                {t.subject}
+              {:else}Universal basic income{/if}
+            </b>
+            <p class="text-xs text-gray-500">
+              {dayjs(t.timestamp).fromNow()}
+              {#if t.direction === 'in'}
+                {#if t.from !== '0x0000000000000000000000000000000000000000'}
+                  from
+                  <!-- <a href="#/wallet/{t.from}/safe">-->
+                  {t.from.slice(0, 12)}...
+
+                  <!-- </a> -->
+                {:else}from MamaOmo{/if}
+              {:else}
+                to
+                <!-- <a href="#/wallet/{t.to}/safe"> -->
+                {t.to.slice(0, 12)}...
 
                 <!-- </a> -->
-              {:else}from MamaOmo{/if}
-            {:else}
-              to
-              <!-- <a href="#/wallet/{t.to}/safe"> -->
-              {t.to.slice(0, 12)}...
-
-              <!-- </a> -->
-            {/if}
-          </p>
+              {/if}
+            </p>
+          </div>
+          {#if t.direction === 'out'}
+            <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
+              -
+              {t.amount}
+            </div>
+          {:else}
+            <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-action">
+              {t.amount}
+            </div>
+          {/if}
         </div>
-        {#if t.direction === 'out'}
-          <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
-            -
-            {t.amount}
-          </div>
-        {:else}
-          <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-action">
-            {t.amount}
-          </div>
-        {/if}
-      </div>
-    {/each}
-  </div>
-{:else}
-  <div class="flex items-center justify-center h-full mx-auto">
-    <Jumper size="150" color="#071D69" unit="px" />
-  </div>
-{/if}
+      {/each}
+    </div>
+  {:else}
+    <div class="flex items-center justify-center h-full mx-auto">
+      <Jumper size="150" color="#071D69" unit="px" />
+    </div>
+  {/if}
+</div>

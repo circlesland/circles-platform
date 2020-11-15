@@ -26,7 +26,7 @@
     box-sizing: border-box;
   }
   aside {
-    z-index: 1000;
+    /* z-index: 1000; */
     position: fixed;
     top: 0;
     left: 0;
@@ -50,7 +50,7 @@
     in:fade
     out:fade
     on:click|self={handleClose}
-    class="overlay">
+    class="z-40 overlay">
     <div class="w-full max-w-lg bg-white rounded-t-lg">
       <header class="rounded-t-lg">
         <div class="flex h-3 overflow-hidden text-xs rounded-t-lg bg-primary" />
