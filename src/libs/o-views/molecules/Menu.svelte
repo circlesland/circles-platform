@@ -14,11 +14,25 @@
   :global(a.active) {
     color: #0c266a;
   }
+  /* .action {
+    z-index: 1000;
+  } */
 </style>
 
 <Modal {triggerRef} bind:isOpen>
   <svelte:component this={actions} />
 </Modal>
+
+<button
+  class="absolute flex items-center justify-center w-full text-xs text-center action"
+  on:click={() => (isOpen = !isOpen)}>
+  {#if !isOpen}
+    <div
+      class="fixed w-16 h-16 mx-auto mt-4 text-white rounded-full action bg-secondary hover:bg-primary">
+      <i class="mt-4 text-3xl fas fa-plus " />
+    </div>
+  {/if}
+</button>
 
 <footer
   class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
@@ -38,21 +52,8 @@
       <p>Tokens</p>
     </a>
   </div>
-  <button
-    class="z-50 flex items-center justify-center text-xs text-center "
-    on:click={() => (isOpen = !isOpen)}>
-    {#if isOpen}
-      <div
-        class="w-16 h-16 -mt-5 border-2 rounded-full text-light-300 border-light-300">
-        <i class="mt-4 text-3xl fas fa-minus" />
-      </div>
-    {:else}
-      <div
-        class="w-16 h-16 -mt-5 text-white rounded-full bg-secondary hover:bg-primary">
-        <i class="mt-4 text-3xl fas fa-plus " />
-      </div>
-    {/if}
-  </button>
+  <div
+    class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary" />
   <div
     class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a

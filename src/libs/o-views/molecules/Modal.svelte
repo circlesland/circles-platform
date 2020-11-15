@@ -54,13 +54,18 @@
     <div class="w-full max-w-lg bg-white rounded-t-lg">
       <header class="rounded-t-lg">
         <div class="flex h-3 overflow-hidden text-xs rounded-t-lg bg-primary" />
-        <div
-          aria-label="Close modal"
-          bind:this={buttonRef}
-          on:click={handleClose} />
       </header>
-      <div style="padding-bottom: 5rem">
+      <div style="padding-bottom: 1rem">
         <slot>No content provided</slot>
+        <div class="w-full text-center">
+          <div
+            aria-label="Close modal"
+            bind:this={buttonRef}
+            on:click={handleClose}
+            class="w-full mx-auto text-center text-light-400 ">
+            <i class="my-2 text-4xl fas fa-times-circle " />
+          </div>
+        </div>
       </div>
     </div>
   </aside>
