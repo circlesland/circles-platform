@@ -178,6 +178,7 @@
                     process.sendEvent({
                         type: "omo.cancel",
                     });
+                    process = null;
                 }}>Cancel</button>
             <button on:click={() => {
                     const answer = {

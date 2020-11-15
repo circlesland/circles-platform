@@ -23,8 +23,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         ready: {
             on: {
                 "omo.trigger": "promptRecipient",
-                "omo.cancel": "stop",
-                "omo.stop": "stop"
+                "omo.cancel": "stop"
             }
         },
         promptRecipient: {
@@ -43,18 +42,17 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }),
             on: {
                 "omo.answer": {
-                    actions: [
-                        assign((context: any, event: any) =>
+                    actions: assign((context: any, event: any) =>
+                    {
+                        if (!context.transfer)
                         {
-                            if (!context.transfer)
-                            {
-                                context.transfer = {};
-                            }
-                            context.transfer.recipient = event.data.fields.address;
-                        })
-                    ],
+                            context.transfer = {};
+                        }
+                        context.transfer.recipient = event.data.fields.address;
+                    }),
                     target: "promptValue"
-                }
+                },
+                "omo.cancel": "stop"
             }
         },
         promptValue: {
@@ -73,18 +71,11 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }),
             on: {
                 "omo.answer": {
-                    actions: [
-                        assign((context: any, event: any) =>
-                        {
-                            if (!context.transfer)
-                            {
-                                context.transfer = {};
-                            }
-                            context.transfer.value = event.data.fields.value;
-                        })
-                    ],
+                    actions: assign((context: any, event: any) =>
+                        context.transfer.value = event.data.fields.value),
                     target: "summarize"
-                }
+                },
+                "omo.cancel": "stop"
             }
         },
         summarize: {
@@ -113,7 +104,10 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                         }
                     }
                 }
-            })
+            }),
+            on: {
+                "omo.cancel": "stop"
+            }
         },
         transferCircles: {
             invoke: {
