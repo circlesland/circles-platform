@@ -10,7 +10,7 @@
     let contextInitializer;
 </script>
 {#if process}
-    <Process {contextInitializer} definition={process}/>
+    <Process  on:stopped={() => process = null} {contextInitializer} definition={process}/>
 {:else}
 <div class="w-full p-4 space-y-2 border-t border-gray-300 rounded-t-xl">
     <div class="space-y-2">

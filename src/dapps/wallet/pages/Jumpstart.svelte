@@ -71,8 +71,7 @@
 
 <MobileLayout>
     <MainFooter>
-        <main
-                slot="main"
+        <main slot="main"
                 class="grid p-8 overflow-hidden overflow-y-scroll text-center bg-light-100">
             <h1 class="text-3xl text-center font-title text-primary">
                 {address} needs a jumpstart ..
@@ -85,20 +84,18 @@
         </main>
         <footer slot="footer" class="p-4 bg-white border-t">
             {#if process}
-                <Process contextInitializer={contextInitializer} definition={process}/>
+                <Process on:stopped={() => process = null} contextInitializer={contextInitializer} definition={process}/>
             {:else}
-            <div class="flex space-x-4">
-                <div
-                        class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"
-                        on:click={() => yes()}>
-                    Yes
+                <div class="flex space-x-4">
+                    <div class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"
+                         on:click={() => yes()}>
+                        Yes
+                    </div>
+                    <div class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"
+                         on:click={() => no()}>
+                        No
+                    </div>
                 </div>
-                <div
-                        class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"
-                        on:click={() => no()}>
-                    No
-                </div>
-            </div>
             {/if}
         </footer>
     </MainFooter>

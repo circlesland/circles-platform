@@ -4,6 +4,8 @@
     import {ProcessDefinition} from "../../o-processes/processManifest";
     import Prompt from "./Prompt.svelte";
     import {ProcessContext} from "../../o-processes/processContext";
+    import {createEventDispatcher} from "svelte";
+    import {weiValueBN} from "../atoms/EtherInput.svelte";
 
     let statusType:
         | "none"
@@ -21,6 +23,8 @@
 
     export let definition: ProcessDefinition;
     export let contextInitializer: (processContext:ProcessContext) => ProcessContext;
+
+    const dispatch = createEventDispatcher();
 
     $:{
         if (definition) {
@@ -77,6 +81,7 @@
             }
             else if (next.stopped)
             {
+                dispatch("stopped");
                 setTimeout(() =>
                 {
                     process = null;
@@ -110,6 +115,6 @@
             <Prompt status={status} process={process} promptFields={promptFields} promptId={promptId}></Prompt>
         {/if}
     {:else}
-        <h1>Invalid process</h1>
+        <h1>Process ended</h1>
     {/if}
 </div>
