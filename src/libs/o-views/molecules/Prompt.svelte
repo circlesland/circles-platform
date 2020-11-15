@@ -1,101 +1,99 @@
 <script lang="ts">
-    import {PromptField} from "../../o-processes/processEvent";
-    import AddressInput from "../atoms/AddressInput.svelte";
-    import EtherInput from "../atoms/EtherInput.svelte";
-    import StringInput from "../atoms/StringInput.svelte";
-    import TextInput from "../atoms/TextInput.svelte";
-    import PrivateKeyInput from "../atoms/PrivateKeyInput.svelte";
-    import PercentInput from "../atoms/PercentInput.svelte";
-    import BN from "bn.js";
+  import { PromptField } from "../../o-processes/processEvent";
+  import AddressInput from "../atoms/AddressInput.svelte";
+  import EtherInput from "../atoms/EtherInput.svelte";
+  import StringInput from "../atoms/StringInput.svelte";
+  import TextInput from "../atoms/TextInput.svelte";
+  import PrivateKeyInput from "../atoms/PrivateKeyInput.svelte";
+  import PercentInput from "../atoms/PercentInput.svelte";
+  import BN from "bn.js";
 
-    export let promptFields: { key: string, field: PromptField }[] = [];
-    export let promptId: string = "";
-    export let process;
-    export let status;
+  export let promptFields: { key: string; field: PromptField }[] = [];
+  export let promptId: string = "";
+  export let process;
+  export let status;
 
-    let promptFieldValues: { [key: string]: { type: string, data: any } } = {};
+  let promptFieldValues: { [key: string]: { type: string; data: any } } = {};
 </script>
-<h1 class="px-4 py-8 mb-4 text-center text-white rounded bg-action">
-    {status}
+
+<h1 class="w-full px-4 py-8 mb-4 text-center text-white rounded bg-action">
+  {status}
 </h1>
 {#each promptFields as promptField}
-    <div class="flex">
-        {#if promptField.field.type === "ethereumAddress"}
-            <span class="mr-3">{promptField.field.label}: </span>
-            <AddressInput
-                    isReadonly={promptField.field.isReadonly}
-                    hexByteString={(promptField.field.value ? promptField.field.value.data : "")}
-                    on:value={(event) => {
-                                const key = promptField.key;
-                                promptFieldValues[key] = event.detail;
-                            }}/>
-        {:else if promptField.field.type === "wei"}
-            <span class="mr-3">{promptField.field.label}: </span>
-            <EtherInput
-                    isReadonly={promptField.field.isReadonly}
-                    weiValueBN={(promptField.field.value ?  promptField.field.value.data : new BN(0))}
-                    on:value={(event) => {
-                                const key = promptField.key;
-                                promptFieldValues[key] = event.detail;
-                            }}/>
-        {:else if promptField.field.type === "string"}
-            <span class="mr-3">{promptField.field.label}: </span>
-            <StringInput
-                    isReadonly={promptField.field.isReadonly}
-                    line={(promptField.field.value ?  promptField.field.value.data : "")}
-                    on:value={(event) => {
-                                    const key = promptField.key;
-                                    promptFieldValues[key] = event.detail;
-                                }}/>
-        {:else if promptField.field.type === "text"}
-            <span class="mr-3">{promptField.field.label}: </span>
-            <TextInput
-                    isReadonly={promptField.field.isReadonly}
-                    text={(promptField.field.value ?  promptField.field.value.data : "")}
-                    on:value={(event) => {
-                                    const key = promptField.key;
-                                    promptFieldValues[key] = event.detail;
-                                }}/>
-        {:else if promptField.field.type === "bytestring"}
-            <span class="mr-3">{promptField.field.label}: </span>
-            <PrivateKeyInput
-                    isReadonly={promptField.field.isReadonly}
-                    on:value={(event) => {
-                                    const key = promptField.key;
-                                    promptFieldValues[key] = event.detail;
-                                }}/>
-        {:else if promptField.field.type === "percent"}
-            <span class="mr-3">{promptField.field.label}: </span>
-            <PercentInput
-                    isReadonly={promptField.field.isReadonly}
-                    percentValue={(promptField.field.value ?  promptField.field.value.data : 0)}
-                    on:value={(event) => {
-                                    const key = promptField.key;
-                                    promptFieldValues[key] = event.detail;
-                                }}/>
-        {:else}
-            {JSON.stringify(promptField, null, 2)}
-        {/if}
-    </div>
+  <div class="flex w-full">
+    {#if promptField.field.type === 'ethereumAddress'}
+      <AddressInput
+        label={promptField.field.label}
+        isReadonly={promptField.field.isReadonly}
+        hexByteString={promptField.field.value ? promptField.field.value.data : ''}
+        on:value={(event) => {
+          const key = promptField.key;
+          promptFieldValues[key] = event.detail;
+        }} />
+    {:else if promptField.field.type === 'wei'}
+      <EtherInput
+        label={promptField.field.label}
+        isReadonly={promptField.field.isReadonly}
+        weiValueBN={promptField.field.value ? promptField.field.value.data : new BN(0)}
+        on:value={(event) => {
+          const key = promptField.key;
+          promptFieldValues[key] = event.detail;
+        }} />
+    {:else if promptField.field.type === 'string'}
+      <StringInput
+        label={promptField.field.label}
+        isReadonly={promptField.field.isReadonly}
+        line={promptField.field.value ? promptField.field.value.data : ''}
+        on:value={(event) => {
+          const key = promptField.key;
+          promptFieldValues[key] = event.detail;
+        }} />
+    {:else if promptField.field.type === 'text'}
+      <TextInput
+        label={promptField.field.label}
+        isReadonly={promptField.field.isReadonly}
+        text={promptField.field.value ? promptField.field.value.data : ''}
+        on:value={(event) => {
+          const key = promptField.key;
+          promptFieldValues[key] = event.detail;
+        }} />
+    {:else if promptField.field.type === 'bytestring'}
+      <PrivateKeyInput
+        label={promptField.field.label}
+        isReadonly={promptField.field.isReadonly}
+        on:value={(event) => {
+          const key = promptField.key;
+          promptFieldValues[key] = event.detail;
+        }} />
+    {:else if promptField.field.type === 'percent'}
+      <PercentInput
+        label={promptField.field.label}
+        isReadonly={promptField.field.isReadonly}
+        percentValue={promptField.field.value ? promptField.field.value.data : 0}
+        on:value={(event) => {
+          const key = promptField.key;
+          promptFieldValues[key] = event.detail;
+        }} />
+    {:else}{JSON.stringify(promptField, null, 2)}{/if}
+  </div>
 {/each}
-<button on:click={() => {
-                    process.sendEvent({
-                        type: "omo.cancel",
-                    });
-                    process = null;
-                }}>Cancel
-</button>
-<button on:click={() => {
-                    const answer = {
-                        type: "omo.answer",
-                        message: "",
-                        data: {
-                            id: promptId,
-                            fields: promptFieldValues
-                        }
-                    };
-                    process.sendEvent(answer);
-                    console.log("Sent", answer);
-                    promptFieldValues = {};
-                }}>Next
-</button>
+
+<div class="flex justify-center w-full h-16 py-2 space-x-3 text-center">
+  <button
+    class="px-6 py-2 font-bold uppercase bg-gray-200 border rounded border-light-400 text-primary"
+    on:click={() => {
+      process.sendEvent({ type: 'omo.cancel' });
+      process = null;
+    }}>
+    <i class="fas fa-times" />
+  </button>
+  <button
+    class="w-full px-4 py-2 font-bold text-white uppercase rounded cursor-pointer bg-primary"
+    on:click={() => {
+      const answer = { type: 'omo.answer', message: '', data: { id: promptId, fields: promptFieldValues } };
+      process.sendEvent(answer);
+      console.log('Sent', answer);
+      promptFieldValues = {};
+    }}>Next
+  </button>
+</div>
