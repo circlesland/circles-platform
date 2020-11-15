@@ -5,12 +5,14 @@
     import type {Process} from "../../../main";
     import {transferCircles} from "../processes/transferCircles/transferCircles";
     import {setTrust} from "../processes/setTrust";
+    import {connectSafe} from "../processes/connectSafe/connectSafe";
     import {ProcessEvent, PromptField} from "../../../libs/o-processes/processEvent";
     import {ProcessDefinition} from "../../../libs/o-processes/processManifest";
     import AddressInput from "../../../libs/o-views/atoms/AddressInput.svelte";
     import EtherInput from "../../../libs/o-views/atoms/EtherInput.svelte";
     import StringInput from "../../../libs/o-views/atoms/StringInput.svelte";
     import TextInput from "../../../libs/o-views/atoms/TextInput.svelte";
+    import PrivateKeyInput from "../../../libs/o-views/atoms/PrivateKeyInput.svelte";
 
     let statusType:
         | "none"
@@ -55,6 +57,14 @@
     function runRemoveTrust()
     {
         const process = runProcess(setTrust);
+        process.sendEvent(<ProcessEvent>{
+            type: "omo.trigger",
+        });
+    }
+
+    function runConnectSafe()
+    {
+        const process = runProcess(connectSafe);
         process.sendEvent(<ProcessEvent>{
             type: "omo.trigger",
         });
@@ -159,16 +169,27 @@
                             }}/>
                     {:else if  promptField.field.type === "string"}
                         <span class="mr-3">{promptField.field.label}: </span>
-                        <StringInput on:value={(event) => {
-                            const key = promptField.key;
-                            promptFieldValues[key] = event.detail;
-                        }}/>
+                        <StringInput
+                                line={(promptField.field.value ?  promptField.field.value.data : "")}
+                                on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
                     {:else if  promptField.field.type === "text"}
                         <span class="mr-3">{promptField.field.label}: </span>
-                        <TextInput on:value={(event) => {
-                            const key = promptField.key;
-                            promptFieldValues[key] = event.detail;
-                        }}/>
+                        <TextInput
+                                text={(promptField.field.value ?  promptField.field.value.data : "")}
+                                on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
+                    {:else if  promptField.field.type === "bytestring"}
+                        <span class="mr-3">{promptField.field.label}: </span>
+                        <PrivateKeyInput
+                                on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
                     {:else}
                         {JSON.stringify(promptField, null, 2)}
                     {/if}
@@ -221,6 +242,13 @@
                         class="w-full p-2 font-bold text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
                         on:click={runTransferCircles}>
                     Send Money
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <div
+                        class="w-full p-2 font-bold text-center uppercase border-2 rounded bg-light-100 border-primary text-primary hover:bg-primary hover:text-white"
+                        on:click={runConnectSafe}>
+                    Connect Safe
                 </div>
             </div>
         </div>

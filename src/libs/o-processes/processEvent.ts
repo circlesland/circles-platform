@@ -2,7 +2,7 @@ import { BN } from "ethereumjs-util";
 import { Address } from "src/libs/o-circles-protocol/interfaces/address";
 
 export type PromptField = {
-    type: "ethereumAddress",
+    type: "ethereumAddress"|"wei"|"bytestring",
     icon?: string,
     label: string,
     description?: string,

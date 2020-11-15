@@ -26,7 +26,7 @@
       class:border={!isValid}
       class:border-red-500={!isValid}
       placeholder="0x1234..."
-      type="string"
+      type="text"
       minlength="42"
       maxlength="42"
       bind:value={hexByteString} />
