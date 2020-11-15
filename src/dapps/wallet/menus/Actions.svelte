@@ -4,7 +4,7 @@
     import {requestUbi} from "../processes/requestUbi/requestUbi";
     import type {Process} from "../../../main";
     import {transferCircles} from "../processes/transferCircles/transferCircles";
-    import {setTrust} from "../processes/setTrust";
+    import {setTrust} from "../processes/setTrust/setTrust";
     import {connectSafe} from "../processes/connectSafe/connectSafe";
     import {ProcessEvent, PromptField} from "../../../libs/o-processes/processEvent";
     import {ProcessDefinition} from "../../../libs/o-processes/processManifest";
@@ -13,6 +13,7 @@
     import StringInput from "../../../libs/o-views/atoms/StringInput.svelte";
     import TextInput from "../../../libs/o-views/atoms/TextInput.svelte";
     import PrivateKeyInput from "../../../libs/o-views/atoms/PrivateKeyInput.svelte";
+    import PercentInput from "../../../libs/o-views/atoms/PercentInput.svelte";
 
     let statusType:
         | "none"
@@ -186,6 +187,14 @@
                     {:else if  promptField.field.type === "bytestring"}
                         <span class="mr-3">{promptField.field.label}: </span>
                         <PrivateKeyInput
+                                on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
+                    {:else if  promptField.field.type === "percent"}
+                        <span class="mr-3">{promptField.field.label}: </span>
+                        <PercentInput
+                                percentValue={(promptField.field.value ?  promptField.field.value.data : 0)}
                                 on:value={(event) => {
                                     const key = promptField.key;
                                     promptFieldValues[key] = event.detail;
