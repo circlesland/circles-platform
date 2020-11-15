@@ -9,8 +9,14 @@ import context from "svelte/types/compiler/parse/read/context";
 export interface SetTrustContext extends ProcessContext
 {
     setTrust?: {
-        trustReceiver: Address,
-        trustLimit: number
+        trustReceiver: {
+            type:string,
+            data:Address
+        },
+        trustLimit: {
+            type:string,
+            data:any
+        }
     }
 }
 
