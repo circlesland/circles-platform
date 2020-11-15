@@ -24,5 +24,6 @@
     width: 100%;
     overflow: hidden !important;
     position: relative;
+    touch-action: none;
   }
 </style>
