@@ -1,21 +1,51 @@
 <script lang="ts">
+  import { lock, unlock, clearBodyLocks } from "tua-body-scroll-lock";
+
   export let area: string = "";
-  export let overflow: Boolean = false;
+  export let m: string = "0";
+  export let p: string = "0";
+  export let bg: string = "";
+  export let space: string = "space-y-0 space-x-0";
+  export let overflowX: Boolean = false;
+  export let overflowY: Boolean = false;
 </script>
 
 <style>
+  .scrollX {
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  .scrollY {
+    -webkit-transform: translate3d(0, 0, 0);
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll !important;
+  }
   .leaf {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
     overflow: hidden;
-    height: 100%;
+  }
+  .fullgrid {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
   }
 </style>
 
-<div class="bg-blue-200 leaf" style="grid-area: {area}">
-  {#if overflow}
-    <div class="h-full overflow-y-scroll bg-green-200">
+<div class="leaf" style="grid-area: {area}">
+  {#if overflowX}
+    <div class="fullgrid scrollX overflow-y-hidden {m} {p} {bg} {space}">
+      <slot />
+    </div>
+  {:else if overflowY}
+    <div class="fullgrid scrollY overflow-x-hidden {m} {p} {bg} {space}">
       <slot />
     </div>
   {:else}
-    <slot />
+    <div class="fullgrid {m} {p} {bg} {space}">
+      <slot />
+    </div>
   {/if}
 </div>

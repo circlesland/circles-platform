@@ -14,8 +14,6 @@
   import wallet_en from "src/dapps/wallet/languages/en.json";
   import identity_de from "src/dapps/identity/languages/de.json";
   import identity_en from "src/dapps/identity/languages/en.json";
-  import LayoutHeadMainFoot from "./libs/o-views/layouts/LayoutHeaderMainFooter.svelte";
-  import LayoutMainFoot from "./libs/o-views/layouts/LayoutHeaderMainFooter.svelte";
   import Composite from "src/libs/o-views/atoms/Composite.svelte";
   import Leaf from "./libs/o-views/atoms/Leaf.svelte";
 
@@ -43,27 +41,62 @@
     columns: "1fr",
     rows: "1fr 1fr",
   };
-  let layout2 = { areas: "'top''bottom'", columns: "1fr", rows: "200px 1fr" };
+  let layout2 = { areas: "'top''bottom'", columns: "1fr", rows: "50px 1fr" };
+  let layout3 = { areas: "'full'", columns: "1fr", rows: "1fr " };
 </script>
 
 <style>
   .app {
-    overflow: hidden;
     height: 100%;
+    overflow: hidden !important;
   }
 </style>
 
 <Tailwind />
 
 <div class="font-sans app">
-  <Composite layout={layout1}>
-    <Composite layout={layout2} area="top">
-      <Leaf area="top" overflow>
-        <div class="py-24 m-4 bg-indigo-500">area B1a</div>
-        <div class="py-24 m-4 bg-indigo-500">area B1b</div>
+  <Composite layout={layout1} area="app">
+    <Composite layout={layout1} area="top">
+      <Leaf area="top" overflowY>
+        <div class="py-16 bg-indigo-500">area B1a</div>
+        <div class="py-24 bg-blue-500 ">area B1b</div>
+        <div class="py-24 bg-green-500 ">area B1b</div>
+        <div class="py-24 bg-green-300 ">area B1b</div>
+        <div class="py-24 bg-yellow-300 ">area B1b</div>
+        <div class="py-24 bg-orange-300 ">area B1b</div>
+        <div class="py-24 bg-red-300 ">area B1b</div>
+        <div class="py-24 bg-pink-500 ">area B1b</div>
+        <div class="py-24 bg-pink-700 ">area B1b</div>
+        <div class="py-24 bg-pink-900 ">area B1b</div>
+      </Leaf>
+      <Leaf area="bottom" overflowX>
+        <div class="flex" style="width: 1000px">
+          <div class="py-16 bg-indigo-500">area B1a</div>
+          <div class="py-24 bg-blue-500 ">area B1b</div>
+          <div class="py-24 bg-green-500 ">area B1b</div>
+          <div class="py-24 bg-green-300 ">area B1b</div>
+          <div class="py-24 bg-yellow-300 ">area B1b</div>
+          <div class="py-24 bg-orange-300 ">area B1b</div>
+          <div class="py-24 bg-red-300 ">area B1b</div>
+          <div class="py-24 bg-pink-500 ">area B1b</div>
+          <div class="py-24 bg-pink-700 ">area B1b</div>
+          <div class="py-24 bg-pink-900 ">area B1b</div>
+        </div>
       </Leaf>
     </Composite>
-    <Leaf area="bottom">bottom</Leaf>
+    <Leaf area="bottom" overflowY>
+      <div class="py-16 bg-indigo-500">area B1a</div>
+      <div class="py-24 bg-blue-500 ">area B1b</div>
+      <div class="py-24 bg-green-500 ">area B1b</div>
+      <div class="py-24 bg-green-300 ">area B1b</div>
+      <div class="py-24 bg-yellow-300 ">area B1b</div>
+      <div class="py-24 bg-orange-300 ">area B1b</div>
+      <div class="py-24 bg-red-300 ">area B1b</div>
+      <div class="py-24 bg-pink-500 ">area B1b</div>
+      <div class="py-24 bg-pink-700 ">area B1b</div>
+      <div class="py-24 bg-pink-900 ">area B1b</div>
+    </Leaf>
   </Composite>
-  <!-- <Router {routes} /> -->
 </div>
+
+<!-- <Router {routes} />  -->
