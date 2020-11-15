@@ -1,13 +1,11 @@
 <script lang="ts">
-  import MobileLayout from "src/libs/o-views/templates/MobileLayout.svelte";
-  import MainFooter from "src/libs/o-views/templates/MainFooter.svelte";
-  import { mnemonicToEntropy } from "bip39";
-  import { config } from "src/libs/o-circles-protocol/config";
-  import { push } from "svelte-spa-router";
-  import { onMount } from "svelte";
-  import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
+  import {mnemonicToEntropy} from "bip39";
+  import {config} from "src/libs/o-circles-protocol/config";
+  import {push} from "svelte-spa-router";
+  import {onMount} from "svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import {connectSafe} from "../processes/connectSafe/connectSafe";
+  import TemplateHeaderMainActionFooter from "../../../libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
 
   let seedphrase: string;
   let safeAddress: string;
