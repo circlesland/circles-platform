@@ -9,9 +9,18 @@ import {config} from "../../../../libs/o-circles-protocol/config";
 export interface TransferCirclesContext extends ProcessContext
 {
     connectSafe?: {
-        safeAddress: Address,
-        safeOwnerAddress: Address,
-        safeOwnerPrivateKey: ByteString
+        safeAddress: {
+            type:string,
+            data:Address
+        },
+        safeOwnerAddress:  {
+            type:string,
+            data:Address
+        },
+        safeOwnerPrivateKey:  {
+            type:string,
+            data:ByteString
+        }
     }
 }
 

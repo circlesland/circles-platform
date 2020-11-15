@@ -9,8 +9,14 @@ import context from "svelte/types/compiler/parse/read/context";
 export interface TransferCirclesContext extends ProcessContext
 {
     transfer?: {
-        recipient: Address,
-        value: BN
+        recipient: {
+            type:string,
+            data:Address
+        },
+        value: {
+            type:string,
+            data:BN
+        }
     }
 }
 
