@@ -2,50 +2,45 @@ import {assign, createMachine, send} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
+import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
-import {ByteString} from "../../../../libs/o-circles-protocol/interfaces/byteString";
-import {config} from "../../../../libs/o-circles-protocol/config";
 
 export interface TransferCirclesContext extends ProcessContext
 {
-    connectSafe?: {
-        safeAddress: {
-            type:"ethereumAddress",
+    transfer?: {
+        recipient: {
+            type:string,
             data:Address
         },
-        safeOwnerAddress:  {
-            type:"ethereumAddress",
-            data:Address
-        },
-        safeOwnerPrivateKey:  {
-            type:"bytestring",
-            data:ByteString
+        value: {
+            type:string,
+            data:BN
         }
     }
 }
 
 /**
- * Connect safe
+ * Transfer circles
  */
 const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
     initial: "ready",
     states: {
         ready: {
             on: {
-                "omo.trigger": "promptSafeAddress",
+                "omo.trigger": "promptRecipient",
                 "omo.cancel": "stop"
             }
         },
-        promptSafeAddress: {
+        promptRecipient: {
             entry: send({
                 type: "omo.prompt",
-                message: "Please enter the address of your safe below and click 'Next'",
+                message: "Please enter the recipient's address below and click 'Next'",
                 data: {
-                    id: "connectSafe",
+                    id: "recipient",
                     fields: {
-                        "safeAddress": {
+                        "address": {
                             type: "ethereumAddress",
-                            label: "Safe address"
+                            label: "Address"
                         }
                     }
                 }
@@ -54,44 +49,35 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                 "omo.answer": {
                     actions: assign((context: any, event: any) =>
                     {
-                        if (!context.connectSafe)
+                        if (!context.transfer)
                         {
-                            context.connectSafe = {};
+                            context.transfer = {};
                         }
-                        context.connectSafe.safeAddress = event.data.fields.safeAddress;
+                        context.transfer.recipient = event.data.fields.address;
                     }),
-                    target: "promptPrivateKey"
+                    target: "promptValue"
                 },
                 "omo.cancel": "stop"
             }
         },
-        promptPrivateKey: {
+        promptValue: {
             entry: send({
                 type: "omo.prompt",
-                message: "Please enter the private key of the safe owner account and click 'Next'",
+                message: "Please enter the Value you want to transfer and click 'Next'",
                 data: {
-                    id: "connectSafe",
+                    id: "value",
                     fields: {
-                        "safeOwnerPrivateKey": {
-                            type: "bytestring",
-                            label: "Safe owner private key"
+                        "value": {
+                            type: "wei",
+                            label: "Value"
                         }
                     }
                 }
             }),
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) => {
-                        context.connectSafe.safeOwnerPrivateKey = event.data.fields.safeOwnerPrivateKey;
-                        context.connectSafe.safeOwnerAddress = {
-                            type: "bytestring",
-                            data: config.getCurrent().web3()
-                                .eth
-                                .accounts
-                                .privateKeyToAccount(context.connectSafe.safeOwnerPrivateKey.data)
-                                .address
-                        };
-                    }),
+                    actions: assign((context: any, event: any) =>
+                        context.transfer.value = event.data.fields.value),
                     target: "summarize"
                 },
                 "omo.cancel": "stop"
@@ -104,17 +90,17 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                     type: "omo.prompt",
                     message: "Enter 'Deine Mudda oida' and click 'Next' to confirm the transaction",
                     data: {
-                        id: "connectSafe",
+                        id: "confirmation",
                         fields: {
-                            "safeOwnerAddress": {
+                            "recipient": {
                                 type: "ethereumAddress",
-                                label: "Safe owner address",
-                                value: context.connectSafe.safeOwnerAddress
+                                label: "Recipient",
+                                value: context.transfer.recipient
                             },
-                            "safeAddress": {
-                                type: "ethereumAddress",
-                                label: "Safe address",
-                                value: context.connectSafe.safeAddress
+                            "value": {
+                                type: "wei",
+                                label: "Value",
+                                value: context.transfer.value
                             },
                             "confirmation": {
                                 type: "string",
@@ -153,7 +139,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
     actions: {}
 });
 
-export const connectSafe: ProcessDefinition = {
-    name: "connectSafe",
+export const transferXDai: ProcessDefinition = {
+    name: "transferXDai",
     stateMachine: processDefinition
 };

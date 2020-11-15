@@ -10,6 +10,7 @@ import Invite from 'src/dapps/wallet/pages/Invite.svelte'
 import Register from 'src/dapps/wallet/pages/Register.svelte'
 import Trusts from 'src/dapps/wallet/pages/Trusts.svelte'
 import Tokens from 'src/dapps/wallet/pages/Tokens.svelte'
+import Jumpstart from 'src/dapps/wallet/pages/Jumpstart.svelte'
 // Identity Dapp
 import Settings from 'src/dapps/identity/pages/Settings.svelte'
 import Login from 'src/dapps/identity/pages/Login.svelte'
@@ -28,6 +29,7 @@ export default {
     '/wallet/connect': ConnectCircles,
     '/wallet/invite': Invite,
     '/wallet/register': Register,
+    '/wallet/jumpstart/:address': Jumpstart,
     '/wallet/:address/safe': Safe,
     '/wallet/:address/trusts': Trusts,
     '/wallet/:address/tokens': Tokens,

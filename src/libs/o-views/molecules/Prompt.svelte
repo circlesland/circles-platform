@@ -1,77 +1,95 @@
 <script lang="ts">
-  import { ProcessEvent, PromptField } from "src/processes/processEvent";
-  import AccountInput from "src/libs/o-views/atoms/AddressInput.svelte";
-  import EtherInput from "src/libs/o-views/atoms/fields/EtherInput.svelte";
-  import StringInput from "src/libs/o-views/atoms/fields/StringInput.svelte";
-  import TextInput from "src/libs/o-views/atoms/fields/TextInput.svelte";
-  import { Process } from "src/main";
+    import {PromptField} from "../../o-processes/processEvent";
+    import AddressInput from "../atoms/AddressInput.svelte";
+    import EtherInput from "../atoms/EtherInput.svelte";
+    import StringInput from "../atoms/StringInput.svelte";
+    import TextInput from "../atoms/TextInput.svelte";
+    import PrivateKeyInput from "../atoms/PrivateKeyInput.svelte";
+    import PercentInput from "../atoms/PercentInput.svelte";
+    import BN from "bn.js";
 
-  export let process: Process;
-  export let promptFields: { [id: string]: PromptField } = {};
+    export let promptFields: { key: string, field: PromptField }[] = [];
+    export let promptId: string = "";
+    export let process;
+    export let status;
 
-  function submit() {
-    if (!process) throw new Error("No process!");
-
-    const filledFields = Object.keys(promptFields)
-      .map((id) => {
-        return {
-          id,
-          field: promptFields[id],
-        };
-      })
-      .filter((item) => item.field.value)
-      .map((item) => {
-        return {
-          id: item.id,
-          value: item.field.value,
-        };
-      });
-
-    process.sendEvent(<ProcessEvent>{
-      type: "omo.answer",
-      data: {
-        fields: filledFields,
-      },
-    });
-  }
-
-  function cancel() {
-    if (!process) throw new Error("No process!");
-
-    process.sendEvent(<ProcessEvent>{
-      type: "omo.cancel",
-      message: "The process was cancelled from a user dialog.",
-    });
-  }
+    let promptFieldValues: { [key: string]: { type: string, data: any } } = {};
 </script>
-
+<h1 class="px-4 py-8 mb-4 text-center text-white rounded bg-action">
+    {status}
+</h1>
 {#each promptFields as promptField}
-  <Label>
-    <p>{promptField.label}:</p>
-    {#if promptField.type === 'account'}
-      <AccountInput
-        on:value={(event) => {
-          promptFields[promptField.id].value = event.detail.data;
-        }} />
-    {:else if promptField.type === 'ether'}
-      <EtherInput
-        on:value={() => {
-          promptFields[promptField.id].value = event.detail.data;
-        }} />
-    {:else if promptField.type === 'string'}
-      <StringInput
-        on:value={() => {
-          promptFields[promptField.id].value = event.detail.data;
-        }} />
-    {:else if promptField.type === 'text'}
-      <TextInput
-        on:value={() => {
-          promptFields[promptField.id].value = event.detail.data;
-        }} />
-    {/if}
-  </Label>
+    <div class="flex">
+        {#if promptField.field.type === "ethereumAddress"}
+            <span class="mr-3">{promptField.field.label}: </span>
+            <AddressInput
+                    hexByteString={(promptField.field.value ? promptField.field.value.data : "")}
+                    on:value={(event) => {
+                                const key = promptField.key;
+                                promptFieldValues[key] = event.detail;
+                            }}/>
+        {:else if promptField.field.type === "wei"}
+            <span class="mr-3">{promptField.field.label}: </span>
+            <EtherInput
+                    weiValueBN={(promptField.field.value ?  promptField.field.value.data : new BN(0))}
+                    on:value={(event) => {
+                                const key = promptField.key;
+                                promptFieldValues[key] = event.detail;
+                            }}/>
+        {:else if promptField.field.type === "string"}
+            <span class="mr-3">{promptField.field.label}: </span>
+            <StringInput
+                    line={(promptField.field.value ?  promptField.field.value.data : "")}
+                    on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
+        {:else if promptField.field.type === "text"}
+            <span class="mr-3">{promptField.field.label}: </span>
+            <TextInput
+                    text={(promptField.field.value ?  promptField.field.value.data : "")}
+                    on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
+        {:else if promptField.field.type === "bytestring"}
+            <span class="mr-3">{promptField.field.label}: </span>
+            <PrivateKeyInput
+                    on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
+        {:else if promptField.field.type === "percent"}
+            <span class="mr-3">{promptField.field.label}: </span>
+            <PercentInput
+                    percentValue={(promptField.field.value ?  promptField.field.value.data : 0)}
+                    on:value={(event) => {
+                                    const key = promptField.key;
+                                    promptFieldValues[key] = event.detail;
+                                }}/>
+        {:else}
+            {JSON.stringify(promptField, null, 2)}
+        {/if}
+    </div>
 {/each}
-<p>
-  <button on:click={submit}>Submit</button><br />
-  <button on:click={cancel}>Cancel</button>
-</p>
+<button on:click={() => {
+                    process.sendEvent({
+                        type: "omo.cancel",
+                    });
+                    process = null;
+                }}>Cancel
+</button>
+<button on:click={() => {
+                    const answer = {
+                        type: "omo.answer",
+                        message: "",
+                        data: {
+                            id: promptId,
+                            fields: promptFieldValues
+                        }
+                    };
+                    process.sendEvent(answer);
+                    console.log("Sent", answer);
+                    promptFieldValues = {};
+                }}>Next
+</button>

@@ -10,11 +10,11 @@ export interface SetTrustContext extends ProcessContext
 {
     setTrust?: {
         trustReceiver: {
-            type:string,
+            type:"ethereumAddress",
             data:Address
         },
         trustLimit: {
-            type:string,
+            type:"percent",
             data:any
         }
     }
