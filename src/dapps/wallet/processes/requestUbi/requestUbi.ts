@@ -5,7 +5,7 @@ import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import {recentlyGotUbi} from "./guards/recentlyGotUbi";
 import {setNextPossibleUbiRetrieval} from "./actions/setNextPossibleUbiRetrieval";
 import {canRetrieveNewUbi} from "./guards/canRetrieveNewUbi";
-import {getUbi} from "./invocations/getUbi";
+import {getUbi} from "./services/getUbi";
 
 /**
  * Requests UBI

@@ -26,7 +26,7 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
             on: {
                 "omo.trigger": [{
                     cond: (context) => context.jumpstart !== undefined,
-                    target:"summarize"
+                    target:"transferXDai"
                 },{
                     target:"promptRecipient"
                 }],

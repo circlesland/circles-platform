@@ -9,6 +9,7 @@
   let isValid = true;
   export let privateKeyPhrase: string;
   export let label: string;
+  export let isReadonly: boolean = false;
   let privateKeyByteString: ByteString;
 
   $: {
@@ -25,7 +26,8 @@
           data: privateKeyByteString,
         });
       }
-    } catch {
+    } catch (e) {
+      console.warn("PrivateKeyInput validation error:", e)
       isValid = false;
     }
   }
@@ -34,6 +36,7 @@
 <div class="w-full">
   <p class="mb-1 text-xs text-gray-700 uppercase">{label}</p>
   <input
+    readonly={isReadonly ? 'readonly' : ''}
     class:border={!isValid}
     class:border-red-500={!isValid}
     placeholder="word1 word2 word3 word4 .... word23 word24"

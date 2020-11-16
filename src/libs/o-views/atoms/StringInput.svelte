@@ -6,6 +6,7 @@
   let isValid = true;
   export let line: string;
   export let label: string;
+  export let isReadonly: boolean = false;
 
   $: {
     dispatch("value", {
@@ -18,6 +19,7 @@
 <div class="w-full">
   <p class="mb-1 text-xs text-gray-700 uppercase">{label}</p>
   <input
+    readonly={isReadonly ? 'readonly' : ''}
     placeholder="Bla bla bla .."
     type="string"
     class:border={!isValid}

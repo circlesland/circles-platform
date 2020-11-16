@@ -6,6 +6,7 @@
   let isValid = true;
   export let percentValue: string;
   export let label: string;
+  export let isReadonly: boolean = false;
 
   $: {
     dispatch("value", {
@@ -18,6 +19,7 @@
 <div class="w-full">
   <p class="mb-1 text-xs text-gray-700 uppercase">{label}</p>
   <input
+    readonly={isReadonly ? 'readonly' : ''}
     placeholder="100%"
     type="number"
     min="0"

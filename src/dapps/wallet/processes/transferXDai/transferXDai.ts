@@ -4,6 +4,7 @@ import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
+import {transferXDaiService} from "./services/transferXDaiService";
 
 export interface TransferXDaiContext extends ProcessContext
 {
@@ -93,41 +94,50 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             {
                 return {
                     type: "omo.prompt",
-                    message: "Enter 'Deine Mudda oida' and click 'Next' to confirm the transaction",
+                    message: "Click 'Next' to confirm the transaction",
                     data: {
                         id: "confirmation",
                         fields: {
-                            "recipient": {
-                                type: "ethereumAddress",
-                                label: "Recipient",
-                                value: context.transfer.recipient
-                            },
                             "value": {
                                 type: "wei",
+                                isReadonly: true,
                                 label: "Value",
                                 value: context.transfer.value
                             },
-                            "confirmation": {
-                                type: "string",
-                                label: "Confirmation phrase"
+                            "recipient": {
+                                type: "ethereumAddress",
+                                isReadonly: true,
+                                label: "Recipient",
+                                value: context.transfer.recipient
                             }
                         }
                     }
                 }
             }),
             on: {
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.answer": "transferXDai"
             }
         },
         transferXDai: {
             invoke: {
                 id: 'transferXDai',
-                src: async (context) => null,
+                src: transferXDaiService,
                 onError: {
-                    actions: []
+                    actions: (context,event) => {
+                        console.log("Error:", event.data);
+                        return send({
+                            type: "omo.error",
+                            message: "The 'Transfer xDai' process failed."
+                        })
+                    },
+                    target: "stop"
                 },
                 onDone: {
-                    actions: []
+                    actions: (context,event) => {
+                        console.log("Success:", event.data);
+                    },
+                    target: "stop"
                 }
             },
             on: {

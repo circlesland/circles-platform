@@ -10,18 +10,21 @@
   export let ethValueString: string = "";
   export let weiValueBN: BN;
   export let label: string = "Label";
+  export let isReadonly: boolean = false;
 
   let lastEthValue: string = "";
   let lastWeiValue: BN = new BN("0");
 
   $: {
+    const web3 = config.getCurrent().web3();
+
     try {
-      if (!weiValueBN.eq(lastWeiValue) && ethValueString == lastEthValue) {
-        ethValueString = config.getCurrent().web3().utils.fromWei(weiValueBN);
+      if (weiValueBN && !weiValueBN.eq(lastWeiValue) && ethValueString == lastEthValue) {
+        ethValueString = web3.utils.fromWei(weiValueBN);
       }
 
-      const bn = new BN(ethValueString);
-      weiValueBN = config.getCurrent().web3().utils.toWei(bn);
+      const weiStr = web3.utils.toWei(ethValueString.toString(), "ether");
+      weiValueBN = new BN(weiStr);
 
       dispatch("value", {
         type: "wei",
@@ -29,7 +32,8 @@
       });
 
       isValid = true;
-    } catch {
+    } catch (e) {
+      console.warn("EtherInput validation failed:", e);
       isValid = false;
     }
     lastWeiValue = weiValueBN;
@@ -41,8 +45,9 @@
   <p class="mb-1 text-xs text-gray-700 uppercase">{label}</p>
 
   <input
-    placeholder="1"
-    type="string"
+    readonly={isReadonly ? 'readonly' : ''}
+    placeholder="0.0"
+    type="number"
     class:border={!isValid}
     class:border-red-500={!isValid}
     bind:value={ethValueString}

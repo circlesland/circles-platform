@@ -1,10 +1,9 @@
 import {assign, createMachine, send} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
-import {ProcessEvent, PromptField} from "src/libs/o-processes/processEvent";
+import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
-import context from "svelte/types/compiler/parse/read/context";
+import {setTrustService} from "./services/setTrustService";
 
 export interface SetTrustContext extends ProcessContext
 {
@@ -53,7 +52,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                     {
                         if (!context.setTrust)
                         {
-                            context.setTrust = {};
+                            context.transferXDaiService = {};
                         }
                         context.setTrust.trustReceiver = event.data.fields.trustReceiver;
                     }),
@@ -64,7 +63,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                     {
                         if (!context.setTrust)
                         {
-                            context.setTrust = {};
+                            context.transferXDaiService = {};
                         }
                         context.setTrust.trustReceiver = event.data.fields.trustReceiver;
                     }),
@@ -101,7 +100,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
             {
                 return {
                     type: "omo.prompt",
-                    message: `Enter 'Deine Mudda oida' and click 'Next' to give ${context.setTrust.trustReceiver.data} trust.`,
+                    message: `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted persons.`,
                     data: {
                         id: "confirmation",
                         fields: {
@@ -114,28 +113,35 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                                 type: "percent",
                                 label: "Trust limit (%)",
                                 value: context.setTrust.trustLimit
-                            },
-                            "confirmation": {
-                                type: "string",
-                                label: "Confirmation phrase"
                             }
                         }
                     }
                 }
             }),
             on: {
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.answer": "setTrust"
             }
         },
-        transferCircles: {
+        setTrust: {
             invoke: {
-                id: 'transferCircles',
-                src: async (context) => null,
+                id: 'setTrust',
+                src: setTrustService,
                 onError: {
-                    actions: []
+                    actions: (context,event) => {
+                        console.log("Error:", event.data);
+                        return send({
+                            type: "omo.error",
+                            message: "The 'Set Trust' process failed."
+                        })
+                    },
+                    target: "stop"
                 },
                 onDone: {
-                    actions: []
+                    actions: (context,event) => {
+                        console.log("Success:", event.data);
+                    },
+                    target: "stop"
                 }
             },
             on: {

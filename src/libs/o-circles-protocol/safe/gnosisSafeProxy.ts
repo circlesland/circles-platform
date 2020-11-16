@@ -55,7 +55,7 @@ export class GnosisSafeProxy extends Web3Contract
     return parseInt(await this.contract.methods.nonce().call());
   }
 
-  async sendEth(account: Account, value: BN, to: Address)
+  async transferEth(account: Account, value: BN, to: Address)
   {
     const safeTransaction = <GnosisSafeTransaction>{
       value: value,
@@ -196,7 +196,7 @@ export class GnosisSafeProxy extends Web3Contract
       });
 
     if (txGasEstimation.eq(new BN("0")))
-      throw new Error("The safe's txGas cost estimation function should always fail with a 'revert' error.");
+      throw new Error("The safe's txGas cost estimation function should always fail with a 'revert' error that contains the cost from character 11 on.");
 
     const dataGasEstimation = this.estimateDataGasCosts(safeTransaction.data)
       .add(new BN("21000"));

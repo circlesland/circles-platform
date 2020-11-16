@@ -1,10 +1,10 @@
 import {assign, createMachine, send} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
-import {ProcessEvent, PromptField} from "src/libs/o-processes/processEvent";
+import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
-import context from "svelte/types/compiler/parse/read/context";
+import {transferCirclesService} from "./services/transferCirclesService";
 
 export interface TransferCirclesContext extends ProcessContext
 {
@@ -94,23 +94,19 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             {
                 return {
                     type: "omo.prompt",
-                    message: "Enter 'Deine Mudda oida' and click 'Next' to confirm the transaction",
+                    message: "Click 'Next' to confirm the transaction.",
                     data: {
                         id: "confirmation",
                         fields: {
-                            "recipient": {
-                                type: "ethereumAddress",
-                                label: "Recipient",
-                                value: context.transfer.recipient
-                            },
                             "value": {
                                 type: "wei",
                                 label: "Value",
                                 value: context.transfer.value
                             },
-                            "confirmation": {
-                                type: "string",
-                                label: "Confirmation phrase"
+                            "recipient": {
+                                type: "ethereumAddress",
+                                label: "To",
+                                value: context.transfer.recipient
                             }
                         }
                     }
@@ -123,12 +119,22 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         transferCircles: {
             invoke: {
                 id: 'transferCircles',
-                src: async (context) => null,
+                src: transferCirclesService,
                 onError: {
-                    actions: []
+                    actions: (context,event) => {
+                        console.log("Error:", event.data);
+                        return send({
+                            type: "omo.error",
+                            message: "The 'Transfer Circles' process failed."
+                        })
+                    },
+                    target: "stop"
                 },
                 onDone: {
-                    actions: []
+                    actions: (context,event) => {
+                        console.log("Success:", event.data);
+                    },
+                    target: "stop"
                 }
             },
             on: {
