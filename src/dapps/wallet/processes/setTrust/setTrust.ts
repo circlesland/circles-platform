@@ -4,6 +4,8 @@ import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {setTrustService} from "./services/setTrustService";
+import {promptError} from "../promptError";
+import {promptSuccess} from "../promptSuccess";
 
 export interface SetTrustContext extends ProcessContext
 {
@@ -124,29 +126,33 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
             }
         },
         setTrust: {
+            entry: send({
+               type: "omo.notification",
+               message: "Setting trust .."
+            }),
             invoke: {
                 id: 'setTrust',
                 src: setTrustService,
                 onError: {
-                    actions: (context,event) => {
-                        console.log("Error:", event.data);
-                        return send({
-                            type: "omo.error",
-                            message: "The 'Set Trust' process failed."
-                        })
-                    },
-                    target: "stop"
+                    actions: promptError,
+                    target: "error"
                 },
                 onDone: {
-                    actions: (context,event) => {
-                        console.log("Success:", event.data);
-                    },
-                    target: "stop"
+                    actions: promptSuccess,
+                    target: "success"
                 }
-            },
+            }
+        },
+        success: {
             on: {
-                "omo.error": "stop",
-                "omo.success": "stop"
+                "omo.answer": "stop",
+                "omo.cancel": "stop"
+            }
+        },
+        error: {
+            on: {
+                "omo.answer": "stop",
+                "omo.cancel": "stop"
             }
         },
         stop: {

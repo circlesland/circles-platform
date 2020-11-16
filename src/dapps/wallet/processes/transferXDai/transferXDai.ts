@@ -5,6 +5,9 @@ import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {transferXDaiService} from "./services/transferXDaiService";
+import {setTrustService} from "../setTrust/services/setTrustService";
+import {promptError} from "../promptError";
+import {promptSuccess} from "../promptSuccess";
 
 export interface TransferXDaiContext extends ProcessContext
 {
@@ -120,29 +123,33 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             }
         },
         transferXDai: {
+            entry: send({
+                type: "omo.notification",
+                message: "Transferring xDai .."
+            }),
             invoke: {
                 id: 'transferXDai',
                 src: transferXDaiService,
                 onError: {
-                    actions: (context,event) => {
-                        console.log("Error:", event.data);
-                        return send({
-                            type: "omo.error",
-                            message: "The 'Transfer xDai' process failed."
-                        })
-                    },
-                    target: "stop"
+                    actions: promptError,
+                    target: "error"
                 },
                 onDone: {
-                    actions: (context,event) => {
-                        console.log("Success:", event.data);
-                    },
-                    target: "stop"
+                    actions: promptSuccess,
+                    target: "success"
                 }
-            },
+            }
+        },
+        success: {
             on: {
-                "omo.error": "stop",
-                "omo.success": "stop"
+                "omo.answer": "stop",
+                "omo.cancel": "stop"
+            }
+        },
+        error: {
+            on: {
+                "omo.answer": "stop",
+                "omo.cancel": "stop"
             }
         },
         stop: {
