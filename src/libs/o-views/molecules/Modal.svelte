@@ -53,17 +53,44 @@
     class="z-40 overlay">
     <div class="w-full max-w-lg bg-white rounded-t-lg">
       <header class="rounded-t-lg">
-        <div class="flex h-3 overflow-hidden text-xs rounded-t-lg bg-primary" />
+        <div class="flex text-white text-center text-xl overflow-hidden text-xs rounded-t-lg bg-primary">
+          <h1>Process title</h1>
+        </div>
+        <!-- Optional stepper -->
+        <div class="flex overflow-hidden text-xs rounded-t-lg text-primary">
+          <p class="p-4">
+            Step 1
+          </p>
+          <p class="p-4">
+            Step 2
+          </p>
+          <p class="p-4">
+            Step 3
+          </p>
+        </div>
       </header>
       <div style="padding-bottom: 1rem">
         <slot>No content provided</slot>
-        <div class="w-full text-center">
+        <div class="w-full flex ">
           <div
-            aria-label="Close modal"
-            bind:this={buttonRef}
-            on:click={handleClose}
-            class="w-full mx-auto text-center text-light-400 ">
+                  aria-label="Close modal"
+                  bind:this={buttonRef}
+                  on:click={handleClose}
+                  class="w-full mx-auto text-center text-light-400 ">
+            <i class="my-2 text-4xl fas fa-arrow-left " />
+          </div>
+          <div
+                  aria-label="Close modal"
+                  bind:this={buttonRef}
+                  on:click={handleClose}
+                  class="w-full mx-auto text-center text-light-400 ">
             <i class="my-2 text-4xl fas fa-times-circle " />
+          </div>
+          <div aria-label="Close modal"
+                  bind:this={buttonRef}
+                  on:click={handleClose}
+                  class="w-full mx-auto text-center text-light-400 ">
+            <!--<i class="my-2 text-4xl fas fa-arrow-right " />-->
           </div>
         </div>
       </div>

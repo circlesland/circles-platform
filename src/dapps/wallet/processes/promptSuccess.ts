@@ -6,15 +6,10 @@ export const promptSuccess = send((context: ProcessContext) =>
 {
     return {
         type: "omo.prompt",
-        message: `Click 'Next' to close the dialog.`,
+        message: context.result,
         data: {
             id: "success",
             fields: {
-                "message": {
-                    type: "text",
-                    label: "Success",
-                    value: JSON.stringify(context.result)
-                }
             }
         }
     }

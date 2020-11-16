@@ -6,6 +6,12 @@
     balance: "",
     currency: "",
   };
+
+  let openDetail: boolean = false;
+
+  function toggleExpand() {
+    openDetail = !openDetail;
+  }
 </script>
 
 <style>
@@ -18,7 +24,7 @@
 </style>
 
 <div>
-  <div class="w-full bg-white border rounded card border-light-200">
+  <div on:click={toggleExpand}  class="w-full bg-white border rounded card border-light-200">
     <div class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>
@@ -32,9 +38,8 @@
       </p>
     </div>
   </div>
-  {#if data.description}
-    <div
-      class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
+  {#if data.description && openDetail}
+    <div class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
       {data.description}
     </div>
   {/if}

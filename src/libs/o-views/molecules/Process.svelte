@@ -5,6 +5,7 @@
     import Prompt from "./Prompt.svelte";
     import {ProcessContext} from "../../o-processes/processContext";
     import {createEventDispatcher} from "svelte";
+    import { Jumper } from "svelte-loading-spinners";
 
     let statusType:
         | "none"
@@ -89,7 +90,10 @@
                 {status}
             </h1>
         {:else if statusType === 'notification'}
-            <h1 class="px-4 py-8 mb-4 text-center bg-orange-300 rounded text-primary">
+            <div class="flex items-center justify-center mx-auto">
+                <Jumper size="60" color="#0C266A" unit="px" />
+            </div>
+            <h1 class="px-4 py-8 mb-4 text-center bg-white rounded text-primary">
                 {status}
             </h1>
         {:else if statusType === 'prompt'}

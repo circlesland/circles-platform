@@ -16,8 +16,17 @@
     let promptFieldValues: { [key: string]: { type: string; data: any } } = {};
 </script>
 
-<div class:bg-red-500={promptId === "error"}
-     class:bg-green-500={promptId === "success"}>
+{#if promptId === "success"}
+    <h1 class="w-full px-4 py-8 mb-4 text-center bg-white border rounded text-primary border-light-300">
+        {status}
+    </h1>
+
+{:else if promptId === "error"}
+    <h1 class="w-full px-4 py-8 mb-4 text-center bg-white border rounded text-primary border-light-300">
+        {status}
+    </h1>
+{:else}
+<div>
     <h1
             class="w-full px-4 py-8 mb-4 text-center bg-white border rounded text-primary border-light-300">
         {status}
@@ -88,7 +97,7 @@
       process.sendEvent({ type: 'omo.cancel' });
       process = null;
     }}>
-            <i class="fas fa-times"/>
+            <!--<i class="fas fa-times"/> -->Cancel
         </button>
         <button
                 class="w-full px-4 py-2 font-bold text-white uppercase rounded cursor-pointer bg-primary"
@@ -101,3 +110,4 @@
         </button>
     </div>
 </div>
+{/if}

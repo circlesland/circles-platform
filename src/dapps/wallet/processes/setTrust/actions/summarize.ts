@@ -1,25 +1,21 @@
 import {send} from "xstate";
 import {SetTrustContext} from "../setTrust";
+import {strings} from "../../../languages/strings";
 
 export const summarize = send((context: SetTrustContext) =>
 {
     return {
         type: "omo.prompt",
         message: context.setTrust.trustLimit.data > 0
-            ? `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted persons.`
-            : `Click 'Next' to remove ${context.setTrust.trustReceiver.data} from your list of trusted persons.`,
+            ? strings.wallet.processes.setTrust.trustConfirmation(context)
+            : strings.wallet.processes.setTrust.untrustConfirmation(context),
         data: {
             id: "confirmation",
             fields: {
                 "trustReceiver": {
                     type: "ethereumAddress",
-                    label: "Trust receiver",
+                    label: context.setTrust.trustLimit.data > 0 ? "Trust receiver" : "Untrust",
                     value: context.setTrust.trustReceiver
-                },
-                "trustLimit": {
-                    type: "percent",
-                    label: "Trust limit (%)",
-                    value: context.setTrust.trustLimit
                 }
             }
         }

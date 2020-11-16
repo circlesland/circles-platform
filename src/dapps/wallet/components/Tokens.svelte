@@ -8,7 +8,7 @@
   export let address: string;
 
   let person: Person;
-  let tokensITrust: [] = [];
+  let tokensITrust:any [] = [];
 
   function init(addr: string) {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
