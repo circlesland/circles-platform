@@ -1,13 +1,19 @@
-import {assign, createMachine, send} from "xstate";
+import {createMachine, send} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {transferCirclesService} from "./services/transferCirclesService";
-import {setTrustService} from "../setTrust/services/setTrustService";
 import {promptError} from "../promptError";
 import {promptSuccess} from "../promptSuccess";
+import {storeTransferValueToContext} from "./actions/storeTransferValueToContext";
+import {storeTransferRecipientToContext} from "./actions/storeTransferRecipientToContext";
+import {promptRecipient} from "./actions/promptRecipient";
+import {promptValue} from "./actions/promptValue";
+import {summarize} from "./actions/summarize";
+import {transferRecipientIsPreconfigured} from "./guards/transferRecipientIsPreconfigured";
+import {notifyInProgress} from "./actions/notifyInProgress";
 
 export interface TransferCirclesContext extends ProcessContext
 {
@@ -32,7 +38,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         ready: {
             on: {
                 "omo.trigger": [{
-                    cond: (context) => context.transfer !== undefined,
+                    cond: "transferRecipientIsPreconfigured",
                     target:"summarize"
                 },{
                     target:"promptRecipient"
@@ -44,14 +50,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             entry: "promptRecipient",
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) =>
-                    {
-                        if (!context.transfer)
-                        {
-                            context.transfer = {};
-                        }
-                        context.transfer.recipient = event.data.fields.address;
-                    }),
+                    actions: "storeTransferRecipientToContext",
                     target: "promptValue"
                 },
                 "omo.trigger": {
@@ -64,8 +63,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             entry: "promptValue",
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) =>
-                        context.transfer.value = event.data.fields.value),
+                    actions: "storeTransferValueToContext",
                     target: "summarize"
                 },
                 "omo.trigger": {
@@ -84,19 +82,16 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }
         },
         transferCircles: {
-            entry: send({
-                type: "omo.notification",
-                message: "Transferring circles .."
-            }),
+            entry: "notifyInProgress",
             invoke: {
                 id: 'transferCircles',
-                src: transferCirclesService,
+                src: "transferCirclesService",
                 onError: {
-                    actions: promptError,
+                    actions: "promptError",
                     target: "error"
                 },
                 onDone: {
-                    actions: promptSuccess,
+                    actions: "promptSuccess",
                     target: "success"
                 }
             }
@@ -106,7 +101,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptSuccess
+                    actions: "promptSuccess"
                 }
             }
         },
@@ -115,7 +110,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptError
+                    actions: "promptError"
                 }
             }
         },
@@ -124,56 +119,21 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         }
     }
 }, {
-    guards: {},
+    services: {
+        "transferCirclesService": transferCirclesService
+    },
+    guards: {
+        "transferRecipientIsPreconfigured": transferRecipientIsPreconfigured
+    },
     actions: {
-        "promptRecipient": send({
-            type: "omo.prompt",
-            message: "Please enter the recipient's address below and click 'Next'",
-            data: {
-                id: "recipient",
-                fields: {
-                    "address": {
-                        type: "ethereumAddress",
-                        label: "Address"
-                    }
-                }
-            }
-        }),
-        "promptValue": send({
-            type: "omo.prompt",
-            message: "Please enter the Value you want to transfer and click 'Next'",
-            data: {
-                id: "value",
-                fields: {
-                    "value": {
-                        type: "wei",
-                        label: "Value"
-                    }
-                }
-            }
-        }),
-        "summarize": send((context: TransferCirclesContext) =>
-        {
-            return {
-                type: "omo.prompt",
-                message: "Click 'Next' to confirm the transaction.",
-                data: {
-                    id: "confirmation",
-                    fields: {
-                        "value": {
-                            type: "wei",
-                            label: "Value",
-                            value: context.transfer.value
-                        },
-                        "recipient": {
-                            type: "ethereumAddress",
-                            label: "To",
-                            value: context.transfer.recipient
-                        }
-                    }
-                }
-            }
-        })
+        "promptError": promptError,
+        "notifyInProgress": notifyInProgress,
+        "promptSuccess":promptSuccess,
+        "storeTransferValueToContext": storeTransferValueToContext,
+        "storeTransferRecipientToContext": storeTransferRecipientToContext,
+        "promptRecipient": promptRecipient,
+        "promptValue": promptValue,
+        "summarize": summarize
     }
 });
 

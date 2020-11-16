@@ -7,7 +7,7 @@ import {getUbi} from "./services/getUbi";
 import {promptError} from "../promptError";
 import {promptSuccess} from "../promptSuccess";
 import {setLastSuccessfulUbiRetrieval} from "./actions/setLastSuccessfulUbiRetrieval";
-import {sendInProgress} from "./actions/sendInProgress";
+import {notifyInProgress} from "./actions/notifyInProgress";
 import {promptAlreadyRequested} from "./actions/promptAlreadyRequested";
 
 /**
@@ -29,7 +29,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
             }
         },
         requestUbi: {
-            entry: "sendInProgress",
+            entry: "notifyInProgress",
             invoke: {
                 id: 'requestingUbi',
                 src: "getUbi",
@@ -78,7 +78,7 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
     actions: {
         "promptError": promptError,
         "promptSuccess":promptSuccess,
-        "sendInProgress": sendInProgress,
+        "notifyInProgress": notifyInProgress,
         "setLastSuccessfulUbiRetrieval": setLastSuccessfulUbiRetrieval,
         "promptAlreadyRequested":promptAlreadyRequested
     }

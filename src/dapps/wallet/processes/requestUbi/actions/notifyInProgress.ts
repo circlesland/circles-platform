@@ -1,6 +1,6 @@
 import {send} from "xstate";
 
-export const sendInProgress = send({
+export const notifyInProgress = send({
     type: "omo.notification",
     message: "Requesting UBI .."
 });
