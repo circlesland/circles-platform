@@ -3,6 +3,7 @@
   import { Person } from "src/libs/o-circles-protocol/model/person";
   import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
+  import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
 
   export let address: string;
 
@@ -22,7 +23,19 @@
     let t2 = await person.getTokenBalances();
     tokensITrust = Object.keys(t2)
       .map((k) => t2[k])
-      .filter((o) => o.balanceString && o.balanceString !== "0");
+      .filter((o) => o.balanceString && o.balanceString !== "0")
+      .map((token) => {
+        return {
+          image:
+            "https://avatars.dicebear.com/api/avataaars/" +
+            token.owner.address +
+            ".svg ",
+          title: token.owner.address.slice(0, 6),
+          description: token.owner.address,
+          balance: token.balanceString,
+          currency: "CRC",
+        };
+      });
     tokensITrust.sort((a, b) => -a.balance.cmp(b.balance));
   }
 
@@ -31,55 +44,28 @@
       init(address);
     }
   }
-</script>
 
-<style>
-  .card {
-    display: grid;
-    grid-template-columns: 3.5rem 1fr auto;
-    grid-template-rows: 3.5rem;
-    width: 100%;
-  }
-</style>
+  let circles = {
+    image: "images/logo/circles.svg",
+    title: "Circles",
+    description: "Circles I trust",
+    balance: "34.23",
+    currency: "CRC",
+  };
+  let xDai = {
+    image: "images/logo/xdai.png",
+    title: "xDai",
+    description: "1 invite or ~ 500 transactions",
+    balance: "0.001232",
+    currency: "XDAI",
+  };
+</script>
 
 <div class="py-2 font-bold text-secondary">My currencies</div>
 
 <div class="space-y-2">
-  <div class="bg-white border rounded card border-light-200">
-    <div class="flex items-center justify-center p-2">
-      <img src="images/logo/circles.svg" alt="CRC" />
-    </div>
-    <div class="p-2">
-      <div class="text-base text-primary">Circles</div>
-      <p class="-mt-1 text-xs text-gray-500">
-        <span class="text-gray-500">Circles I trust</span>
-      </p>
-    </div>
-    <div class="px-4 py-2 text-right">
-      <div class="text-lg text-primary">248.32</div>
-      <p class="-mt-1 text-xs text-gray-500">
-        <span class="text-xs text-gray-500">CRC</span>
-      </p>
-    </div>
-  </div>
-
-  <div class="bg-white border rounded card border-light-200">
-    <div class="flex items-center justify-center p-2">
-      <img src="images/logo/xdai.png" alt="xDai" />
-    </div>
-    <div class="p-2">
-      <div class="text-base text-primary">xDai</div>
-      <p class="-mt-1 text-xs text-gray-500">
-        <span class="text-gray-500">1 invite or ~ 500 transactions</span>
-      </p>
-    </div>
-    <div class="px-4 py-2 text-right">
-      <div class="text-lg text-primary">0.001232</div>
-      <p class="-mt-1 text-xs text-gray-500">
-        <span class="text-xs text-gray-500">xDAI</span>
-      </p>
-    </div>
-  </div>
+  <TokenItem data={circles} />
+  <TokenItem data={xDai} />
 </div>
 
 <div class="pt-4 pb-2 font-bold text-secondary">All my trusted Circles</div>
@@ -87,25 +73,7 @@
 <div class="space-y-2">
   {#if tokensITrust.length > 0}
     {#each tokensITrust as token}
-      <div class="bg-white border rounded card border-light-200">
-        <div class="flex items-center justify-center p-2">
-          <img
-            src="https://avatars.dicebear.com/api/avataaars/{token.owner.address}.svg"
-            alt="CRC" />
-        </div>
-        <div class="p-2">
-          <div class="text-base text-primary">Circles</div>
-          <p class="-mt-1 text-xs text-gray-500 ">
-            <span class="text-gray-500">{token.owner.address}</span>
-          </p>
-        </div>
-        <div class="px-4 py-2 text-right">
-          <div class="text-lg text-primary">{token.balanceString}</div>
-          <p class="-mt-1 text-xs text-gray-500 ">
-            <span class="text-xs text-gray-500">CRC</span>
-          </p>
-        </div>
-      </div>
+      <TokenItem data={token} />
     {/each}
   {:else}
     <div class="flex items-center justify-center h-full mx-auto">
@@ -113,28 +81,6 @@
     </div>
   {/if}
 </div>
-
-<!-- 
-<div class="mb-2">
-  <div class="flex w-full bg-white border border-gray-300 rounded">
-    <img src="images/logo/logo.png" alt="CRC" class="p-2 h-14" />
-    <div class="flex-1 w-2/3 px-4 py-2 ">
-      <div class="text-base text-primary">
-        Circles
-        <i class="fas fa-check" />
-      </div>
-      <p class="-mt-1 text-xs text-gray-500">
-        <span class="text-gray-500">Circles verfied by Omo</span>
-      </p>
-    </div>
-    <div class="flex-1 w-1/3 px-4 py-2 text-right">
-      <div class="text-lg text-primary">248.32</div>
-      <p class="-mt-1 text-xs text-gray-500">
-        <span class="text-xs text-gray-500">CRC</span>
-      </p>
-    </div>
-  </div>
-</div> -->
 
 <!-- 
 <div class="mb-2">

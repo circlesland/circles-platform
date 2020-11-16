@@ -24,6 +24,7 @@
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
     overflow: hidden;
+    max-width: 100%;
     position: relative;
   }
   .fullgrid {

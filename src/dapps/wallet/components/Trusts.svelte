@@ -39,6 +39,8 @@
   }
 </script>
 
+<div class="py-2 font-bold text-secondary">Mutual Friends</div>
+
 <div class="space-y-2">
   <div class="flex w-full bg-white border border-gray-300 rounded">
     <img
@@ -57,12 +59,13 @@
         <img src="icons/removeTrust.svg" alt="add" />
       </div>
       <div
-        class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-        <img src="icons/send.svg" alt="add" />
+        class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded bg-primary">
+        <i class="fas fa-money-bill-wave" />
       </div>
     </div>
   </div>
 
+  <div class="py-2 font-bold text-secondary">Friends, who I trust</div>
   <!-- 
 {#if address === mySafeAddress}
   <b class="m-4 text-primary">People that trust me:</b><br />
@@ -113,6 +116,9 @@
 {#if address === mySafeAddress}
   <b class="m-4 text-primary">People I trust:</b>
 {:else}<b class="m-4 text-primary">People that {address} trusts:</b>{/if} -->
+
+  <div class="py-2 font-bold text-secondary">Friends, who only trust me</div>
+
   {#each personsITrust as personITrust}
     <div class="flex w-full bg-white border border-gray-300 rounded">
       <img

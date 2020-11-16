@@ -58,19 +58,22 @@
 </script>
 
 <div class="h-full pt-2 mx-auto font-bold text-center text-white bg-primary">
-  <div class="font-bold text-gray-100 uppercase">
+  <div class="w-full mx-auto font-bold text-center text-gray-100 uppercase">
     {#if circlesBalance != undefined}
-      <p class="text-5xl ">
+      <div class="flex items-center justify-center mx-auto text-6xl">
         {circlesBalance}
-        <span class="text-xl text-gray-300">CRC</span>
-      </p>
+        <span><img
+            src="images/logo/crc.svg"
+            class="h-8 pl-2"
+            alt="CRC" /></span>
+      </div>
     {:else}
       <div class="flex items-center justify-center mx-auto">
         <Jumper size="60" color="#fff" unit="px" />
       </div>
     {/if}
 
-    {#if personalEtherBalance != undefined}
+    <!-- {#if personalEtherBalance != undefined}
       <div
         class="flex items-center justify-center w-full mx-auto text-center lowercase">
         <div class="px-2 text-sm text-gray-400">
@@ -88,6 +91,6 @@
       <div class="flex items-center justify-center mx-auto">
         <Jumper size="30" color="#fff" unit="px" />
       </div>
-    {/if}
+    {/if} -->
   </div>
 </div>
