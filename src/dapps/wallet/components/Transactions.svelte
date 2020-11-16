@@ -128,6 +128,9 @@
             {/if}
           </div>
           {#if openDetail}
+            <pre>
+            {JSON.stringify(t, null, 2)}
+            </pre>
             <div
               class="flex max-w-full p-4 text-xs text-gray-500 bg-white border-b border-x border-light-300">
               <div class="max-w-full text-gray-500 ">
