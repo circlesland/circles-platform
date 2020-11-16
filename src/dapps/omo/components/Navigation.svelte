@@ -27,7 +27,7 @@
       class="flex items-center justify-center w-20 px-2 text-xs text-center hover:text-primary">
       <a href="#/wallet/{address}/trusts">
         <i class="text-2xl fas fa-heart" />
-        <p>Add Friend</p>
+        <p>Trust Friend</p>
       </a>
     </div>
     <div
