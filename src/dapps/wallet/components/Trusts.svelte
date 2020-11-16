@@ -108,16 +108,6 @@
     }
   }
 
-  let trusting = {
-    image: "https://avatars.dicebear.com/api/avataaars/trusting.svg",
-    title: "0x1234",
-    connection: "trusted by you",
-    detail: {
-      address: "0x123788dbgx12o81eb8oznogGASfgonolialsf",
-    },
-    actions: ["untrust"],
-  };
-
   let removed = {
     image: "https://avatars.dicebear.com/api/avataaars/removed.svg",
     title: "0x1234",
@@ -127,8 +117,6 @@
     },
     actions: ["trust"],
   };
-
-  function transferCircles(recipientAddress: Address) {}
 
   function untrust(recipientAddress: Address) {}
   function runTransferCircles(recipientAddress: Address) {
