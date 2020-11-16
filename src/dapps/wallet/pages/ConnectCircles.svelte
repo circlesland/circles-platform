@@ -78,7 +78,7 @@
   <footer slot="footer" class="p-4 bg-white border-t">
     <div class="flex space-x-4">
       <a
-        href="#/wallet/start"
+        href="#/omo/dapps"
         class="px-4 py-2 uppercase border border-gray-300 rounded text-primary"><i
           class="fas fa-arrow-left" /></a>
       <a

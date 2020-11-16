@@ -1,23 +1,37 @@
-<script>
+<script lang="ts">
   import TemplateDapp from "src/libs/o-views/templates/TemplateDapps.svelte";
   import { _ } from "svelte-i18n";
+  import Navigation from "../components/Navigation.svelte";
+  import { onMount } from "svelte";
+
+  let address: string;
+
+  onMount(() => {
+    address = localStorage.getItem("omo.safeAddress");
+  });
 </script>
 
 <TemplateDapp>
   <header slot="header">
-    <div
-      class="flex items-center justify-center h-full text-4xl font-bold text-center bg-white border rounded border-light-200 text-primary">
-      <div>
-        <!-- <img
-                src="/images/"
-                class="w-32 h-32 mx-auto mt-6 border-4 rounded-full border-light-300"
-                alt="name" /> -->
-        <p class="py-6 text-lg uppercase font-title">
-          <span class="text-4xl">{$_('omo_dashboard_title')}</span>
-        </p>
+    {#if address}
+      <div
+        class="flex items-center justify-center h-full text-4xl font-bold text-center bg-white border rounded border-light-200 text-primary">
+        <div>
+          <img
+            src="https://avatars.dicebear.com/api/avataaars/omo.svg"
+            class="w-32 h-32 mx-auto mt-6 border-4 rounded-full border-light-300"
+            alt="name" />
+          <p class="py-4 text-lg font-title">
+            <span class="text-4xl">{$_('omo_dashboard_title')} Omo</span>
+          </p>
+        </div>
       </div>
-    </div>
+    {/if}
   </header>
+
+  <footer slot="footer">
+    <Navigation {address} />
+  </footer>
   <main slot="main">
     <div class="grid grid-cols-2 gap-2 -mt-4">
       <a href="#/identity/settings">
