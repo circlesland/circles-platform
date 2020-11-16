@@ -72,47 +72,89 @@
       init(address);
     }
   }
+  let openDetail: Boolean = false;
 </script>
 
 <div class="overflow-scroll">
   {#if transactions.length > 0}
     <div class="m-4 space-y-2">
       {#each transactions as t}
-        <div class="flex w-full bg-white border border-gray-300 rounded">
-          <div class="flex-1 w-2/3 px-4 py-2 text-sm">
-            <b class="text-primary">
-              {#if t.from !== '0x0000000000000000000000000000000000000000'}
-                {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
-                {t.subject}
-              {:else}Universal basic income{/if}
-            </b>
-            <p class="text-xs text-gray-500">
-              {dayjs(t.timestamp).fromNow()}
-              {#if t.direction === 'in'}
+        <div>
+          <div
+            class="flex w-full bg-white border border-gray-300 rounded"
+            on:click={() => (openDetail = !openDetail)}>
+            <div class="flex items-center justify-center w-10 text-sm ">
+              <i
+                class="text-light-400 fas"
+                class:fa-plus={!openDetail}
+                class:fa-minus={openDetail} />
+            </div>
+            <div class="flex-1 w-2/3 py-2 pr-2 text-sm">
+              <b class="text-primary">
                 {#if t.from !== '0x0000000000000000000000000000000000000000'}
-                  from
-                  <!-- <a href="#/wallet/{t.from}/safe">-->
-                  {t.from.slice(0, 12)}...
+                  {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
+                  {t.subject}
+                {:else}Universal basic income{/if}
+              </b>
+              <p class="text-xs text-gray-500">
+                {dayjs(t.timestamp).fromNow()}
+                {#if t.direction === 'in'}
+                  {#if t.from !== '0x0000000000000000000000000000000000000000'}
+                    from
+                    <!-- <a href="#/wallet/{t.from}/safe">-->
+                    {t.from.slice(0, 12)}...
+
+                    <!-- </a> -->
+                  {:else}from MamaOmo{/if}
+                {:else}
+                  to
+                  <!-- <a href="#/wallet/{t.to}/safe"> -->
+                  {t.to.slice(0, 12)}...
 
                   <!-- </a> -->
-                {:else}from MamaOmo{/if}
-              {:else}
-                to
-                <!-- <a href="#/wallet/{t.to}/safe"> -->
-                {t.to.slice(0, 12)}...
-
-                <!-- </a> -->
-              {/if}
-            </p>
-          </div>
-          {#if t.direction === 'out'}
-            <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
-              -
-              {t.amount}
+                {/if}
+              </p>
             </div>
-          {:else}
-            <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-action">
-              {t.amount}
+            {#if t.direction === 'out'}
+              <div
+                class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
+                -
+                {t.amount}
+              </div>
+            {:else}
+              <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-action">
+                {t.amount}
+              </div>
+            {/if}
+          </div>
+          {#if openDetail}
+            <div
+              class="flex max-w-full p-4 text-xs text-gray-500 bg-white border-b border-x border-light-300">
+              <div class="max-w-full text-gray-500 ">
+                <div class="max-w-full text-gray-500 ">
+                  Date:
+                  <span class="text-xs text-primary">15.11.2020 18:47:23</span>
+                </div>
+                <div class="max-w-full text-gray-500 ">
+                  Nonce:
+                  <span class="text-xs text-primary">5</span>
+                </div>
+                <div>
+                  Sender:<br />
+                  <span
+                    class="text-xs text-primary">0x987ansdufonaoscd8dbgBAGSnfASIUldGn23487lsak</span>
+                </div>
+                <div class="max-w-full text-gray-500 ">
+                  Receiver:<br />
+                  <span
+                    class="text-xs text-primary">0x987ansdufonaoscd8dbgBAGSnfASIUldGn23487lsak</span>
+                </div>
+                <div class="max-w-full text-gray-500 ">
+                  Transaction Hash:<br />
+                  <span
+                    class="text-xxs text-primary">0x987ansdufonaoscd8dbgBAGSnfASIUldGn23487lsaksdfsdfsdfsdfasdfadfasdasds</span>
+                </div>
+              </div>
             </div>
           {/if}
         </div>
