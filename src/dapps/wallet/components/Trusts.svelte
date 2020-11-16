@@ -6,6 +6,7 @@
 
   import Avatars from "@dicebear/avatars";
   import sprites from "@dicebear/avatars-avataaars-sprites";
+  import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
 
   export let address: string;
   let mySafeAddress: string;
@@ -50,6 +51,14 @@
       init(address);
     }
   }
+
+  function transferCircles(recipientAddress:Address) {
+
+  }
+
+  function untrust(recipientAddress:Address) {
+
+  }
 </script>
 
 <div class="py-2 font-bold text-secondary">Mutual Friends</div>
@@ -70,11 +79,11 @@
     <div class="flex items-center content-end justify-center">
       <div
         class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-        <img src="icons/removeTrust.svg" alt="add" />
+        <img src="icons/removeTrust.svg" on:click={() => untrust(mutualTrust.owner.address)} alt="add" />
       </div>
       <div
         class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded bg-primary">
-        <i class="fas fa-money-bill-wave" />
+        <i class="fas fa-money-bill-wave" on:click={() => transferCircles(mutualTrust.owner.address)} />
       </div>
     </div>
   </div>
