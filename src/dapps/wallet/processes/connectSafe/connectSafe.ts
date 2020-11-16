@@ -5,21 +5,22 @@ import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {ByteString} from "../../../../libs/o-circles-protocol/interfaces/byteString";
 import {config} from "../../../../libs/o-circles-protocol/config";
-import {mnemonicToEntropy} from "bip39";
-import {push} from "svelte-spa-router";
+import {promptSuccess} from "../promptSuccess";
+import {promptError} from "../promptError";
+import {connectSafeService} from "./services/connectSafeService";
 
-export interface TransferCirclesContext extends ProcessContext
+export interface ConnectSafeContext extends ProcessContext
 {
     connectSafe?: {
-        safeAddress: {
+        safeAddress?: {
             type:"ethereumAddress",
             data:Address
         },
-        safeOwnerAddress:  {
+        safeOwnerAddress?:  {
             type:"ethereumAddress",
             data:Address
         },
-        safeOwnerPrivateKey:  {
+        safeOwnerPrivateKey?:  {
             type:"bytestring",
             data:ByteString
         }
@@ -29,7 +30,7 @@ export interface TransferCirclesContext extends ProcessContext
 /**
  * Connect safe
  */
-const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
+const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
     initial: "ready",
     states: {
         ready: {
@@ -39,118 +40,77 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }
         },
         promptSafeAddress: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the address of your safe below and click 'Next'",
-                data: {
-                    id: "connectSafe",
-                    fields: {
-                        "safeAddress": {
-                            type: "ethereumAddress",
-                            label: "Safe address"
-                        }
-                    }
-                }
-            }),
+            entry: "promptSafeAddress",
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) =>
-                    {
-                        if (!context.connectSafe)
-                        {
-                            context.connectSafe = {};
-                        }
-                        context.connectSafe.safeAddress = event.data.fields.safeAddress;
-                    }),
+                    actions: "storeSafeAddressToContext",
                     target: "promptPrivateKey"
+                },
+                "omo.trigger": {
+                    actions: "promptSafeAddress"
                 },
                 "omo.cancel": "stop"
             }
         },
         promptPrivateKey: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the private key of the safe owner account and click 'Next'",
-                data: {
-                    id: "connectSafe",
-                    fields: {
-                        "safeOwnerPrivateKey": {
-                            type: "bytestring",
-                            label: "Safe owner private key"
-                        }
-                    }
-                }
-            }),
+            entry: "promptPrivateKey",
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) => {
-                        context.connectSafe.safeOwnerPrivateKey = event.data.fields.safeOwnerPrivateKey;
-                        context.connectSafe.safeOwnerAddress = {
-                            type: "bytestring",
-                            data: config.getCurrent().web3()
-                                .eth
-                                .accounts
-                                .privateKeyToAccount("0x" + context.connectSafe.safeOwnerPrivateKey.data)
-                                .address
-                        };
-                    }),
+                    actions: "storePrivateKeyToContext",
                     target: "summarize"
+                },
+                "omo.trigger": {
+                    actions: "promptPrivateKey"
                 },
                 "omo.cancel": "stop"
             }
         },
         summarize: {
-            entry: send((context: TransferCirclesContext) =>
-            {
-                return {
-                    type: "omo.prompt",
-                    message: "Press 'Next' to confirm the values and connect your safe.",
-                    data: {
-                        id: "connectSafe",
-                        fields: {
-                            "safeOwnerAddress": {
-                                isReadonly: true,
-                                type: "ethereumAddress",
-                                label: "Safe owner address",
-                                value: context.connectSafe.safeOwnerAddress
-                            },
-                            "safeAddress": {
-                                isReadonly: true,
-                                type: "ethereumAddress",
-                                label: "Safe address",
-                                value: context.connectSafe.safeAddress
-                            }
-                        }
-                    }
-                }
-            }),
+            entry: "summarize",
             on: {
                 "omo.answer": {
-                    actions:(context) => {
-                        localStorage.setItem("omo.privateKey", "0x" + context.connectSafe.safeOwnerPrivateKey.data);
-                        localStorage.setItem("omo.address", context.connectSafe.safeOwnerAddress.data);
-                        localStorage.setItem("omo.safeAddress", context.connectSafe.safeAddress.data);
-
-                        push("/wallet/" + context.connectSafe.safeAddress.data + "/safe");
-                    }
+                    target: "connectSafe"
+                },
+                "omo.trigger": {
+                    actions: "summarize"
                 },
                 "omo.cancel": "stop"
             }
         },
-        transferCircles: {
+        connectSafe: {
+            entry: send({
+                type: "omo.notification",
+                message: "Connecting safe .."
+            }),
             invoke: {
-                id: 'transferCircles',
-                src: async (context) => null,
+                id: 'connectSafe',
+                src: connectSafeService,
                 onError: {
-                    actions: []
+                    actions: promptError,
+                    target: "error"
                 },
                 onDone: {
-                    actions: []
+                    actions: promptSuccess,
+                    target: "success"
                 }
-            },
+            }
+        },
+        success: {
             on: {
-                "omo.error": "stop",
-                "omo.success": "stop"
+                "omo.answer": "stop",
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptSuccess
+                }
+            }
+        },
+        error: {
+            on: {
+                "omo.answer": "stop",
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptError
+                }
             }
         },
         stop: {
@@ -159,7 +119,79 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
     }
 }, {
     guards: {},
-    actions: {}
+    actions: {
+        "promptSafeAddress":send({
+            type: "omo.prompt",
+            message: "Please enter the address of your safe below and click 'Next'",
+            data: {
+                id: "connectSafe",
+                fields: {
+                    "safeAddress": {
+                        type: "ethereumAddress",
+                        label: "Safe address"
+                    }
+                }
+            }
+        }),
+        "promptPrivateKey":send({
+            type: "omo.prompt",
+            message: "Please enter the private key of the safe owner account and click 'Next'",
+            data: {
+                id: "connectSafe",
+                fields: {
+                    "safeOwnerPrivateKey": {
+                        type: "bytestring",
+                        label: "Safe owner private key"
+                    }
+                }
+            }
+        }),
+        "summarize":send((context) =>
+        {
+            return {
+                type: "omo.prompt",
+                message: "Press 'Next' to confirm the values and connect your safe.",
+                data: {
+                    id: "connectSafe",
+                    fields: {
+                        "safeOwnerAddress": {
+                            isReadonly: true,
+                            type: "ethereumAddress",
+                            label: "Safe owner address",
+                            value: context.connectSafe.safeOwnerAddress
+                        },
+                        "safeAddress": {
+                            isReadonly: true,
+                            type: "ethereumAddress",
+                            label: "Safe address",
+                            value: context.connectSafe.safeAddress
+                        }
+                    }
+                }
+            }
+        }),
+        "storePrivateKeyToContext": assign((context, event: any) => {
+            context.connectSafe.safeOwnerPrivateKey = event.data.fields.safeOwnerPrivateKey;
+            context.connectSafe.safeOwnerAddress = {
+                type: "ethereumAddress",
+                data: config.getCurrent().web3()
+                    .eth
+                    .accounts
+                    .privateKeyToAccount("0x" + context.connectSafe.safeOwnerPrivateKey.data)
+                    .address
+            };
+            return context;
+        }),
+        "storeSafeAddressToContext":assign((context, event: any) =>
+        {
+            if (!context.connectSafe)
+            {
+                context.connectSafe = {};
+            }
+            context.connectSafe.safeAddress = event.data.fields.safeAddress;
+            return context;
+        })
+    }
 });
 
 export const connectSafe: ProcessDefinition = {
