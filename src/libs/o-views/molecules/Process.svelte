@@ -5,30 +5,37 @@
     import Prompt from "./Prompt.svelte";
     import {ProcessContext} from "../../o-processes/processContext";
     import {createEventDispatcher} from "svelte";
-    import {weiValueBN} from "../atoms/EtherInput.svelte";
 
     let statusType:
         | "none"
         | "message"
         | "notification"
-        | "success"
-        | "error"
         | "prompt" = "none";
     let status: string = "";
 
     let promptId: string = "";
     let promptFields: { key: string, field: PromptField }[] = [];
 
-    let process: Process = null;
-
     export let definition: ProcessDefinition;
+    export let process: Process;
     export let contextInitializer: (processContext:ProcessContext) => ProcessContext;
 
     const dispatch = createEventDispatcher();
 
     $:{
-        if (definition) {
-            process = runProcess();
+        if (process)
+        {
+            subscribeToProcess(process);
+
+            process.sendEvent(<ProcessEvent>{
+                type: "omo.trigger",
+            });
+        }
+        else if (definition)
+        {
+            process = window.stateMachines.run(definition, contextInitializer);
+
+            subscribeToProcess(process);
 
             process.sendEvent(<ProcessEvent>{
                 type: "omo.trigger",
@@ -36,14 +43,8 @@
         }
     }
 
-    function runProcess()
+    function subscribeToProcess(process:Process)
     {
-        if (process)
-        {
-            throw new Error("There is already a running process.");
-        }
-
-        process = window.stateMachines.run(definition, contextInitializer);
         process.events.subscribe((next) =>
         {
             if (next.event?.type === "omo.notification")
@@ -64,16 +65,6 @@
                     };
                 });
             }
-            else if (next.event?.type === "omo.error")
-            {
-                statusType = "error";
-                status = next.event.message;
-            }
-            else if (next.event?.type === "omo.success")
-            {
-                statusType = "success";
-                status = "The process completed successfully.";
-            }
             else if (next.event?.type === "omo.continue")
             {
                 statusType = "message";
@@ -88,8 +79,6 @@
                 }, 3000);
             }
         });
-
-        return process;
     }
 </script>
 
@@ -103,16 +92,8 @@
             <h1 class="px-4 py-8 mb-4 text-center bg-orange-300 rounded text-primary">
                 {status}
             </h1>
-        {:else if statusType === 'error'}
-            <h1 class="px-4 py-8 mb-4 text-center text-white bg-red-400 rounded">
-                {status}
-            </h1>
-        {:else if statusType === 'success'}
-            <h1 class="px-4 py-8 mb-4 text-center text-white rounded bg-action">
-                {status}
-            </h1>
         {:else if statusType === 'prompt'}
-            <Prompt status={status} process={process} promptFields={promptFields} promptId={promptId}></Prompt>
+            <Prompt status={status} process={process} promptFields={promptFields} promptId={promptId}/>
         {/if}
     {:else}
         <h1>Process ended</h1>

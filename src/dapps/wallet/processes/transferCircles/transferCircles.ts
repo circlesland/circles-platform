@@ -41,19 +41,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }
         },
         promptRecipient: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the recipient's address below and click 'Next'",
-                data: {
-                    id: "recipient",
-                    fields: {
-                        "address": {
-                            type: "ethereumAddress",
-                            label: "Address"
-                        }
-                    }
-                }
-            }),
+            entry: "promptRecipient",
             on: {
                 "omo.answer": {
                     actions: assign((context: any, event: any) =>
@@ -66,56 +54,32 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                     }),
                     target: "promptValue"
                 },
+                "omo.trigger": {
+                    actions: "promptRecipient"
+                },
                 "omo.cancel": "stop"
             }
         },
         promptValue: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the Value you want to transfer and click 'Next'",
-                data: {
-                    id: "value",
-                    fields: {
-                        "value": {
-                            type: "wei",
-                            label: "Value"
-                        }
-                    }
-                }
-            }),
+            entry: "promptValue",
             on: {
                 "omo.answer": {
                     actions: assign((context: any, event: any) =>
                         context.transfer.value = event.data.fields.value),
                     target: "summarize"
                 },
+                "omo.trigger": {
+                    actions: "promptValue"
+                },
                 "omo.cancel": "stop"
             }
         },
         summarize: {
-            entry: send((context: TransferCirclesContext) =>
-            {
-                return {
-                    type: "omo.prompt",
-                    message: "Click 'Next' to confirm the transaction.",
-                    data: {
-                        id: "confirmation",
-                        fields: {
-                            "value": {
-                                type: "wei",
-                                label: "Value",
-                                value: context.transfer.value
-                            },
-                            "recipient": {
-                                type: "ethereumAddress",
-                                label: "To",
-                                value: context.transfer.recipient
-                            }
-                        }
-                    }
-                }
-            }),
+            entry: "summarize",
             on: {
+                "omo.trigger": {
+                    actions: "summarize"
+                },
                 "omo.cancel": "stop"
             }
         },
@@ -140,13 +104,19 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         success: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptSuccess
+                }
             }
         },
         error: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptError
+                }
             }
         },
         stop: {
@@ -155,7 +125,56 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
     }
 }, {
     guards: {},
-    actions: {}
+    actions: {
+        "promptRecipient": send({
+            type: "omo.prompt",
+            message: "Please enter the recipient's address below and click 'Next'",
+            data: {
+                id: "recipient",
+                fields: {
+                    "address": {
+                        type: "ethereumAddress",
+                        label: "Address"
+                    }
+                }
+            }
+        }),
+        "promptValue": send({
+            type: "omo.prompt",
+            message: "Please enter the Value you want to transfer and click 'Next'",
+            data: {
+                id: "value",
+                fields: {
+                    "value": {
+                        type: "wei",
+                        label: "Value"
+                    }
+                }
+            }
+        }),
+        "summarize": send((context: TransferCirclesContext) =>
+        {
+            return {
+                type: "omo.prompt",
+                message: "Click 'Next' to confirm the transaction.",
+                data: {
+                    id: "confirmation",
+                    fields: {
+                        "value": {
+                            type: "wei",
+                            label: "Value",
+                            value: context.transfer.value
+                        },
+                        "recipient": {
+                            type: "ethereumAddress",
+                            label: "To",
+                            value: context.transfer.recipient
+                        }
+                    }
+                }
+            }
+        })
+    }
 });
 
 export const transferCircles: ProcessDefinition = {

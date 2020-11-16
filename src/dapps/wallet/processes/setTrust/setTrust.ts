@@ -34,19 +34,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
             }
         },
         promptTrustReceiver: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the address of the person you want to trust and click 'Next'",
-                data: {
-                    id: "setTrust",
-                    fields: {
-                        "trustReceiver": {
-                            type: "ethereumAddress",
-                            label: "Address"
-                        }
-                    }
-                }
-            }),
+            entry: "promptTrustReceiver",
             on: {
                 "omo.answer": [{
                     cond: (ctx) => !!ctx.setTrust.trustLimit,
@@ -71,58 +59,34 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                     }),
                     target: "promptTrustLimit"
                 }],
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: "promptTrustReceiver"
+                }
             }
         },
         promptTrustLimit: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the trust limit in percent and click 'Next'",
-                data: {
-                    id: "setTrust",
-                    fields: {
-                        "trustLimit": {
-                            type: "percent",
-                            label: "Trust limit %"
-                        }
-                    }
-                }
-            }),
+            entry: "promptTrustLimit",
             on: {
                 "omo.answer": {
                     actions: assign((context: any, event: any) =>
                         context.setTrust.trustLimit = event.data.fields.trustLimit),
                     target: "summarize"
                 },
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: "promptTrustLimit"
+                }
             }
         },
         summarize: {
-            entry: send((context: SetTrustContext) =>
-            {
-                return {
-                    type: "omo.prompt",
-                    message: `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted persons.`,
-                    data: {
-                        id: "confirmation",
-                        fields: {
-                            "trustReceiver": {
-                                type: "ethereumAddress",
-                                label: "Trust receiver",
-                                value: context.setTrust.trustReceiver
-                            },
-                            "trustLimit": {
-                                type: "percent",
-                                label: "Trust limit (%)",
-                                value: context.setTrust.trustLimit
-                            }
-                        }
-                    }
-                }
-            }),
+            entry: "summarize",
             on: {
                 "omo.cancel": "stop",
-                "omo.answer": "setTrust"
+                "omo.answer": "setTrust",
+                "omo.trigger": {
+                    actions: "summarize"
+                }
             }
         },
         setTrust: {
@@ -146,13 +110,19 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
         success: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptSuccess
+                }
             }
         },
         error: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptError
+                }
             }
         },
         stop: {
@@ -161,7 +131,56 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
     }
 }, {
     guards: {},
-    actions: {}
+    actions: {
+        "promptTrustReceiver": send({
+            type: "omo.prompt",
+            message: "Please enter the address of the person you want to trust and click 'Next'",
+            data: {
+                id: "setTrust",
+                fields: {
+                    "trustReceiver": {
+                        type: "ethereumAddress",
+                        label: "Address"
+                    }
+                }
+            }
+        }),
+        "promptTrustLimit": send({
+            type: "omo.prompt",
+            message: "Please enter the trust limit in percent and click 'Next'",
+            data: {
+                id: "setTrust",
+                fields: {
+                    "trustLimit": {
+                        type: "percent",
+                        label: "Trust limit %"
+                    }
+                }
+            }
+        }),
+        "summarize": send((context: SetTrustContext) =>
+        {
+            return {
+                type: "omo.prompt",
+                message: `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted persons.`,
+                data: {
+                    id: "confirmation",
+                    fields: {
+                        "trustReceiver": {
+                            type: "ethereumAddress",
+                            label: "Trust receiver",
+                            value: context.setTrust.trustReceiver
+                        },
+                        "trustLimit": {
+                            type: "percent",
+                            label: "Trust limit (%)",
+                            value: context.setTrust.trustLimit
+                        }
+                    }
+                }
+            }
+        })
+    }
 });
 
 export const setTrust: ProcessDefinition = {

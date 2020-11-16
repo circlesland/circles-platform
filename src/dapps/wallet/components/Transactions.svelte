@@ -6,7 +6,6 @@
   import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";
-  import { from } from "rxjs";
 
   export let address: string;
 
@@ -73,9 +72,7 @@
       init(address);
     }
   }
-  let openDetail: Boolean = false;
 
-  let openDetailPayload: Boolean = false;
 </script>
 
 <div class="overflow-scroll">
@@ -85,12 +82,12 @@
         <div>
           <div
             class="flex w-full bg-white border border-gray-300 rounded"
-            on:click={() => (openDetail = !openDetail)}>
+            on:click={() => (t.openDetail = !t.openDetail)}>
             <div class="flex items-center justify-center w-10 text-sm ">
               <i
                 class="text-light-400 fas"
-                class:fa-plus={!openDetail}
-                class:fa-minus={openDetail} />
+                class:fa-plus={!t.openDetail}
+                class:fa-minus={t.openDetail}></i>
             </div>
             <div class="flex-1 w-2/3 py-2 pr-2 text-sm">
               <b class="text-primary">
@@ -130,12 +127,12 @@
               </div>
             {/if}
           </div>
-          {#if openDetail}
+          {#if t.openDetail}
             <div
               class="flex max-w-full p-4 text-xs text-gray-500 bg-white border-b border-x border-light-300">
               <div class="max-w-full text-gray-500 ">
                 <div class="flex text-sm">
-                  {#if t.from == 0x0000000000000000000000000000000000000000}
+                  {#if t.from === "0x0000000000000000000000000000000000000000"}
                     <img
                       src="https://avatars.dicebear.com/api/avataaars/mama.svg"
                       alt="profile"
@@ -147,7 +144,7 @@
                       class="h-12" />
                   {/if}
                   <div class="py-4 text-xl">
-                    <i class="fas fa-arrow-right" />
+                    <i class="fas fa-arrow-right"></i>
                   </div>
                   <img
                     src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"
@@ -174,10 +171,10 @@
                 </div>
                 <div
                   class="justify-center my-2 text-xs uppercase text-secondary "
-                  on:click={() => (openDetailPayload = !openDetailPayload)}>
+                  on:click={() => (t.openDetailPayload = !t.openDetailPayload)}>
                   Show Payload
                 </div>
-                {#if openDetailPayload}
+                {#if t.openDetailPayload}
                   <pre
                     class=" text-xxs">{JSON.stringify(t, null, 2)}
                     </pre>

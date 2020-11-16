@@ -26,6 +26,7 @@ export interface Process {
 declare global {
   interface Window {
     stateMachines: {
+      current():Process|null,
       run: (definition: ProcessDefinition) => Process
     }
   }
@@ -48,7 +49,12 @@ function getServiceContext(): ProcessContext {
   return processContext;
 }
 
-window.stateMachines = {
+window.stateMachines = <any>{
+  _current: null,
+  current(): Process
+  {
+    return this._current;
+  },
   run<TContext>(definition: ProcessDefinition, contextModifier?:(processContext:ProcessContext)=>TContext) {
     const { service, state, send } = useMachine(
       definition.stateMachine,
@@ -77,6 +83,7 @@ window.stateMachines = {
       processEvents.next({
         stopped: true
       });
+      this._current = null;
     });
 
     const process: Process = {
@@ -86,6 +93,8 @@ window.stateMachines = {
     };
 
     service.start();
+
+    this._current = process;
 
     return process;
   }
