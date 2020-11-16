@@ -5,7 +5,9 @@ export const summarize = send((context: SetTrustContext) =>
 {
     return {
         type: "omo.prompt",
-        message: `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted persons.`,
+        message: context.setTrust.trustLimit.data > 0
+            ? `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted persons.`
+            : `Click 'Next' to remove ${context.setTrust.trustReceiver.data} from your list of trusted persons.`,
         data: {
             id: "confirmation",
             fields: {

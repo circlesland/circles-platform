@@ -7,6 +7,8 @@
   import Avatars from "@dicebear/avatars";
   import sprites from "@dicebear/avatars-avataaars-sprites";
   import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
+  import {setTrust, SetTrustContext} from "../processes/setTrust/setTrust";
+  import {transferCircles, TransferCirclesContext} from "../processes/transferCircles/transferCircles";
 
   export let address: string;
   let mySafeAddress: string;
@@ -52,12 +54,36 @@
     }
   }
 
-  function transferCircles(recipientAddress:Address) {
-
+  function runTransferCircles(recipientAddress:Address) {
+    const contextInitializer = (context:TransferCirclesContext) => {
+      context.transfer = {
+        recipient: {
+          type: "ethereumAddress",
+          data: recipientAddress
+        }
+      };
+      return context;
+    };
+    window.stateMachines.run(transferCircles, contextInitializer);
+    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
   }
 
-  function untrust(recipientAddress:Address) {
-
+  function runSetTrust(recipientAddress:Address) {
+    const contextInitializer = (context:SetTrustContext) => {
+      context.setTrust = {
+        trustReceiver: {
+          type: 'ethereumAddress',
+          data: recipientAddress
+        },
+        trustLimit: {
+          type: 'percent',
+          data: 0
+        }
+      };
+      return context;
+    };
+    window.stateMachines.run(setTrust, contextInitializer);
+    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
   }
 </script>
 
@@ -76,14 +102,14 @@
         <i class="fas fa-exchange-alt" /><span class="ml-2">mutual trust</span>
       </p>
     </div>
-    <div class="flex items-center content-end justify-center">
-      <div
+    <div class="flex items-center content-end justify-center" >
+      <div on:click={() => runSetTrust(mutualTrust.owner.address)}
         class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-        <img src="icons/removeTrust.svg" on:click={() => untrust(mutualTrust.owner.address)} alt="add" />
+        <img src="icons/removeTrust.svg" alt="add" />
       </div>
-      <div
+      <div on:click={() => runTransferCircles(mutualTrust.owner.address)}
         class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded bg-primary">
-        <i class="fas fa-money-bill-wave" on:click={() => transferCircles(mutualTrust.owner.address)} />
+        <i class="fas fa-money-bill-wave" />
       </div>
     </div>
   </div>
