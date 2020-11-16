@@ -6,6 +6,8 @@ import {recentlyGotUbi} from "./guards/recentlyGotUbi";
 import {setNextPossibleUbiRetrieval} from "./actions/setNextPossibleUbiRetrieval";
 import {canRetrieveNewUbi} from "./guards/canRetrieveNewUbi";
 import {getUbi} from "./services/getUbi";
+import {promptError} from "../promptError";
+import {promptSuccess} from "../promptSuccess";
 
 /**
  * Requests UBI
@@ -49,26 +51,28 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
                 id: 'requestingUbi',
                 src: getUbi,
                 onError: {
-                    actions: send({
-                        type: "omo.error",
-                        message: "An error occurred during the UBI request. Please try again later."
-                    })
+                    actions: promptError,
+                    target: "error"
                 },
                 onDone: {
                     actions: [
                         "setLastSuccessfulUbiRetrieval",
-                        send({
-                            type: "omo.success",
-                            data: {
-                                type: "ubi"
-                            }
-                        })
-                    ]
+                        promptSuccess
+                    ],
+                    target: "success"
                 }
-            },
+            }
+        },
+        success: {
             on: {
-                "omo.error": "stop",
-                "omo.success": "stop"
+                "omo.answer": "stop",
+                "omo.cancel": "stop"
+            }
+        },
+        error: {
+            on: {
+                "omo.answer": "stop",
+                "omo.cancel": "stop"
             }
         },
         stop: {
