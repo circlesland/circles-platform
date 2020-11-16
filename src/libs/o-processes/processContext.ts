@@ -6,6 +6,8 @@ export interface ProcessContext {
     account: Account,
     person: Person,
     safe: GnosisSafeProxy,
+    error?: any,
+    result?:any,
     other: {
         [key: string]: any
     }

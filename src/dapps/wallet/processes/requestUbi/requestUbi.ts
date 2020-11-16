@@ -3,11 +3,12 @@ import { ProcessContext } from "src/libs/o-processes/processContext";
 import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import {recentlyGotUbi} from "./guards/recentlyGotUbi";
-import {setNextPossibleUbiRetrieval} from "./actions/setNextPossibleUbiRetrieval";
-import {canRetrieveNewUbi} from "./guards/canRetrieveNewUbi";
 import {getUbi} from "./services/getUbi";
 import {promptError} from "../promptError";
 import {promptSuccess} from "../promptSuccess";
+import {setLastSuccessfulUbiRetrieval} from "./actions/setLastSuccessfulUbiRetrieval";
+import {notifyInProgress} from "./actions/notifyInProgress";
+import {promptAlreadyRequested} from "./actions/promptAlreadyRequested";
 
 /**
  * Requests UBI
@@ -18,50 +19,28 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
         ready: {
             on: {
                 "omo.trigger": [{
-                    cond: recentlyGotUbi,
-                    actions: [
-                        setNextPossibleUbiRetrieval,
-                        send({
-                            type: "omo.notification",
-                            message: "You recently requested your UBI. You can send only one request every 12 hours."
-                        })
-                    ]
+                    cond: "recentlyGotUbi",
+                    actions: "promptAlreadyRequested",
                 }, {
-                    cond: canRetrieveNewUbi,
-                    actions: [
-                        setNextPossibleUbiRetrieval,
-                        send({
-                            type: "omo.continue",
-                            message: "Requesting UBI .."
-                        })
-                    ]
-                }, {
-                    actions: send({
-                        type: "omo.notification",
-                        message: "You must wait at least 20 seconds before you can try again."
-                    })
+                    target: "requestUbi"
                 }],
-                "omo.stop": "stop",
-                "omo.notification": "stop",
-                "omo.continue": "requestUbi"
+                "omo.answer": "stop",
+                "omo.cancel": "stop",
             }
         },
         requestUbi: {
-            entry: send({
-                type: "omo.notification",
-                message: "Requesting UBI .."
-            }),
+            entry: "notifyInProgress",
             invoke: {
                 id: 'requestingUbi',
-                src: getUbi,
+                src: "getUbi",
                 onError: {
-                    actions: promptError,
+                    actions: "promptError",
                     target: "error"
                 },
                 onDone: {
                     actions: [
                         "setLastSuccessfulUbiRetrieval",
-                        promptSuccess
+                        "promptSuccess"
                     ],
                     target: "success"
                 }
@@ -70,18 +49,38 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
         success: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: "promptSuccess"
+                }
             }
         },
         error: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: "promptError"
+                }
             }
         },
         stop: {
             type: "final"
         }
+    }
+}, {
+    services: {
+        "getUbi": getUbi
+    },
+    guards: {
+        "recentlyGotUbi": recentlyGotUbi
+    },
+    actions: {
+        "promptError": promptError,
+        "promptSuccess":promptSuccess,
+        "notifyInProgress": notifyInProgress,
+        "setLastSuccessfulUbiRetrieval": setLastSuccessfulUbiRetrieval,
+        "promptAlreadyRequested":promptAlreadyRequested
     }
 });
 

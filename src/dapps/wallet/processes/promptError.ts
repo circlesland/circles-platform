@@ -1,7 +1,7 @@
 import {send} from "xstate";
 import {ProcessContext} from "../../../libs/o-processes/processContext";
 
-export const promptError = send((context: ProcessContext, event:any) =>
+export const promptError = send((context: ProcessContext) =>
 {
     return {
         type: "omo.prompt",
@@ -12,7 +12,7 @@ export const promptError = send((context: ProcessContext, event:any) =>
                 "message": {
                     type: "text",
                     label: "Error",
-                    value: JSON.stringify(event.data)
+                    value: JSON.stringify(context.error)
                 }
             }
         }

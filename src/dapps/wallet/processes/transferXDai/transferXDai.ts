@@ -5,9 +5,15 @@ import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {BN} from "ethereumjs-util";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {transferXDaiService} from "./services/transferXDaiService";
-import {setTrustService} from "../setTrust/services/setTrustService";
 import {promptError} from "../promptError";
 import {promptSuccess} from "../promptSuccess";
+import {notifyInProgress} from "./actions/notifyInProgress";
+import {isTransferPreconfigured} from "./guards/isTransferPreconfigured";
+import {storeTransferRecipientToContext} from "./actions/storeTransferRecipientToContext";
+import {storeTransferValueToContext} from "./actions/storeTransferValueToContext";
+import {promptRecipient} from "./actions/promptRecipient";
+import {promptValue} from "./actions/promptValue";
+import {summarize} from "./actions/summarize";
 
 export interface TransferXDaiContext extends ProcessContext
 {
@@ -32,7 +38,7 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
         ready: {
             on: {
                 "omo.trigger": [{
-                    cond: (context) => context.transfer !== undefined,
+                    cond: "isTransferPreconfigured",
                     target:"summarize"
                 },{
                     target:"promptRecipient"
@@ -44,14 +50,7 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             entry: "promptRecipient",
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) =>
-                    {
-                        if (!context.transfer)
-                        {
-                            context.transfer = {};
-                        }
-                        context.transfer.recipient = event.data.fields.address;
-                    }),
+                    actions: "storeTransferRecipientToContext",
                     target: "promptValue"
                 },
                 "omo.trigger": {
@@ -64,8 +63,7 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             entry: "promptValue",
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) =>
-                        context.transfer.value = event.data.fields.value),
+                    actions: "storeTransferValueToContext",
                     target: "summarize"
                 },
                 "omo.trigger": {
@@ -85,19 +83,16 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             }
         },
         transferXDai: {
-            entry: send({
-                type: "omo.notification",
-                message: "Transferring xDai .."
-            }),
+            entry: "notifyInProgress",
             invoke: {
                 id: 'transferXDai',
-                src: transferXDaiService,
+                src: "transferXDaiService",
                 onError: {
-                    actions: promptError,
+                    actions: "promptError",
                     target: "error"
                 },
                 onDone: {
-                    actions: promptSuccess,
+                    actions: "promptSuccess",
                     target: "success"
                 }
             }
@@ -107,7 +102,7 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptSuccess
+                    actions: "promptSuccess"
                 }
             }
         },
@@ -116,7 +111,7 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptError
+                    actions: "promptError"
                 }
             }
         },
@@ -125,58 +120,21 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
         }
     }
 }, {
-    guards: {},
+    services: {
+        "transferXDaiService": transferXDaiService
+    },
+    guards: {
+        "isTransferPreconfigured": isTransferPreconfigured
+    },
     actions: {
-        "promptRecipient":send({
-            type: "omo.prompt",
-            message: "Please enter the recipient's address below and click 'Next'",
-            data: {
-                id: "recipient",
-                fields: {
-                    "address": {
-                        type: "ethereumAddress",
-                        label: "Address"
-                    }
-                }
-            }
-        }),
-        "promptValue": send({
-            type: "omo.prompt",
-            message: "Please enter the xDai value you want to transfer and click 'Next'",
-            data: {
-                id: "value",
-                fields: {
-                    "value": {
-                        type: "wei",
-                        label: "Value"
-                    }
-                }
-            }
-        }),
-        "summarize": send((context: TransferXDaiContext) =>
-        {
-            return {
-                type: "omo.prompt",
-                message: "Click 'Next' to confirm the transaction",
-                data: {
-                    id: "confirmation",
-                    fields: {
-                        "value": {
-                            type: "wei",
-                            isReadonly: true,
-                            label: "Value",
-                            value: context.transfer.value
-                        },
-                        "recipient": {
-                            type: "ethereumAddress",
-                            isReadonly: true,
-                            label: "Recipient",
-                            value: context.transfer.recipient
-                        }
-                    }
-                }
-            }
-        })
+        "notifyInProgress": notifyInProgress,
+        "promptError": promptError,
+        "promptSuccess":promptSuccess,
+        "storeTransferRecipientToContext": storeTransferRecipientToContext,
+        "storeTransferValueToContext": storeTransferValueToContext,
+        "promptRecipient": promptRecipient,
+        "promptValue": promptValue,
+        "summarize": summarize
     }
 });
 

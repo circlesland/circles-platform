@@ -1,4 +1,4 @@
-import {assign, createMachine, send} from "xstate";
+import {createMachine} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
@@ -6,6 +6,14 @@ import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {setTrustService} from "./services/setTrustService";
 import {promptError} from "../promptError";
 import {promptSuccess} from "../promptSuccess";
+import {promptTrustReceiver} from "./actions/promptTrustReceiver";
+import {promptTrustLimit} from "./actions/promptTrustLimit";
+import {summarize} from "./actions/summarize";
+import {storeTrustReceiverToContext} from "./actions/storeTrustReceiverToContext";
+import {storeTrustLimitToContext} from "./actions/storeTrustLimitToContext";
+import {notifyInProgress} from "./actions/notifyInProgress";
+import {isTrustLimitAlreadySet} from "./guards/isTrustLimitAlreadySet";
+import {not} from "rxjs/internal-compatibility";
 
 export interface SetTrustContext extends ProcessContext
 {
@@ -37,26 +45,12 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
             entry: "promptTrustReceiver",
             on: {
                 "omo.answer": [{
-                    cond: (ctx) => !!ctx.setTrust.trustLimit,
-                    actions: assign((context: any, event: any) =>
-                    {
-                        if (!context.setTrust)
-                        {
-                            context.transferXDaiService = {};
-                        }
-                        context.setTrust.trustReceiver = event.data.fields.trustReceiver;
-                    }),
+                    cond: "isTrustLimitAlreadySet",
+                    actions: "storeTrustReceiverToContext",
                     target: "summarize"
                 }, {
-                    cond: (ctx) => !ctx.setTrust.trustLimit,
-                    actions: assign((context: any, event: any) =>
-                    {
-                        if (!context.setTrust)
-                        {
-                            context.transferXDaiService = {};
-                        }
-                        context.setTrust.trustReceiver = event.data.fields.trustReceiver;
-                    }),
+                    cond: "isTrustLimitNotSet",
+                    actions: "storeTrustReceiverToContext",
                     target: "promptTrustLimit"
                 }],
                 "omo.cancel": "stop",
@@ -69,8 +63,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
             entry: "promptTrustLimit",
             on: {
                 "omo.answer": {
-                    actions: assign((context: any, event: any) =>
-                        context.setTrust.trustLimit = event.data.fields.trustLimit),
+                    actions: "storeTrustLimitToContext",
                     target: "summarize"
                 },
                 "omo.cancel": "stop",
@@ -90,19 +83,16 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
             }
         },
         setTrust: {
-            entry: send({
-               type: "omo.notification",
-               message: "Setting trust .."
-            }),
+            entry: "notifyInProgress",
             invoke: {
                 id: 'setTrust',
-                src: setTrustService,
+                src: "setTrustService",
                 onError: {
-                    actions: promptError,
+                    actions: "promptError",
                     target: "error"
                 },
                 onDone: {
-                    actions: promptSuccess,
+                    actions: "promptSuccess",
                     target: "success"
                 }
             }
@@ -112,7 +102,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptSuccess
+                    actions: "promptSuccess"
                 }
             }
         },
@@ -121,7 +111,7 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptError
+                    actions: "promptError"
                 }
             }
         },
@@ -130,56 +120,22 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
         }
     }
 }, {
-    guards: {},
+    services: {
+        "setTrustService": setTrustService
+    },
+    guards: {
+        "isTrustLimitAlreadySet": isTrustLimitAlreadySet,
+        "isTrustLimitNotSet": (context => !isTrustLimitAlreadySet(context)),
+    },
     actions: {
-        "promptTrustReceiver": send({
-            type: "omo.prompt",
-            message: "Please enter the address of the person you want to trust and click 'Next'",
-            data: {
-                id: "setTrust",
-                fields: {
-                    "trustReceiver": {
-                        type: "ethereumAddress",
-                        label: "Address"
-                    }
-                }
-            }
-        }),
-        "promptTrustLimit": send({
-            type: "omo.prompt",
-            message: "Please enter the trust limit in percent and click 'Next'",
-            data: {
-                id: "setTrust",
-                fields: {
-                    "trustLimit": {
-                        type: "percent",
-                        label: "Trust limit %"
-                    }
-                }
-            }
-        }),
-        "summarize": send((context: SetTrustContext) =>
-        {
-            return {
-                type: "omo.prompt",
-                message: `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted persons.`,
-                data: {
-                    id: "confirmation",
-                    fields: {
-                        "trustReceiver": {
-                            type: "ethereumAddress",
-                            label: "Trust receiver",
-                            value: context.setTrust.trustReceiver
-                        },
-                        "trustLimit": {
-                            type: "percent",
-                            label: "Trust limit (%)",
-                            value: context.setTrust.trustLimit
-                        }
-                    }
-                }
-            }
-        })
+        "promptError": promptError,
+        "promptSuccess":promptSuccess,
+        "promptTrustReceiver": promptTrustReceiver,
+        "promptTrustLimit": promptTrustLimit,
+        "notifyInProgress": notifyInProgress,
+        "summarize":summarize,
+        "storeTrustReceiverToContext": storeTrustReceiverToContext,
+        "storeTrustLimitToContext": storeTrustLimitToContext
     }
 });
 
