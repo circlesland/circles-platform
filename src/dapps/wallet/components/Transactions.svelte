@@ -71,7 +71,8 @@
     if (config.getCurrent().web3().utils.isAddress(address)) {
       init(address);
     }
-    let openDetail: Boolean = false;
+  }
+  let openDetail: Boolean = false;
 </script>
 
 <div class="overflow-scroll">
@@ -79,10 +80,10 @@
     <div class="m-4 space-y-2">
       {#each transactions as t}
         <div>
-          <div class="flex w-full bg-white border border-gray-300 rounded">
-            <div
-              class="flex items-center justify-center w-10 text-sm "
-              on:click={() => (openDetail = !openDetail)}>
+          <div
+            class="flex w-full bg-white border border-gray-300 rounded"
+            on:click={() => (openDetail = !openDetail)}>
+            <div class="flex items-center justify-center w-10 text-sm ">
               <i
                 class="text-light-400 fas"
                 class:fa-plus={!openDetail}
