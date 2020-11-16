@@ -84,7 +84,7 @@
       <a
         href="#/wallet/register"
         class="w-full px-4 py-2 text-center uppercase border rounded cursor-pointer text-primary bg-light-100">
-        Register New
+        Register
       </a>
       <div
         class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"

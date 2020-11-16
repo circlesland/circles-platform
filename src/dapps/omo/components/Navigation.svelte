@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { _ } from "svelte-i18n";
+
   export let address: string;
 </script>
 
@@ -12,36 +14,36 @@
     <a
       href="#/wallet/register"
       class="w-full px-4 py-2 text-center uppercase border rounded cursor-pointer text-primary bg-light-100">
-      Register New
+      {$_('omo_button_register')}
     </a>
     <a
       href="#/wallet/connect"
       class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary">
-      Login
+      {$_('omo_button_login')}
     </a>
   </div>
 {:else}
   <div
     class="flex justify-between px-10 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
     <div
-      class="flex items-center justify-center w-20 px-2 text-xs text-center hover:text-primary">
+      class="flex items-center justify-center w-24 text-xs text-center hover:text-primary">
       <a href="#/wallet/{address}/trusts">
         <i class="text-2xl fas fa-heart" />
-        <p>Trust Friend</p>
+        <p>{$_('omo_nav_trust_friend')}</p>
       </a>
     </div>
     <div
-      class="flex items-center justify-center w-20 px-2 text-xs text-center hover:text-primary">
+      class="flex items-center justify-center w-24 text-xs text-center hover:text-primary">
       <a href="#/wallet/{address}/trusts">
         <i class="text-2xl fas fa-user-plus" />
-        <p>Invite Friend</p>
+        <p>{$_('omo_nav_invite_friend')}</p>
       </a>
     </div>
     <div
-      class="flex items-center justify-center w-20 px-2 text-xs text-center hover:text-primary">
+      class="flex items-center justify-center w-24 text-xs text-center hover:text-primary">
       <a href="#/wallet/{address}/safe">
         <i class="text-2xl fas fa-money-bill-wave" />
-        <p>Send Payment</p>
+        <p>{$_('omo_nav_send_money')}</p>
       </a>
     </div>
   </div>

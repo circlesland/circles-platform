@@ -25,7 +25,7 @@
     localStorage.removeItem("omo.address");
     localStorage.removeItem("omo.safeAddress");
     localStorage.removeItem("omo.privateKey");
-    push("  /omo/dapps");
+    push("/omo/dapps");
   }
 
   onMount(() => {

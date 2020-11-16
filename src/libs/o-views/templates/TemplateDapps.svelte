@@ -17,10 +17,10 @@
     <Leaf area="notifications">
       <Notifications />
     </Leaf>
-    <Leaf area="header" p="p-4">
+    <Leaf area="header">
       <slot name="header" />
     </Leaf>
-    <Leaf area="main" p="p-4" overflowY>
+    <Leaf area="main" p="p-4 mt-4" overflowY>
       <slot name="main" />
     </Leaf>
     <Leaf area="footer">
