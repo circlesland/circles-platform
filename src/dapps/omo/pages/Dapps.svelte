@@ -18,7 +18,7 @@
       <div>
         {#if address}
           <img
-            src="https://avatars.dicebear.com/api/avataaars/omo.svg"
+            src="https://avatars.dicebear.com/api/avataaars/{address}.svg"
             class="w-32 h-32 mx-auto mt-6 bg-white border-4 rounded-full border-light-300"
             alt="name" />
         {/if}
