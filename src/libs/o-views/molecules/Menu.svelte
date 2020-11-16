@@ -24,11 +24,11 @@
 </Modal>
 
 <button
-  class="absolute flex items-center justify-center w-full text-xs text-center action"
+  class="absolute flex items-center justify-center w-full text-center action"
   on:click={() => (isOpen = !isOpen)}>
   {#if !isOpen}
     <div
-      class="fixed w-16 h-16 mx-auto mt-4 text-white rounded-full action bg-secondary hover:bg-primary">
+      class="fixed w-16 h-16 mx-auto mt-6 text-white border rounded-full border-light-100 action bg-secondary hover:bg-primary">
       <i class="mt-4 text-3xl fas fa-plus " />
     </div>
   {/if}
@@ -53,7 +53,7 @@
     </a>
   </div>
   <div
-    class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary" />
+    class="flex items-center justify-center w-12 px-2 text-xs text-center hover:text-primary" />
   <div
     class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a
@@ -64,7 +64,6 @@
       <p>Friends</p>
     </a>
   </div>
-
   <div
     class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
     <a href="/omo/dapps" use:link>

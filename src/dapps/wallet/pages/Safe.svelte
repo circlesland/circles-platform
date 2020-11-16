@@ -6,8 +6,19 @@
   import Account from "src/dapps/wallet/components/Account.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import TemplateSafeBalance from "src/libs/o-views/templates/TemplateSafeBalance.svelte";
+  import { onMount } from "svelte";
+  import { push } from "svelte-spa-router";
 
   export let params = {};
+
+  let mySafeAddress;
+
+  onMount(() => {
+    mySafeAddress = localStorage.getItem("omo.safeAddress");
+    if (!mySafeAddress) {
+      push("/wallet/connect");
+    }
+  });
 
   let address: string = null;
 

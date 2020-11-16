@@ -6,11 +6,12 @@ import Dapps from 'src/dapps/omo/pages/Dapps.svelte'
 // Wallet Dapp
 import Safe from 'src/dapps/wallet/pages/Safe.svelte'
 import ConnectCircles from 'src/dapps/wallet/pages/ConnectCircles.svelte'
-import Invite from 'src/dapps/wallet/pages/Invite.svelte'
-import Register from 'src/dapps/wallet/pages/Register.svelte'
+import Start from 'src/dapps/wallet/pages/Start.svelte'
 import Trusts from 'src/dapps/wallet/pages/Trusts.svelte'
 import Tokens from 'src/dapps/wallet/pages/Tokens.svelte'
 import Jumpstart from 'src/dapps/wallet/pages/Jumpstart.svelte'
+import Register from 'src/dapps/wallet/pages/Register.svelte'
+
 // Identity Dapp
 import Settings from 'src/dapps/identity/pages/Settings.svelte'
 import Login from 'src/dapps/identity/pages/Login.svelte'
@@ -27,7 +28,7 @@ export default {
     '/identity/login': Login,
     // Wallet
     '/wallet/connect': ConnectCircles,
-    '/wallet/invite': Invite,
+    '/wallet/start': Start,
     '/wallet/register': Register,
     '/wallet/jumpstart/:address': Jumpstart,
     '/wallet/:address/safe': Safe,

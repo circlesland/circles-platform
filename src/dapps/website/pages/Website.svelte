@@ -33,7 +33,7 @@
     </div>
     <div class="flex justify-center pt-20">
       <a
-        href="#/omo/dapps"
+        href="#/omo/login"
         class="px-4 py-2 text-center text-white uppercase border border-white rounded">{$_('button_gotoapp')}</a>
     </div>
   </div>

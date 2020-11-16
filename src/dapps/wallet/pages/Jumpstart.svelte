@@ -8,7 +8,7 @@
   import { config } from "../../../libs/o-circles-protocol/config";
   import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
-  import {jumpstart} from "../processes/jumpstart/jumpstart";
+  import { jumpstart } from "../processes/jumpstart/jumpstart";
 
   // http://localhost:5000/#/wallet/jumpstart/0x9B74661e83F6696AdF872576f886Dc5Eb569B0bD
 
@@ -50,31 +50,29 @@
       };
     }
   }
-    $: {
-        if (params.address)
-        {
-            address = params.address;
-            contextInitializer = (processContext:ProcessContext) => {
-                const jumpstartContext = {
-                    ...processContext,
-                    jumpstart: {
-                        recipient: {
-                            type: "ethereumAddress",
-                            data: params.address
-                        }
-                    }
-                };
-                return jumpstartContext;
-            }
-        }
+  $: {
+    if (params.address) {
+      address = params.address;
+      contextInitializer = (processContext: ProcessContext) => {
+        const jumpstartContext = {
+          ...processContext,
+          jumpstart: {
+            recipient: {
+              type: "ethereumAddress",
+              data: params.address,
+            },
+          },
+        };
+        return jumpstartContext;
+      };
     }
+  }
 
-    let process;
+  let process;
 
-    function yes()
-    {
-        process = jumpstart;
-    }
+  function yes() {
+    process = jumpstart;
+  }
 
   function no() {
     push("/wallet/" + mySafeAddress + "/safe");

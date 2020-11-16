@@ -54,7 +54,7 @@
       browsers localstorage
     </p>
   </main>
-  <footer slot="footer" class="p-4 bg-white border-t">
+  <aside slot="action">
     <div>
       <p class="mb-1 text-xs text-gray-700 uppercase">
         Enter safeaddress to recover
@@ -62,7 +62,7 @@
       <input
         placeholder="Your safe address"
         type="text"
-        class="w-full p-2 mb-2 bg-transparent border border-gray-300 rounded text-primary"
+        class="w-full p-2 mb-2 bg-transparent bg-white border border-gray-300 rounded text-primary"
         bind:value={safeAddress} />
     </div>
     <div>
@@ -71,14 +71,21 @@
       </p>
       <textarea
         placeholder="word1 word2 word3 word4 .... word23 word24"
-        class="w-full h-24 p-2 mb-2 bg-transparent border border-gray-300 rounded text-primary"
+        class="w-full h-24 p-2 bg-transparent bg-white border border-gray-300 rounded text-primary"
         bind:value={seedphrase} />
     </div>
+  </aside>
+  <footer slot="footer" class="p-4 bg-white border-t">
     <div class="flex space-x-4">
       <a
-        href="#/omo/dapps"
+        href="#/wallet/start"
         class="px-4 py-2 uppercase border border-gray-300 rounded text-primary"><i
           class="fas fa-arrow-left" /></a>
+      <a
+        href="#/wallet/register"
+        class="w-full px-4 py-2 text-center uppercase border rounded cursor-pointer text-primary bg-light-100">
+        Register New
+      </a>
       <div
         class="w-full py-2 text-center text-white uppercase rounded cursor-pointer bg-primary"
         on:click={() => storeInputAndContinue()}>
