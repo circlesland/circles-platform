@@ -1,13 +1,18 @@
-import {assign, createMachine, send} from "xstate";
+import {createMachine} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {ByteString} from "../../../../libs/o-circles-protocol/interfaces/byteString";
-import {config} from "../../../../libs/o-circles-protocol/config";
 import {promptSuccess} from "../promptSuccess";
 import {promptError} from "../promptError";
 import {connectSafeService} from "./services/connectSafeService";
+import {notifyInProgress} from "./actions/notifyInProgress";
+import {promptSafeAddress} from "./actions/promptSafeAddress";
+import {promptPrivateKey} from "./actions/promptPrivateKey";
+import {summarize} from "./actions/summarize";
+import {storePrivateKeyToContext} from "./actions/storePrivateKeyToContext";
+import {storeSafeAddressToContext} from "./actions/storeSafeAddressToContext";
 
 export interface ConnectSafeContext extends ProcessContext
 {
@@ -78,19 +83,16 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
             }
         },
         connectSafe: {
-            entry: send({
-                type: "omo.notification",
-                message: "Connecting safe .."
-            }),
+            entry: "notifyInProgress",
             invoke: {
                 id: 'connectSafe',
-                src: connectSafeService,
+                src: "connectSafeService",
                 onError: {
-                    actions: promptError,
+                    actions: "promptError",
                     target: "error"
                 },
                 onDone: {
-                    actions: promptSuccess,
+                    actions: "promptSuccess",
                     target: "success"
                 }
             }
@@ -100,7 +102,7 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptSuccess
+                    actions: "promptSuccess"
                 }
             }
         },
@@ -109,7 +111,7 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: promptError
+                    actions: "promptError"
                 }
             }
         },
@@ -118,79 +120,19 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
         }
     }
 }, {
+    services: {
+        "connectSafeService": connectSafeService
+    },
     guards: {},
     actions: {
-        "promptSafeAddress":send({
-            type: "omo.prompt",
-            message: "Please enter the address of your safe below and click 'Next'",
-            data: {
-                id: "connectSafe",
-                fields: {
-                    "safeAddress": {
-                        type: "ethereumAddress",
-                        label: "Safe address"
-                    }
-                }
-            }
-        }),
-        "promptPrivateKey":send({
-            type: "omo.prompt",
-            message: "Please enter the private key of the safe owner account and click 'Next'",
-            data: {
-                id: "connectSafe",
-                fields: {
-                    "safeOwnerPrivateKey": {
-                        type: "bytestring",
-                        label: "Safe owner private key"
-                    }
-                }
-            }
-        }),
-        "summarize":send((context) =>
-        {
-            return {
-                type: "omo.prompt",
-                message: "Press 'Next' to confirm the values and connect your safe.",
-                data: {
-                    id: "connectSafe",
-                    fields: {
-                        "safeOwnerAddress": {
-                            isReadonly: true,
-                            type: "ethereumAddress",
-                            label: "Safe owner address",
-                            value: context.connectSafe.safeOwnerAddress
-                        },
-                        "safeAddress": {
-                            isReadonly: true,
-                            type: "ethereumAddress",
-                            label: "Safe address",
-                            value: context.connectSafe.safeAddress
-                        }
-                    }
-                }
-            }
-        }),
-        "storePrivateKeyToContext": assign((context, event: any) => {
-            context.connectSafe.safeOwnerPrivateKey = event.data.fields.safeOwnerPrivateKey;
-            context.connectSafe.safeOwnerAddress = {
-                type: "ethereumAddress",
-                data: config.getCurrent().web3()
-                    .eth
-                    .accounts
-                    .privateKeyToAccount("0x" + context.connectSafe.safeOwnerPrivateKey.data)
-                    .address
-            };
-            return context;
-        }),
-        "storeSafeAddressToContext":assign((context, event: any) =>
-        {
-            if (!context.connectSafe)
-            {
-                context.connectSafe = {};
-            }
-            context.connectSafe.safeAddress = event.data.fields.safeAddress;
-            return context;
-        })
+        "notifyInProgress": notifyInProgress,
+        "promptError": promptError,
+        "promptSuccess":promptSuccess,
+        "promptSafeAddress": promptSafeAddress,
+        "promptPrivateKey": promptPrivateKey,
+        "summarize": summarize,
+        "storePrivateKeyToContext": storePrivateKeyToContext,
+        "storeSafeAddressToContext": storeSafeAddressToContext
     }
 });
 
