@@ -25,7 +25,7 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
         ready: {
             on: {
                 "omo.trigger": [{
-                    cond: (context) => context.jumpstart !== undefined,
+                    cond: "isPreconfigured",
                     target:"transferXDai"
                 },{
                     target:"promptRecipient"
@@ -34,30 +34,10 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
             }
         },
         promptRecipient: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the recipient's address below and click 'Next'",
-                data: {
-                    id: "recipient",
-                    fields: {
-                        "address": {
-                            type: "ethereumAddress",
-                            label: "Address"
-                        }
-                    }
-                }
-            }),
+            entry: "promptRecipient",
             on: {
                 "omo.answer": {
-                    actions: assign((context: JumpstartContext, event: any) =>
-                    {
-                        if (!context.jumpstart)
-                        {
-                            context.jumpstart = {};
-                        }
-                        context.jumpstart.recipient = event.data.fields.address;
-                        return context;
-                    }),
+                    actions: "storeJumpstartRecipientToContext",
                     target: "transferXDai"
                 },
                 "omo.cancel": "stop"
@@ -67,6 +47,7 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
             invoke: {
                 id: 'transferXDai',
                 src: transferXDai.stateMachine,
+                autoForward: true,
                 data: {
                     transfer: (context, event) =>
                     {
@@ -78,26 +59,38 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
                             }
                         }
                     }
-                },
-                onError: {
-                    actions: []
-                },
-                onDone: {
-                    actions: []
                 }
-            },
-            on: {
-                "omo.error": "stop",
-                "omo.success": "stop"
             }
-        },
-        stop: {
-            type: "final"
         }
     }
 }, {
-    guards: {},
-    actions: {}
+    guards: {
+        "isPreconfigured": (context) => context.jumpstart !== undefined
+    },
+    actions: {
+        "promptRecipient": send({
+            type: "omo.prompt",
+            message: "Please enter the recipient's address below and click 'Next'",
+            data: {
+                id: "recipient",
+                fields: {
+                    "address": {
+                        type: "ethereumAddress",
+                        label: "Address"
+                    }
+                }
+            }
+        }),
+        "storeJumpstartRecipientToContext": assign((context: JumpstartContext, event: any) =>
+        {
+            if (!context.jumpstart)
+            {
+                context.jumpstart = {};
+            }
+            context.jumpstart.recipient = event.data.fields.address;
+            return context;
+        }),
+    }
 });
 
 export const jumpstart: ProcessDefinition = {

@@ -2,7 +2,7 @@ import {send} from "xstate";
 import {SetTrustContext} from "./setTrust/setTrust";
 import {ProcessContext} from "../../../libs/o-processes/processContext";
 
-export const promptSuccess = send((context: ProcessContext, event:any) =>
+export const promptSuccess = send((context: ProcessContext) =>
 {
     return {
         type: "omo.prompt",
@@ -12,8 +12,8 @@ export const promptSuccess = send((context: ProcessContext, event:any) =>
             fields: {
                 "message": {
                     type: "text",
-                    label: "Success:",
-                    value: JSON.stringify(event.data)
+                    label: "Success",
+                    value: JSON.stringify(context.result)
                 }
             }
         }
