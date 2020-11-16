@@ -5,6 +5,8 @@ import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {transferXDai} from "../transferXDai/transferXDai";
 import {config} from "../../../../libs/o-circles-protocol/config";
+import {promptError} from "../promptError";
+import {promptSuccess} from "../promptSuccess";
 
 export interface JumpstartContext extends ProcessContext
 {
@@ -68,6 +70,8 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
         "isPreconfigured": (context) => context.jumpstart !== undefined
     },
     actions: {
+        "promptError": promptError,
+        "promptSuccess":promptSuccess,
         "promptRecipient": send({
             type: "omo.prompt",
             message: "Please enter the recipient's address below and click 'Next'",

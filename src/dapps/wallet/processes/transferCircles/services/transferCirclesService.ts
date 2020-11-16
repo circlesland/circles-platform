@@ -8,7 +8,6 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 {
     try
     {
-        console.log("transferCirclesService");
         const cfg = config.getCurrent();
         const web3 = cfg.web3();
 
@@ -35,21 +34,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 
         // 5. Distribute the amount over all accepted tokens
         const maxBalance = exchangeableTokens.reduce((p, c) => c.balance.gt(p) ? c.balance : p, new BN("0"));
-        const weights = exchangeableTokens.map(token => {
-            return {
-                token: token,
-                weight: token.balance.div(maxBalance).toNumber()
-            }
-        });
-        const singlePart = context.transfer.value.data.div(new BN(exchangeableTokens.length));
-        const distributed = weights.map(weightedToken => {
-            return {
-                token: weightedToken.token,
-                weight: weightedToken.weight,
-                part: weightedToken.token.balance.mul(singlePart).toString()
-            }
-        });
-        console.log(distributed);
+
     }
     catch (e) {
         console.error(e);
