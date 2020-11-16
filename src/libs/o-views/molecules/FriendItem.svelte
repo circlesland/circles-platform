@@ -5,6 +5,7 @@
     image: "",
     title: "",
     description: "",
+    attached: {},
     actions: [],
   };
 </script>
@@ -26,23 +27,23 @@
     <div class="p-2">
       <div class="text-lg text-primary">{data.title}</div>
       <p class="-mt-1 text-xs text-gray-500">
-        <span class="text-xs text-gray-500">subline</span>
+        <span class="text-xs text-gray-500">{data.description}</span>
       </p>
     </div>
     <div class="flex justify-end p-2 space-x-2 text-right">
       {#each data.actions as a}
         <div
-          class="flex items-center content-end justify-center w-10 p-3 text-white border-l border-gray-300 rounded bg-secondary">
+          class="flex items-center content-end justify-center w-10 p-3 text-white border-l border-gray-300 rounded bg-secondary hover:bg-primary">
           {#if a.name == 'send'}<i class="fas fa-money-bill-wave" />{/if}
           {#if a.name == 'trust'}<i class="fas fa-heart" />{/if}
         </div>
       {/each}
     </div>
   </div>
-  {#if data.description}
+  {#if data.attached}
     <div
       class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
-      {data.description}
+      {data.attached}
     </div>
   {/if}
 </div>
