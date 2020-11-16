@@ -106,7 +106,7 @@ dist
 
 # Svelte build
 /public/build
-
+/public/index.css
 
 .history
 .DS_Store
