@@ -11,8 +11,6 @@
         | "none"
         | "message"
         | "notification"
-        | "success"
-        | "error"
         | "prompt" = "none";
     let status: string = "";
 
@@ -64,16 +62,6 @@
                     };
                 });
             }
-            else if (next.event?.type === "omo.error")
-            {
-                statusType = "error";
-                status = next.event.message;
-            }
-            else if (next.event?.type === "omo.success")
-            {
-                statusType = "success";
-                status = "The process completed successfully.";
-            }
             else if (next.event?.type === "omo.continue")
             {
                 statusType = "message";
@@ -101,14 +89,6 @@
             </h1>
         {:else if statusType === 'notification'}
             <h1 class="px-4 py-8 mb-4 text-center bg-orange-300 rounded text-primary">
-                {status}
-            </h1>
-        {:else if statusType === 'error'}
-            <h1 class="px-4 py-8 mb-4 text-center text-white bg-red-400 rounded">
-                {status}
-            </h1>
-        {:else if statusType === 'success'}
-            <h1 class="px-4 py-8 mb-4 text-center text-white rounded bg-action">
                 {status}
             </h1>
         {:else if statusType === 'prompt'}
