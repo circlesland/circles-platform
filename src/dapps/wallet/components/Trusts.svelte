@@ -1,19 +1,25 @@
 <script lang="ts">
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "src/libs/o-circles-protocol/model/person";
+  import {
+    Person,
+    TokenAndOwner,
+  } from "src/libs/o-circles-protocol/model/person";
   import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
 
   import Avatars from "@dicebear/avatars";
   import sprites from "@dicebear/avatars-avataaars-sprites";
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
+  import { Address } from "../../../libs/o-circles-protocol/interfaces/address";
 
   export let address: string;
   let mySafeAddress: string;
 
   let person: Person;
-  let personsThatTrustMe: [] = [];
-  let personsITrust: [] = [];
+  let personsThatTrustMe: TokenAndOwner[] = [];
+  let personsITrust: TokenAndOwner[] = [];
+  let mutualTrusts: TokenAndOwner[] = [];
+  let mutual: { [address: string]: any } = {};
 
   function init(addr: string) {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -27,10 +33,68 @@
 
   async function reload() {
     let t1 = await person.getPersonsThatTrustMe();
-    personsThatTrustMe = Object.keys(t1).map((k) => t1[k]);
-
     let t2 = await person.getPersonsITrust();
-    personsITrust = Object.keys(t2).map((k) => t2[k]);
+
+    mutualTrusts = Object.keys(t1)
+      .map((k) => t1[k])
+      .filter((o) => {
+        const isMutual = t2[o.owner.address] !== undefined;
+        if (isMutual) mutual[o.owner.address] = true;
+
+        return isMutual;
+      })
+      .map((mutualTrust) => {
+        return {
+          image:
+            "https://avatars.dicebear.com/api/avataaars/" +
+            mutualTrust.owner.address +
+            ".svg ",
+          title: mutualTrust.owner.address.slice(0, 8),
+          connection: "mutual trust",
+          detail: {
+            address: mutualTrust.owner.address,
+          },
+          actions: ["untrust", "send"],
+        };
+      });
+
+    console.log(mutual);
+
+    personsThatTrustMe = Object.keys(t1)
+      .map((k) => t1[k])
+      .filter((o) => !mutual[o.owner.address])
+      .map((personsThatTrustMe) => {
+        return {
+          image:
+            "https://avatars.dicebear.com/api/avataaars/" +
+            personsThatTrustMe.owner.address +
+            ".svg ",
+          title: personsThatTrustMe.owner.address.slice(0, 8),
+          connection: "is trusting you",
+          detail: {
+            address: personsThatTrustMe.owner.address,
+          },
+          actions: ["send", "trust"],
+        };
+      });
+
+    personsITrust = Object.keys(t2)
+      .map((k) => t2[k])
+      .filter((o) => !mutual[o.owner.address])
+      .map((personsITrust) => {
+        return {
+          image:
+            "https://avatars.dicebear.com/api/avataaars/" +
+            personsITrust.owner.address +
+            ".svg ",
+          title: personsITrust.owner.address.slice(0, 8),
+          connection: "trusted by you",
+          detail: {
+            address: personsITrust.owner.address,
+          },
+          actions: ["untrust"],
+        };
+      });
   }
 
   $: {
@@ -38,140 +102,61 @@
       init(address);
     }
   }
-  let friend = {
-    image: "https://avatars.dicebear.com/api/avataaars/mutual.svg",
-    title: "hello friend",
-    description: "",
-    connection: "trust",
-    actions: [
-      {
-        name: "send",
-      },
-      {
-        name: "trust",
-      },
-    ],
+
+  let trusting = {
+    image: "https://avatars.dicebear.com/api/avataaars/trusting.svg",
+    title: "0x1234",
+    connection: "trusted by you",
+    detail: {
+      address: "0x123788dbgx12o81eb8oznogGASfgonolialsf",
+    },
+    actions: ["untrust"],
   };
+
+  let removed = {
+    image: "https://avatars.dicebear.com/api/avataaars/removed.svg",
+    title: "0x1234",
+    connection: "trust removed",
+    detail: {
+      address: "0x123788dbgx12o81eb8oznogGASfgonolialsf",
+    },
+    actions: ["trust"],
+  };
+
+  function transferCircles(recipientAddress: Address) {}
+
+  function untrust(recipientAddress: Address) {}
 </script>
 
 <div class="py-2 font-bold text-secondary">Mutual Friends</div>
 
 <div class="space-y-2">
-  <FriendItem data={friend} />
-
-  <div class="flex w-full bg-white border border-gray-300 rounded">
-    <img
-      src="https://avatars.dicebear.com/api/avataaars/mutual.svg"
-      alt="profile"
-      class="h-12" />
-    <div class="flex-1 px-2 py-2 text-base">
-      <div class="text-xs text-primary">0x123456789eFGHIj...</div>
-      <p class="text-xs text-gray-500">
-        <i class="fas fa-exchange-alt" /><span class="ml-2">mutual trust</span>
-      </p>
-    </div>
-    <div class="flex items-center content-end justify-center">
-      <div
-        class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-        <img src="icons/removeTrust.svg" alt="add" />
-      </div>
-      <div
-        class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded bg-primary">
-        <i class="fas fa-money-bill-wave" />
-      </div>
-    </div>
-  </div>
-
-  <div class="py-2 font-bold text-secondary">Friends, who I trust</div>
   <!-- 
-{#if address === mySafeAddress}
-  <b class="m-4 text-primary">People that trust me:</b><br />
-{:else}<br class="m-4 text-primary" />People that trust {address}:<br />{/if} -->
+      on:click={() => transferCircles(mutualTrust.owner.address)} 
+      on:click={() => untrust(mutualTrust.owner.address)} 
+    -->
+
+  {#each mutualTrusts as mutualTrust}
+    <FriendItem data={mutualTrust} />
+  {/each}
+
+  <div class="py-2 font-bold text-secondary">Friends, who only trust me</div>
+
   {#each personsThatTrustMe as personThatTrustMe}
-    <div class="flex w-full bg-white border border-gray-300 rounded">
-      <img
-        src="https://avatars.dicebear.com/api/avataaars/{personThatTrustMe.owner.address}.svg"
-        alt="profile"
-        class="h-12" />
-      <div class="flex-1 px-2 py-2 text-base">
-        {#if !personThatTrustMe.limit || personThatTrustMe.limit == 0}
-          <div class="text-xs text-gray-300">
-            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
-            {personThatTrustMe.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </div>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you</span>
-          </p>
-        {:else}
-          <div class="text-xs text-primary">
-            <!-- <a href="#/wallet/{personThatTrustMe.owner.address}/trusts"> -->
-            {personThatTrustMe.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </div>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you
-            </span>
-          </p>
-        {/if}
-      </div>
-      <div class="flex items-center content-end justify-center">
-        <div
-          class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-          <img src="icons/addTrust.svg" alt="add" />
-        </div>
-        <div
-          class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-          <img src="icons/send.svg" alt="add" />
-        </div>
-      </div>
-    </div>
+    <FriendItem data={personThatTrustMe} />
   {/each}
   <!-- 
 {#if address === mySafeAddress}
   <b class="m-4 text-primary">People I trust:</b>
 {:else}<b class="m-4 text-primary">People that {address} trusts:</b>{/if} -->
 
-  <div class="py-2 font-bold text-secondary">Friends, who only trust me</div>
+  <div class="py-2 font-bold text-secondary">Friends, who only I trust</div>
 
   {#each personsITrust as personITrust}
-    <div class="flex w-full bg-white border border-gray-300 rounded">
-      <img
-        src="https://avatars.dicebear.com/api/avataaars/{personITrust.owner.address}.svg"
-        alt="profile"
-        class="h-12" />
-      <div class="flex-1 px-2 py-2 text-base">
-        {#if !personITrust.limit || personITrust.limit == 0}
-          <div class="text-xs text-gray-300">
-            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
-            {personITrust.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </div>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
-              trusted by 10 friends</span>
-          </p>
-        {:else}
-          <div class="text-xs text-primary">
-            <!-- <a href="#/wallet/{personITrust.owner.address}/trusts"> -->
-            {personITrust.owner.address.slice(0, 20)}...
-
-            <!-- </a> -->
-          </div>
-          <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-left" /><span class="ml-2">trusted by you</span>
-          </p>
-        {/if}
-      </div>
-      <div class="flex items-center content-end justify-center">
-        <div
-          class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-          <img src="icons/removeTrust.svg" alt="add" />
-        </div>
-      </div>
-    </div>
+    <FriendItem data={personITrust} />
   {/each}
+
+  <div class="py-2 font-bold text-secondary">Friends, who I removed</div>
+  (placeholder)
+  <FriendItem data={removed} />
 </div>

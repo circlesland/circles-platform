@@ -30,7 +30,7 @@
             "https://avatars.dicebear.com/api/avataaars/" +
             token.owner.address +
             ".svg ",
-          title: token.owner.address.slice(0, 6),
+          title: token.owner.address.slice(0, 8),
           description: token.owner.address,
           balance: token.balanceString,
           currency: "CRC",
