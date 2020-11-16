@@ -6,6 +6,7 @@
 
   import Avatars from "@dicebear/avatars";
   import sprites from "@dicebear/avatars-avataaars-sprites";
+  import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
 
   export let address: string;
   let mySafeAddress: string;
@@ -37,11 +38,27 @@
       init(address);
     }
   }
+  let friend = {
+    image: "https://avatars.dicebear.com/api/avataaars/mutual.svg",
+    title: "hello friend",
+    description: "",
+    connection: "trust",
+    actions: [
+      {
+        name: "send",
+      },
+      {
+        name: "trust",
+      },
+    ],
+  };
 </script>
 
 <div class="py-2 font-bold text-secondary">Mutual Friends</div>
 
 <div class="space-y-2">
+  <FriendItem data={friend} />
+
   <div class="flex w-full bg-white border border-gray-300 rounded">
     <img
       src="https://avatars.dicebear.com/api/avataaars/mutual.svg"
