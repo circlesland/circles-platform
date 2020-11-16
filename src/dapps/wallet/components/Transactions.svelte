@@ -6,6 +6,7 @@
   import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";
+  import { from } from "rxjs";
 
   export let address: string;
 
@@ -73,6 +74,8 @@
     }
   }
   let openDetail: Boolean = false;
+
+  let openDetailPayload: Boolean = false;
 </script>
 
 <div class="overflow-scroll">
@@ -128,35 +131,57 @@
             {/if}
           </div>
           {#if openDetail}
-            <pre>
-            {JSON.stringify(t, null, 2)}
-            </pre>
             <div
               class="flex max-w-full p-4 text-xs text-gray-500 bg-white border-b border-x border-light-300">
               <div class="max-w-full text-gray-500 ">
+                <div class="flex text-sm">
+                  {#if t.from == 0x0000000000000000000000000000000000000000}
+                    <img
+                      src="https://avatars.dicebear.com/api/avataaars/mama.svg"
+                      alt="profile"
+                      class="h-12" />
+                  {:else}
+                    <img
+                      src="https://avatars.dicebear.com/api/avataaars/{t.from}.svg"
+                      alt="profile"
+                      class="h-12" />
+                  {/if}
+                  <div class="py-4 text-xl">
+                    <i class="fas fa-arrow-right" />
+                  </div>
+                  <img
+                    src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"
+                    alt="profile"
+                    class="h-12" />
+                </div>
                 <div class="max-w-full text-gray-500 ">
                   Date:
-                  <span class="text-xs text-primary">15.11.2020 18:47:23</span>
-                </div>
-                <div class="max-w-full text-gray-500 ">
-                  Nonce:
-                  <span class="text-xs text-primary">5</span>
+                  <span class="text-xs text-primary">
+                    {dayjs(t.timestamp).format('YYYY D. MMM HH:MM')}</span>
                 </div>
                 <div>
-                  Sender:<br />
-                  <span
-                    class="text-xs text-primary">0x987ansdufonaoscd8dbgBAGSnfASIUldGn23487lsak</span>
+                  Sender:
+                  <span class="text-xs text-primary">{t.from}</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
-                  Receiver:<br />
-                  <span
-                    class="text-xs text-primary">0x987ansdufonaoscd8dbgBAGSnfASIUldGn23487lsak</span>
+                  Receiver:
+                  <span class="text-xs text-primary">{t.to}</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
-                  Transaction Hash:<br />
+                  Amount:
                   <span
-                    class="text-xxs text-primary">0x987ansdufonaoscd8dbgBAGSnfASIUldGn23487lsaksdfsdfsdfsdfasdfadfasdasds</span>
+                    class="text-xs text-primary">{t.o.returnValues.value / 1000000000000000000}</span>
                 </div>
+                <div
+                  class="justify-center my-2 text-xs uppercase text-secondary "
+                  on:click={() => (openDetailPayload = !openDetailPayload)}>
+                  Show Payload
+                </div>
+                {#if openDetailPayload}
+                  <pre
+                    class=" text-xxs">{JSON.stringify(t, null, 2)}
+                    </pre>
+                {/if}
               </div>
             </div>
           {/if}

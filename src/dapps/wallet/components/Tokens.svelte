@@ -37,13 +37,17 @@
   {#each tokensITrust as token}
     <div class="mb-2">
       <div class="flex w-full bg-white border border-gray-300 rounded">
+        <img
+          src="https://avatars.dicebear.com/api/avataaars/{token.owner.address}.svg"
+          alt="profile"
+          class="h-12 pt-1" />
         <div class="flex-1 w-2/3 px-4 py-2 text-sm">
           <div class="text-primary">
             <a
               href="#/wallet/{token.owner.address}/tokens">{token.owner.address.slice(0, 25)}...</a>
           </div>
           <p class="text-xs text-gray-500">
-            <span class="text-gray-500">safe address of token owner</span>
+            <span class="text-gray-500">safe address of token creator</span>
           </p>
           <!-- <b class="text-primary">{token.token}</b> -->
           <!-- <p class="text-primary">
