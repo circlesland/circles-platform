@@ -41,19 +41,7 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             }
         },
         promptRecipient: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the recipient's address below and click 'Next'",
-                data: {
-                    id: "recipient",
-                    fields: {
-                        "address": {
-                            type: "ethereumAddress",
-                            label: "Address"
-                        }
-                    }
-                }
-            }),
+            entry: "promptRecipient",
             on: {
                 "omo.answer": {
                     actions: assign((context: any, event: any) =>
@@ -66,59 +54,33 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
                     }),
                     target: "promptValue"
                 },
+                "omo.trigger": {
+                    actions: "promptRecipient"
+                },
                 "omo.cancel": "stop"
             }
         },
         promptValue: {
-            entry: send({
-                type: "omo.prompt",
-                message: "Please enter the xDai value you want to transfer and click 'Next'",
-                data: {
-                    id: "value",
-                    fields: {
-                        "value": {
-                            type: "wei",
-                            label: "Value"
-                        }
-                    }
-                }
-            }),
+            entry: "promptValue",
             on: {
                 "omo.answer": {
                     actions: assign((context: any, event: any) =>
                         context.transfer.value = event.data.fields.value),
                     target: "summarize"
                 },
+                "omo.trigger": {
+                    actions: "promptValue"
+                },
                 "omo.cancel": "stop"
             }
         },
         summarize: {
-            entry: send((context: TransferXDaiContext) =>
-            {
-                return {
-                    type: "omo.prompt",
-                    message: "Click 'Next' to confirm the transaction",
-                    data: {
-                        id: "confirmation",
-                        fields: {
-                            "value": {
-                                type: "wei",
-                                isReadonly: true,
-                                label: "Value",
-                                value: context.transfer.value
-                            },
-                            "recipient": {
-                                type: "ethereumAddress",
-                                isReadonly: true,
-                                label: "Recipient",
-                                value: context.transfer.recipient
-                            }
-                        }
-                    }
-                }
-            }),
+            entry: "summarize",
             on: {
                 "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: "summarize"
+                },
                 "omo.answer": "transferXDai"
             }
         },
@@ -143,13 +105,19 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
         success: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptSuccess
+                }
             }
         },
         error: {
             on: {
                 "omo.answer": "stop",
-                "omo.cancel": "stop"
+                "omo.cancel": "stop",
+                "omo.trigger": {
+                    actions: promptError
+                }
             }
         },
         stop: {
@@ -158,7 +126,58 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
     }
 }, {
     guards: {},
-    actions: {}
+    actions: {
+        "promptRecipient":send({
+            type: "omo.prompt",
+            message: "Please enter the recipient's address below and click 'Next'",
+            data: {
+                id: "recipient",
+                fields: {
+                    "address": {
+                        type: "ethereumAddress",
+                        label: "Address"
+                    }
+                }
+            }
+        }),
+        "promptValue": send({
+            type: "omo.prompt",
+            message: "Please enter the xDai value you want to transfer and click 'Next'",
+            data: {
+                id: "value",
+                fields: {
+                    "value": {
+                        type: "wei",
+                        label: "Value"
+                    }
+                }
+            }
+        }),
+        "summarize": send((context: TransferXDaiContext) =>
+        {
+            return {
+                type: "omo.prompt",
+                message: "Click 'Next' to confirm the transaction",
+                data: {
+                    id: "confirmation",
+                    fields: {
+                        "value": {
+                            type: "wei",
+                            isReadonly: true,
+                            label: "Value",
+                            value: context.transfer.value
+                        },
+                        "recipient": {
+                            type: "ethereumAddress",
+                            isReadonly: true,
+                            label: "Recipient",
+                            value: context.transfer.recipient
+                        }
+                    }
+                }
+            }
+        })
+    }
 });
 
 export const transferXDai: ProcessDefinition = {
