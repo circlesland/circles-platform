@@ -38,6 +38,9 @@ module.exports = {
       },
       width: {
         '14': '3.5rem' 
+      },
+      fontSize: {
+        'xxs': '.50rem'
       }
     }
   },

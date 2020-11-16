@@ -46,7 +46,7 @@
       alt="profile"
       class="h-12" />
     <div class="flex-1 px-2 py-2 text-base">
-      <div class="text-xs text-primary">0x123456789AbCDeFGHIj...</div>
+      <div class="text-xs text-primary">0x123456789eFGHIj...</div>
       <p class="text-xs text-gray-500">
         <i class="fas fa-exchange-alt" /><span class="ml-2">mutual trust</span>
       </p>
@@ -82,8 +82,7 @@
             <!-- </a> -->
           </div>
           <p class="text-xs text-gray-500">
-            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you -
-              trusted by 10 friends</span>
+            <i class="fas fa-arrow-right" /><span class="ml-2">trusts you</span>
           </p>
         {:else}
           <div class="text-xs text-primary">
