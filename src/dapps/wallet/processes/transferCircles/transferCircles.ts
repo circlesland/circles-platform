@@ -14,16 +14,17 @@ import {promptValue} from "./actions/promptValue";
 import {summarize} from "./actions/summarize";
 import {transferRecipientIsPreconfigured} from "./guards/transferRecipientIsPreconfigured";
 import {notifyInProgress} from "./actions/notifyInProgress";
+import {transferValueIsPreconfigured} from "./guards/transferValuetIsPreconfigured";
 
 export interface TransferCirclesContext extends ProcessContext
 {
     transfer?: {
-        recipient: {
-            type:string,
+        recipient?: {
+            type:"ethereumAddress",
             data:Address
         },
-        value: {
-            type:string,
+        value?: {
+            type:"wei",
             data:BN
         }
     }
@@ -39,6 +40,9 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             on: {
                 "omo.trigger": [{
                     cond: "transferRecipientIsPreconfigured",
+                    target:"promptValue"
+                }, {
+                    cond: "isFullyConfigured",
                     target:"summarize"
                 },{
                     target:"promptRecipient"
@@ -49,10 +53,14 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         promptRecipient: {
             entry: "promptRecipient",
             on: {
-                "omo.answer": {
+                "omo.answer": [{
+                    actions: "storeTransferRecipientToContext",
+                    cond: "transferValueIsPreconfigured",
+                    target: "summarize"
+                },{
                     actions: "storeTransferRecipientToContext",
                     target: "promptValue"
-                },
+                }],
                 "omo.trigger": {
                     actions: "promptRecipient"
                 },
@@ -78,6 +86,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                 "omo.trigger": {
                     actions: "summarize"
                 },
+                "omo.answer": "transferCircles",
                 "omo.cancel": "stop"
             }
         },
@@ -123,7 +132,9 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         "transferCirclesService": transferCirclesService
     },
     guards: {
-        "transferRecipientIsPreconfigured": transferRecipientIsPreconfigured
+        "transferRecipientIsPreconfigured": transferRecipientIsPreconfigured,
+        "transferValueIsPreconfigured": transferValueIsPreconfigured,
+        "isFullyConfigured": context => transferRecipientIsPreconfigured(context) && transferValueIsPreconfigured(context)
     },
     actions: {
         "promptError": promptError,

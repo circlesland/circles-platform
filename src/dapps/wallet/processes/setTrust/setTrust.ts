@@ -13,7 +13,7 @@ import {storeTrustReceiverToContext} from "./actions/storeTrustReceiverToContext
 import {storeTrustLimitToContext} from "./actions/storeTrustLimitToContext";
 import {notifyInProgress} from "./actions/notifyInProgress";
 import {isTrustLimitAlreadySet} from "./guards/isTrustLimitAlreadySet";
-import {not} from "rxjs/internal-compatibility";
+import {isTrustReceiverAlreadySet} from "./guards/isTrustReceiverAlreadySet";
 
 export interface SetTrustContext extends ProcessContext
 {
@@ -37,7 +37,15 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
     states: {
         ready: {
             on: {
-                "omo.trigger": "promptTrustReceiver",
+                "omo.trigger": [{
+                    cond: "isFullyConfigured",
+                    target: "summarize"
+                }, {
+                    cond: "isTrustReceiverAlreadySet",
+                    target: "promptTrustLimit"
+                }, {
+                    target: "promptTrustReceiver"
+                }],
                 "omo.cancel": "stop"
             }
         },
@@ -49,8 +57,6 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                     actions: "storeTrustReceiverToContext",
                     target: "summarize"
                 }, {
-                    cond: "isTrustLimitNotSet",
-                    actions: "storeTrustReceiverToContext",
                     target: "promptTrustLimit"
                 }],
                 "omo.cancel": "stop",
@@ -125,6 +131,8 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
     },
     guards: {
         "isTrustLimitAlreadySet": isTrustLimitAlreadySet,
+        "isTrustReceiverAlreadySet": isTrustReceiverAlreadySet,
+        "isFullyConfigured": (context => isTrustReceiverAlreadySet(context) && isTrustLimitAlreadySet(context)),
         "isTrustLimitNotSet": (context => !isTrustLimitAlreadySet(context)),
     },
     actions: {

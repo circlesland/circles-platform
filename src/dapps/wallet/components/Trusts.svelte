@@ -11,6 +11,11 @@
   import sprites from "@dicebear/avatars-avataaars-sprites";
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
   import { Address } from "../../../libs/o-circles-protocol/interfaces/address";
+  import { setTrust, SetTrustContext } from "../processes/setTrust/setTrust";
+  import {
+    transferCircles,
+    TransferCirclesContext,
+  } from "../processes/transferCircles/transferCircles";
 
   export let address: string;
   let mySafeAddress: string;
@@ -126,18 +131,66 @@
   function transferCircles(recipientAddress: Address) {}
 
   function untrust(recipientAddress: Address) {}
+  function runTransferCircles(recipientAddress: Address) {
+    const contextInitializer = (context: TransferCirclesContext) => {
+      context.transfer = {
+        recipient: {
+          type: "ethereumAddress",
+          data: recipientAddress,
+        },
+      };
+      return context;
+    };
+    window.stateMachines.run(transferCircles, contextInitializer);
+    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
+  }
+
+  function runSetTrust(recipientAddress: Address) {
+    const contextInitializer = (context: SetTrustContext) => {
+      context.setTrust = {
+        trustReceiver: {
+          type: "ethereumAddress",
+          data: recipientAddress,
+        },
+        trustLimit: {
+          type: "percent",
+          data: 0,
+        },
+      };
+      return context;
+    };
+    window.stateMachines.run(setTrust, contextInitializer);
+    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
+  }
 </script>
 
 <div class="py-2 font-bold text-secondary">Mutual Friends</div>
 
 <div class="space-y-2">
-  <!-- 
-      on:click={() => transferCircles(mutualTrust.owner.address)} 
-      on:click={() => untrust(mutualTrust.owner.address)} 
-    -->
-
   {#each mutualTrusts as mutualTrust}
     <FriendItem data={mutualTrust} />
+    <!-- <div class="flex w-full bg-white border border-gray-300 rounded">
+    <img
+      src="https://avatars.dicebear.com/api/avataaars/{mutualTrust.owner.address}.svg"
+      alt="profile"
+      class="h-12" />
+    <div class="flex-1 px-2 py-2 text-base">
+      <div class="text-xs text-primary">{mutualTrust.owner.address}</div>
+      <p class="text-xs text-gray-500">
+        <i class="fas fa-exchange-alt" /><span class="ml-2">mutual trust</span>
+      </p>
+    </div>
+    <div class="flex items-center content-end justify-center" >
+      <div on:click={() => runSetTrust(mutualTrust.owner.address)}
+        class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
+        <img src="icons/removeTrust.svg" alt="add" />
+      </div>
+      <div on:click={() => runTransferCircles(mutualTrust.owner.address)}
+        class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded bg-primary">
+        <i class="fas fa-money-bill-wave" />
+      </div>
+    </div>
+  </div> -->
   {/each}
 
   <div class="py-2 font-bold text-secondary">Friends, who only trust me</div>
@@ -145,10 +198,6 @@
   {#each personsThatTrustMe as personThatTrustMe}
     <FriendItem data={personThatTrustMe} />
   {/each}
-  <!-- 
-{#if address === mySafeAddress}
-  <b class="m-4 text-primary">People I trust:</b>
-{:else}<b class="m-4 text-primary">People that {address} trusts:</b>{/if} -->
 
   <div class="py-2 font-bold text-secondary">Friends, who only I trust</div>
 

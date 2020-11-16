@@ -4,10 +4,17 @@
   import active from "svelte-spa-router/active";
 
   let triggerRef;
+
   export let isOpen: Boolean;
   export let actions;
 
   export let address: string = null;
+
+  window.eventBroker.getTopic("omo", "shell").observable.subscribe(event => {
+    if (event === "openMenu") {
+      isOpen = true;
+    }
+  });
 </script>
 
 <style>
