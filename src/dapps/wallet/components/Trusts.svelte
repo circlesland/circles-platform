@@ -1,6 +1,6 @@
 <script lang="ts">
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "src/libs/o-circles-protocol/model/person";
+  import {Person, TokenAndOwner} from "src/libs/o-circles-protocol/model/person";
   import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
 
@@ -11,8 +11,10 @@
   let mySafeAddress: string;
 
   let person: Person;
-  let personsThatTrustMe: [] = [];
-  let personsITrust: [] = [];
+  let personsThatTrustMe:TokenAndOwner[] = [];
+  let personsITrust: TokenAndOwner[] = [];
+  let mutualTrusts:TokenAndOwner[] = [];
+  let mutual:{[address:string]:any} = {};
 
   function init(addr: string) {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -26,10 +28,22 @@
 
   async function reload() {
     let t1 = await person.getPersonsThatTrustMe();
-    personsThatTrustMe = Object.keys(t1).map((k) => t1[k]);
-
     let t2 = await person.getPersonsITrust();
-    personsITrust = Object.keys(t2).map((k) => t2[k]);
+
+    mutualTrusts = Object.keys(t1).map((k) => t1[k]).filter(o =>
+    {
+      const isMutual = t2[o.owner.address] !== undefined;
+      if(isMutual)
+        mutual[o.owner.address] = true;
+
+      return isMutual;
+    });
+
+    console.log(mutual)
+
+    personsThatTrustMe = Object.keys(t1).map((k) => t1[k]).filter(o => mutual[o.owner.address]);
+    personsITrust = Object.keys(t2).map((k) => t2[k]).filter(o => mutual[o.owner.address]);
+
   }
 
   $: {
@@ -42,13 +56,14 @@
 <div class="py-2 font-bold text-secondary">Mutual Friends</div>
 
 <div class="space-y-2">
+  {#each mutualTrusts as mutualTrust}
   <div class="flex w-full bg-white border border-gray-300 rounded">
     <img
-      src="https://avatars.dicebear.com/api/avataaars/mutual.svg"
+      src="https://avatars.dicebear.com/api/avataaars/{mutualTrust.owner.address}.svg"
       alt="profile"
       class="h-12" />
     <div class="flex-1 px-2 py-2 text-base">
-      <div class="text-xs text-primary">0x123456789eFGHIj...</div>
+      <div class="text-xs text-primary">{mutualTrust.owner.address}</div>
       <p class="text-xs text-gray-500">
         <i class="fas fa-exchange-alt" /><span class="ml-2">mutual trust</span>
       </p>
@@ -64,8 +79,9 @@
       </div>
     </div>
   </div>
+  {/each}
 
-  <div class="py-2 font-bold text-secondary">Friends, who I trust</div>
+  <div class="py-2 font-bold text-secondary">Friends, who only trust me</div>
   <!-- 
 {#if address === mySafeAddress}
   <b class="m-4 text-primary">People that trust me:</b><br />
@@ -117,7 +133,7 @@
   <b class="m-4 text-primary">People I trust:</b>
 {:else}<b class="m-4 text-primary">People that {address} trusts:</b>{/if} -->
 
-  <div class="py-2 font-bold text-secondary">Friends, who only trust me</div>
+  <div class="py-2 font-bold text-secondary">Friends, who I trust</div>
 
   {#each personsITrust as personITrust}
     <div class="flex w-full bg-white border border-gray-300 rounded">
