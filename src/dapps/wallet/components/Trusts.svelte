@@ -41,9 +41,8 @@
 
     console.log(mutual)
 
-    personsThatTrustMe = Object.keys(t1).map((k) => t1[k]).filter(o => mutual[o.owner.address]);
-    personsITrust = Object.keys(t2).map((k) => t2[k]).filter(o => mutual[o.owner.address]);
-
+    personsThatTrustMe = Object.keys(t1).map((k) => t1[k]).filter(o => !mutual[o.owner.address]);
+    personsITrust = Object.keys(t2).map((k) => t2[k]).filter(o => !mutual[o.owner.address]);
   }
 
   $: {
