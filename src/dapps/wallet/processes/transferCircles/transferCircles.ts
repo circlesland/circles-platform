@@ -120,6 +120,10 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }
         },
         transferCircles: {
+            entry: send({
+                type: "omo.notification",
+                message: "Transferring circles .."
+            }),
             invoke: {
                 id: 'transferCircles',
                 src: transferCirclesService,

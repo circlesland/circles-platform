@@ -110,12 +110,12 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                                 type: "ethereumAddress",
                                 label: "Trust receiver",
                                 value: context.setTrust.trustReceiver
-                            }/*,
+                            },
                             "trustLimit": {
                                 type: "percent",
                                 label: "Trust limit (%)",
                                 value: context.setTrust.trustLimit
-                            }*/
+                            }
                         }
                     }
                 }
@@ -126,6 +126,10 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
             }
         },
         setTrust: {
+            entry: send({
+               type: "omo.notification",
+               message: "Setting trust .."
+            }),
             invoke: {
                 id: 'setTrust',
                 src: setTrustService,

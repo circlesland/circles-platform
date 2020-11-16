@@ -123,6 +123,10 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             }
         },
         transferXDai: {
+            entry: send({
+                type: "omo.notification",
+                message: "Transferring xDai .."
+            }),
             invoke: {
                 id: 'transferXDai',
                 src: transferXDaiService,

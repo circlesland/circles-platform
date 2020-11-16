@@ -47,6 +47,10 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
             }
         },
         requestUbi: {
+            entry: send({
+                type: "omo.notification",
+                message: "Requesting UBI .."
+            }),
             invoke: {
                 id: 'requestingUbi',
                 src: getUbi,
