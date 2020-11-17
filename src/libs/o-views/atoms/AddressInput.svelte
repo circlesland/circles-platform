@@ -6,7 +6,7 @@
 
   let isValid = true;
   export let label: string;
-  export let hexByteString: string;
+  export let hexByteString: string = "";
   export let isReadonly: boolean = false;
 
   $: {

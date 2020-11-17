@@ -1,15 +1,21 @@
 import {send} from "xstate";
+import {TransferXDaiContext} from "../transferXDai";
+import {BN} from "ethereumjs-util";
 
-export const promptValue = send({
-    type: "omo.prompt",
-    message: "Please enter the xDai value you want to transfer and click 'Next'",
-    data: {
-        id: "value",
-        fields: {
-            "value": {
-                type: "wei",
-                label: "Value"
+export const promptValue = send((context: TransferXDaiContext) =>
+{
+    return {
+        type: "omo.prompt",
+        message: "Please enter the xDai value you want to transfer and click 'Next'",
+        data: {
+            id: "value",
+            fields: {
+                "value": {
+                    type: "wei",
+                    label: "Value",
+                    value: new BN(context.transfer?.value?.data ?? "0")
+                }
             }
         }
     }
-})
+});
