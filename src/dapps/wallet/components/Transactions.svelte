@@ -72,10 +72,9 @@
       init(address);
     }
   }
-
 </script>
 
-<div class="overflow-scroll">
+<div class="h-full">
   {#if transactions.length > 0}
     <div class="m-4 space-y-2">
       {#each transactions as t}
@@ -87,7 +86,7 @@
               <i
                 class="text-light-400 fas"
                 class:fa-plus={!t.openDetail}
-                class:fa-minus={t.openDetail}></i>
+                class:fa-minus={t.openDetail} />
             </div>
             <div class="flex-1 w-2/3 py-2 pr-2 text-sm">
               <b class="text-primary">
@@ -132,7 +131,7 @@
               class="flex max-w-full p-4 text-xs text-gray-500 bg-white border-b border-x border-light-300">
               <div class="max-w-full text-gray-500 ">
                 <div class="flex text-sm">
-                  {#if t.from === "0x0000000000000000000000000000000000000000"}
+                  {#if t.from === '0x0000000000000000000000000000000000000000'}
                     <img
                       src="https://avatars.dicebear.com/api/avataaars/mama.svg"
                       alt="profile"
@@ -144,7 +143,7 @@
                       class="h-12" />
                   {/if}
                   <div class="py-4 text-xl">
-                    <i class="fas fa-arrow-right"></i>
+                    <i class="fas fa-arrow-right" />
                   </div>
                   <img
                     src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"

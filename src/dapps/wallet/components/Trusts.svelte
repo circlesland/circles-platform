@@ -7,6 +7,7 @@
   } from "src/libs/o-circles-protocol/model/person";
   import { config } from "src/libs/o-circles-protocol/config";
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
+  import { Jumper } from "svelte-loading-spinners";
 
   export let address: string;
   let mySafeAddress: string;
@@ -48,7 +49,7 @@
             mutualTrust.owner.address +
             ".svg ",
           title: mutualTrust.owner.address.slice(0, 8),
-          connection: "trustREVOKED",
+          connection: "trustRevoked",
           detail: {
             limit: "0",
             address: mutualTrust.owner.address,
@@ -81,7 +82,7 @@
             mutualTrust.owner.address +
             ".svg ",
           title: mutualTrust.owner.address.slice(0, 8),
-          connection: "trustBOTH",
+          connection: "trustedMutual",
           detail: {
             address: mutualTrust.owner.address,
             limit: mutualTrust.limit,
@@ -101,7 +102,7 @@
             personsThatTrustMe.owner.address +
             ".svg ",
           title: personsThatTrustMe.owner.address.slice(0, 8),
-          connection: "trustIN",
+          connection: "trustingMe",
           detail: {
             address: personsThatTrustMe.owner.address,
             limit: personsThatTrustMe.limit,
@@ -121,7 +122,7 @@
             personsITrust.owner.address +
             ".svg ",
           title: personsITrust.owner.address.slice(0, 8),
-          connection: "trustOUT",
+          connection: "trustedByMe",
           detail: {
             address: personsITrust.owner.address,
             limit: personsITrust.limit,
@@ -136,22 +137,13 @@
       init(address);
     }
   }
-
-  let removed = {
-    image: "https://avatars.dicebear.com/api/avataaars/removed.svg",
-    title: "0x1234",
-    connection: "trustREVOKED",
-    detail: {
-      address: "0x123788dbgx12o81eb8oznogGASfgonolialsf",
-      limit: "0",
-    },
-    actions: ["trust"],
-  };
 </script>
 
-<div class="space-y-2">
+<div class="h-full space-y-2">
   {#if personsThatTrustMe.length <= 1 && mutualTrusts.length == 0 && mutualTrusts.length == 0 && mutualTrusts.length == 0}
-    <div class="p-20">LOADING</div>
+    <div class="flex items-center justify-center h-full">
+      <Jumper size="150" color="#071D69" unit="px" />
+    </div>
   {:else}
     {#if personsThatTrustMe.length > 0}
       <div class="py-2 font-bold text-gray-500">New friends trusting me</div>

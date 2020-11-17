@@ -94,15 +94,16 @@
     <div class="p-2" on:click={toggleExpand}>
       <div class="text-lg text-primary">{data.title}</div>
       <p class="-mt-1 text-xs text-gray-500">
-        {#if data.connection == 'trustBOTH'}
+        {#if data.connection == 'trustedMutual'}
           <i class="fas fa-exchange-alt" /><span class="ml-2">
-            mututal trust</span>
-        {:else if data.connection == 'trustIN'}
-          <i class="fas fa-arrow-left" /><span class="ml-2"> trusting you</span>
-        {:else if data.connection == 'trustOUT'}
+            mutual trust</span>
+        {:else if data.connection == 'trustingMe'}
           <i class="fas fa-arrow-right" /><span class="ml-2">
+            is trusting you</span>
+        {:else if data.connection == 'trustedByMe'}
+          <i class="fas fa-arrow-left" /><span class="ml-2">
             trusted by you</span>
-        {:else if data.connection == 'trustREVOKED'}
+        {:else if data.connection == 'trustRevoked'}
           <i class="fas fa-minus-circle" /><span class="ml-2">
             revoked trust</span>
         {/if}
