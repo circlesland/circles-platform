@@ -16,7 +16,7 @@
 <div class="w-full p-2 bg-primary">
   <div
     href="https://discord.gg/Rbhy4j9"
-    class="w-full p-2 text-xs text-white text-blue-300 bg-secondary">
+    class="w-full p-2 text-xs text-blue-300 bg-secondary">
     {$_('notes_text')}
     <span class="text-white uppercase rounded ">--
       {$_('notes_button')}
