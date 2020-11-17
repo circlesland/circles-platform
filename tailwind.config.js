@@ -18,7 +18,7 @@ module.exports = {
       colors: {
         dark: "#051F45",
         primary: '#0C266A',
-        secondary: '#247ACA',
+        secondary: '#1B54A8',
         action: '#2AD78B',
         'smoke-darkest': 'rgba(0, 0, 0, 0.9)',
         'smoke-darker': 'rgba(0, 0, 0, 0.75)',

@@ -8,7 +8,7 @@
   export let address: string;
 
   let person: Person;
-  let tokensITrust:any [] = [];
+  let tokensITrust: any[] = [];
 
   function init(addr: string) {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -49,14 +49,14 @@
     image: "images/logo/circles.svg",
     title: "Circles",
     description: "Circles I trust",
-    balance: "34.23",
+    balance: "{{balance}}",
     currency: "CRC",
   };
   let xDai = {
     image: "images/logo/xdai.png",
     title: "xDai",
     description: "1 invite or ~ 500 transactions",
-    balance: "0.001232",
+    balance: "{{balance}}",
     currency: "XDAI",
   };
 </script>

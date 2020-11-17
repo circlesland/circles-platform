@@ -8,6 +8,7 @@
     setTrust,
     SetTrustContext,
   } from "../../../dapps/wallet/processes/setTrust/setTrust";
+  import ButtonIcon from "../atoms/ButtonIcon.svelte";
 
   export let data = {
     image: "",
@@ -112,28 +113,16 @@
     <div class="flex justify-end p-2 space-x-2 text-right">
       {#each data.actions as a}
         {#if a == 'send'}
-          <div
-            on:click={() => runTransferCircles(data.detail.address)}
-            class="flex items-center content-end justify-center w-10 p-3 text-gray-500 bg-gray-300 border-l border-gray-300 rounded hover:bg-primary hover:text-white">
-            <i class="fas fa-money-bill-wave" />
-          </div>
-        {:else if a == 'send' && data.connection == 'trustBOTH'}
-          <div
-            on:click={() => runTransferCircles(data.detail.address)}
-            class="flex items-center content-end justify-center w-10 p-3 text-gray-500 bg-gray-300 border-l border-gray-300 rounded hover:bg-primary hover:text-white">
-            <i class="fas fa-money-bill-wave" />
+          <div on:click={() => runTransferCircles(data.detail.address)}>
+            <ButtonIcon icon="money-bill-wave" type="primary" />
           </div>
         {:else if a == 'trust'}
-          <div
-            on:click={() => runTrust(data.detail.address)}
-            class="flex items-center content-end justify-center w-10 p-3 text-white border-l border-gray-300 rounded bg-secondary hover:bg-primary">
-            <i class="fas fa-heart" />
+          <div on:click={() => runTrust(data.detail.address)}>
+            <ButtonIcon icon="heart" type="primary" />
           </div>
         {:else if a == 'untrust'}
-          <div
-            on:click={() => runUntrust(data.detail.address)}
-            class="flex items-center content-end justify-center w-10 p-3 text-gray-500 bg-gray-300 border-l border-gray-300 rounded hover:bg-red-400 hover:text-white">
-            <i class="fas fa-minus" />
+          <div on:click={() => runUntrust(data.detail.address)}>
+            <ButtonIcon icon="minus" type="secondary" />
           </div>
         {/if}
       {/each}
