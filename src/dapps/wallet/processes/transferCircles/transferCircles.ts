@@ -1,4 +1,4 @@
-import {createMachine, send} from "xstate";
+import {assign, createMachine, send} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
@@ -15,6 +15,7 @@ import {summarize} from "./actions/summarize";
 import {transferRecipientIsPreconfigured} from "./guards/transferRecipientIsPreconfigured";
 import {notifyInProgress} from "./actions/notifyInProgress";
 import {transferValueIsPreconfigured} from "./guards/transferValuetIsPreconfigured";
+import {strings} from "../../languages/strings";
 
 export interface TransferCirclesContext extends ProcessContext
 {
@@ -96,11 +97,17 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                 id: 'transferCircles',
                 src: "transferCirclesService",
                 onError: {
-                    actions: "promptError",
+                    actions: [
+                        "setError",
+                        "promptError"
+                    ],
                     target: "error"
                 },
                 onDone: {
-                    actions: "promptSuccess",
+                    actions: [
+                        "setResult",
+                        "promptSuccess"
+                    ],
                     target: "success"
                 }
             }
@@ -137,6 +144,16 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         "isFullyConfigured": context => transferRecipientIsPreconfigured(context) && transferValueIsPreconfigured(context)
     },
     actions: {
+        "setError": assign(
+            context => {
+                context.result = strings.wallet.processes.transferCircles.errorMessage(context)
+                return context;
+            }),
+        "setResult": assign(
+            context => {
+                context.result = strings.wallet.processes.transferCircles.successMessage(context)
+                return context;
+            }),
         "promptError": promptError,
         "notifyInProgress": notifyInProgress,
         "promptSuccess":promptSuccess,

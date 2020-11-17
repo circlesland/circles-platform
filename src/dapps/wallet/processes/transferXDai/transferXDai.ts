@@ -1,4 +1,4 @@
-import {assign, createMachine, send} from "xstate";
+import {assign, createMachine} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
@@ -14,6 +14,7 @@ import {storeTransferValueToContext} from "./actions/storeTransferValueToContext
 import {promptRecipient} from "./actions/promptRecipient";
 import {promptValue} from "./actions/promptValue";
 import {summarize} from "./actions/summarize";
+import {strings} from "../../languages/strings";
 
 export interface TransferXDaiContext extends ProcessContext
 {
@@ -88,11 +89,17 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
                 id: 'transferXDai',
                 src: "transferXDaiService",
                 onError: {
-                    actions: "promptError",
+                    actions: [
+                        "setError",
+                        "promptError"
+                    ],
                     target: "error"
                 },
                 onDone: {
-                    actions: "promptSuccess",
+                    actions: [
+                        "setResult",
+                        "promptSuccess"
+                    ],
                     target: "success"
                 }
             }
@@ -127,6 +134,16 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
         "isTransferPreconfigured": isTransferPreconfigured
     },
     actions: {
+        "setError": assign(
+        context => {
+            context.result = strings.wallet.processes.transferXDai.errorMessage(context)
+            return context;
+        }),
+        "setResult": assign(
+        context => {
+            context.result = strings.wallet.processes.transferXDai.successMessage(context)
+            return context;
+        }),
         "notifyInProgress": notifyInProgress,
         "promptError": promptError,
         "promptSuccess":promptSuccess,

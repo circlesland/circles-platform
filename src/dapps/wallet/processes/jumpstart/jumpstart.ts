@@ -7,6 +7,7 @@ import {transferXDai} from "../transferXDai/transferXDai";
 import {config} from "../../../../libs/o-circles-protocol/config";
 import {promptError} from "../promptError";
 import {promptSuccess} from "../promptSuccess";
+import {strings} from "../../languages/strings";
 
 export interface JumpstartContext extends ProcessContext
 {
@@ -70,6 +71,16 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
         "isPreconfigured": (context) => context.jumpstart !== undefined
     },
     actions: {
+        "setError": assign(
+            context => {
+                context.result = strings.wallet.processes.jumpstart.errorMessage(context)
+                return context;
+            }),
+        "setResult": assign(
+            context => {
+                context.result = strings.wallet.processes.jumpstart.successMessage(context)
+                return context;
+            }),
         "promptError": promptError,
         "promptSuccess":promptSuccess,
         "promptRecipient": send({

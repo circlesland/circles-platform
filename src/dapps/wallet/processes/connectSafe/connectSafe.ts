@@ -1,4 +1,4 @@
-import {createMachine} from "xstate";
+import {assign, createMachine} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
@@ -13,6 +13,7 @@ import {promptPrivateKey} from "./actions/promptPrivateKey";
 import {summarize} from "./actions/summarize";
 import {storePrivateKeyToContext} from "./actions/storePrivateKeyToContext";
 import {storeSafeAddressToContext} from "./actions/storeSafeAddressToContext";
+import {strings} from "../../languages/strings";
 
 export interface ConnectSafeContext extends ProcessContext
 {
@@ -88,11 +89,17 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 id: 'connectSafe',
                 src: "connectSafeService",
                 onError: {
-                    actions: "promptError",
+                    actions: [
+                        "setError",
+                        "promptError"
+                    ],
                     target: "error"
                 },
                 onDone: {
-                    actions: "promptSuccess",
+                    actions: [
+                        "setResult",
+                        "promptSuccess"
+                    ],
                     target: "success"
                 }
             }
@@ -125,6 +132,16 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
     },
     guards: {},
     actions: {
+        "setError": assign(
+            context => {
+                context.result = strings.wallet.processes.connectSafe.errorMessage(context)
+                return context;
+            }),
+        "setResult": assign(
+            context => {
+                context.result = strings.wallet.processes.connectSafe.successMessage(context)
+                return context;
+            }),
         "notifyInProgress": notifyInProgress,
         "promptError": promptError,
         "promptSuccess":promptSuccess,

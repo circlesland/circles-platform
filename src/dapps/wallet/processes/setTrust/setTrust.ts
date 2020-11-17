@@ -1,4 +1,4 @@
-import {createMachine} from "xstate";
+import {assign, createMachine} from "xstate";
 import {ProcessContext} from "src/libs/o-processes/processContext";
 import {ProcessEvent} from "src/libs/o-processes/processEvent";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
@@ -14,6 +14,7 @@ import {storeTrustLimitToContext} from "./actions/storeTrustLimitToContext";
 import {notifyInProgress} from "./actions/notifyInProgress";
 import {isTrustLimitAlreadySet} from "./guards/isTrustLimitAlreadySet";
 import {isTrustReceiverAlreadySet} from "./guards/isTrustReceiverAlreadySet";
+import {strings} from "../../languages/strings";
 
 export interface SetTrustContext extends ProcessContext
 {
@@ -94,11 +95,17 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                 id: 'setTrust',
                 src: "setTrustService",
                 onError: {
-                    actions: "promptError",
+                    actions: [
+                        "setError",
+                        "promptError"
+                    ],
                     target: "error"
                 },
                 onDone: {
-                    actions: "promptSuccess",
+                    actions: [
+                        "setResult",
+                        "promptSuccess"
+                    ],
                     target: "success"
                 }
             }
@@ -136,6 +143,16 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
         "isTrustLimitNotSet": (context => !isTrustLimitAlreadySet(context)),
     },
     actions: {
+        "setError": assign(
+            context => {
+                context.result = strings.wallet.processes.setTrust.errorMessage(context)
+                return context;
+            }),
+        "setResult": assign(
+            context => {
+                context.result = strings.wallet.processes.setTrust.successMessage(context)
+                return context;
+            }),
         "promptError": promptError,
         "promptSuccess":promptSuccess,
         "promptTrustReceiver": promptTrustReceiver,

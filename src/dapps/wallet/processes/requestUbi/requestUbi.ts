@@ -1,4 +1,4 @@
-import { createMachine, send } from "xstate";
+import {assign, createMachine, send} from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
 import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
@@ -9,6 +9,7 @@ import {promptSuccess} from "../promptSuccess";
 import {setLastSuccessfulUbiRetrieval} from "./actions/setLastSuccessfulUbiRetrieval";
 import {notifyInProgress} from "./actions/notifyInProgress";
 import {promptAlreadyRequested} from "./actions/promptAlreadyRequested";
+import {strings} from "../../languages/strings";
 
 /**
  * Requests UBI
@@ -34,12 +35,15 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
                 id: 'requestingUbi',
                 src: "getUbi",
                 onError: {
-                    actions: "promptError",
+                    actions: [
+                        "setError",
+                        "promptError"
+                    ],
                     target: "error"
                 },
                 onDone: {
                     actions: [
-                        "setLastSuccessfulUbiRetrieval",
+                        "setResult",
                         "promptSuccess"
                     ],
                     target: "success"
@@ -76,6 +80,16 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
         "recentlyGotUbi": recentlyGotUbi
     },
     actions: {
+        "setError": assign(
+            context => {
+                context.result = strings.wallet.processes.jumpstart.errorMessage(context)
+                return context;
+            }),
+        "setResult": assign(
+            context => {
+                context.result = strings.wallet.processes.jumpstart.successMessage(context)
+                return context;
+            }),
         "promptError": promptError,
         "promptSuccess":promptSuccess,
         "notifyInProgress": notifyInProgress,
