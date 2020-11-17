@@ -11,6 +11,15 @@
   // local props
   let buttonRef;
   // functions
+  const handleBack = () => {
+    const runningProcess = window.stateMachines.current();
+    if (!runningProcess) {
+      return;
+    }
+    runningProcess.sendEvent({
+      type: "omo.back"
+    });
+  };
   const handleClose = () => (isOpen = false);
   const handleEsc = (e) => e.key === "Escape" && handleClose();
 
@@ -23,7 +32,7 @@
     }
   });
 
-  let progressSeries: Array = [33, 66, 100];
+  let progressSeries:number[] = [33, 66, 100];
 </script>
 
 <style>
@@ -68,7 +77,7 @@
           <div
             aria-label="Close modal"
             bind:this={buttonRef}
-            on:click={handleClose}
+            on:click={handleBack}
             class="w-full mx-auto text-center text-light-400 ">
             <i class="my-2 text-4xl fas fa-arrow-left " />
           </div>

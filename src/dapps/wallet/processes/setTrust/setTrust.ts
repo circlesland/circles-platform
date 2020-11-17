@@ -69,6 +69,9 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
         promptTrustLimit: {
             entry: "promptTrustLimit",
             on: {
+                "omo.back": {
+                    actions: "promptTrustReceiver"
+                },
                 "omo.answer": {
                     actions: "storeTrustLimitToContext",
                     target: "summarize"
@@ -82,6 +85,9 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
         summarize: {
             entry: "summarize",
             on: {
+                "omo.back": {
+                    actions: "promptTrustLimit"
+                },
                 "omo.cancel": "stop",
                 "omo.answer": "setTrust",
                 "omo.trigger": {

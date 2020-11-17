@@ -71,6 +71,9 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         promptValue: {
             entry: "promptValue",
             on: {
+                "omo.back": {
+                    actions: "promptRecipient"
+                },
                 "omo.answer": {
                     actions: "storeTransferValueToContext",
                     target: "summarize"
@@ -84,6 +87,9 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
         summarize: {
             entry: "summarize",
             on: {
+                "omo.back": {
+                    actions: "promptValue"
+                },
                 "omo.trigger": {
                     actions: "summarize"
                 },

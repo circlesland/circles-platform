@@ -61,6 +61,9 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
         promptPrivateKey: {
             entry: "promptPrivateKey",
             on: {
+                "omo.back": {
+                    actions: "promptSafeAddress"
+                },
                 "omo.answer": {
                     actions: "storePrivateKeyToContext",
                     target: "summarize"
@@ -74,6 +77,9 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
         summarize: {
             entry: "summarize",
             on: {
+                "omo.back": {
+                    actions: "promptPrivateKey"
+                },
                 "omo.answer": {
                     target: "connectSafe"
                 },

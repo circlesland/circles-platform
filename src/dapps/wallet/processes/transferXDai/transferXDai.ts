@@ -63,6 +63,9 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
         promptValue: {
             entry: "promptValue",
             on: {
+                "omo.back": {
+                    actions: "promptRecipient"
+                },
                 "omo.answer": {
                     actions: "storeTransferValueToContext",
                     target: "summarize"
@@ -76,6 +79,9 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
         summarize: {
             entry: "summarize",
             on: {
+                "omo.back": {
+                    actions: "promptValue"
+                },
                 "omo.cancel": "stop",
                 "omo.trigger": {
                     actions: "summarize"

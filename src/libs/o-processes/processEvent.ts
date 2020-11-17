@@ -13,6 +13,7 @@ export type PromptField = {
 export type ProcessEvent =
     | { type: "omo.trigger" }
     | { type: "omo.stop" }
+    | { type: "omo.back" }
     | { type: "omo.continue", message?: string }
     | { type: "omo.notification", message: string }
     | { type: "omo.cancel", message: string }
