@@ -4,8 +4,13 @@
   import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
+  import { BN } from "ethereumjs-util";
 
   export let address: string;
+  let balance: BN;
+  let safeEthBalance: BN;
+  let safeEtherBalance: string;
+  let circlesBalance: string;
 
   let person: Person;
   let tokensITrust: any[] = [];
@@ -20,6 +25,18 @@
   }
 
   async function reload() {
+    const web3 = config.getCurrent().web3();
+
+    balance = await person.getTokenBalance();
+    const balanceStr = web3.utils.fromWei(balance, "ether");
+    const dot = balanceStr.indexOf(".");
+    circlesBalance = balanceStr.slice(0, dot + 3);
+
+    safeEthBalance = await person.getEthBalance();
+    const ethBalanceStr = web3.utils.fromWei(safeEthBalance, "ether");
+    const ethDot = ethBalanceStr.indexOf(".");
+    safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
+
     let t2 = await person.getTokenBalances();
     tokensITrust = Object.keys(t2)
       .map((k) => t2[k])
@@ -45,30 +62,30 @@
     }
   }
 
-  let circles = {
+  $: circles = {
     image: "images/logo/circles.svg",
     title: "Circles",
     description: "Circles I trust",
-    balance: "{{balance}}",
+    balance: circlesBalance,
     currency: "CRC",
   };
-  let xDai = {
+  $: xDai = {
     image: "images/logo/xdai.png",
     title: "xDai",
     description: "1 invite or ~ 500 transactions",
-    balance: "{{balance}}",
+    balance: safeEtherBalance,
     currency: "XDAI",
   };
 </script>
 
-<div class="py-2 font-bold text-secondary">My currencies</div>
+<div class="py-2 font-bold text-gray-500">My currency balances</div>
 
 <div class="space-y-2">
   <TokenItem data={circles} />
   <TokenItem data={xDai} />
 </div>
 
-<div class="pt-4 pb-2 font-bold text-secondary">All my trusted Circles</div>
+<div class="py-2 font-bold text-gray-500">Trusted Circles I am holding</div>
 
 <div class="space-y-2">
   {#if tokensITrust.length > 0}
@@ -81,41 +98,3 @@
     </div>
   {/if}
 </div>
-
-<!-- 
-<div class="mb-2">
-  <div class="flex w-full bg-white border border-gray-300 rounded">
-    <img
-      src="https://avatars.dicebear.com/api/avataaars/{token.owner.address}.svg"
-      alt="profile"
-      class="h-12 pt-1" />
-    <div class="flex-1 w-2/3 px-4 py-2 text-sm">
-      <div class="text-primary">
-        <a
-          href="#/wallet/{token.owner.address}/tokens">{token.owner.address.slice(0, 20)}...</a>
-      </div>
-      <p class="text-xs text-gray-500">
-        <span class="text-gray-500">safe address of token creator</span>
-      </p>
-      <b class="text-primary">{token.token}</b>
-      <p class="text-primary">
-        {#if !token.limit || token.limit == 0}
-          <b class="text-primary">
-            <a
-              href="#/wallet/{token.owner.address}/tokens"
-              class="">{token.owner.address.slice(0, 25)}...</a>
-          </b>
-        {:else}
-          <b class="text-primary">
-            <span class="text-gray-500">safe address of owner:</span>
-            <a
-              href="#/wallet/{token.owner.address}/tokens">{token.owner.address.slice(0, 25)}...</a>
-          </b>
-        {/if}
-      </p>
-    </div>
-    <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
-      {token.balanceString}
-    </div>
-  </div>
-</div> -->

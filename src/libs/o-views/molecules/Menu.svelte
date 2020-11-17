@@ -46,7 +46,7 @@
   </a>
 
   <a href="#/wallet/{address}/tokens" use:active={{ path: '/wallet/*/tokens' }}>
-    <NavItem icon="coins" text="Safe" />
+    <NavItem icon="coins" text="Token" />
   </a>
 
   <!-- placeholder for the action button -->

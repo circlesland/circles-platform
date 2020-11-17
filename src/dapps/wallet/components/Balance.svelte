@@ -72,25 +72,5 @@
         <Jumper size="60" color="#fff" unit="px" />
       </div>
     {/if}
-
-    <!-- {#if personalEtherBalance != undefined}
-      <div
-        class="flex items-center justify-center w-full mx-auto text-center lowercase">
-        <div class="px-2 text-sm text-gray-400">
-          Safe:
-          {safeEtherBalance}
-          xDai
-        </div>
-        <div class="px-2 text-sm text-gray-400">
-          Owner:
-          {personalEtherBalance}
-          xDai
-        </div>
-      </div>
-    {:else}
-      <div class="flex items-center justify-center mx-auto">
-        <Jumper size="30" color="#fff" unit="px" />
-      </div>
-    {/if} -->
   </div>
 </div>
