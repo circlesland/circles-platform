@@ -1,16 +1,20 @@
 <script lang="ts">
-  import {Address} from "../../o-circles-protocol/interfaces/address";
+  import { Address } from "../../o-circles-protocol/interfaces/address";
   import {
     transferCircles,
-    TransferCirclesContext
+    TransferCirclesContext,
   } from "../../../dapps/wallet/processes/transferCircles/transferCircles";
-  import {setTrust, SetTrustContext} from "../../../dapps/wallet/processes/setTrust/setTrust";
+  import {
+    setTrust,
+    SetTrustContext,
+  } from "../../../dapps/wallet/processes/setTrust/setTrust";
 
   export let data = {
     image: "",
     title: "",
     detail: {
       address: "",
+      limit: "",
     },
     connection: "",
     actions: [],
@@ -90,29 +94,43 @@
     <div class="p-2" on:click={toggleExpand}>
       <div class="text-lg text-primary">{data.title}</div>
       <p class="-mt-1 text-xs text-gray-500">
-        <i class="fas fa-exchange-alt" /><span class="ml-2">
-          {data.connection}</span>
+        {#if data.connection == 'trustBOTH'}
+          <i class="fas fa-exchange-alt" /><span class="ml-2">
+            mututal trust</span>
+        {:else if data.connection == 'trustIN'}
+          <i class="fas fa-arrow-left" /><span class="ml-2"> trusting you</span>
+        {:else if data.connection == 'trustOUT'}
+          <i class="fas fa-arrow-right" /><span class="ml-2">
+            trusted by you</span>
+        {:else if data.connection == 'trustREVOKED'}
+          <i class="fas fa-minus-circle" /><span class="ml-2">
+            revoked trust</span>
+        {/if}
       </p>
     </div>
     <div class="flex justify-end p-2 space-x-2 text-right">
       {#each data.actions as a}
         {#if a == 'send'}
-          <div on:click={() => runTransferCircles(data.detail.address)}
+          <div
+            on:click={() => runTransferCircles(data.detail.address)}
             class="flex items-center content-end justify-center w-10 p-3 text-gray-500 bg-gray-300 border-l border-gray-300 rounded hover:bg-primary hover:text-white">
             <i class="fas fa-money-bill-wave" />
           </div>
-        {:else if a == 'send' && data.connection == 'mutual'}
-          <div on:click={() => runTransferCircles(data.detail.address)}
+        {:else if a == 'send' && data.connection == 'trustBOTH'}
+          <div
+            on:click={() => runTransferCircles(data.detail.address)}
             class="flex items-center content-end justify-center w-10 p-3 text-gray-500 bg-gray-300 border-l border-gray-300 rounded hover:bg-primary hover:text-white">
             <i class="fas fa-money-bill-wave" />
           </div>
         {:else if a == 'trust'}
-          <div on:click={() => runTrust(data.detail.address)}
+          <div
+            on:click={() => runTrust(data.detail.address)}
             class="flex items-center content-end justify-center w-10 p-3 text-white border-l border-gray-300 rounded bg-secondary hover:bg-primary">
             <i class="fas fa-heart" />
           </div>
         {:else if a == 'untrust'}
-          <div on:click={() => runUntrust(data.detail.address)}
+          <div
+            on:click={() => runUntrust(data.detail.address)}
             class="flex items-center content-end justify-center w-10 p-3 text-gray-500 bg-gray-300 border-l border-gray-300 rounded hover:bg-red-400 hover:text-white">
             <i class="fas fa-minus" />
           </div>
@@ -122,11 +140,18 @@
   </div>
 
   {#if data.detail && openDetail}
-    <div class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
-      {data.detail.address}
+    <div
+      class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
+      <div>
+        Address:<span class="pl-2 text-primary">{data.detail.address}</span>
+      </div>
+      <div>
+        Limit:<span class="pl-2 text-primary">{data.detail.limit}%</span>
+      </div>
     </div>
   {/if}
 </div>
+
 <!-- 
 <div class="flex items-center content-end justify-center">
   <div

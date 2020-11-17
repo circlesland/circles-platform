@@ -1,30 +1,28 @@
 <script lang="ts">
-  import {mnemonicToEntropy} from "bip39";
-  import {config} from "src/libs/o-circles-protocol/config";
-  import {push} from "svelte-spa-router";
-  import {onMount} from "svelte";
+  import { mnemonicToEntropy } from "bip39";
+  import { config } from "src/libs/o-circles-protocol/config";
+  import { push } from "svelte-spa-router";
+  import { onMount } from "svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
-  import {connectSafe} from "../processes/connectSafe/connectSafe";
-  import TemplateHeaderMainActionFooter from "../../../libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
+  import { connectSafe } from "../processes/connectSafe/connectSafe";
   import Process from "../../../libs/o-views/molecules/Process.svelte";
+  import TemplateHeaderMainAction from "src/libs/o-views/templates/TemplateHeaderMainAction.svelte";
 
   let seedphrase: string;
   let safeAddress: string;
 
   let process = connectSafe;
 
-  function createNewAccount()
-  {
+  function createNewAccount() {
     push("/wallet/register");
   }
 
-  function storeInputAndContinue()
-  {
+  function storeInputAndContinue() {
     const privateKey = mnemonicToEntropy(seedphrase);
     const ownerAddress = config
-            .getCurrent()
-            .web3()
-            .eth.accounts.privateKeyToAccount(privateKey);
+      .getCurrent()
+      .web3()
+      .eth.accounts.privateKeyToAccount(privateKey);
 
     localStorage.setItem("omo.privateKey", "0x" + privateKey);
     localStorage.setItem("omo.address", ownerAddress.address);
@@ -33,11 +31,9 @@
     push("/wallet/" + safeAddress + "/safe");
   }
 
-  onMount(() =>
-  {
+  onMount(() => {
     safeAddress = localStorage.getItem("omo.safeAddress");
-    if (safeAddress)
-    {
+    if (safeAddress) {
       push("/wallet/" + safeAddress + "/safe");
     }
   });
@@ -46,7 +42,7 @@
   };
 </script>
 
-<TemplateHeaderMainActionFooter>
+<TemplateHeaderMainAction>
   <header slot="header">
     <Header data={header} />
   </header>
@@ -61,26 +57,8 @@
   </main>
   <aside slot="action">
     <div>
-      <Process on:stopped={() => process = null} definition={process}/>
+      <Process on:stopped={() => (process = null)} definition={process} />
     </div>
-      <!--<p class="mb-1 text-xs text-gray-700 uppercase">
-        Enter safe address to recover
-      </p>
-      <input
-        placeholder="Your safe address"
-        type="text"
-        class="w-full p-2 mb-2 bg-transparent bg-white border border-gray-300 rounded text-primary"
-        bind:value={safeAddress} />
-    </div>
-    <div>
-      <p class="mb-1 text-xs text-gray-700 uppercase">
-        Enter seedphrase to recover
-      </p>
-      <textarea
-        placeholder="word1 word2 word3 word4 .... word23 word24"
-        class="w-full h-24 p-2 bg-transparent bg-white border border-gray-300 rounded text-primary"
-        bind:value={seedphrase} />
-    </div>-->
   </aside>
   <footer slot="footer" class="p-4 bg-white border-t">
     <div class="flex space-x-4">
@@ -100,4 +78,4 @@
       </div>
     </div>
   </footer>
-</TemplateHeaderMainActionFooter>
+</TemplateHeaderMainAction>

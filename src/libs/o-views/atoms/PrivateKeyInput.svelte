@@ -27,7 +27,7 @@
         });
       }
     } catch (e) {
-      console.warn("PrivateKeyInput validation error:", e)
+      console.warn("PrivateKeyInput validation error:", e);
       isValid = false;
     }
   }
@@ -35,7 +35,7 @@
 
 <div class="w-full">
   <p class="mb-1 text-xs text-gray-700 uppercase">{label}</p>
-  <input
+  <textarea
     readonly={isReadonly ? 'readonly' : ''}
     class:border={!isValid}
     class:border-red-500={!isValid}
