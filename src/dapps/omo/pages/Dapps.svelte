@@ -19,11 +19,11 @@
         {#if address}
           <img
             src="https://avatars.dicebear.com/api/avataaars/{address}.svg"
-            class="w-32 h-32 mx-auto mt-6 bg-white border-4 rounded-full border-light-300"
+            class="w-32 h-32 mx-auto mt-10 bg-white border-4 rounded-full border-light-300"
             alt="name" />
         {/if}
 
-        <div class="py-2 text-4xl font-title">
+        <div class="py-10 mt-2 text-4xl font-title">
           <div class="text-2xl">
             {#if address}
               {$_('omo_dashboard_title_loggedIn')}
@@ -32,9 +32,7 @@
           </div>
 
           {#if !address}
-            <div class="text-base">
-              to unlock your first dapps please register or login
-            </div>
+            <div class="text-base">to unlock your first dapps please login</div>
           {/if}
         </div>
       </div>
@@ -44,6 +42,7 @@
   <footer slot="footer">
     <Navigation {address} />
   </footer>
+
   <main slot="main">
     <div class="grid grid-cols-2 gap-2 -mt-4">
       {#if address}

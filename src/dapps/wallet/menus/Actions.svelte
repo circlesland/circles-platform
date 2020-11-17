@@ -64,7 +64,7 @@
             process = transferCircles;
             contextInitializer = null;
           }}>
-          <Button text="Send Money" type="secondary" disabled />
+          <Button text="Send Money" type="secondary" />
         </div>
       </div>
       <!-- <div class="flex space-x-2">

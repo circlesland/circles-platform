@@ -61,8 +61,10 @@
         <ProgressBar />
       </header>
       <div style="padding-bottom: 1rem">
-        <slot>No content provided</slot>
-        <div class="flex w-full ">
+        <div class="p-4">
+          <slot>No content provided</slot>
+        </div>
+        <div class="flex w-full">
           <div
             aria-label="Close modal"
             bind:this={buttonRef}

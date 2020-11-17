@@ -8,7 +8,7 @@
   let layout: Layout = {
     areas: "'notifications''header''main' 'footer'",
     columns: "1fr",
-    rows: "auto auto  1fr 68px",
+    rows: "auto 250px 1fr 68px",
   };
 </script>
 

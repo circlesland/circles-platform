@@ -81,8 +81,14 @@
 <div class="py-2 font-bold text-gray-500">My currency balances</div>
 
 <div class="space-y-2">
-  <TokenItem data={circles} />
-  <TokenItem data={xDai} />
+  {#if circlesBalance || safeEtherBalance}
+    <TokenItem data={circles} />
+    <TokenItem data={xDai} />
+  {:else}
+    <div class="flex items-center justify-center h-full mx-auto">
+      <Jumper size="150" color="#071D69" unit="px" />
+    </div>
+  {/if}
 </div>
 
 <div class="py-2 font-bold text-gray-500">Trusted Circles I am holding</div>
