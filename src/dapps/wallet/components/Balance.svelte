@@ -5,6 +5,7 @@
   import type { BN } from "ethereumjs-util";
 
   import { Jumper } from "svelte-loading-spinners";
+  import Account from "./Account.svelte";
 
   export let address: string;
 
@@ -57,20 +58,20 @@
   }
 </script>
 
-<div class="h-full pt-2 mx-auto font-bold text-center text-white bg-primary">
-  <div class="w-full mx-auto font-bold text-center text-gray-100 uppercase">
-    {#if circlesBalance != undefined}
-      <div class="flex items-center justify-center mx-auto text-6xl">
-        {circlesBalance}
-        <span><img
-            src="images/logo/crc.svg"
-            class="h-8 pl-2"
-            alt="CRC" /></span>
-      </div>
-    {:else}
-      <div class="flex items-center justify-center mx-auto">
-        <Jumper size="60" color="#fff" unit="px" />
-      </div>
-    {/if}
-  </div>
+<div
+  class="flex items-center justify-center h-full font-bold text-center text-white bg-primary">
+  {#if circlesBalance != undefined}
+    <div
+      class="flex items-center justify-center pl-6 mx-auto text-6xl uppercase">
+      {circlesBalance}
+      <span><img
+          src="images/logo/crc.svg"
+          class="h-8 pt-1 pl-2"
+          alt="CRC" /></span>
+    </div>
+  {:else}
+    <div class="flex items-center justify-center mx-auto">
+      <Jumper size="60" color="#fff" unit="px" />
+    </div>
+  {/if}
 </div>

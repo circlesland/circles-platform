@@ -10,15 +10,16 @@ module.exports = {
   },
   theme: {
     fontFamily: {
-      'title': ['Montserrat', 'sans-serif'],
-      // 'subtitle': ['Exo 2', 'sans-serif'],
+      'title': ['Comfortaa', 'cursive'],
       'sans': ['Quicksand', 'sans-serif']
     },
     extend: {
       colors: {
         dark: "#051F45",
         primary: '#0C266A',
-        secondary: '#1B54A8',
+        'primary-darker': "#0A1A52",
+        secondary: '#0D49A3',
+        'secondary-lighter': "#1058C5",
         action: '#2AD78B',
         'smoke-darkest': 'rgba(0, 0, 0, 0.9)',
         'smoke-darker': 'rgba(0, 0, 0, 0.75)',

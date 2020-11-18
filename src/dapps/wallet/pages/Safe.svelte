@@ -37,8 +37,10 @@
     <Header data={header} />
   </header>
   <div slot="balance">
-    <Account {address} />
     <Balance {address} />
+  </div>
+  <div slot="address">
+    <Account {address} />
   </div>
   <main slot="main">
     <Transactions {address} />

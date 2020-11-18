@@ -6,6 +6,7 @@
   import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";
+  import Account from "./Account.svelte";
 
   export let address: string;
 

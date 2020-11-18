@@ -6,9 +6,9 @@
   import TemplateMobileWrapper from "./TemplateMobileWrapper.svelte";
 
   let layout: Layout = {
-    areas: "'notifications''header''balance''main' 'footer'",
+    areas: "'notifications' 'balance' 'address' 'main' 'footer'",
     columns: "1fr",
-    rows: "auto 40px 160px 1fr 68px",
+    rows: "auto 160px 40px 1fr 68px",
   };
 </script>
 
@@ -17,11 +17,11 @@
     <Leaf area="notifications">
       <Notifications />
     </Leaf>
-    <Leaf area="header">
-      <slot name="header" />
-    </Leaf>
     <Leaf area="balance">
       <slot name="balance" />
+    </Leaf>
+    <Leaf area="address">
+      <slot name="address" />
     </Leaf>
     <Leaf area="main" overflowY>
       <slot name="main" />

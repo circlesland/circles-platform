@@ -20,7 +20,7 @@
 
 <style>
   :global(a.active) {
-    color: #0c266a;
+    color: #0d49a3;
   }
 </style>
 
@@ -33,7 +33,7 @@
   on:click={() => (isOpen = !isOpen)}>
   {#if !isOpen}
     <div
-      class="fixed w-16 h-16 mx-auto mt-6 text-white border rounded-full border-light-100 action bg-secondary hover:bg-primary">
+      class="fixed w-16 h-16 mx-auto mt-6 text-white border rounded-full border-light-100 action bg-secondary hover:bg-secondary-lighter">
       <i class="mt-4 text-3xl fas fa-plus " />
     </div>
   {/if}
@@ -56,9 +56,9 @@
     href="/wallet/{address}/trusts"
     use:link
     use:active={{ path: '/wallet/*/trusts' }}>
-    <NavItem icon="user-friends" text="friends" />
+    <NavItem icon="user-friends" text="Friends" />
   </a>
   <a href="/omo/dapps" use:link>
-    <NavItem icon="user-circle" text="home" />
+    <NavItem icon="user-circle" text="Home" />
   </a>
 </footer>

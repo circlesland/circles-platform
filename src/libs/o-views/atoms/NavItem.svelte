@@ -4,8 +4,8 @@
 </script>
 
 <div
-  class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-primary">
+  class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
   <span>
     <i class="text-2xl fas fa-{icon}" />
-    <p>{text}</p></span>
+    <p class="lowercase font-title">{text}</p></span>
 </div>

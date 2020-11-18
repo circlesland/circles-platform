@@ -6,13 +6,19 @@
   :global(css-doodle) {
     margin: auto;
   }
+  .fullgrid {
+    display: grid;
+    grid-template-rows: 1fr;
+    max-height: 900px;
+    height: 100%;
+  }
 </style>
 
 <div
   class="fixed z-10 flex flex-col items-center justify-center w-full h-full overflow-hidden bg-center bg-cover">
   <div
     class="flex items-center justify-center w-full h-full max-w-lg overflow-hidden wrap">
-    <div class="w-full h-full overflow-hidden">
+    <div class="w-full overflow-hidden fullgrid">
       <slot />
     </div>
   </div>

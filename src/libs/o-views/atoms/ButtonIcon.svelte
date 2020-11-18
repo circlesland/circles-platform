@@ -6,14 +6,28 @@
 
 {#if type == 'primary' && !disabled}
   <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 text-white border-2 rounded-lg cursor-pointer border-primary bg-primary hover:border-secondary hover:bg-secondary">
+    class="flex items-center content-end justify-center w-10 h-10 p-2 text-white border-2 rounded-lg cursor-pointer border-secondary bg-secondary hover:border-secondary-lighter hover:bg-secondary-lighter">
     <i class="fas fa-{icon}" />
   </div>
 {/if}
 
 {#if type == 'secondary' && !disabled}
   <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-primary text-primary hover:border-secondary hover:text-secondary">
+    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-secondary text-secondary hover:border-secondary-lighter hover:text-secondary-lighter">
+    <i class="fas fa-{icon}" />
+  </div>
+{/if}
+
+{#if type == 'light' && !disabled}
+  <div
+    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-light-400 text-light-400 hover:border-secondary-lighter hover:text-secondary-lighter">
+    <i class="fas fa-{icon}" />
+  </div>
+{/if}
+
+{#if type == 'light-danger' && !disabled}
+  <div
+    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-light-300 text-light-300 hover:bg-red-500 hover:border-red-500 hover:text-white">
     <i class="fas fa-{icon}" />
   </div>
 {/if}

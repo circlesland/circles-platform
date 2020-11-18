@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Trusts } from "src/dapps/wallet/pages/Trusts.svelte";
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
   import {
     AddressLookup,
@@ -146,7 +147,9 @@
     </div>
   {:else}
     {#if personsThatTrustMe.length > 0}
-      <div class="py-2 font-bold text-gray-500">New friends trusting me</div>
+      <div class="pl-1 text-gray-500 lowercase font-title">
+        New trust friend requests
+      </div>
     {/if}
 
     {#each personsThatTrustMe as personThatTrustMe}
@@ -154,7 +157,9 @@
     {/each}
 
     {#if mutualTrusts.length > 0}
-      <div class="py-2 font-bold text-gray-500">Mutually trusted friends</div>
+      <div class="pl-1 text-gray-500 lowercase font-title">
+        Mutually trusted friends
+      </div>
     {/if}
 
     {#each mutualTrusts as mutualTrust}
@@ -162,7 +167,9 @@
     {/each}
 
     {#if personsITrust.length > 0}
-      <div class="py-2 font-bold text-gray-500">Friends, who you trust</div>
+      <div class="pl-1 text-gray-500 lowercase font-title">
+        Friends, who only you trust
+      </div>
     {/if}
 
     {#each personsITrust as personITrust}
@@ -170,7 +177,9 @@
     {/each}
 
     {#if untrusted.length > 0}
-      <div class="py-2 font-bold text-gray-500">Friends, who I removed</div>
+      <div class="pl-1 text-gray-500 lowercase font-title">
+        Friends, where I revoked Trusts
+      </div>
     {/if}
     {#each untrusted as ut}
       <FriendItem data={ut} />

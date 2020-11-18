@@ -13,10 +13,10 @@
   };
 </script>
 
-<div class="w-full p-2 bg-primary">
+<div class="w-full bg-primary-darker">
   <div
     href="https://discord.gg/Rbhy4j9"
-    class="w-full p-2 text-xs text-blue-300 bg-secondary">
+    class="w-full p-2 text-xs text-blue-300 bg-secondary-lighter">
     {$_('notes_text')}
     <span class="text-white uppercase rounded ">--
       {$_('notes_button')}

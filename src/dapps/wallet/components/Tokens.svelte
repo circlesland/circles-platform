@@ -75,11 +75,13 @@
     title: "xDai",
     description: "1 invite or ~ 500 transactions",
     balance: safeEtherBalance,
-    currency: "XDAI",
+    currency: "XDAI (~$USD)",
   };
 </script>
 
-<div class="py-2 font-bold text-gray-500">My currency balances</div>
+<div class="pb-1 pl-1 text-gray-500 lowercase font-title">
+  currency balances
+</div>
 
 <div class="space-y-2">
   {#if circlesBalance || safeEtherBalance}
@@ -92,7 +94,9 @@
   {/if}
 </div>
 
-<div class="py-2 font-bold text-gray-500">Trusted Circles I am holding</div>
+<div class="pt-4 pb-1 pl-1 text-gray-500 lowercase font-title">
+  detailed circles
+</div>
 
 <div class="space-y-2">
   {#if tokensITrust.length > 0}

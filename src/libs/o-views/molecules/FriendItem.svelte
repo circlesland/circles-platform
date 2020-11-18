@@ -84,6 +84,7 @@
     grid-template-columns: 3.5rem 1fr 1fr;
     grid-template-rows: 3.5rem;
     max-width: 100%;
+    overflow: hidden;
   }
 </style>
 
@@ -110,7 +111,7 @@
         {/if}
       </p>
     </div>
-    <div class="flex justify-end p-2 space-x-2 text-right">
+    <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
       {#each data.actions as a}
         {#if a == 'send'}
           <div on:click={() => runTransferCircles(data.detail.address)}>
@@ -122,7 +123,7 @@
           </div>
         {:else if a == 'untrust'}
           <div on:click={() => runUntrust(data.detail.address)}>
-            <ButtonIcon icon="minus" type="secondary" />
+            <ButtonIcon icon="minus" type="light-danger" />
           </div>
         {/if}
       {/each}
@@ -131,9 +132,9 @@
 
   {#if data.detail && openDetail}
     <div
-      class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
+      class="w-full p-2 overflow-hidden text-xs text-gray-500 bg-white border-b border-l border-r border-light-200 ">
       <div>
-        Address:<span class="pl-2 text-primary">{data.detail.address}</span>
+        Address:<br /><span class=" text-primary">{data.detail.address}</span>
       </div>
       <div>
         Limit:<span class="pl-2 text-primary">{data.detail.limit}%</span>

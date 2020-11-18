@@ -22,17 +22,6 @@
   }
 </script>
 
-<!-- <div
-  class="flex items-center justify-center font-bold text-center text-gray-500 bg-gray-100">
-  {#if mySafeAddress === address}
-    <p class="text-xs text-blue-300 rounded-full bg-secondary">
-      <span class="uppercase">my safe address</span><br />{person.address}
-    </p>
-  {:else}{person.address}{/if}
-</div> -->
-
-<div class="flex items-center justify-center bg-primary">
-  <p class="px-2 py-1 text-xs text-blue-300 rounded-full bg-secondary">
-    {person.address}
-  </p>
+<div class="flex items-center justify-center py-2">
+  <p class="px-3 py-1 text-xs text-light-400">Safe: {person.address}</p>
 </div>
