@@ -15,6 +15,7 @@ import Register from 'src/dapps/wallet/pages/Register.svelte'
 // Identity Dapp
 import Settings from 'src/dapps/identity/pages/Settings.svelte'
 import Login from 'src/dapps/identity/pages/Login.svelte'
+import wrap from "svelte-spa-router/wrap";
 
 // Export the route definition object
 export default {
@@ -22,7 +23,16 @@ export default {
     '/': Website,
     // Wildcard parameter
     // Included twice to match both `/wild` (and nothing after) and `/wild/*` (with anything after)
-    '/omo/*': Dapps,
+    '/omo/*': wrap({
+        component: Dapps,
+        props: {
+            getActions:() => {
+                return [
+                    "Hello", "World"
+                ]
+            }
+        }
+    }),
     // Identity
     '/identity/settings': Settings,
     '/identity/login': Login,

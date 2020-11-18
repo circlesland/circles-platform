@@ -10,6 +10,7 @@
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import { jumpstart } from "../processes/jumpstart/jumpstart";
 
+  export let getActions:() => string[];
   // http://localhost:5000/#/wallet/jumpstart/0x9B74661e83F6696AdF872576f886Dc5Eb569B0bD
 
   export let params = {};

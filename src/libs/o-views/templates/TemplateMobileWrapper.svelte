@@ -1,5 +1,6 @@
 <script>
   import "css-doodle";
+  import Modal from "../molecules/Modal.svelte";
 </script>
 
 <style>
@@ -9,7 +10,6 @@
   .fullgrid {
     display: grid;
     grid-template-rows: 1fr;
-    max-height: 900px;
     height: 100%;
   }
 </style>
@@ -21,6 +21,7 @@
     <div class="w-full overflow-hidden fullgrid">
       <slot />
     </div>
+    <Modal></Modal>
   </div>
 </div>
 

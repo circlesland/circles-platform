@@ -4,6 +4,7 @@
 
   import QrCode from "svelte-qrcode";
 
+  export let getActions:() => string[];
   let waitingForFunding: Boolean = true;
   let header = {
     title: "Register",

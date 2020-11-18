@@ -19,11 +19,12 @@
     </a>
   </div>
 {:else}
+  <!--
   <div class="flex items-center justify-center h-full text-gray-500">
     -- quick actions placeholder --
-  </div>
+  </div>-->
 
-  <!--<div
+  <div
     class="flex justify-between px-10 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
     <div
       class="flex items-center justify-center w-24 text-xs text-center hover:text-primary">
@@ -46,5 +47,5 @@
         <p>{$_('omo_nav_send_money')}</p>
       </a>
     </div>
-  </div> -->
+  </div>
 {/if}

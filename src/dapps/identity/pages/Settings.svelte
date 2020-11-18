@@ -12,6 +12,7 @@
   let safeAddress: string;
   let lastSuccessfulUbiRetrieval: string;
   let nextPossibleUbiRetrieval: string;
+  export let getActions:() => string[];
 
   safeOwner = localStorage.getItem("omo.address");
   safeAddress = localStorage.getItem("omo.safeAddress");

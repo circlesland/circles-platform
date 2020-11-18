@@ -5,6 +5,7 @@
   import Trusts from "src/dapps/wallet/components/Trusts.svelte";
   import TemplateSafe from "src/libs/o-views/templates/TemplateSafe.svelte";
 
+  export let getActions:() => string[];
   export let params = {};
 
   let header = {

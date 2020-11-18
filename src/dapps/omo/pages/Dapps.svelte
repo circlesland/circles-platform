@@ -4,10 +4,13 @@
   import Navigation from "../components/Navigation.svelte";
   import { onMount } from "svelte";
 
+  export let getActions:() => string[];
+
   let address: string;
 
   onMount(() => {
     address = localStorage.getItem("omo.safeAddress");
+    console.log(getActions());
   });
 </script>
 

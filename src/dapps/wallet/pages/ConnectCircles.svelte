@@ -9,6 +9,8 @@
   import TemplateHeaderMainAction from "src/libs/o-views/templates/TemplateHeaderMainAction.svelte";
   import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
 
+  export let getActions:() => string[];
+
   let seedphrase: string;
   let safeAddress: string;
 

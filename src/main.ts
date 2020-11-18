@@ -15,6 +15,7 @@ import { Person } from "src/libs/o-circles-protocol/model/person";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import {EventBroker} from "./eventBroker";
+import {OmoEvent} from "./libs/o-events/omoEvent";
 
 dayjs.extend(relativeTime)
 
@@ -28,6 +29,7 @@ export interface Process {
 declare global {
   interface Window {
     eventBroker: EventBroker,
+    dispatchShellEvent:(event:OmoEvent) => void,
     stateMachines: {
       current():Process|null,
       run: (definition: ProcessDefinition) => Process
@@ -39,6 +41,9 @@ const eventBroker = new EventBroker();
 eventBroker.createTopic("omo", "shell");
 
 window.eventBroker = eventBroker;
+window.dispatchShellEvent = (event) => {
+  window.eventBroker.getTopic("omo", "shell").publish(event);
+}
 
 function getServiceContext(): ProcessContext {
   const safeAddress = localStorage.getItem("omo.safeAddress");
