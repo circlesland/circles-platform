@@ -169,7 +169,7 @@
                   <span
                     class="text-xs text-primary">{t.o.returnValues.value / 1000000000000000000}</span>
                 </div>
-                <div
+                <!-- <div
                   class="justify-center my-2 text-xs uppercase text-secondary "
                   on:click={() => (t.openDetailPayload = !t.openDetailPayload)}>
                   Show Payload
@@ -178,7 +178,7 @@
                   <pre
                     class=" text-xxs">{JSON.stringify(t, null, 2)}
                     </pre>
-                {/if}
+                {/if} -->
               </div>
             </div>
           {/if}

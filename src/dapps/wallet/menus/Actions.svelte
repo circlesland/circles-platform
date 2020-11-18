@@ -24,7 +24,7 @@
     {contextInitializer}
     definition={process} />
 {:else}
-  <div class="w-full p-4 space-y-2">
+  <div class="w-full">
     <div class="space-y-2">
       <div
         on:click={() => {

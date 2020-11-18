@@ -67,7 +67,7 @@
   }
 </script>
 
-<div class="w-full space-y-2 border-t border-gray-300">
+<div class="w-full border-t border-gray-300">
   {#if process}
     {#if statusType === 'message'}
       <h1 class="px-4 py-8 mb-4 text-center rounded text-primary bg-light-100">

@@ -17,7 +17,7 @@
       return;
     }
     runningProcess.sendEvent({
-      type: "omo.back"
+      type: "omo.back",
     });
   };
   const handleClose = () => {
@@ -27,13 +27,12 @@
       return;
     }
 
-    if (confirm('Do you want to cancel the running process?'))
-    {
+    if (confirm("Do you want to cancel the running process?")) {
       runningProcess.sendEvent({
-        type: "omo.cancel"
+        type: "omo.cancel",
       });
     }
-  }
+  };
   const handleEsc = (e) => e.key === "Escape" && handleClose();
 
   // lifecycle
@@ -45,7 +44,7 @@
     }
   });
 
-  let progressSeries:number[] = [33, 66, 100];
+  let progressSeries: number[] = [33, 66, 100];
 </script>
 
 <style>
@@ -80,6 +79,12 @@
     class="z-40 overlay">
     <div class="w-full max-w-lg bg-white rounded-t-xl">
       <header class="rounded-t-lg">
+        <div
+          class="flex items-center justify-center py-2 overflow-hidden text-base text-center text-white rounded-t-xl bg-primary">
+          <div class="flex items-center justify-between lowercase font-title">
+            -- step title --
+          </div>
+        </div>
         <ProgressBar />
       </header>
       <div style="padding-bottom: 1rem">
