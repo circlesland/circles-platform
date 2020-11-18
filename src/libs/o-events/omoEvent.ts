@@ -1,3 +1,5 @@
+import {OmoEventTypes} from "./eventTypes";
+
 export interface OmoEvent {
-    type:string
+    type:OmoEventTypes
 }

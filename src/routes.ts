@@ -16,13 +16,17 @@ import Settings from 'src/dapps/identity/pages/Settings.svelte'
 import Login from 'src/dapps/identity/pages/Login.svelte'
 import wrap from "svelte-spa-router/wrap";
 import {location} from 'svelte-spa-router'
+import {OmoEvent} from "./libs/o-events/omoEvent";
+import {ShowModal} from "./libs/o-events/showModal";
+import {RunProcess} from "./libs/o-events/runProcess";
+import {requestUbi} from "./dapps/wallet/processes/requestUbi/requestUbi";
 
 export type ActionBarAction = {
     type: "route"|"trigger",
     pos: "1"|"2"|"3"|"4"|"overflow",
     icon: string,
     label: string,
-    event?: any,
+    event?: () => OmoEvent,
     route?: string
 }
 
@@ -49,8 +53,7 @@ export default {
                 type: "round",
                 pos: "2",
                 icon: "fa-star",
-                label: "123",
-                event: "showModal"
+                label: "123"
             }, {
                 type: "round",
                 pos: "3",
@@ -130,11 +133,11 @@ export default {
                 label: "Home",
                 route: "#/omo/dapps"
             },{
-                type: "route",
+                type: "trigger",
                 pos: "overflow",
                 icon: "coins",
-                label: "Oida",
-                route: "#/omo/dapps"
+                label: "Get UBI",
+                event: () => new RunProcess(requestUbi)
             }]
         }
     }),
