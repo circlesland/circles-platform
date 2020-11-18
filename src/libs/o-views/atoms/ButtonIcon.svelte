@@ -27,7 +27,7 @@
 
 {#if type == 'light-danger' && !disabled}
   <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-light-300 text-light-300 hover:bg-red-500 hover:border-red-500 hover:text-white">
+    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-light-300 text-light-300 hover:bg-danger hover:border-danger hover:text-white">
     <i class="fas fa-{icon}" />
   </div>
 {/if}

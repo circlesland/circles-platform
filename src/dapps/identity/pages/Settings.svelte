@@ -6,6 +6,7 @@
 
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
+  import Button from "src/libs/o-views/atoms/Button.svelte";
 
   let safeOwner: string;
   let safeAddress: string;
@@ -78,10 +79,8 @@
         href="#/omo/dapps"
         class="px-4 py-2 font-bold uppercase bg-gray-200 border rounded border-light-400 text-primary"><i
           class="fas fa-arrow-left" /></a>
-      <p
-        on:click={() => logout()}
-        class="w-full px-4 py-2 font-bold text-white uppercase rounded cursor-pointer bg-primary">
-        logout
+      <p on:click={() => logout()} class="w-full">
+        <Button text="Logout" type="danger" />
       </p>
     </div>
   </footer>

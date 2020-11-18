@@ -23,8 +23,8 @@
             alt="name" />
         {/if}
 
-        <div class="py-4 mt-2 text-4xl font-title">
-          <div class="text-2xl">
+        <div class="py-4 mt-2 font-bold">
+          <div class="text-3xl">
             {#if address}
               {$_('omo_dashboard_title_loggedIn')}
               Omo

@@ -94,8 +94,8 @@
       <img src={data.image} alt="CRC" />
     </div>
     <div class="p-2" on:click={toggleExpand}>
-      <div class="text-lg text-primary">{data.title}</div>
-      <p class="-mt-1 text-xs text-gray-500">
+      <div class="text-base text-primary">{data.title}</div>
+      <p class="text-xs text-gray-500 ">
         {#if data.connection == 'trustedMutual'}
           <i class="fas fa-exchange-alt" /><span class="ml-2">
             mutual trust</span>

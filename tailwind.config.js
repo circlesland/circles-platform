@@ -22,6 +22,8 @@ module.exports = {
         secondary: '#0D49A3',
         'secondary-lighter': "#1058C5",
         action: '#2AD78B',
+        info: '#FFDE69',
+        danger: "#F59172",
         'smoke-darkest': 'rgba(0, 0, 0, 0.9)',
         'smoke-darker': 'rgba(0, 0, 0, 0.75)',
         'smoke-dark': 'rgba(0, 0, 0, 0.6)',
