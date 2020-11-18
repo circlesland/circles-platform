@@ -20,7 +20,20 @@
       type: "omo.back"
     });
   };
-  const handleClose = () => (isOpen = false);
+  const handleClose = () => {
+    const runningProcess = window.stateMachines.current();
+    if (!runningProcess) {
+      isOpen = false;
+      return;
+    }
+
+    if (confirm('Do you want to cancel the running process?'))
+    {
+      runningProcess.sendEvent({
+        type: "omo.cancel"
+      });
+    }
+  }
   const handleEsc = (e) => e.key === "Escape" && handleClose();
 
   // lifecycle
