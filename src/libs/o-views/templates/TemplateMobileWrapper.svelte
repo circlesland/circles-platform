@@ -9,19 +9,19 @@
   }
   .fullgrid {
     display: grid;
+    max-height: 900px;
     grid-template-rows: 1fr;
     height: 100%;
   }
 </style>
 
 <div
-  class="fixed z-10 flex flex-col items-center justify-center w-full h-full overflow-hidden bg-center bg-cover">
+  class="z-10 flex flex-col items-center justify-center w-full h-full overflow-hidden bg-center bg-cover">
   <div
     class="flex items-center justify-center w-full h-full max-w-lg overflow-hidden wrap">
     <div class="w-full overflow-hidden fullgrid">
       <slot />
     </div>
-    <Modal></Modal>
   </div>
 </div>
 

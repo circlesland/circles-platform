@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Router from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
@@ -16,7 +16,9 @@
   import identity_en from "src/dapps/identity/languages/en.json";
   import Composite from "./libs/o-views/atoms/Composite.svelte";
   import Leaf from "./libs/o-views/atoms/Leaf.svelte";
-  import TemplateMobileWrapper from "./libs/o-views/templates/TemplateMobileWrapper.svelte";
+  import Button from "./libs/o-views/atoms/Button.svelte";
+  import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
+  import Modal from "./libs/o-views/molecules/Modal.svelte";
 
   let notes_en = {
     notes_text:
@@ -47,12 +49,46 @@
 
   let actions = [];
 
-  function routeLoaded(e) {
+  let isOpen:boolean = false;
+
+  window.eventBroker.getTopic("omo", "shell").observable.subscribe((event) => {
+    if (event === "openMenu") {
+      isOpen = true;
+    }
+  });
+
+  function routeLoading(e) {
     if (!e.detail.userData)
       return;
 
     actions = e.detail.userData.actions;
-    console.log(actions)
+  }
+
+
+  let quickActions: any[] = [];
+  let overflowActions: any[] = [];
+
+  $: {
+    let _quickActions = actions.filter(o => o.pos && o.pos !== "overflow");
+    quickActions = [0, 1, 2, 3].map(index =>
+    {
+      let actionAt: any = _quickActions.find(action => action.pos == index + 1);
+      actionAt = actionAt ?? {
+        type: "trigger",
+        pos: (index + 1).toString(),
+        icon: "",
+        label: ""
+      }
+      return actionAt;
+    });
+
+    overflowActions = actions.filter(o => !o.pos || o.pos === "overflow");
+    console.log(overflowActions)
+  }
+
+  function toggleOpen() {
+    isOpen = !isOpen
+    console.log("toggleOpen")
   }
 </script>
 
@@ -69,19 +105,21 @@
 <div class="font-primary app">
   <Composite layout={layout2}>
     <Leaf area="top">
-      <Router {routes}
-              on:routeLoaded={routeLoaded}/>
+      <Router {routes} on:routeLoading={routeLoading}/>
     </Leaf>
     <Leaf area="bottom">
-      <div class="bg-white w-full">
-        {#each actions as action}
-          {#if action.type === ""}
-            <div>{action.label}</div>
-          {:else}
-            <div>{action.label}</div>
-          {/if}
+      <ActionBar on:actionButtonClick={toggleOpen} {quickActions}/>
+      <Modal bind:isOpen={isOpen}>
+        {#each overflowActions as action}
+          <div class="w-full">
+            <div class="space-y-2">
+              <div on:click={() => {}}>
+                <Button text="{action.label}" type="secondary" />
+              </div>
+            </div>
+          </div>
         {/each}
-      </div>
+      </Modal>
     </Leaf>
   </Composite>
 </div>

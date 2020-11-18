@@ -5,16 +5,6 @@
   import Tokens from "src/dapps/wallet/components/Tokens.svelte";
   import TemplateSafe from "src/libs/o-views/templates/TemplateSafe.svelte";
 
-
-  export let params = {};
-
-  let address: string = null;
-
-  $: {
-    if (params.address) {
-      address = params.address;
-    }
-  }
   let header = {
     title: "Tokens",
   };
@@ -25,9 +15,9 @@
     <Header data={header} />
   </header>
   <main slot="main">
-    <Tokens {address} />
+    <Tokens />
   </main>
   <footer slot="footer">
-    <Menu {address} actions={Actions} />
+    <Menu actions={Actions} />
   </footer>
 </TemplateSafe>

@@ -6,7 +6,7 @@
 
   let triggerRef;
 
-  export let isOpen: Boolean;
+  export let isOpen: boolean;
   export let actions;
 
   export let address: string = null;

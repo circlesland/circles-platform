@@ -28,6 +28,7 @@ export interface Process {
 
 declare global {
   interface Window {
+    mySafeAddress:string,
     eventBroker: EventBroker,
     dispatchShellEvent:(event:OmoEvent) => void,
     stateMachines: {
@@ -36,6 +37,8 @@ declare global {
     }
   }
 }
+
+window.mySafeAddress = localStorage.getItem("omo.safeAddress");
 
 const eventBroker = new EventBroker();
 eventBroker.createTopic("omo", "shell");

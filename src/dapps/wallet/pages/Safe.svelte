@@ -10,24 +10,16 @@
   import { push } from "svelte-spa-router";
 
 
-  export let params = {};
-
-  let mySafeAddress;
+  let address = localStorage.getItem("omo.safeAddress");
+  console.log(address)
 
   onMount(() => {
-    mySafeAddress = localStorage.getItem("omo.safeAddress");
-    if (!mySafeAddress) {
+    if (!address) {
       push("/wallet/connect");
     }
   });
 
-  let address: string = null;
 
-  $: {
-    if (params.address) {
-      address = params.address;
-    }
-  }
   let header = {
     title: "Safe",
   };

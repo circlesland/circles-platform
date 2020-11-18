@@ -35,14 +35,6 @@
   };
   const handleEsc = (e) => e.key === "Escape" && handleClose();
 
-  // lifecycle
-  afterUpdate(() => {
-    if (isOpen) {
-      buttonRef.focus();
-    } else {
-      triggerRef && triggerRef.focus();
-    }
-  });
 
   let progressSeries: number[] = [33, 66, 100];
 </script>
@@ -87,34 +79,7 @@
         </div>
         <ProgressBar />
       </header>
-      <div style="padding-bottom: 1rem">
-        <div class="p-4">
-          <slot>No content provided</slot>
-        </div>
-        <div class="flex w-full">
-          <div
-            aria-label="Close modal"
-            bind:this={buttonRef}
-            on:click={handleBack}
-            class="w-full mx-auto text-center text-light-400 ">
-            <i class="my-2 text-4xl fas fa-arrow-left " />
-          </div>
-          <div
-            aria-label="Close modal"
-            bind:this={buttonRef}
-            on:click={handleClose}
-            class="w-full mx-auto text-center text-light-400 ">
-            <i class="my-2 text-4xl fas fa-times-circle " />
-          </div>
-          <div
-            aria-label="Close modal"
-            bind:this={buttonRef}
-            on:click={handleClose}
-            class="w-full mx-auto text-center text-light-400 ">
-            <!--<i class="my-2 text-4xl fas fa-arrow-right " />-->
-          </div>
-        </div>
-      </div>
+      <slot></slot>
     </div>
   </aside>
 {/if}

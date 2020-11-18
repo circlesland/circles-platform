@@ -1,13 +1,9 @@
 <script lang="ts">
   import TemplateDapp from "src/libs/o-views/templates/TemplateDapps.svelte";
   import { _ } from "svelte-i18n";
-  import Navigation from "../components/Navigation.svelte";
   import { onMount } from "svelte";
 
-
-
   let address: string;
-
   onMount(() => {
     address = localStorage.getItem("omo.safeAddress");
   });
@@ -42,7 +38,6 @@
   </header>
 
   <footer slot="footer">
-    <Navigation {address} />
   </footer>
 
   <main slot="main">

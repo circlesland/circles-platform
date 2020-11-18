@@ -5,20 +5,9 @@
   import Trusts from "src/dapps/wallet/components/Trusts.svelte";
   import TemplateSafe from "src/libs/o-views/templates/TemplateSafe.svelte";
 
-
-  export let params = {};
-
   let header = {
     title: "Friends",
   };
-
-  let address: string = null;
-
-  $: {
-    if (params.address) {
-      address = params.address;
-    }
-  }
 </script>
 
 <TemplateSafe>
@@ -26,9 +15,9 @@
     <Header data={header} />
   </header>
   <main slot="main">
-    <Trusts {address} />
+    <Trusts />
   </main>
   <footer slot="footer">
-    <Menu {address} actions={Actions} />
+    <Menu actions={Actions} />
   </footer>
 </TemplateSafe>

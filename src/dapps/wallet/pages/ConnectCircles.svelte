@@ -31,13 +31,13 @@
     localStorage.setItem("omo.address", ownerAddress.address);
     localStorage.setItem("omo.safeAddress", safeAddress);
 
-    push("/wallet/" + safeAddress + "/safe");
+    push("/wallet/safe");
   }
 
   onMount(() => {
     safeAddress = localStorage.getItem("omo.safeAddress");
     if (safeAddress) {
-      push("/wallet/" + safeAddress + "/safe");
+      push("/wallet/safe");
     }
   });
   let header = {
