@@ -3,7 +3,7 @@
   import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
 
-  export let getActions:() => string[];
+
   let header = {
     title: "Start",
   };

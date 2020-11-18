@@ -9,7 +9,7 @@
   import { onMount } from "svelte";
   import { push } from "svelte-spa-router";
 
-  export let getActions:() => string[];
+
   export let params = {};
 
   let mySafeAddress;

@@ -25,19 +25,60 @@ export default {
     // Included twice to match both `/wild` (and nothing after) and `/wild/*` (with anything after)
     '/omo/*': wrap({
         component: Dapps,
-        props: {
-            getActions:() => {
-                return [
-                    "Hello", "World"
-                ]
-            }
+        userData: {
+            actions:[{
+                type: "round",
+                icon: "fa-star",
+                label: "Open Modal",
+                event: "showModal"
+            }, {
+                type: "round",
+                icon: "fa-star",
+                label: "123",
+                event: "showModal"
+            }, {
+                type: "round",
+                icon: "fa-star",
+                label: "456",
+                event: "showModal"
+            }]
         }
     }),
     // Identity
-    '/identity/settings': Settings,
+    '/identity/settings': wrap({
+        component: Settings,
+        userData: {
+            actions:[{
+                type: "round",
+                icon: "fa-cogs",
+                label: "Open Modal",
+                event: "showModal"
+            }, {
+                type: "round",
+                icon: "fa-cogs",
+                label: "123",
+                event: "showModal"
+            }]
+        }
+    }),
     '/identity/login': Login,
     // Wallet
-    '/wallet/connect': ConnectCircles,
+    '/wallet/connect': wrap({
+        component: ConnectCircles,
+        userData: {
+            actions:[{
+                type: "round",
+                icon: "fa-cogs",
+                label: "Open Modal",
+                event: "showModal"
+            }, {
+                type: "round",
+                icon: "fa-cogs",
+                label: "123",
+                event: "showModal"
+            }]
+        }
+    }),
     '/wallet/start': Start,
     '/wallet/register': Register,
     '/wallet/jumpstart/:address': Jumpstart,

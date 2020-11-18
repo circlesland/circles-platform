@@ -45,22 +45,15 @@
   let layout2 = {areas: "'top''bottom'", columns: "1fr", rows: "1fr 60px"};
   let layout3 = {areas: "'full'", columns: "1fr", rows: "1fr "};
 
-  let actions = [{
-    type: "round",
-    icon: "fa-star",
-    label: "Open Modal",
-    event: "showModal"
-  }, {
-    type: "round",
-    icon: "fa-star",
-    label: "123",
-    event: "showModal"
-  }, {
-    type: "round",
-    icon: "fa-star",
-    label: "456",
-    event: "showModal"
-  }];
+  let actions = [];
+
+  function routeLoaded(e) {
+    if (!e.detail.userData)
+      return;
+
+    actions = e.detail.userData.actions;
+    console.log(actions)
+  }
 </script>
 
 <style>
@@ -76,12 +69,17 @@
 <div class="font-primary app">
   <Composite layout={layout2}>
     <Leaf area="top">
-      <Router {routes} />
+      <Router {routes}
+              on:routeLoaded={routeLoaded}/>
     </Leaf>
     <Leaf area="bottom">
       <div class="bg-white w-full">
         {#each actions as action}
-          <div>{action.label}</div>
+          {#if action.type === ""}
+            <div>{action.label}</div>
+          {:else}
+            <div>{action.label}</div>
+          {/if}
         {/each}
       </div>
     </Leaf>

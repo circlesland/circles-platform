@@ -5,7 +5,7 @@
   import Tokens from "src/dapps/wallet/components/Tokens.svelte";
   import TemplateSafe from "src/libs/o-views/templates/TemplateSafe.svelte";
 
-  export let getActions:() => string[];
+
   export let params = {};
 
   let address: string = null;
