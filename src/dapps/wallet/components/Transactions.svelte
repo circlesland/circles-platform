@@ -117,12 +117,12 @@
             </div>
             {#if t.direction === 'out'}
               <div
-                class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-primary">
-                -
-                {t.amount}
+                class="w-1/3 h-12 px-3 py-1 text-3xl font-light text-right text-primary">
+                <span>-{t.amount}</span>
               </div>
             {:else}
-              <div class="w-1/3 h-12 px-3 py-1 text-3xl text-right text-action">
+              <div
+                class="w-1/3 h-12 px-3 py-2 text-3xl font-light text-right text-action">
                 {t.amount}
               </div>
             {/if}

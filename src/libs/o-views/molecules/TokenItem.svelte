@@ -31,13 +31,13 @@
       <img src={data.image} alt="CRC" />
     </div>
     <div class="px-1 py-2">
-      <div class="text-lg text-primary">{data.title}</div>
-      <p class="-mt-1 text-xs text-gray-500">
+      <div class="text-base text-primary">{data.title}</div>
+      <p class="text-xs text-gray-500">
         <span class="text-xs text-gray-500">{data.currency}</span>
       </p>
     </div>
     <div class="p-1 px-4 text-right">
-      <div class="text-3xl text-action">
+      <div class="py-1 text-3xl font-light text-action">
         {parseFloat(data.balance).toFixed(2)}
       </div>
     </div>

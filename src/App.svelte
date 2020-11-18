@@ -53,6 +53,6 @@
 
 <Tailwind />
 
-<div class="font-sans app">
+<div class="font-primary app">
   <Router {routes} />
 </div>

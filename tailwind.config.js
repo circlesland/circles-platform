@@ -11,7 +11,8 @@ module.exports = {
   theme: {
     fontFamily: {
       'title': ['Comfortaa', 'cursive'],
-      'sans': ['Quicksand', 'sans-serif']
+      'primary': ['Comfortaa', 'cursive'],
+      'secondary': ['Quicksand', 'sans-serif']
     },
     extend: {
       colors: {
