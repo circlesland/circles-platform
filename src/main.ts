@@ -33,7 +33,7 @@ declare global {
     dispatchShellEvent:(event:OmoEvent) => void,
     stateMachines: {
       current():Process|null,
-      run: (definition: ProcessDefinition) => Process
+      run: (definition: ProcessDefinition, contextModifier?:(processContext:ProcessContext)=>ProcessContext) => Process
     }
   }
 }

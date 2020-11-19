@@ -64,7 +64,9 @@
     }
     if (event.type == "runProcess")
     {
-      runningProcess = window.stateMachines.run((<RunProcess>event).definition);
+      runningProcess = window.stateMachines.run(
+              (<RunProcess>event).definition,
+              (<RunProcess>event).contextModifier);
       isOpen = true;
     }
   });
