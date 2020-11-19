@@ -7,10 +7,17 @@
   import { BN } from "ethereumjs-util";
 
   export let address: string;
+  let accountAddress: string = localStorage.getItem("omo.address");
+  let safeAddress: string = localStorage.getItem("omo.safeAddress");
+
   let balance: BN;
+  let circlesBalance: string;
+
   let safeEthBalance: BN;
   let safeEtherBalance: string;
-  let circlesBalance: string;
+
+  let personalEthBalance: BN;
+  let personalEtherBalance: string;
 
   let person: Person;
   let tokensITrust: any[] = [];
@@ -36,6 +43,16 @@
     const ethBalanceStr = web3.utils.fromWei(safeEthBalance, "ether");
     const ethDot = ethBalanceStr.indexOf(".");
     safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
+
+    personalEthBalance = await web3.eth.getBalance(
+      localStorage.getItem("omo.address")
+    );
+    const personalEthBalanceStr = web3.utils.fromWei(
+      personalEthBalance,
+      "ether"
+    );
+    const personalEthDot = personalEthBalanceStr.indexOf(".");
+    personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
 
     let t2 = await person.getTokenBalances();
     tokensITrust = Object.keys(t2)
@@ -63,19 +80,26 @@
     }
   }
 
-  $: circles = {
+  $: circlesSafe = {
     image: "images/logo/circles.svg",
-    title: "Circles",
-    description: "Circles I trust",
+    title: "Safe Circles",
+    description: safeAddress,
     balance: circlesBalance,
-    currency: "CRC",
+    currency: "Account: Safe",
   };
-  $: xDai = {
+  $: xDaiSafe = {
     image: "images/logo/xdai.png",
-    title: "xDai",
-    description: "1 invite or ~ 500 transactions",
+    title: "Safe xDai",
+    description: safeAddress,
     balance: safeEtherBalance,
-    currency: "XDAI (~$USD)",
+    currency: "Account: Safe",
+  };
+  $: xDaiOwner = {
+    image: "images/logo/xdai.png",
+    title: "SafeOwner xDai",
+    description: accountAddress,
+    balance: personalEtherBalance,
+    currency: "Account: SafeOwner",
   };
 </script>
 
@@ -85,8 +109,9 @@
 
 <div class="space-y-2">
   {#if circlesBalance || safeEtherBalance}
-    <TokenItem data={circles} />
-    <TokenItem data={xDai} />
+    <TokenItem data={circlesSafe} />
+    <TokenItem data={xDaiSafe} />
+    <TokenItem data={xDaiOwner} />
   {:else}
     <div class="flex items-center justify-center h-full mx-auto">
       <Jumper size="150" color="#071D69" unit="px" />
@@ -95,7 +120,7 @@
 </div>
 
 <div class="pt-4 pb-1 pl-1 text-gray-500 lowercase font-title">
-  detailed circles
+  detailed circles distribution
 </div>
 
 <div class="space-y-2">

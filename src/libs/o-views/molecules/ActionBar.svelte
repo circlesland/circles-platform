@@ -19,9 +19,8 @@
     dispatch("actionButtonClick");
   }
 
-  function isActive(action:ActionBarAction) {
-    if (!action || !action.route)
-      return;
+  function isActive(action: ActionBarAction) {
+    if (!action || !action.route) return;
 
     return action.route.indexOf($location) > -1;
   }
@@ -38,7 +37,7 @@
     class="absolute flex items-center justify-center w-full text-center action"
     on:click={onActionButtonClick}>
     <div
-      class="fixed w-16 h-16 mx-auto mt-6 text-white border rounded-full border-light-100 action bg-secondary hover:bg-secondary-lighter">
+      class="fixed w-16 h-16 mx-auto mt-4 text-white border rounded-full border-light-100 action bg-secondary hover:bg-secondary-lighter">
       <i class="mt-4 text-3xl fas fa-plus " />
     </div>
   </button>
@@ -55,7 +54,7 @@
 
     <a on:click={() => {}}>
       <div
-        class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
+        class="flex items-center justify-center w-16 px-2 text-center stext-xs hover:text-secondary-lighter">
         <span>
           <i class="text-2xl" />
           <p class="lowercase font-title" />

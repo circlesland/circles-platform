@@ -38,14 +38,17 @@
     </div>
     <div class="p-1 px-4 text-right">
       <div class="py-1 text-3xl font-light text-action">
-        {parseFloat(data.balance).toFixed(2)}
+        {#if parseFloat(data.balance) < 1}
+          {parseFloat(data.balance).toFixed(4)}
+        {:else}{parseFloat(data.balance).toFixed(2)}{/if}
       </div>
     </div>
   </div>
   {#if data.description && openDetail}
     <div
       class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
-      {data.description}
+      Address:
+      <span class="text-primary">{data.description}</span>
     </div>
   {/if}
 </div>

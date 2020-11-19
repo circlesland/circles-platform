@@ -3,6 +3,7 @@
   import { afterUpdate, createEventDispatcher } from "svelte";
   import { fade, scale, fly } from "svelte/transition";
   import ProgressBar from "../atoms/ProgressBar.svelte";
+  import InfoBox from "./InfoBox.svelte";
 
   const dispatch = createEventDispatcher();
   // public props
@@ -59,6 +60,7 @@
         </div>
         <!-- <ProgressBar /> -->
       </header>
+      <InfoBox />
       <div class="p-4 space-y-2">
         <slot />
       </div>
