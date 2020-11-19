@@ -1,6 +1,6 @@
 <script lang="ts">
   import NavItem from "../atoms/NavItem.svelte";
-  import { link, location } from "svelte-spa-router";
+  import { link, location, push } from "svelte-spa-router";
   import active from "svelte-spa-router/active";
   import { createEventDispatcher, onMount } from "svelte";
   import { ActionBarAction } from "../../../routes";
@@ -24,6 +24,12 @@
 
     return action.route.indexOf($location) > -1;
   }
+  function logout() {
+    localStorage.removeItem("omo.address");
+    localStorage.removeItem("omo.safeAddress");
+    localStorage.removeItem("omo.privateKey");
+    push("/");
+  }
 </script>
 
 <style>
@@ -32,7 +38,11 @@
   }
 </style>
 
-{#if safeAddress}
+{#if safeAddress && $location == '/omo/dapps'}
+  <div on:click={logout} class="w-full p-2 bg-white">
+    <Button text="Logout" type="danger" />
+  </div>
+{:else if safeAddress}
   <button
     class="absolute flex items-center justify-center w-full text-center action"
     on:click={onActionButtonClick}>

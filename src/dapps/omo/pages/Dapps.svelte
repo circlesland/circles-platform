@@ -43,7 +43,7 @@
     {#if !address}
       <div class="grid grid-cols-2 gap-2 -mt-4">
         <div
-          class="flex items-center justify-center h-48 p-6 text-center bg-white border border-gray-200 rounded text-light-300">
+          class="flex items-center justify-center h-48 p-6 text-center bg-white border border-gray-200 rounded text-light-300 ">
           <div class="text-light-300">
             <i class="text-5xl fas fa-piggy-bank" />
             <p class="pt-3 font-title">{$_('omo_name_wallet')}</p>
@@ -56,12 +56,12 @@
       <div class="grid grid-cols-2 gap-2 -mt-4">
         <a href="#/wallet/safe">
           <div
-            class="flex items-center justify-center h-48 p-6 text-center text-gray-800 bg-white border border-gray-200 rounded">
-            <div class="text-primary">
+            class="flex items-center justify-center h-48 p-6 text-center bg-white border-2 border-gray-200 rounded text-secondary hover:text-secondary-lighter hover:border-secondary-lighter">
+            <div class="">
               <i class="text-5xl fas fa-piggy-bank" />
               <p class="pt-3 font-title">{$_('omo_name_wallet')}</p>
               <span
-                class="px-2 py-1 text-xs text-blue-200 rounded-full bg-secondary">{$_('omo_alpha_testing')}</span>
+                class="px-2 py-1 text-xs text-orange-800 rounded-full bg-info">{$_('omo_alpha_testing')}</span>
             </div>
           </div>
         </a>

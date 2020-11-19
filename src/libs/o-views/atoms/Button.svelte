@@ -39,6 +39,13 @@
   </div>
 {/if}
 
+{#if type == 'light-danger' && !disabled}
+  <div
+    class="w-full p-3 font-bold text-center lowercase bg-white border-2 rounded-lg cursor-pointer border-danger text-danger hover:text-white hover:bg-danger">
+    {text}
+  </div>
+{/if}
+
 {#if disabled}
   <div
     class="w-full p-3 font-bold text-center lowercase border-2 rounded-lg bg-light-100 border-light-300 text-light-300">

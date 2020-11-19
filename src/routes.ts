@@ -72,7 +72,7 @@ export default {
                 type: "trigger",
                 pos: "overflow",
                 icon: faCoins,
-                label: "Connect Safe",
+                label: "Connect Circles Safe",
                 event: () => new RunProcess(connectSafe)
             }]
         }
