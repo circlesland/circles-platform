@@ -1,7 +1,8 @@
 import {OmoEvent} from "./omoEvent";
+import {OmoEventTypes} from "./eventTypes";
 
 export class ShowModal implements OmoEvent {
-    type: "showModal";
+    type: OmoEventTypes = "showModal";
 
     readonly component:any;
 

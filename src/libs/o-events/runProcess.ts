@@ -1,9 +1,10 @@
 import {OmoEvent} from "./omoEvent";
 import {ProcessDefinition} from "../o-processes/processManifest";
 import {ProcessContext} from "../o-processes/processContext";
+import {OmoEventTypes} from "./eventTypes";
 
 export class RunProcess implements OmoEvent {
-    type: "runProcess";
+    type: OmoEventTypes = "runProcess";
 
     readonly definition: ProcessDefinition;
     readonly contextModifier?:(processContext:ProcessContext)=>ProcessContext;

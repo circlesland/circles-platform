@@ -19,11 +19,11 @@ import {strings} from "../../languages/strings";
 export interface SetTrustContext extends ProcessContext
 {
     setTrust?: {
-        trustReceiver: {
+        trustReceiver?: {
             type: "ethereumAddress",
             data: Address
         },
-        trustLimit: {
+        trustLimit?: {
             type: "percent",
             data: any
         }

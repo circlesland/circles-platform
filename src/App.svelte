@@ -20,6 +20,9 @@
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
   import TemplateMobileWrapper from "./libs/o-views/templates/TemplateMobileWrapper.svelte";
+  import { OmoEvent } from "./libs/o-events/omoEvent";
+  import { RunProcess } from "./libs/o-events/runProcess";
+  import Process from "./libs/o-views/molecules/Process.svelte";
 
   let notes_en = {
     notes_text:
@@ -42,13 +45,24 @@
 
   let actions = [];
 
-  let isOpen: boolean = false;
+  let isOpen = false;
+  let runningProcess: Process = window.stateMachines.current();
 
-  window.eventBroker.getTopic("omo", "shell").observable.subscribe((event) => {
-    if (event === "openMenu") {
-      isOpen = true;
-    }
-  });
+  window.eventBroker
+    .getTopic("omo", "shell")
+    .observable.subscribe((event: OmoEvent) => {
+      runningProcess = window.stateMachines.current();
+      if (event.type === "openMenu") {
+        isOpen = true;
+      }
+      if (event.type == "runProcess") {
+        runningProcess = window.stateMachines.run(
+          (<RunProcess>event).definition,
+          (<RunProcess>event).contextModifier
+        );
+        isOpen = true;
+      }
+    });
 
   function routeLoading(e) {
     if (!e.detail.userData) return;
@@ -80,7 +94,14 @@
 
   function toggleOpen() {
     isOpen = !isOpen;
-    console.log("toggleOpen");
+  }
+
+  function modalWantsToClose() {
+    runningProcess = window.stateMachines.current();
+    if (runningProcess) {
+    } else {
+      isOpen = false;
+    }
   }
 
   let layout1 = {
@@ -108,16 +129,26 @@
       </Leaf>
       <Leaf area="bottom">
         <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
-        <Modal bind:isOpen>
-          {#each overflowActions as action}
-            <div class="w-full">
-              <div class="space-y-2">
-                <div on:click={() => {}}>
-                  <Button text={action.label} type="secondary" />
+        <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
+          {#if runningProcess}
+            <Process
+              process={runningProcess}
+              on:stopped={() => {
+                isOpen = false;
+                runningProcess = null;
+              }} />
+          {:else}
+            {#each overflowActions as action}
+              <div class="w-full">
+                <div class="space-y-2">
+                  <div
+                    on:click={() => window.dispatchShellEvent(action.event())}>
+                    <Button text={action.label} type="secondary" />
+                  </div>
                 </div>
               </div>
-            </div>
-          {/each}
+            {/each}
+          {/if}
         </Modal>
       </Leaf>
     </Composite>

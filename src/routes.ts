@@ -16,13 +16,20 @@ import Settings from 'src/dapps/identity/pages/Settings.svelte'
 import Login from 'src/dapps/identity/pages/Login.svelte'
 import wrap from "svelte-spa-router/wrap";
 import { location } from 'svelte-spa-router'
+import { OmoEvent } from "./libs/o-events/omoEvent";
+import { ShowModal } from "./libs/o-events/showModal";
+import { RunProcess } from "./libs/o-events/runProcess";
+import { requestUbi } from "./dapps/wallet/processes/requestUbi/requestUbi";
+import { transferXDai } from "./dapps/wallet/processes/transferXDai/transferXDai";
+import { setTrust, SetTrustContext } from "./dapps/wallet/processes/setTrust/setTrust";
+import { transferCircles } from "./dapps/wallet/processes/transferCircles/transferCircles";
 
 export type ActionBarAction = {
     type: "route" | "trigger",
     pos: "1" | "2" | "3" | "4" | "overflow",
     icon: string,
     label: string,
-    event?: any,
+    event?: () => OmoEvent,
     route?: string
 }
 
@@ -100,11 +107,38 @@ export default {
                 label: "Home",
                 route: "#/omo/dapps"
             }, {
-                type: "route",
+                type: "trigger",
                 pos: "overflow",
-                icon: "home",
-                label: "Oida",
-                route: "#/omo/dapps"
+                icon: "coins",
+                label: "Get UBI",
+                event: () => new RunProcess(requestUbi)
+            }, {
+                type: "trigger",
+                pos: "overflow",
+                icon: "coins",
+                label: "Send xDai",
+                event: () => new RunProcess(transferXDai)
+            }, {
+                type: "trigger",
+                pos: "overflow",
+                icon: "coins",
+                label: "Trust friend",
+                event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
+                    context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
+                    return context;
+                })
+            }, {
+                type: "trigger",
+                pos: "overflow",
+                icon: "coins",
+                label: "Send money",
+                event: () => new RunProcess(transferCircles)
+            }, {
+                type: "trigger",
+                pos: "overflow",
+                icon: "coins",
+                label: "Receive money",
+                //event: () => new RunProcess(requestUbi)
             }]
         }
     }),

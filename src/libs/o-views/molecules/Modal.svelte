@@ -1,9 +1,10 @@
 <script lang="ts">
   // imports
-  import { afterUpdate } from "svelte";
+  import { afterUpdate, createEventDispatcher } from "svelte";
   import { fade, scale, fly } from "svelte/transition";
   import ProgressBar from "../atoms/ProgressBar.svelte";
 
+  const dispatch = createEventDispatcher();
   // public props
   export let triggerRef = undefined;
   export let isOpen = false;
@@ -11,30 +12,10 @@
   // local props
   let buttonRef;
   // functions
-  const handleBack = () => {
-    const runningProcess = window.stateMachines.current();
-    if (!runningProcess) {
-      return;
-    }
-    runningProcess.sendEvent({
-      type: "omo.back",
-    });
-  };
   const handleClose = () => {
-    const runningProcess = window.stateMachines.current();
-    if (!runningProcess) {
-      isOpen = false;
-      return;
-    }
-
-    if (confirm("Do you want to cancel the running process?")) {
-      runningProcess.sendEvent({
-        type: "omo.cancel",
-      });
-    }
+    dispatch("closeRequest");
   };
   const handleEsc = (e) => e.key === "Escape" && handleClose();
-
   let progressSeries: number[] = [33, 66, 100];
 </script>
 
