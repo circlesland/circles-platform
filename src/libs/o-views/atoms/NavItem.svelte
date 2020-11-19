@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Icon from "fa-svelte";
+  // import Icon from "fa-svelte";
 
   export let icon;
   export let text;
