@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Trusts } from "src/dapps/wallet/pages/Trusts.svelte";
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
   import {
     AddressLookup,
@@ -16,7 +15,7 @@
   let person: Person;
   let personsThatTrustMe: any[] = [];
   let personsITrust: any[] = [];
-  let mutualTrusts: any[] = [];
+  let mutualFriends: any[] = [];
   let mutual: { [address: string]: any } = {};
   let untrusted: any[] = [];
   let untrusted_: { [address: string]: any } = {};
@@ -67,7 +66,7 @@
         tt2[o.owner.address] = o;
       });
 
-    mutualTrusts = Object.keys(t1)
+    mutualFriends = Object.keys(t1)
       .map((k) => <TokenAndOwner>t1[k])
       .filter((o) => o.limit > 0)
       .filter((o) => {
@@ -88,7 +87,7 @@
             address: mutualTrust.owner.address,
             limit: mutualTrust.limit,
           },
-          actions: ["untrust", "send"],
+          actions: ["untrust"],
         };
       });
 
@@ -108,7 +107,7 @@
             address: personsThatTrustMe.owner.address,
             limit: personsThatTrustMe.limit,
           },
-          actions: ["send", "trust"],
+          actions: ["trust"],
         };
       });
 
@@ -141,7 +140,7 @@
 </script>
 
 <div class="h-full space-y-2">
-  {#if personsThatTrustMe.length <= 1 && mutualTrusts.length == 0 && mutualTrusts.length == 0 && mutualTrusts.length == 0}
+  {#if personsThatTrustMe.length <= 1 && mutualFriends.length == 0 && mutualFriends.length == 0 && mutualFriends.length == 0}
     <div class="flex items-center justify-center h-full">
       <Jumper size="150" color="#071D69" unit="px" />
     </div>
@@ -156,13 +155,13 @@
       <FriendItem data={personThatTrustMe} />
     {/each}
 
-    {#if mutualTrusts.length > 0}
+    {#if mutualFriends.length > 0}
       <div class="pl-1 text-gray-500 lowercase font-title">
         Mutually trusted friends
       </div>
     {/if}
 
-    {#each mutualTrusts as mutualTrust}
+    {#each mutualFriends as mutualTrust}
       <FriendItem data={mutualTrust} />
     {/each}
 
@@ -178,7 +177,7 @@
 
     {#if untrusted.length > 0}
       <div class="pl-1 text-gray-500 lowercase font-title">
-        Friends, where I revoked Trusts
+        Friends, where I revoked Friends
       </div>
     {/if}
     {#each untrusted as ut}

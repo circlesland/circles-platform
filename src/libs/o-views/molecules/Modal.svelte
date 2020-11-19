@@ -6,7 +6,7 @@
 
   const dispatch = createEventDispatcher();
   // public props
-  export let triggerRef = undefined;
+  // export let triggerRef = undefined;
   export let isOpen = false;
   export let role = "dialog";
   // local props
@@ -57,9 +57,11 @@
             -- step title --
           </div>
         </div>
-        <ProgressBar />
+        <!-- <ProgressBar /> -->
       </header>
-      <slot />
+      <div class="p-4 space-y-2">
+        <slot />
+      </div>
     </div>
   </aside>
 {/if}

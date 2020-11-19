@@ -2,8 +2,8 @@
   import Router from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
-  import {getLocaleFromNavigator, addMessages, init} from "svelte-i18n";
-  import {_} from "svelte-i18n";
+  import { getLocaleFromNavigator, addMessages, init } from "svelte-i18n";
+  import { _ } from "svelte-i18n";
 
   import omo_en from "src/dapps/omo/languages/en.json";
   import omo_de from "src/dapps/omo/languages/de.json";
@@ -20,8 +20,8 @@
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
   import TemplateMobileWrapper from "./libs/o-views/templates/TemplateMobileWrapper.svelte";
-  import {OmoEvent} from "./libs/o-events/omoEvent";
-  import {RunProcess} from "./libs/o-events/runProcess";
+  import { OmoEvent } from "./libs/o-events/omoEvent";
+  import { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
   import NavItem from "./libs/o-views/atoms/NavItem.svelte";
 
@@ -51,25 +51,21 @@
 
   window.eventBroker
     .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) =>
-  {
-    runningProcess = window.stateMachines.current();
-    if (event.type === "openMenu")
-    {
-      isOpen = true;
-    }
-    if (event.type == "runProcess")
-    {
-      runningProcess = window.stateMachines.run(
-        (<RunProcess>event).definition,
-        (<RunProcess>event).contextModifier
-      );
-      isOpen = true;
-    }
-  });
+    .observable.subscribe((event: OmoEvent) => {
+      runningProcess = window.stateMachines.current();
+      if (event.type === "openMenu") {
+        isOpen = true;
+      }
+      if (event.type == "runProcess") {
+        runningProcess = window.stateMachines.run(
+          (<RunProcess>event).definition,
+          (<RunProcess>event).contextModifier
+        );
+        isOpen = true;
+      }
+    });
 
-  function routeLoading(e)
-  {
+  function routeLoading(e) {
     if (!e.detail.userData) return;
 
     actions = e.detail.userData.actions;
@@ -80,8 +76,7 @@
 
   $: {
     let _quickActions = actions.filter((o) => o.pos && o.pos !== "overflow");
-    quickActions = [0, 1, 2, 3].map((index) =>
-    {
+    quickActions = [0, 1, 2, 3].map((index) => {
       let actionAt: any = _quickActions.find(
         (action) => action.pos == index + 1
       );
@@ -98,19 +93,14 @@
     console.log(overflowActions);
   }
 
-  function toggleOpen()
-  {
+  function toggleOpen() {
     isOpen = !isOpen;
   }
 
-  function modalWantsToClose()
-  {
+  function modalWantsToClose() {
     runningProcess = window.stateMachines.current();
-    if (runningProcess)
-    {
-    }
-    else
-    {
+    if (runningProcess) {
+    } else {
       isOpen = false;
     }
   }
@@ -130,16 +120,16 @@
   }
 </style>
 
-<Tailwind/>
+<Tailwind />
 
 <div class="font-primary app">
   <TemplateMobileWrapper>
     <Composite layout={layout1}>
       <Leaf area="top" overflowY>
-        <Router {routes} on:routeLoading={routeLoading}/>
+        <Router {routes} on:routeLoading={routeLoading} />
       </Leaf>
       <Leaf area="bottom">
-        <ActionBar on:actionButtonClick={toggleOpen} {quickActions}/>
+        <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
         <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
           {#if runningProcess}
             <Process
@@ -147,45 +137,46 @@
               on:stopped={() => {
                 isOpen = false;
                 runningProcess = null;
-              }}/>
+              }} />
           {:else}
             {#each overflowActions as action}
               <div class="w-full">
                 <div class="space-y-2">
                   <div
                     on:click={() => window.dispatchShellEvent(action.event())}>
-                    <Button text={action.label} type="secondary"/>
+                    <Button text={action.label} type="secondary" />
                   </div>
                 </div>
               </div>
             {/each}
 
-            <footer class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
+            <footer
+              class="flex justify-between px-4 pt-3 text-gray-400 bg-white ">
               <a on:click={() => {}}>
                 <div
                   class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
                   <span>
-                    <i class="text-2xl"></i>
-                    <p class="lowercase font-title"></p>
+                    <i class="text-2xl" />
+                    <p class="lowercase font-title" />
                   </span>
                 </div>
               </a>
-              <a on:click={() => {
-                isOpen = false;
-              }}>
-                <NavItem icon="times" text="Cancel"/>
+              <a
+                on:click={() => {
+                  isOpen = false;
+                }}>
+                <NavItem icon="times" text="close" />
               </a>
               <a on:click={() => {}}>
                 <div
                   class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
                   <span>
-                    <i class="text-2xl"></i>
-                    <p class="lowercase font-title"></p>
+                    <i class="text-2xl" />
+                    <p class="lowercase font-title" />
                   </span>
                 </div>
               </a>
             </footer>
-
           {/if}
         </Modal>
       </Leaf>

@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { push } from "svelte-spa-router";
   import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
-
 
   let header = {
     title: "Start",

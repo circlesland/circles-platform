@@ -7,7 +7,7 @@ import Dapps from 'src/dapps/omo/pages/Dapps.svelte'
 import Safe from 'src/dapps/wallet/pages/Safe.svelte'
 import ConnectCircles from 'src/dapps/wallet/pages/ConnectCircles.svelte'
 import Start from 'src/dapps/wallet/pages/Start.svelte'
-import Trusts from 'src/dapps/wallet/pages/Trusts.svelte'
+import Friends from 'src/dapps/wallet/pages/Friends.svelte'
 import Tokens from 'src/dapps/wallet/pages/Tokens.svelte'
 import Register from 'src/dapps/wallet/pages/Register.svelte'
 
@@ -23,7 +23,7 @@ import { requestUbi } from "./dapps/wallet/processes/requestUbi/requestUbi";
 import { transferXDai } from "./dapps/wallet/processes/transferXDai/transferXDai";
 import { setTrust, SetTrustContext } from "./dapps/wallet/processes/setTrust/setTrust";
 import { transferCircles } from "./dapps/wallet/processes/transferCircles/transferCircles";
-import {connectSafe} from "./dapps/wallet/processes/connectSafe/connectSafe";
+import { connectSafe } from "./dapps/wallet/processes/connectSafe/connectSafe";
 
 export type ActionBarAction = {
     type: "route" | "trigger",
@@ -35,29 +35,29 @@ export type ActionBarAction = {
 }
 
 const safeDefaultActions = [{
-  type: "route",
-  pos: "1",
-  icon: "piggy-bank",
-  label: "Safe",
-  route: "#/wallet/safe"
+    type: "route",
+    pos: "1",
+    icon: "piggy-bank",
+    label: "Safe",
+    route: "#/wallet/safe"
 }, {
-  type: "route",
-  pos: "2",
-  icon: "coins",
-  label: "Tokens",
-  route: "#/wallet/tokens"
+    type: "route",
+    pos: "2",
+    icon: "coins",
+    label: "Tokens",
+    route: "#/wallet/tokens"
 }, {
-  type: "route",
-  pos: "3",
-  icon: "user-friends",
-  label: "Friends",
-  route: "#/wallet/trusts"
+    type: "route",
+    pos: "3",
+    icon: "user-friends",
+    label: "Friends",
+    route: "#/wallet/friends"
 }, {
-  type: "route",
-  pos: "4",
-  icon: "home",
-  label: "Home",
-  route: "#/omo/dapps"
+    type: "route",
+    pos: "4",
+    icon: "home",
+    label: "Home",
+    route: "#/omo/dapps"
 }];
 
 location.subscribe(event => {
@@ -74,11 +74,11 @@ export default {
         component: Dapps,
         userData: {
             actions: [{
-              type: "trigger",
-              pos: "overflow",
-              icon: "coins",
-              label: "Connect Safe",
-              event: () => new RunProcess(connectSafe)
+                type: "trigger",
+                pos: "overflow",
+                icon: "coins",
+                label: "Connect Safe",
+                event: () => new RunProcess(connectSafe)
             }]
         }
     }),
@@ -110,10 +110,10 @@ export default {
         }
     }),
     '/wallet/start': wrap({
-      component: Start,
-      userData: {
-        actions: safeDefaultActions
-      }
+        component: Start,
+        userData: {
+            actions: safeDefaultActions
+        }
     }),
     '/wallet/register': Register,
     //'/wallet/jumpstart/:address': Jumpstart,
@@ -121,54 +121,130 @@ export default {
         component: Safe,
         userData: {
             actions: <ActionBarAction[]>[
-              ...safeDefaultActions
-          , {
-                type: "trigger",
-                pos: "overflow",
-                icon: "coins",
-                label: "Get UBI",
-                event: () => new RunProcess(requestUbi)
-            }, {
-                type: "trigger",
-                pos: "overflow",
-                icon: "coins",
-                label: "Send xDai",
-                event: () => new RunProcess(transferXDai)
-            }, {
-                type: "trigger",
-                pos: "overflow",
-                icon: "coins",
-                label: "Trust friend",
-                event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
-                    context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
-                    return context;
-                })
-            }, {
-                type: "trigger",
-                pos: "overflow",
-                icon: "coins",
-                label: "Send money",
-                event: () => new RunProcess(transferCircles)
-            }, {
-                type: "trigger",
-                pos: "overflow",
-                icon: "coins",
-                label: "Receive money",
-                //event: () => new RunProcess(requestUbi)
-            }]
+                ...safeDefaultActions
+                , {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Get UBI",
+                    event: () => new RunProcess(requestUbi)
+                }, {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Send xDai",
+                    event: () => new RunProcess(transferXDai)
+                }, {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Trust friend",
+                    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
+                        context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
+                        return context;
+                    })
+                },
+                // {
+                //     type: "trigger",
+                //     pos: "overflow",
+                //     icon: "coins",
+                //     label: "Send money",
+                //     event: () => new RunProcess(transferCircles)
+                // }, {
+                //     type: "trigger",
+                //     pos: "overflow",
+                //     icon: "coins",
+                //     label: "Receive money",
+                //     //event: () => new RunProcess(requestUbi)
+                // }
+            ]
         }
     }),
-    '/wallet/trusts': wrap({
-      component: Trusts,
-      userData: {
-        actions: safeDefaultActions
-      }
+    '/wallet/friends': wrap({
+        component: Friends,
+        userData: {
+            actions: <ActionBarAction[]>[
+                ...safeDefaultActions
+                , {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Get UBI",
+                    event: () => new RunProcess(requestUbi)
+                }, {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Send xDai",
+                    event: () => new RunProcess(transferXDai)
+                }, {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Trust friend",
+                    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
+                        context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
+                        return context;
+                    })
+                },
+                // {
+                //     type: "trigger",
+                //     pos: "overflow",
+                //     icon: "coins",
+                //     label: "Send money",
+                //     event: () => new RunProcess(transferCircles)
+                // }, {
+                //     type: "trigger",
+                //     pos: "overflow",
+                //     icon: "coins",
+                //     label: "Receive money",
+                //     //event: () => new RunProcess(requestUbi)
+                // }
+            ]
+        }
     }),
     '/wallet/tokens': wrap({
-      component: Tokens,
-      userData: {
-        actions: safeDefaultActions
-      }
+        component: Tokens,
+        userData: {
+            actions: <ActionBarAction[]>[
+                ...safeDefaultActions
+                , {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Get UBI",
+                    event: () => new RunProcess(requestUbi)
+                }, {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Send xDai",
+                    event: () => new RunProcess(transferXDai)
+                }, {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: "coins",
+                    label: "Trust friend",
+                    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
+                        context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
+                        return context;
+                    })
+                },
+                // {
+                //     type: "trigger",
+                //     pos: "overflow",
+                //     icon: "coins",
+                //     label: "Send money",
+                //     event: () => new RunProcess(transferCircles)
+                // }, {
+                //     type: "trigger",
+                //     pos: "overflow",
+                //     icon: "coins",
+                //     label: "Receive money",
+                //     //event: () => new RunProcess(requestUbi)
+                // }
+            ]
+        }
     }),
     // Catch-all, must be last
     '*': NotFound,

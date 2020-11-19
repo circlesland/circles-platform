@@ -41,21 +41,18 @@
 
 <footer
   class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
-  <a href="#/wallet/{address}/safe" use:active={{ path: '/wallet/*/safe' }}>
+  <a href="#/wallet/{address}/safe" use:active={{ path: '/wallet/safe' }}>
     <NavItem icon="piggy-bank" text="Safe" />
   </a>
 
-  <a href="#/wallet/{address}/tokens" use:active={{ path: '/wallet/*/tokens' }}>
+  <a href="#/wallet/{address}/tokens" use:active={{ path: '/wallet/tokens' }}>
     <NavItem icon="coins" text="Token" />
   </a>
 
   <!-- placeholder for the action button -->
   <div class="w-12 px-2" />
 
-  <a
-    href="/wallet/{address}/trusts"
-    use:link
-    use:active={{ path: '/wallet/*/trusts' }}>
+  <a href="/wallet/friends" use:link use:active={{ path: '/wallet/friends' }}>
     <NavItem icon="user-friends" text="Friends" />
   </a>
   <a href="/omo/dapps" use:link>
