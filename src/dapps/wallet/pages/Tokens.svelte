@@ -8,6 +8,8 @@
   let header = {
     title: "Tokens",
   };
+
+  let address = localStorage.getItem("omo.safeAddress");
 </script>
 
 <TemplateSafe>
@@ -15,7 +17,7 @@
     <Header data={header} />
   </header>
   <main slot="main">
-    <Tokens />
+    <Tokens {address} />
   </main>
   <footer slot="footer">
     <Menu actions={Actions} />

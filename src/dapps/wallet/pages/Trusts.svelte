@@ -8,6 +8,8 @@
   let header = {
     title: "Friends",
   };
+
+  let address = localStorage.getItem("omo.safeAddress");
 </script>
 
 <TemplateSafe>
@@ -15,7 +17,7 @@
     <Header data={header} />
   </header>
   <main slot="main">
-    <Trusts />
+    <Trusts {address} />
   </main>
   <footer slot="footer">
     <Menu actions={Actions} />

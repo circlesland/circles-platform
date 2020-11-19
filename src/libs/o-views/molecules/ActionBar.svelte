@@ -37,6 +37,16 @@
         <NavItem icon="{quickActions[1].icon}" text="{quickActions[1].label}"/>
     </a>
 
+  <a on:click={() => {}}>
+    <div
+      class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
+                  <span>
+                    <i class="text-2xl"></i>
+                    <p class="lowercase font-title"></p>
+                  </span>
+    </div>
+  </a>
+
     <a href="{quickActions[2].route}">
         <NavItem icon="{quickActions[2].icon}" text="{quickActions[2].label}"/>
     </a>

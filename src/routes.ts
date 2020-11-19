@@ -34,6 +34,32 @@ export type ActionBarAction = {
     route?: string
 }
 
+const safeDefaultActions = [{
+  type: "route",
+  pos: "1",
+  icon: "piggy-bank",
+  label: "Safe",
+  route: "#/wallet/safe"
+}, {
+  type: "route",
+  pos: "2",
+  icon: "coins",
+  label: "Tokens",
+  route: "#/wallet/tokens"
+}, {
+  type: "route",
+  pos: "3",
+  icon: "user-friends",
+  label: "Friends",
+  route: "#/wallet/trusts"
+}, {
+  type: "route",
+  pos: "4",
+  icon: "home",
+  label: "Home",
+  route: "#/omo/dapps"
+}];
+
 location.subscribe(event => {
     console.log(event);
 })
@@ -83,37 +109,20 @@ export default {
             }]
         }
     }),
-    '/wallet/start': Start,
+    '/wallet/start': wrap({
+      component: Start,
+      userData: {
+        actions: safeDefaultActions
+      }
+    }),
     '/wallet/register': Register,
     //'/wallet/jumpstart/:address': Jumpstart,
     '/wallet/safe': wrap({
         component: Safe,
         userData: {
-            actions: <ActionBarAction[]>[{
-                type: "route",
-                pos: "1",
-                icon: "piggy-bank",
-                label: "Safe",
-                route: "#/wallet/safe"
-            }, {
-                type: "route",
-                pos: "2",
-                icon: "coins",
-                label: "Tokens",
-                route: "#/wallet/tokens"
-            }, {
-                type: "route",
-                pos: "3",
-                icon: "user-friends",
-                label: "Friends",
-                route: "#/wallet/trusts"
-            }, {
-                type: "route",
-                pos: "4",
-                icon: "home",
-                label: "Home",
-                route: "#/omo/dapps"
-            }, {
+            actions: <ActionBarAction[]>[
+              ...safeDefaultActions
+          , {
                 type: "trigger",
                 pos: "overflow",
                 icon: "coins",
@@ -149,8 +158,18 @@ export default {
             }]
         }
     }),
-    '/wallet/trusts': Trusts,
-    '/wallet/tokens': Tokens,
+    '/wallet/trusts': wrap({
+      component: Trusts,
+      userData: {
+        actions: safeDefaultActions
+      }
+    }),
+    '/wallet/tokens': wrap({
+      component: Tokens,
+      userData: {
+        actions: safeDefaultActions
+      }
+    }),
     // Catch-all, must be last
     '*': NotFound,
 }
