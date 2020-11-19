@@ -14,6 +14,7 @@ import {summarize} from "./actions/summarize";
 import {storePrivateKeyToContext} from "./actions/storePrivateKeyToContext";
 import {storeSafeAddressToContext} from "./actions/storeSafeAddressToContext";
 import {strings} from "../../languages/strings";
+import {push} from "svelte-spa-router";
 
 export interface ConnectSafeContext extends ProcessContext
 {
@@ -115,7 +116,8 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: "promptSuccess"
+                    actions: () => push('#/wallet/safe'),
+                    //actions: "promptSuccess"
                 }
             }
         },
