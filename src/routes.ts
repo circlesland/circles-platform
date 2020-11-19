@@ -23,6 +23,7 @@ import { requestUbi } from "./dapps/wallet/processes/requestUbi/requestUbi";
 import { transferXDai } from "./dapps/wallet/processes/transferXDai/transferXDai";
 import { setTrust, SetTrustContext } from "./dapps/wallet/processes/setTrust/setTrust";
 import { transferCircles } from "./dapps/wallet/processes/transferCircles/transferCircles";
+import {connectSafe} from "./dapps/wallet/processes/connectSafe/connectSafe";
 
 export type ActionBarAction = {
     type: "route" | "trigger",
@@ -46,7 +47,13 @@ export default {
     '/omo/*': wrap({
         component: Dapps,
         userData: {
-            actions: []
+            actions: [{
+              type: "trigger",
+              pos: "overflow",
+              icon: "coins",
+              label: "Connect Safe",
+              event: () => new RunProcess(connectSafe)
+            }]
         }
     }),
     // Identity
