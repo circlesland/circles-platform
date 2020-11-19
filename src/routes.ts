@@ -1,17 +1,13 @@
 // Components
 import Website from 'src/dapps/website/pages/Website.svelte'
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
-//Dapp Overview
 import Dapps from 'src/dapps/omo/pages/Dapps.svelte'
-// Wallet Dapp
 import Safe from 'src/dapps/wallet/pages/Safe.svelte'
 import ConnectCircles from 'src/dapps/wallet/pages/ConnectCircles.svelte'
 import Start from 'src/dapps/wallet/pages/Start.svelte'
 import Friends from 'src/dapps/wallet/pages/Friends.svelte'
 import Tokens from 'src/dapps/wallet/pages/Tokens.svelte'
 import Register from 'src/dapps/wallet/pages/Register.svelte'
-
-// Identity Dapp
 import Settings from 'src/dapps/identity/pages/Settings.svelte'
 import Login from 'src/dapps/identity/pages/Login.svelte'
 import wrap from "svelte-spa-router/wrap";
@@ -23,12 +19,13 @@ import { requestUbi } from "./dapps/wallet/processes/requestUbi/requestUbi";
 import { transferXDai } from "./dapps/wallet/processes/transferXDai/transferXDai";
 import { setTrust, SetTrustContext } from "./dapps/wallet/processes/setTrust/setTrust";
 import { transferCircles } from "./dapps/wallet/processes/transferCircles/transferCircles";
-import { connectSafe } from "./dapps/wallet/processes/connectSafe/connectSafe";
+import {connectSafe} from "./dapps/wallet/processes/connectSafe/connectSafe";
+import {faCogs, faCoins, faHome, faPiggyBank, faUserFriends} from "@fortawesome/free-solid-svg-icons";
 
 export type ActionBarAction = {
     type: "route" | "trigger",
     pos: "1" | "2" | "3" | "4" | "overflow",
-    icon: string,
+    icon: any,
     label: string,
     event?: () => OmoEvent,
     route?: string
@@ -37,25 +34,25 @@ export type ActionBarAction = {
 const safeDefaultActions = [{
     type: "route",
     pos: "1",
-    icon: "piggy-bank",
+    icon: faPiggyBank,
     label: "Safe",
     route: "#/wallet/safe"
 }, {
     type: "route",
     pos: "2",
-    icon: "coins",
+    icon: faCoins,
     label: "Tokens",
     route: "#/wallet/tokens"
 }, {
     type: "route",
     pos: "3",
-    icon: "user-friends",
+    icon: faUserFriends,
     label: "Friends",
     route: "#/wallet/friends"
 }, {
     type: "route",
     pos: "4",
-    icon: "home",
+    icon: faHome,
     label: "Home",
     route: "#/omo/dapps"
 }];
@@ -74,11 +71,11 @@ export default {
         component: Dapps,
         userData: {
             actions: [{
-                type: "trigger",
-                pos: "overflow",
-                icon: "coins",
-                label: "Connect Safe",
-                event: () => new RunProcess(connectSafe)
+              type: "trigger",
+              pos: "overflow",
+              icon: faCoins,
+              label: "Connect Safe",
+              event: () => new RunProcess(connectSafe)
             }]
         }
     }),
@@ -97,13 +94,13 @@ export default {
             actions: [{
                 type: "round",
                 pos: "1",
-                icon: "fa-cogs",
+                icon: faCogs,
                 label: "Open Modal",
                 event: "showModal"
             }, {
                 type: "round",
                 pos: "2",
-                icon: "fa-cogs",
+                icon: faCogs,
                 label: "123",
                 event: "showModal"
             }]
@@ -125,19 +122,19 @@ export default {
                 , {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Get UBI",
                     event: () => new RunProcess(requestUbi)
                 }, {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Send xDai",
                     event: () => new RunProcess(transferXDai)
                 }, {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Trust friend",
                     event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
                         context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
@@ -168,19 +165,19 @@ export default {
                 , {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Get UBI",
                     event: () => new RunProcess(requestUbi)
                 }, {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Send xDai",
                     event: () => new RunProcess(transferXDai)
                 }, {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Trust friend",
                     event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
                         context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
@@ -211,19 +208,19 @@ export default {
                 , {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Get UBI",
                     event: () => new RunProcess(requestUbi)
                 }, {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Send xDai",
                     event: () => new RunProcess(transferXDai)
                 }, {
                     type: "trigger",
                     pos: "overflow",
-                    icon: "coins",
+                    icon: faCoins,
                     label: "Trust friend",
                     event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
                         context.setTrust = { trustLimit: { type: 'percent', data: 100 } };

@@ -6,6 +6,7 @@
   import { ProcessContext } from "../../o-processes/processContext";
   import { createEventDispatcher } from "svelte";
   import { Jumper } from "svelte-loading-spinners";
+  import {faArrowLeft, faTimes} from "@fortawesome/free-solid-svg-icons";
   import NavItem from "../atoms/NavItem.svelte";
 
   let statusType: "none" | "message" | "notification" | "prompt" = "none";
@@ -109,10 +110,10 @@
 
 <footer class="flex justify-between px-4 pb-2 text-gray-400 bg-white ">
   <a on:click={handleBack}>
-    <NavItem icon="arrow-left" text="Back" />
+    <NavItem icon={faArrowLeft} text="Back" />
   </a>
   <a on:click={handleCancel}>
-    <NavItem icon="times" text="Close" />
+    <NavItem icon={faTimes} text="Close" />
   </a>
   <a on:click={() => {}}>
     <div

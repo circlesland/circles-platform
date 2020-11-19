@@ -1,5 +1,5 @@
 <script lang="ts">
-  // import Icon from "fa-svelte";
+  import Icon from 'fa-svelte'
 
   export let icon;
   export let text;
@@ -17,7 +17,8 @@
 <div
   class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
   <span>
-    {#if icon}<i class="text-2xl fas fa-{icon}" />{/if}
-    <!-- <Icon {icon} class="text-2xl hover:text-secondary-lighter text-light-400" /> -->
+    {#if icon}
+    <Icon icon={icon}></Icon>
+    {/if}
     <p class="lowercase font-title">{text}</p></span>
 </div>

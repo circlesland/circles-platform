@@ -25,6 +25,7 @@
   import Process from "./libs/o-views/molecules/Process.svelte";
   import NavItem from "./libs/o-views/atoms/NavItem.svelte";
   import { onMount } from "svelte";
+  import {faTimes} from "@fortawesome/free-solid-svg-icons";
 
   $: safeAddress = "";
 
@@ -172,7 +173,7 @@
                 on:click={() => {
                   isOpen = false;
                 }}>
-                <NavItem icon="times" text="close" />
+                <NavItem icon={faTimes} text="close" />
               </a>
               <a on:click={() => {}}>
                 <div
