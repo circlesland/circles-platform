@@ -13,14 +13,13 @@ import Login from 'src/dapps/identity/pages/Login.svelte'
 import wrap from "svelte-spa-router/wrap";
 import { location } from 'svelte-spa-router'
 import { OmoEvent } from "./libs/o-events/omoEvent";
-import { ShowModal } from "./libs/o-events/showModal";
 import { RunProcess } from "./libs/o-events/runProcess";
 import { requestUbi } from "./dapps/wallet/processes/requestUbi/requestUbi";
 import { transferXDai } from "./dapps/wallet/processes/transferXDai/transferXDai";
 import { setTrust, SetTrustContext } from "./dapps/wallet/processes/setTrust/setTrust";
 import { transferCircles } from "./dapps/wallet/processes/transferCircles/transferCircles";
-import {connectSafe} from "./dapps/wallet/processes/connectSafe/connectSafe";
-import {faCogs, faCoins, faHome, faPiggyBank, faUserFriends} from "@fortawesome/free-solid-svg-icons";
+import { connectSafe } from "./dapps/wallet/processes/connectSafe/connectSafe";
+import { faCogs, faCoins, faHome, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 
 export type ActionBarAction = {
     type: "route" | "trigger",
@@ -71,11 +70,11 @@ export default {
         component: Dapps,
         userData: {
             actions: [{
-              type: "trigger",
-              pos: "overflow",
-              icon: faCoins,
-              label: "Connect Safe",
-              event: () => new RunProcess(connectSafe)
+                type: "trigger",
+                pos: "overflow",
+                icon: faCoins,
+                label: "Connect Safe",
+                event: () => new RunProcess(connectSafe)
             }]
         }
     }),

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Router from "svelte-spa-router";
+  import Router, { location } from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
   import { getLocaleFromNavigator, addMessages, init } from "svelte-i18n";
@@ -25,7 +25,7 @@
   import Process from "./libs/o-views/molecules/Process.svelte";
   import NavItem from "./libs/o-views/atoms/NavItem.svelte";
   import { onMount } from "svelte";
-  import {faTimes} from "@fortawesome/free-solid-svg-icons";
+  import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
   $: safeAddress = "";
 
@@ -138,6 +138,7 @@
       </Leaf>
       <Leaf area="bottom">
         <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
+
         <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
           {#if runningProcess}
             <Process
