@@ -9,7 +9,7 @@
   class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
   <span>
     {#if icon}
-      <Icon {icon} />
+      <Icon {icon} class="text-2xl" />
     {/if}
     <p class="lowercase font-title">{text}</p></span>
 </div>
