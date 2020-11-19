@@ -93,14 +93,6 @@
     {/each}
 
     <div class="flex justify-center w-full h-16 py-2 space-x-3 text-center">
-      <!-- <button
-                class="px-6 py-2 font-bold uppercase bg-gray-200 border rounded border-light-400 text-primary"
-                on:click={() => {
-      process.sendEvent({ type: 'omo.cancel' });
-      process = null;
-    }}>
-    cancel   
-        </button> -->
       <div
         class="w-full"
         on:click={() => {

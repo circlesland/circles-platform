@@ -57,7 +57,6 @@
 
   window.eventBroker.getTopic("omo", "shell").observable.subscribe((event: OmoEvent) =>
   {
-    console.log("received:", event)
     runningProcess = window.stateMachines.current();
     if (event.type === "openMenu")
     {
@@ -103,7 +102,16 @@
   function toggleOpen()
   {
     isOpen = !isOpen
-    console.log("toggleOpen")
+  }
+
+  function modalWantsToClose()
+  {
+    runningProcess = window.stateMachines.current();
+    if (runningProcess) {
+
+    } else {
+      isOpen = false;
+    }
   }
 </script>
 
@@ -124,9 +132,12 @@
     </Leaf>
     <Leaf area="bottom">
       <ActionBar on:actionButtonClick={toggleOpen} {quickActions}/>
-      <Modal bind:isOpen={isOpen}>
+      <Modal bind:isOpen={isOpen} on:closeRequest={modalWantsToClose}>
         {#if runningProcess}
-          <Process process={runningProcess} />
+          <Process process={runningProcess} on:stopped={() => {
+            isOpen = false;
+            runningProcess = null;
+          }} />
         {:else}
           {#each overflowActions as action}
             <div class="w-full">
