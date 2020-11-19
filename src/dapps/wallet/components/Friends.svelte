@@ -177,7 +177,7 @@
 
     {#if untrusted.length > 0}
       <div class="pl-1 text-gray-500 lowercase font-title">
-        Friends, where I revoked Friends
+        Friends, where I revoked trust
       </div>
     {/if}
     {#each untrusted as ut}
