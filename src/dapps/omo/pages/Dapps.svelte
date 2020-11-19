@@ -54,7 +54,7 @@
       </div>
     {:else}
       <div class="grid grid-cols-2 gap-2 -mt-4">
-        <a href="#/wallet/connect">
+        <a href="#/wallet/safe">
           <div
             class="flex items-center justify-center h-48 p-6 text-center text-gray-800 bg-white border border-gray-200 rounded">
             <div class="text-primary">

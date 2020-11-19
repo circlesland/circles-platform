@@ -3,7 +3,6 @@ import Website from 'src/dapps/website/pages/Website.svelte'
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import Dapps from 'src/dapps/omo/pages/Dapps.svelte'
 import Safe from 'src/dapps/wallet/pages/Safe.svelte'
-import ConnectCircles from 'src/dapps/wallet/pages/ConnectCircles.svelte'
 import Start from 'src/dapps/wallet/pages/Start.svelte'
 import Friends from 'src/dapps/wallet/pages/Friends.svelte'
 import Tokens from 'src/dapps/wallet/pages/Tokens.svelte'
@@ -87,24 +86,6 @@ export default {
     }),
     '/identity/login': Login,
     // Wallet
-    '/wallet/connect': wrap({
-        component: ConnectCircles,
-        userData: {
-            actions: [{
-                type: "round",
-                pos: "1",
-                icon: faCogs,
-                label: "Open Modal",
-                event: "showModal"
-            }, {
-                type: "round",
-                pos: "2",
-                icon: faCogs,
-                label: "123",
-                event: "showModal"
-            }]
-        }
-    }),
     '/wallet/start': wrap({
         component: Start,
         userData: {
