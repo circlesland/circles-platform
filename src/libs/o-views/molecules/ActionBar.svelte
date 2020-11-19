@@ -6,11 +6,7 @@
   import { ActionBarAction } from "../../../routes";
   import Button from "../atoms/Button.svelte";
 
-  $: safeAddress = "";
-
-  onMount(() => {
-    safeAddress = localStorage.getItem("omo.safeAddress");
-  });
+  export let safeAddress:string;
 
   const dispatch = createEventDispatcher();
   export let quickActions: ActionBarAction[] = [];

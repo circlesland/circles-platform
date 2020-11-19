@@ -27,10 +27,9 @@
   import { onMount } from "svelte";
   import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-  $: safeAddress = "";
+  let safeAddress;
 
   onMount(() => {
-    safeAddress = localStorage.getItem("omo.safeAddress");
   });
 
   let notes_en = {
@@ -74,6 +73,8 @@
     });
 
   function routeLoading(e) {
+    safeAddress = localStorage.getItem("omo.safeAddress");
+
     if (!e.detail.userData) return;
 
     actions = e.detail.userData.actions;
@@ -137,7 +138,7 @@
         <Router {routes} on:routeLoading={routeLoading} />
       </Leaf>
       <Leaf area="bottom">
-        <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
+        <ActionBar bind:safeAddress={safeAddress} on:actionButtonClick={toggleOpen} {quickActions} />
 
         <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
           {#if runningProcess}
