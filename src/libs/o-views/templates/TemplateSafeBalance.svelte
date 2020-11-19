@@ -8,7 +8,7 @@
   let layout: Layout = {
     areas: "'notifications' 'balance' 'address' 'main' 'footer'",
     columns: "1fr",
-    rows: "auto 160px 40px 1fr 68px",
+    rows: "auto 160px 40px 1fr ",
   };
 </script>
 
@@ -25,9 +25,6 @@
     </Leaf>
     <Leaf area="main" overflowY>
       <slot name="main" />
-    </Leaf>
-    <Leaf area="footer">
-      <slot name="footer" />
     </Leaf>
   </Composite>
 </TemplateMobileWrapper>

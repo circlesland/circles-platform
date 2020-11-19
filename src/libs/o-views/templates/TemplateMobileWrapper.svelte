@@ -1,6 +1,5 @@
 <script>
   import "css-doodle";
-  import Modal from "../molecules/Modal.svelte";
 </script>
 
 <style>
@@ -9,22 +8,21 @@
   }
   .fullgrid {
     display: grid;
-    max-height: 900px;
     grid-template-rows: 1fr;
     height: 100%;
   }
 </style>
 
 <div
-  class="z-10 flex flex-col items-center justify-center w-full h-full overflow-hidden bg-center bg-cover">
+  class="z-10 flex flex-col items-center justify-center w-full h-full overflow-hidden bg-center bg-cover bg-light-300">
   <div
-    class="flex items-center justify-center w-full h-full max-w-lg overflow-hidden wrap">
-    <div class="w-full overflow-hidden fullgrid">
+    class="flex items-center justify-center w-full h-full max-w-2xl overflow-hidden wrap">
+    <div class="w-full h-full fullgrid">
       <slot />
     </div>
   </div>
 </div>
-
+<!-- 
 <div
   class="fixed z-0 flex items-center justify-center w-full h-full position bg-dark">
   <css-doodle>
@@ -57,4 +55,4 @@
       
       `}
   </css-doodle>
-</div>
+</div> -->

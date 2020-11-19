@@ -35,7 +35,6 @@
   };
   const handleEsc = (e) => e.key === "Escape" && handleClose();
 
-
   let progressSeries: number[] = [33, 66, 100];
 </script>
 
@@ -69,7 +68,7 @@
     out:fade
     on:click|self={handleClose}
     class="z-40 overlay">
-    <div class="w-full max-w-lg bg-white rounded-t-xl">
+    <div class="w-full max-w-2xl bg-white rounded-t-xl">
       <header class="rounded-t-lg">
         <div
           class="flex items-center justify-center py-2 overflow-hidden text-base text-center text-white rounded-t-xl bg-primary">
@@ -79,7 +78,7 @@
         </div>
         <ProgressBar />
       </header>
-      <slot></slot>
+      <slot />
     </div>
   </aside>
 {/if}

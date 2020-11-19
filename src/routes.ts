@@ -15,11 +15,11 @@ import Register from 'src/dapps/wallet/pages/Register.svelte'
 import Settings from 'src/dapps/identity/pages/Settings.svelte'
 import Login from 'src/dapps/identity/pages/Login.svelte'
 import wrap from "svelte-spa-router/wrap";
-import {location} from 'svelte-spa-router'
+import { location } from 'svelte-spa-router'
 
 export type ActionBarAction = {
-    type: "route"|"trigger",
-    pos: "1"|"2"|"3"|"4"|"overflow",
+    type: "route" | "trigger",
+    pos: "1" | "2" | "3" | "4" | "overflow",
     icon: string,
     label: string,
     event?: any,
@@ -39,44 +39,14 @@ export default {
     '/omo/*': wrap({
         component: Dapps,
         userData: {
-            actions:[{
-                type: "route",
-                pos: "1",
-                icon: "fa-star",
-                label: "Open Modal",
-                route: "#/wallet/safe"
-            }, {
-                type: "round",
-                pos: "2",
-                icon: "fa-star",
-                label: "123",
-                event: "showModal"
-            }, {
-                type: "round",
-                pos: "3",
-                icon: "fa-star",
-                label: "456",
-                event: "showModal"
-            }]
+            actions: []
         }
     }),
     // Identity
     '/identity/settings': wrap({
         component: Settings,
         userData: {
-            actions:[{
-                type: "round",
-                pos: "1",
-                icon: "fa-cogs",
-                label: "Open Modal",
-                event: "showModal"
-            }, {
-                type: "round",
-                pos: "2",
-                icon: "fa-cogs",
-                label: "123",
-                event: "showModal"
-            }]
+            actions: []
         }
     }),
     '/identity/login': Login,
@@ -84,7 +54,7 @@ export default {
     '/wallet/connect': wrap({
         component: ConnectCircles,
         userData: {
-            actions:[{
+            actions: [{
                 type: "round",
                 pos: "1",
                 icon: "fa-cogs",
@@ -105,34 +75,34 @@ export default {
     '/wallet/safe': wrap({
         component: Safe,
         userData: {
-            actions:<ActionBarAction[]>[{
+            actions: <ActionBarAction[]>[{
                 type: "route",
                 pos: "1",
                 icon: "piggy-bank",
                 label: "Safe",
                 route: "#/wallet/safe"
-            },{
+            }, {
                 type: "route",
                 pos: "2",
                 icon: "coins",
                 label: "Tokens",
-                route: "#/wallet/token"
-            },{
+                route: "#/wallet/tokens"
+            }, {
                 type: "route",
                 pos: "3",
-                icon: "coins",
+                icon: "user-friends",
                 label: "Friends",
                 route: "#/wallet/trusts"
-            },{
+            }, {
                 type: "route",
                 pos: "4",
-                icon: "coins",
+                icon: "home",
                 label: "Home",
                 route: "#/omo/dapps"
-            },{
+            }, {
                 type: "route",
                 pos: "overflow",
-                icon: "coins",
+                icon: "home",
                 label: "Oida",
                 route: "#/omo/dapps"
             }]

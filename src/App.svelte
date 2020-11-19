@@ -2,8 +2,8 @@
   import Router from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
-  import {getLocaleFromNavigator, addMessages, init} from "svelte-i18n";
-  import {_} from "svelte-i18n";
+  import { getLocaleFromNavigator, addMessages, init } from "svelte-i18n";
+  import { _ } from "svelte-i18n";
 
   import omo_en from "src/dapps/omo/languages/en.json";
   import omo_de from "src/dapps/omo/languages/de.json";
@@ -19,15 +19,16 @@
   import Button from "./libs/o-views/atoms/Button.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
+  import TemplateMobileWrapper from "./libs/o-views/templates/TemplateMobileWrapper.svelte";
 
   let notes_en = {
     notes_text:
-            "This dapp is an early alpha test version. For feedback join our",
+      "This dapp is an early alpha test version. For feedback join our",
     notes_button: "chat",
   };
   let notes_de = {
     notes_text:
-            "Diese App is noch in früher Testphase. Für Feedback schreib uns im",
+      "Diese App is noch in früher Testphase. Für Feedback schreib uns im",
     notes_button: "chat",
   };
 
@@ -39,17 +40,9 @@
     initialLocale: getLocaleFromNavigator(),
   });
 
-  let layout1 = {
-    areas: "'top''bottom'",
-    columns: "1fr",
-    rows: "1fr 1fr",
-  };
-  let layout2 = {areas: "'top''bottom'", columns: "1fr", rows: "1fr 60px"};
-  let layout3 = {areas: "'full'", columns: "1fr", rows: "1fr "};
-
   let actions = [];
 
-  let isOpen:boolean = false;
+  let isOpen: boolean = false;
 
   window.eventBroker.getTopic("omo", "shell").observable.subscribe((event) => {
     if (event === "openMenu") {
@@ -58,38 +51,43 @@
   });
 
   function routeLoading(e) {
-    if (!e.detail.userData)
-      return;
+    if (!e.detail.userData) return;
 
     actions = e.detail.userData.actions;
   }
-
 
   let quickActions: any[] = [];
   let overflowActions: any[] = [];
 
   $: {
-    let _quickActions = actions.filter(o => o.pos && o.pos !== "overflow");
-    quickActions = [0, 1, 2, 3].map(index =>
-    {
-      let actionAt: any = _quickActions.find(action => action.pos == index + 1);
+    let _quickActions = actions.filter((o) => o.pos && o.pos !== "overflow");
+    quickActions = [0, 1, 2, 3].map((index) => {
+      let actionAt: any = _quickActions.find(
+        (action) => action.pos == index + 1
+      );
       actionAt = actionAt ?? {
         type: "trigger",
         pos: (index + 1).toString(),
         icon: "",
-        label: ""
-      }
+        label: "",
+      };
       return actionAt;
     });
 
-    overflowActions = actions.filter(o => !o.pos || o.pos === "overflow");
-    console.log(overflowActions)
+    overflowActions = actions.filter((o) => !o.pos || o.pos === "overflow");
+    console.log(overflowActions);
   }
 
   function toggleOpen() {
-    isOpen = !isOpen
-    console.log("toggleOpen")
+    isOpen = !isOpen;
+    console.log("toggleOpen");
   }
+
+  let layout1 = {
+    areas: "'top''bottom'",
+    columns: "1fr",
+    rows: "1fr 68px",
+  };
 </script>
 
 <style>
@@ -103,23 +101,25 @@
 <Tailwind />
 
 <div class="font-primary app">
-  <Composite layout={layout2}>
-    <Leaf area="top">
-      <Router {routes} on:routeLoading={routeLoading}/>
-    </Leaf>
-    <Leaf area="bottom">
-      <ActionBar on:actionButtonClick={toggleOpen} {quickActions}/>
-      <Modal bind:isOpen={isOpen}>
-        {#each overflowActions as action}
-          <div class="w-full">
-            <div class="space-y-2">
-              <div on:click={() => {}}>
-                <Button text="{action.label}" type="secondary" />
+  <TemplateMobileWrapper>
+    <Composite layout={layout1}>
+      <Leaf area="top" overflowY>
+        <Router {routes} on:routeLoading={routeLoading} />
+      </Leaf>
+      <Leaf area="bottom">
+        <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
+        <Modal bind:isOpen>
+          {#each overflowActions as action}
+            <div class="w-full">
+              <div class="space-y-2">
+                <div on:click={() => {}}>
+                  <Button text={action.label} type="secondary" />
+                </div>
               </div>
             </div>
-          </div>
-        {/each}
-      </Modal>
-    </Leaf>
-  </Composite>
+          {/each}
+        </Modal>
+      </Leaf>
+    </Composite>
+  </TemplateMobileWrapper>
 </div>

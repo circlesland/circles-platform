@@ -8,23 +8,18 @@
   let layout: Layout = {
     areas: "'notifications''header''main' 'footer'",
     columns: "1fr",
-    rows: "auto 250px 1fr 68px",
+    rows: "auto 250px 1fr",
   };
 </script>
 
-<TemplateMobileWrapper>
-  <Composite {layout} bg="bg-light-100">
-    <Leaf area="notifications">
-      <Notifications />
-    </Leaf>
-    <Leaf area="header">
-      <slot name="header" />
-    </Leaf>
-    <Leaf area="main" p="p-4 mt-4" overflowY>
-      <slot name="main" />
-    </Leaf>
-    <Leaf area="footer">
-      <slot name="footer" />
-    </Leaf>
-  </Composite>
-</TemplateMobileWrapper>
+<Composite {layout} bg="bg-light-100">
+  <Leaf area="notifications">
+    <Notifications />
+  </Leaf>
+  <Leaf area="header">
+    <slot name="header" />
+  </Leaf>
+  <Leaf area="main" p="p-4 mt-4" overflowY>
+    <slot name="main" />
+  </Leaf>
+</Composite>
