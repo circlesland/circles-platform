@@ -105,7 +105,8 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 onDone: {
                     actions: [
                         "setResult",
-                        "promptSuccess"
+                        "promptSuccess",
+                        () => push('#/wallet/safe'),
                     ],
                     target: "success"
                 }
@@ -116,7 +117,6 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: () => push('#/wallet/safe'),
                     //actions: "promptSuccess"
                 }
             }
