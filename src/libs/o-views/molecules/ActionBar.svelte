@@ -18,6 +18,13 @@
   function onActionButtonClick() {
     dispatch("actionButtonClick");
   }
+
+  function isActive(action:ActionBarAction) {
+    if (!action || !action.route)
+      return;
+
+    return action.route.indexOf($location) > -1;
+  }
 </script>
 
 <style>
@@ -38,11 +45,11 @@
 
   <footer
     class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
-    <a href={quickActions[0].route}>
+    <a href={quickActions[0].route} class:active={isActive(quickActions[0])}>
       <NavItem icon={quickActions[0].icon} text={quickActions[0].label} />
     </a>
 
-    <a href={quickActions[1].route}>
+    <a href={quickActions[1].route} class:active={isActive(quickActions[1])}>
       <NavItem icon={quickActions[1].icon} text={quickActions[1].label} />
     </a>
 
@@ -56,11 +63,11 @@
       </div>
     </a>
 
-    <a href={quickActions[2].route}>
+    <a href={quickActions[2].route} class:active={isActive(quickActions[2])}>
       <NavItem icon={quickActions[2].icon} text={quickActions[2].label} />
     </a>
 
-    <a href={quickActions[3].route}>
+    <a href={quickActions[3].route} class:active={isActive(quickActions[3])}>
       <NavItem icon={quickActions[3].icon} text={quickActions[3].label} />
     </a>
   </footer>
