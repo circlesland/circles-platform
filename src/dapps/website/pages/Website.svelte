@@ -1,80 +1,29 @@
 <script lang="ts">
   import "css-doodle";
+  import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
+  import { push } from "svelte-spa-router";
   // import { MamaOmo, SpanishMamaOmo } from "src/libs/mama-omo";
 
   // function clickMe() {
   //   new MamaOmo("Samuel").greetMe();
   // }
+  $: safeAddress = "";
+
+  onMount(() => {
+    safeAddress = localStorage.getItem("omo.safeAddress");
+    if (safeAddress) {
+      push("/omo/dapps");
+    }
+  });
 </script>
 
-<style>
-  :root {
-    --bg: #051f45;
-  }
-</style>
-
-<div class="absolute z-10 flex items-center justify-center w-full h-full ">
-  <div>
-    <img src="images/logo/logo_light.svg" alt="omo" class="w-16 pb-6 mx-auto" />
-  </div>
-</div>
-
-<div class="absolute z-10 flex items-end justify-center w-full h-full py-16">
-  <div>
-    <!-- <div
-      class="p-2 text-center text-white bg-orange-300 cursor-pointer"
-      on:click={clickMe}>
-      GreetMe
-    </div> -->
-    <div class="text-2xl text-center text-white font-title">
-      empowering your
-      <br />abundance
-    </div>
-    <div class="flex justify-center pt-20">
-      <a
-        href="#/omo/login"
-        class="px-4 py-2 text-center text-white uppercase border border-white rounded">{$_('button_gotoapp')}</a>
+<div class="flex items-center justify-center h-full bg-light-100">
+  <div class="">
+    <img src="images/logo/logo.svg" alt="omo" class="w-1/3 mx-auto" />
+    <div
+      class="mx-auto text-xl text-center text-secondary font-title max-w-4/5">
+      empowering your abundance
     </div>
   </div>
-</div>
-
-<div class="z-0 flex items-center justify-center w-full h-full bg-dark">
-  <css-doodle>
-    {`
-    :doodle {
-        @grid: 8x1 / 50vmin;
-      }
-    
-      @size: calc(100% - @i() * 3%);
-      @place-cell: center;
-      @shape: heart;
-      overflow: hidden;
-      
-      :after {
-        content: '';
-        @size: calc(100% - 5px);
-        @shape: heart;
-        background: var(--bg);
-        z-index: 1;
-      }
-    
-      :before {
-        content: '';
-        position: absolute;
-        @size: 200%;
-        background: conic-gradient(
-          @pd(#78E7D4, #E3383F, #EFF4DD, #F2A341) @p(10%, 40%),
-          transparent 0
-        );
-        animation: cycle @r(3s, 5s, .1) linear infinite;
-        animation-delay: -@r(8s);
-        z-index: 0;
-      }
-    
-      @keyframes cycle {
-        to { transform: rotate(1turn); }
-      }
-      `}
-  </css-doodle>
 </div>

@@ -7,9 +7,6 @@
   import { connectSafe } from "../processes/connectSafe/connectSafe";
   import Process from "../../../libs/o-views/molecules/Process.svelte";
   import TemplateHeaderMainAction from "src/libs/o-views/templates/TemplateHeaderMainAction.svelte";
-  import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
-
-
 
   let seedphrase: string;
   let safeAddress: string;

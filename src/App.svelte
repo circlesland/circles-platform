@@ -24,6 +24,13 @@
   import { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
   import NavItem from "./libs/o-views/atoms/NavItem.svelte";
+  import { onMount } from "svelte";
+
+  $: safeAddress = "";
+
+  onMount(() => {
+    safeAddress = localStorage.getItem("omo.safeAddress");
+  });
 
   let notes_en = {
     notes_text:
