@@ -11,15 +11,14 @@
   });
 </script>
 
-<Compose areas="'header''main'" rows="280px 1fr">
+<Compose areas="'header''main'" rows="auto 1fr">
   <Compose area="header">
     <ProfileHeader data={profile} {address} />
   </Compose>
-
   <Compose
     area="main"
     columns="1fr 1fr"
-    rows="repeat(7, 200px)"
+    rows="repeat({dapps.length / 2}, 200px)"
     tw="p-4"
     gap="1rem"
     overflowY>

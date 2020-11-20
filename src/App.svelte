@@ -122,7 +122,7 @@
       <Compose>
         <Notifications />
       </Compose>
-      <Compose>
+      <Compose rows="1fr" columns="1fr">
         <Router {routes} on:routeLoading={routeLoading} />
       </Compose>
       <Compose>

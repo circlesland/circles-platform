@@ -91,11 +91,21 @@
     </Compose>
   </Compose>
 {:else if $location == '/'}
-  <a href="#/omo/dapps" class="w-full p-2">
-    <Button text="Go to app" type="primary" />
-  </a>
+  <Compose
+    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    columns="1fr"
+    rows="1fr">
+    <div href="#/omo/dapps" class="w-full p-2">
+      <Button text="Go to app" type="primary" />
+    </div>
+  </Compose>
 {:else}
-  <div on:click={onActionButtonClick} class="w-full p-2">
-    <Button text="Login" type="primary" />
-  </div>
+  <Compose
+    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    columns="1fr"
+    rows="1fr">
+    <div on:click={onActionButtonClick} class="w-full p-2">
+      <Button text="Login" type="primary" />
+    </div>
+  </Compose>
 {/if}
