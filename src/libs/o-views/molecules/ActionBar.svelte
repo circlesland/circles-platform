@@ -66,7 +66,8 @@
     </Compose>
     <Compose rows="1fr" columns="1fr">
       <div
-        class="w-16 h-16 mx-auto mb-3 text-white rounded-full  action bg-secondary hover:bg-secondary-lighter">
+        on:click={onActionButtonClick}
+        class="w-16 h-16 mx-auto mb-3 text-white rounded-full action bg-secondary hover:bg-secondary-lighter">
         <div class="flex items-center justify-center">
           <i class="mt-4 text-3xl fas fa-plus " />
         </div>
