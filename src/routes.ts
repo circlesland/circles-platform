@@ -1,5 +1,5 @@
 // Components
-import Website from 'src/dapps/website/views/pages/Website.svelte'
+import Website from "src/dapps/website/views/pages/Website.svelte"
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import Dapps from 'src/dapps/omo/views/pages/Dapps.svelte'
 import Safe from 'src/dapps/wallet/views/pages/Safe.svelte'
@@ -226,3 +226,4 @@ export default {
     // Catch-all, must be last
     '*': NotFound,
 }
+
