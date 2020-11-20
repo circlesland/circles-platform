@@ -39,9 +39,9 @@
     tw="justify-center items-center p-4 bg-white  border-t border-light-300"
     columns="1fr"
     rows="1fr">
-    <div on:click={logout} class="w-full">
+    <a on:click={logout} class="w-full">
       <Button text="Logout" type="danger" />
-    </div>
+    </a>
   </Compose>
 {:else if safeAddress}
   <Compose
@@ -95,17 +95,17 @@
     tw="justify-center items-center p-4 bg-white  border-t border-light-300"
     columns="1fr"
     rows="1fr">
-    <div href="#/omo/dapps" class="w-full p-2">
+    <a href="#/omo/dapps" class="w-full p-2">
       <Button text="Go to app" type="primary" />
-    </div>
+    </a>
   </Compose>
 {:else}
   <Compose
     tw="justify-center items-center p-4 bg-white  border-t border-light-300"
     columns="1fr"
     rows="1fr">
-    <div on:click={onActionButtonClick} class="w-full p-2">
+    <a on:click={onActionButtonClick} class="w-full p-2">
       <Button text="Login" type="primary" />
-    </div>
+    </a>
   </Compose>
 {/if}
