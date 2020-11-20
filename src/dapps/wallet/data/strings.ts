@@ -15,8 +15,8 @@ export const strings = {
                 "errorMessage": (context: SetTrustContext) => context.setTrust.trustLimit.data > 0
                     ? `An error occurred while trusting ${context.setTrust.trustReceiver.data}.`
                     : `An error occurred while revoking trust ${context.setTrust.trustReceiver.data}.`,
-                "trustConfirmation": (context: SetTrustContext) => `Click 'Next' to add ${context.setTrust.trustReceiver.data} to your list of trusted friends.`,
-                "untrustConfirmation": (context: SetTrustContext) => `Click 'Next' to remove ${context.setTrust.trustReceiver.data} from your list of trusted friends.`,
+                "trustConfirmation": (context: SetTrustContext) => `Click 'Next' to add ${context.setTrust.trustReceiver.data.slice(0, 8)} to your list of trusted friends.`,
+                "untrustConfirmation": (context: SetTrustContext) => `Click 'Next' to remove ${context.setTrust.trustReceiver.data.slice(0, 8)} from your list of trusted friends.`,
                 "setTrustProgress": (context: SetTrustContext) => context.setTrust.trustLimit.data > 0 ? "Trusting .." : "Untrusting ..",
                 "alreadyTrustedError": (context: SetTrustContext) => `You are already trusting ${context.setTrust.trustReceiver.data}.`
             },
