@@ -25,6 +25,7 @@
   import { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
   import { onMount } from "svelte";
+  import Notifications from "./libs/o-views/molecules/Notifications.svelte";
 
   let safeAddress;
 
@@ -117,7 +118,10 @@
 
 <ComposeApp tw="font-primary bg-light-300">
   <Compose tw="mx-auto bg-light-100 w-full max-w-2xl">
-    <Compose columns="1fr" rows="1fr auto" tw="w-full">
+    <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
+      <Compose>
+        <Notifications />
+      </Compose>
       <Compose>
         <Router {routes} on:routeLoading={routeLoading} />
       </Compose>
