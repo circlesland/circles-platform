@@ -21,7 +21,7 @@ export const strings = {
                 "alreadyTrustedError": (context: SetTrustContext) => `You are already trusting ${context.setTrust.trustReceiver.data}.`
             },
             connectSafe: {
-                "successMessage": (context: ConnectSafeContext) => `The safe is now connected.(Please close the dialog  )`,
+                "successMessage": (context: ConnectSafeContext) => `The safe is now connected. (Please close the dialog)`,
                 "errorMessage": (context: ConnectSafeContext) => `Couldn't connect the safe.`
             },
             jumpstart: {
@@ -30,7 +30,7 @@ export const strings = {
             },
             requestUbi: {
                 "successMessage": (context: ProcessContext) => `UBI successfully requested`,
-                "errorMessage": (context: ProcessContext) => `Error during UBI request`
+                "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
             },
             transferCircles: {
                 "successMessage": (context: TransferCirclesContext) => `Circles successfully transferred`,
