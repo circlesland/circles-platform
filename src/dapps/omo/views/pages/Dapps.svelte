@@ -19,7 +19,7 @@
   <Compose
     area="main"
     columns="1fr 1fr"
-    rows="repeat({dapps.length}, 250px)"
+    rows="repeat(7, 200px)"
     tw="p-4"
     gap="1rem"
     overflowY>

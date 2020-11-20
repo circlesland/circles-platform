@@ -1,28 +1,20 @@
-<!--<script lang="ts">
-  import Balance from "src/dapps/wallet/components/Balance.svelte";
-  import Transactions from "src/dapps/wallet/components/Transactions.svelte";
-  import Account from "src/dapps/wallet/components/Account.svelte";
+<script lang="ts">
+  import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
-  import TemplateSafeBalance from "src/libs/o-views/templates/TemplateSafeBalance.svelte";
-  import { onMount } from "svelte";
-  import { push } from "svelte-spa-router";
+  import Balance from "../molecules/Balance.svelte";
+  import Transactions from "../molecules/Transactions.svelte";
 
   let address = localStorage.getItem("omo.safeAddress");
 
   let header = {
     title: "Safe",
   };
-</script><TemplateSafeBalance>
-  <header slot="header">
-    <Header data={header} />
-  </header>
-  <div slot="balance">
-    <Balance {address} />
-  </div>
-  <div slot="address">
-    <Account {address} />
-  </div>
-  <main slot="main">
+</script>
+
+<Compose rows="48px 160px 1fr" columns="1fr">
+  <Header data={header} />
+  <Balance {address} />
+  <Compose rows="1fr" columns="1fr" overflowY>
     <Transactions {address} />
-  </main>
-</TemplateSafeBalance> -->
+  </Compose>
+</Compose>

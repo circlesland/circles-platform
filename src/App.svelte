@@ -2,7 +2,7 @@
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, { location } from "svelte-spa-router";
+  import Router from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
   import { getLocaleFromNavigator, addMessages, init } from "svelte-i18n";
@@ -121,33 +121,31 @@
       <Compose>
         <Router {routes} on:routeLoading={routeLoading} />
       </Compose>
-      <Compose>
-        <ActionBar
-          bind:safeAddress
-          on:actionButtonClick={toggleOpen}
-          {quickActions} />
-      </Compose>
-    </Compose>
-    <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
-      {#if runningProcess}
-        <Process
-          process={runningProcess}
-          on:stopped={() => {
-            isOpen = false;
-            runningProcess = null;
-          }} />
-      {:else}
-        {#each overflowActions as action}
-          <div class="w-full">
-            <div class="space-y-2">
-              <div on:click={() => window.dispatchShellEvent(action.event())}>
-                <Button text={action.label} type="secondary" />
+      <ActionBar
+        bind:safeAddress
+        on:actionButtonClick={toggleOpen}
+        {quickActions} />
+      <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
+        {#if runningProcess}
+          <Process
+            process={runningProcess}
+            on:stopped={() => {
+              isOpen = false;
+              runningProcess = null;
+            }} />
+        {:else}
+          {#each overflowActions as action}
+            <div class="w-full">
+              <div class="space-y-2">
+                <div on:click={() => window.dispatchShellEvent(action.event())}>
+                  <Button text={action.label} type="secondary" />
+                </div>
               </div>
             </div>
-          </div>
-        {/each}
-        <ProcessNav bind:isOpen />
-      {/if}
-    </Modal>
+          {/each}
+          <ProcessNav bind:isOpen />
+        {/if}
+      </Modal>
+    </Compose>
   </Compose>
 </ComposeApp>

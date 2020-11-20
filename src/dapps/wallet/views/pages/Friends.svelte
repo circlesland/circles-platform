@@ -1,18 +1,19 @@
-<!--<script lang="ts">
+<script lang="ts">
+  import Friends from "../molecules/Friends.svelte";
+  import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
-  import Friends from "src/dapps/wallet/components/Friends.svelte";
-  import TemplateSafe from "src/libs/o-views/templates/TemplateSafe.svelte";
-
   let header = {
     title: "Friends",
   };
 
   let address = localStorage.getItem("omo.safeAddress");
-</script><TemplateSafe>
-  <header slot="header">
+</script>
+
+<Compose rows="48px 1fr" columns="1fr">
+  <Compose>
     <Header data={header} />
-  </header>
-  <main slot="main">
+  </Compose>
+  <Compose rows="1fr" columns="1fr" tw="p-4" overflowY>
     <Friends {address} />
-  </main>
-</TemplateSafe> -->
+  </Compose>
+</Compose>

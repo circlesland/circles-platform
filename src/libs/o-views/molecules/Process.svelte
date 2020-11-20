@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { Process } from "../../../main";
-  import { ProcessEvent, PromptField } from "../../o-processes/processEvent";
+  import { PromptField } from "../../o-processes/processEvent";
   import { ProcessDefinition } from "../../o-processes/processManifest";
   import Prompt from "./Prompt.svelte";
   import { ProcessContext } from "../../o-processes/processContext";
   import { createEventDispatcher } from "svelte";
   import { Jumper } from "svelte-loading-spinners";
-  import {faArrowLeft, faTimes} from "@fortawesome/free-solid-svg-icons";
+  import { faArrowLeft, faTimes } from "@fortawesome/free-solid-svg-icons";
   import NavItem from "../atoms/NavItem.svelte";
 
   let statusType: "none" | "message" | "notification" | "prompt" = "none";

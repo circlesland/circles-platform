@@ -7,10 +7,10 @@
 </script>
 
 <Compose tw="mx-auto text-gray-500 mt-2">
-  <a
+  <div
     on:click={() => {
       isOpen = false;
     }}>
     <NavItem icon={faTimes} text="close" />
-  </a>
+  </div>
 </Compose>

@@ -4,6 +4,7 @@
   import { createEventDispatcher } from "svelte";
   import { ActionBarAction } from "../../../routes";
   import Button from "../atoms/Button.svelte";
+  import Compose from "../atoms/Compose.svelte";
 
   export let safeAddress: string;
 
@@ -34,47 +35,60 @@
 </style>
 
 {#if safeAddress && $location == '/omo/dapps'}
-  <div on:click={logout} class="w-full p-2">
-    <Button text="Logout" type="danger" />
-  </div>
-{:else if safeAddress}
-  <button
-    class="absolute flex items-center justify-center w-full text-center action"
-    on:click={onActionButtonClick}>
-    <div
-      class="fixed w-16 h-16 mx-auto mt-4 text-white border rounded-full border-light-100 action bg-secondary hover:bg-secondary-lighter">
-      <i class="mt-4 text-3xl fas fa-plus " />
+  <Compose
+    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    columns="1fr"
+    rows="1fr">
+    <div on:click={logout} class="w-full">
+      <Button text="Logout" type="danger" />
     </div>
-  </button>
-
-  <footer
-    class="flex justify-between px-4 pt-3 pb-2 text-gray-400 bg-white border-t border-gray-300">
-    <a href={quickActions[0].route} class:active={isActive(quickActions[0])}>
-      <NavItem icon={quickActions[0].icon} text={quickActions[0].label} />
-    </a>
-
-    <a href={quickActions[1].route} class:active={isActive(quickActions[1])}>
-      <NavItem icon={quickActions[1].icon} text={quickActions[1].label} />
-    </a>
-
-    <a on:click={() => {}}>
+  </Compose>
+{:else if safeAddress}
+  <Compose
+    rows="1fr"
+    columns="1fr 1fr 80px 1fr 1fr"
+    tw="bg-white border-t border-light-300 text-light-400 h-20 justify-center items-center px-4">
+    <Compose rows="1fr" columns="1fr">
+      <a
+        href={quickActions[0].route}
+        class:active={isActive(quickActions[0])}
+        class="mx-auto">
+        <NavItem icon={quickActions[0].icon} text={quickActions[0].label} />
+      </a>
+    </Compose>
+    <Compose rows="1fr" columns="1fr">
+      <a
+        href={quickActions[1].route}
+        class:active={isActive(quickActions[1])}
+        class="mx-auto">
+        <NavItem icon={quickActions[1].icon} text={quickActions[1].label} />
+      </a>
+    </Compose>
+    <Compose rows="1fr" columns="1fr">
       <div
-        class="flex items-center justify-center w-16 px-2 text-center stext-xs hover:text-secondary-lighter">
-        <span>
-          <i class="text-2xl" />
-          <p class="lowercase font-title" />
-        </span>
+        class="w-16 h-16 mx-auto mb-3 text-white rounded-full  action bg-secondary hover:bg-secondary-lighter">
+        <div class="flex items-center justify-center">
+          <i class="mt-4 text-3xl fas fa-plus " />
+        </div>
       </div>
-    </a>
-
-    <a href={quickActions[2].route} class:active={isActive(quickActions[2])}>
-      <NavItem icon={quickActions[2].icon} text={quickActions[2].label} />
-    </a>
-
-    <a href={quickActions[3].route} class:active={isActive(quickActions[3])}>
-      <NavItem icon={quickActions[3].icon} text={quickActions[3].label} />
-    </a>
-  </footer>
+    </Compose>
+    <Compose rows="1fr" columns="1fr">
+      <a
+        href={quickActions[2].route}
+        class:active={isActive(quickActions[2])}
+        class="mx-auto">
+        <NavItem icon={quickActions[2].icon} text={quickActions[2].label} />
+      </a>
+    </Compose>
+    <Compose rows="1fr" columns="1fr">
+      <a
+        href={quickActions[3].route}
+        class:active={isActive(quickActions[3])}
+        class="mx-auto">
+        <NavItem icon={quickActions[3].icon} text={quickActions[3].label} />
+      </a>
+    </Compose>
+  </Compose>
 {:else if $location == '/'}
   <a href="#/omo/dapps" class="w-full p-2">
     <Button text="Go to app" type="primary" />
