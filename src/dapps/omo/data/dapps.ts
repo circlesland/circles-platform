@@ -72,6 +72,19 @@ export const dapps = [
   },
   {
     data: {
+      title: "Crowdfunding",
+      tag: "soon",
+    },
+    action: {
+      route: "omo/dapps",
+    },
+    design: {
+      icon: "people-carry",
+      type: "disabled",
+    },
+  },
+  {
+    data: {
       title: "Movies",
       tag: "soon",
     },
