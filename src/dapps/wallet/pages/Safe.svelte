@@ -1,4 +1,4 @@
-<script lang="ts">
+<!--<script lang="ts">
   import Balance from "src/dapps/wallet/components/Balance.svelte";
   import Transactions from "src/dapps/wallet/components/Transactions.svelte";
   import Account from "src/dapps/wallet/components/Account.svelte";
@@ -12,9 +12,7 @@
   let header = {
     title: "Safe",
   };
-</script>
-
-<TemplateSafeBalance>
+</script><TemplateSafeBalance>
   <header slot="header">
     <Header data={header} />
   </header>
@@ -27,4 +25,4 @@
   <main slot="main">
     <Transactions {address} />
   </main>
-</TemplateSafeBalance>
+</TemplateSafeBalance> -->

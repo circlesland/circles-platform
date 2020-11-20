@@ -1,12 +1,15 @@
 <script lang="ts">
+  import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
+  import Compose from "./libs/o-views/atoms/Compose.svelte";
+  import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
   import Router, { location } from "svelte-spa-router";
   import routes from "src/routes";
   import Tailwind from "src/Tailwind.svelte";
   import { getLocaleFromNavigator, addMessages, init } from "svelte-i18n";
   import { _ } from "svelte-i18n";
 
-  import omo_en from "src/dapps/omo/languages/en.json";
-  import omo_de from "src/dapps/omo/languages/de.json";
+  import omo_en from "src/dapps/omo/data/languages/en.json";
+  import omo_de from "src/dapps/omo/data/languages/de.json";
 
   import website_en from "src/dapps/website/languages/en.json";
   import website_de from "src/dapps/website/languages/de.json";
@@ -14,23 +17,18 @@
   import wallet_en from "src/dapps/wallet/languages/en.json";
   import identity_de from "src/dapps/identity/languages/de.json";
   import identity_en from "src/dapps/identity/languages/en.json";
-  import Composite from "./libs/o-views/atoms/Composite.svelte";
-  import Leaf from "./libs/o-views/atoms/Leaf.svelte";
+
   import Button from "./libs/o-views/atoms/Button.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
-  import TemplateMobileWrapper from "./libs/o-views/templates/TemplateMobileWrapper.svelte";
   import { OmoEvent } from "./libs/o-events/omoEvent";
   import { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
-  import NavItem from "./libs/o-views/atoms/NavItem.svelte";
   import { onMount } from "svelte";
-  import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
   let safeAddress;
 
-  onMount(() => {
-  });
+  onMount(() => {});
 
   let notes_en = {
     notes_text:
@@ -113,83 +111,43 @@
       isOpen = false;
     }
   }
-
-  let layout1 = {
-    areas: "'top''bottom'",
-    columns: "1fr",
-    rows: "1fr 68px",
-  };
 </script>
-
-<style>
-  .app {
-    height: 100%;
-    overflow: hidden !important;
-    position: relative;
-  }
-</style>
 
 <Tailwind />
 
-<div class="font-primary app">
-  <TemplateMobileWrapper>
-    <Composite layout={layout1}>
-      <Leaf area="top" overflowY>
+<ComposeApp tw="font-primary bg-light-300">
+  <Compose tw="mx-auto bg-light-100 w-full max-w-2xl">
+    <Compose columns="1fr" rows="1fr auto" tw="w-full">
+      <Compose>
         <Router {routes} on:routeLoading={routeLoading} />
-      </Leaf>
-      <Leaf area="bottom">
-        <ActionBar bind:safeAddress={safeAddress} on:actionButtonClick={toggleOpen} {quickActions} />
-
-        <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
-          {#if runningProcess}
-            <Process
-              process={runningProcess}
-              on:stopped={() => {
-                isOpen = false;
-                runningProcess = null;
-              }} />
-          {:else}
-            {#each overflowActions as action}
-              <div class="w-full">
-                <div class="space-y-2">
-                  <div
-                    on:click={() => window.dispatchShellEvent(action.event())}>
-                    <Button text={action.label} type="secondary" />
-                  </div>
-                </div>
+      </Compose>
+      <Compose>
+        <ActionBar
+          bind:safeAddress
+          on:actionButtonClick={toggleOpen}
+          {quickActions} />
+      </Compose>
+    </Compose>
+    <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
+      {#if runningProcess}
+        <Process
+          process={runningProcess}
+          on:stopped={() => {
+            isOpen = false;
+            runningProcess = null;
+          }} />
+      {:else}
+        {#each overflowActions as action}
+          <div class="w-full">
+            <div class="space-y-2">
+              <div on:click={() => window.dispatchShellEvent(action.event())}>
+                <Button text={action.label} type="secondary" />
               </div>
-            {/each}
-
-            <footer
-              class="flex justify-between px-4 pt-3 text-gray-400 bg-white ">
-              <a on:click={() => {}}>
-                <div
-                  class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
-                  <span>
-                    <i class="text-2xl" />
-                    <p class="lowercase font-title" />
-                  </span>
-                </div>
-              </a>
-              <a
-                on:click={() => {
-                  isOpen = false;
-                }}>
-                <NavItem icon={faTimes} text="close" />
-              </a>
-              <a on:click={() => {}}>
-                <div
-                  class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
-                  <span>
-                    <i class="text-2xl" />
-                    <p class="lowercase font-title" />
-                  </span>
-                </div>
-              </a>
-            </footer>
-          {/if}
-        </Modal>
-      </Leaf>
-    </Composite>
-  </TemplateMobileWrapper>
-</div>
+            </div>
+          </div>
+        {/each}
+        <ProcessNav bind:isOpen />
+      {/if}
+    </Modal>
+  </Compose>
+</ComposeApp>

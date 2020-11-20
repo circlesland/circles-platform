@@ -6,30 +6,25 @@
   export let gap: string = "";
   export let overflowX: Boolean = false;
   export let overflowY: Boolean = false;
-  export let app: boolean = false;
-  export let design: string;
+  export let tw: string;
 </script>
 
 <style>
-  .layout {
+  .compose {
     display: grid;
     grid-template-areas: var(--areas);
     grid-template-columns: var(--columns);
     grid-template-rows: var(--rows);
-    overflow: hidden;
+    grid-gap: var(--gap);
     position: relative;
   }
-  .leaf {
+  .area {
+    grid-area: var(--area);
     display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr;
-    overflow: hidden;
+    grid-template-rows: minmax(1fr);
+    grid-template-columns: minmax(1fr);
+    overflow: hidden !important;
     position: relative;
-  }
-  .full {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr;
   }
   .scrollX {
     -webkit-transform: translate3d(0, 0, 0);
@@ -41,34 +36,56 @@
     -webkit-overflow-scrolling: touch;
     overflow-y: scroll !important;
   }
+
+  .noArea {
+    display: grid;
+    grid-template-rows: minmax(1fr);
+    grid-template-columns: minmax(1fr);
+    overflow: hidden !important;
+    position: relative;
+  }
 </style>
 
-{#if areas || rows || columns}
-  {#if app}
-    <div
-      class="h-full composite  {design}"
-      style="grid-area: {area}; --areas: {areas}; --columns: {columns}; --rows: {rows};">
-      <slot />
-    </div>
-  {:else}
-    <div
-      class="composite {design}"
-      style="grid-area: {area}; --areas: {areas}; --columns: {columns}; --rows: {rows};">
-      <slot />
-    </div>
-  {/if}
-{:else}
-  <div class="leaf full" style="grid-area: {area}">
+{#if area}
+  <div class="area" style="--area:{area};">
     {#if overflowX}
-      <div class="overflow-y-hidden full scrollX {design}">
+      <div
+        class="overflow-y-hidden compose scrollX {tw}"
+        style="--areas:'{areas}'; --columns:{columns}; --rows:{rows}; --gap:{gap};">
         <slot />
       </div>
     {:else if overflowY}
-      <div class="overflow-x-hidden full scrollY {design}">
+      <div
+        class="overflow-x-hidden compose scrollY {tw}"
+        style="--areas:'{areas}'; --columns:{columns}; --rows:{rows}; --gap:{gap};">
         <slot />
       </div>
     {:else}
-      <div class="full {design}">
+      <div
+        class="overflow-hidden compose {tw}"
+        style="--areas:'{areas}'; --columns:{columns}; --rows:{rows}; --gap:{gap};">
+        <slot />
+      </div>
+    {/if}
+  </div>
+{:else}
+  <div class="noArea">
+    {#if overflowX}
+      <div
+        class="overflow-y-hidden compose scrollX {tw}"
+        style="--areas:{areas}; --columns:{columns}; --rows:{rows}; --gap:{gap};">
+        <slot />
+      </div>
+    {:else if overflowY}
+      <div
+        class="overflow-x-hidden compose scrollY {tw}"
+        style="--areas:{areas}; --columns:{columns}; --rows:{rows}; --gap:{gap};">
+        <slot />
+      </div>
+    {:else}
+      <div
+        class="overflow-hidden compose {tw}"
+        style="--areas:{areas}; --columns:{columns}; --rows:{rows}; --gap:{gap};">
         <slot />
       </div>
     {/if}

@@ -1,12 +1,11 @@
 <script lang="ts">
   import NavItem from "../atoms/NavItem.svelte";
-  import { link, location, push } from "svelte-spa-router";
-  import active from "svelte-spa-router/active";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { location, push } from "svelte-spa-router";
+  import { createEventDispatcher } from "svelte";
   import { ActionBarAction } from "../../../routes";
   import Button from "../atoms/Button.svelte";
 
-  export let safeAddress:string;
+  export let safeAddress: string;
 
   const dispatch = createEventDispatcher();
   export let quickActions: ActionBarAction[] = [];
@@ -28,14 +27,14 @@
   }
 </script>
 
-<style>
+<style global>
   :global(a.active) {
     color: #0d49a3;
   }
 </style>
 
 {#if safeAddress && $location == '/omo/dapps'}
-  <div on:click={logout} class="w-full p-2 bg-white">
+  <div on:click={logout} class="w-full p-2">
     <Button text="Logout" type="danger" />
   </div>
 {:else if safeAddress}
@@ -77,11 +76,11 @@
     </a>
   </footer>
 {:else if $location == '/'}
-  <a href="#/omo/dapps" class="w-full p-2 bg-white">
+  <a href="#/omo/dapps" class="w-full p-2">
     <Button text="Go to app" type="primary" />
   </a>
 {:else}
-  <div on:click={onActionButtonClick} class="w-full p-2 bg-white">
+  <div on:click={onActionButtonClick} class="w-full p-2">
     <Button text="Login" type="primary" />
   </div>
 {/if}

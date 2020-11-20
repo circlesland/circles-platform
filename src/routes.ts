@@ -1,7 +1,7 @@
 // Components
 import Website from 'src/dapps/website/pages/Website.svelte'
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
-import Dapps from 'src/dapps/omo/pages/Dapps.svelte'
+import Dapps from 'src/dapps/omo/views/pages/Dapps.svelte'
 import Safe from 'src/dapps/wallet/pages/Safe.svelte'
 import Start from 'src/dapps/wallet/pages/Start.svelte'
 import Friends from 'src/dapps/wallet/pages/Friends.svelte'

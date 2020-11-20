@@ -1,4 +1,4 @@
-<script lang="ts">
+<!--<script lang="ts">
   import { onMount } from "svelte";
   import { push } from "svelte-spa-router";
 
@@ -41,10 +41,7 @@
   let header = {
     title: "Settings",
   };
-</script>
-
-<TemplateHeaderMainActionFooter>
-  <header slot="header">
+</script><header slot="header">
     <Header data={header} />
   </header>
   <main slot="main">
@@ -85,4 +82,4 @@
       </p>
     </div>
   </footer>
-</TemplateHeaderMainActionFooter>
+ -->

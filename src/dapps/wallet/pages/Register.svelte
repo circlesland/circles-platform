@@ -1,4 +1,4 @@
-<script lang="ts">
+<!--<script lang="ts">
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import TemplateHeaderMainActionFooter from "src/libs/o-views/templates/TemplateHeaderMainActionFooter.svelte";
 
@@ -9,9 +9,7 @@
   let header = {
     title: "Register",
   };
-</script>
-
-<TemplateHeaderMainActionFooter>
+</script><TemplateHeaderMainActionFooter>
   <header slot="header">
     <Header data={header} />
   </header>
@@ -55,4 +53,4 @@
       {/if}
     </div>
   </footer>
-</TemplateHeaderMainActionFooter>
+</TemplateHeaderMainActionFooter> -->

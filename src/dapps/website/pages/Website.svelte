@@ -1,13 +1,8 @@
 <script lang="ts">
-  import "css-doodle";
   import { onMount } from "svelte";
   import { _ } from "svelte-i18n";
   import { push } from "svelte-spa-router";
-  // import { MamaOmo, SpanishMamaOmo } from "src/libs/mama-omo";
 
-  // function clickMe() {
-  //   new MamaOmo("Samuel").greetMe();
-  // }
   $: safeAddress = "";
 
   onMount(() => {
@@ -18,7 +13,7 @@
   });
 </script>
 
-<div class="flex items-center justify-center h-full bg-light-100">
+<div class="flex items-center justify-center">
   <div class="">
     <img src="images/logo/logo.svg" alt="omo" class="w-1/3 mx-auto" />
     <div
