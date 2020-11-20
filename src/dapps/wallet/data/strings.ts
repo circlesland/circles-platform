@@ -9,15 +9,15 @@ export const strings = {
     wallet: {
         processes: {
             setTrust: {
-                "successMessage": (context: SetTrustContext) => context.setTrust.trustLimit.data.slice(0, 8) > 0
+                "successMessage": (context: SetTrustContext) => context.setTrust.trustLimit.data > 0
                     ? `Successfully trusted ${context.setTrust.trustReceiver.data.slice(0, 8)}`
                     : `Successfully revoked trusted ${context.setTrust.trustReceiver.data.slice(0, 8)}`,
-                "errorMessage": (context: SetTrustContext) => context.setTrust.trustLimit.data.slice(0, 8) > 0
+                "errorMessage": (context: SetTrustContext) => context.setTrust.trustLimit.data > 0
                     ? `An error occurred while trusting ${context.setTrust.trustReceiver.data.slice(0, 8)}.`
                     : `An error occurred while revoking trust ${context.setTrust.trustReceiver.data.slice(0, 8)}.`,
                 "trustConfirmation": (context: SetTrustContext) => `Click 'Next' to add ${context.setTrust.trustReceiver.data.slice(0, 8)} to your list of trusted friends.`,
                 "untrustConfirmation": (context: SetTrustContext) => `Click 'Next' to remove ${context.setTrust.trustReceiver.data.slice(0, 8)} from your list of trusted friends.`,
-                "setTrustProgress": (context: SetTrustContext) => context.setTrust.trustLimit.data.slice(0, 8) > 0 ? "Trusting .." : "Untrusting ..",
+                "setTrustProgress": (context: SetTrustContext) => context.setTrust.trustLimit.data > 0 ? "Trusting .." : "Untrusting ..",
                 "alreadyTrustedError": (context: SetTrustContext) => `You are already trusting ${context.setTrust.trustReceiver.data.slice(0, 8)}.`
             },
             connectSafe: {

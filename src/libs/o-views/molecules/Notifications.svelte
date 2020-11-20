@@ -18,7 +18,7 @@
   class="w-full p-2 text-xs text-white bg-secondary ">
   {$_('notes_text')}
   <span
-    class="px-2 py-1 font-bold uppercase rounded text-info bg-secondary-lighter">
+    class="px-2 py-1 font-bold uppercase rounded text-action bg-secondary-lighter">
     -
     {$_('notes_button')}
     -
