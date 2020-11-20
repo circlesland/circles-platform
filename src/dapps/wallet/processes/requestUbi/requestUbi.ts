@@ -1,15 +1,16 @@
-import {assign, createMachine, send} from "xstate";
+import { assign, createMachine, send } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
 import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import {recentlyGotUbi} from "./guards/recentlyGotUbi";
-import {getUbi} from "./services/getUbi";
-import {promptError} from "../promptError";
-import {promptSuccess} from "../promptSuccess";
-import {setLastSuccessfulUbiRetrieval} from "./actions/setLastSuccessfulUbiRetrieval";
-import {notifyInProgress} from "./actions/notifyInProgress";
-import {promptAlreadyRequested} from "./actions/promptAlreadyRequested";
-import {strings} from "../../languages/strings";
+import { recentlyGotUbi } from "./guards/recentlyGotUbi";
+import { getUbi } from "./services/getUbi";
+import { promptError } from "../promptError";
+import { promptSuccess } from "../promptSuccess";
+import { setLastSuccessfulUbiRetrieval } from "./actions/setLastSuccessfulUbiRetrieval";
+import { notifyInProgress } from "./actions/notifyInProgress";
+import { promptAlreadyRequested } from "./actions/promptAlreadyRequested";
+import { strings } from "../../data/strings";
+
 
 /**
  * Requests UBI
@@ -91,10 +92,10 @@ const processDefinition = createMachine<ProcessContext, ProcessEvent>({
                 return context;
             }),
         "promptError": promptError,
-        "promptSuccess":promptSuccess,
+        "promptSuccess": promptSuccess,
         "notifyInProgress": notifyInProgress,
         "setLastSuccessfulUbiRetrieval": setLastSuccessfulUbiRetrieval,
-        "promptAlreadyRequested":promptAlreadyRequested
+        "promptAlreadyRequested": promptAlreadyRequested
     }
 });
 

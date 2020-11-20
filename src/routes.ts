@@ -1,14 +1,14 @@
 // Components
-import Website from 'src/dapps/website/pages/Website.svelte'
+import Website from 'src/dapps/website/views/pages/Website.svelte'
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import Dapps from 'src/dapps/omo/views/pages/Dapps.svelte'
-import Safe from 'src/dapps/wallet/pages/Safe.svelte'
-import Start from 'src/dapps/wallet/pages/Start.svelte'
-import Friends from 'src/dapps/wallet/pages/Friends.svelte'
-import Tokens from 'src/dapps/wallet/pages/Tokens.svelte'
-import Register from 'src/dapps/wallet/pages/Register.svelte'
-import Settings from 'src/dapps/identity/pages/Settings.svelte'
-import Login from 'src/dapps/identity/pages/Login.svelte'
+import Safe from 'src/dapps/wallet/views/pages/Safe.svelte'
+import Start from 'src/dapps/wallet/views/pages/Start.svelte'
+import Friends from 'src/dapps/wallet/views/pages/Friends.svelte'
+import Tokens from 'src/dapps/wallet/views/pages/Tokens.svelte'
+import Register from 'src/dapps/wallet/views/pages/Register.svelte'
+import Settings from 'src/dapps/identity/views/pages/Settings.svelte'
+import Login from 'src/dapps/identity/views/pages/Login.svelte'
 import wrap from "svelte-spa-router/wrap";
 import { location } from 'svelte-spa-router'
 import { OmoEvent } from "./libs/o-events/omoEvent";
@@ -18,7 +18,7 @@ import { transferXDai } from "./dapps/wallet/processes/transferXDai/transferXDai
 import { setTrust, SetTrustContext } from "./dapps/wallet/processes/setTrust/setTrust";
 import { transferCircles } from "./dapps/wallet/processes/transferCircles/transferCircles";
 import { connectSafe } from "./dapps/wallet/processes/connectSafe/connectSafe";
-import { faCogs, faCoins, faHome, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
+import { faCoins, faHome, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 
 export type ActionBarAction = {
     type: "route" | "trigger",

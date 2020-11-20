@@ -1,9 +1,9 @@
-import {send} from "xstate";
-import {SetTrustContext} from "../setTrust";
-import {strings} from "../../../languages/strings";
+import { send } from "xstate";
+import { SetTrustContext } from "../setTrust";
+import { strings } from "../../../data/strings";
 
-export const summarize = send((context: SetTrustContext) =>
-{
+
+export const summarize = send((context: SetTrustContext) => {
     return {
         type: "omo.prompt",
         message: context.setTrust.trustLimit.data > 0

@@ -1,32 +1,31 @@
-import {assign, createMachine, send} from "xstate";
-import {ProcessContext} from "src/libs/o-processes/processContext";
-import {ProcessEvent} from "src/libs/o-processes/processEvent";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {BN} from "ethereumjs-util";
-import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
-import {transferCirclesService} from "./services/transferCirclesService";
-import {promptError} from "../promptError";
-import {promptSuccess} from "../promptSuccess";
-import {storeTransferValueToContext} from "./actions/storeTransferValueToContext";
-import {storeTransferRecipientToContext} from "./actions/storeTransferRecipientToContext";
-import {promptRecipient} from "./actions/promptRecipient";
-import {promptValue} from "./actions/promptValue";
-import {summarize} from "./actions/summarize";
-import {transferRecipientIsPreconfigured} from "./guards/transferRecipientIsPreconfigured";
-import {notifyInProgress} from "./actions/notifyInProgress";
-import {transferValueIsPreconfigured} from "./guards/transferValuetIsPreconfigured";
-import {strings} from "../../languages/strings";
+import { assign, createMachine, send } from "xstate";
+import { ProcessContext } from "src/libs/o-processes/processContext";
+import { ProcessEvent } from "src/libs/o-processes/processEvent";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { BN } from "ethereumjs-util";
+import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
+import { transferCirclesService } from "./services/transferCirclesService";
+import { promptError } from "../promptError";
+import { promptSuccess } from "../promptSuccess";
+import { storeTransferValueToContext } from "./actions/storeTransferValueToContext";
+import { storeTransferRecipientToContext } from "./actions/storeTransferRecipientToContext";
+import { promptRecipient } from "./actions/promptRecipient";
+import { promptValue } from "./actions/promptValue";
+import { summarize } from "./actions/summarize";
+import { transferRecipientIsPreconfigured } from "./guards/transferRecipientIsPreconfigured";
+import { notifyInProgress } from "./actions/notifyInProgress";
+import { transferValueIsPreconfigured } from "./guards/transferValuetIsPreconfigured";
+import { strings } from "../../data/strings";
 
-export interface TransferCirclesContext extends ProcessContext
-{
+export interface TransferCirclesContext extends ProcessContext {
     transfer?: {
         recipient?: {
-            type:"ethereumAddress",
-            data:Address
+            type: "ethereumAddress",
+            data: Address
         },
         value?: {
-            type:"wei",
-            data:BN
+            type: "wei",
+            data: BN
         }
     }
 }
@@ -41,12 +40,12 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             on: {
                 "omo.trigger": [{
                     cond: "transferRecipientIsPreconfigured",
-                    target:"promptValue"
+                    target: "promptValue"
                 }, {
                     cond: "isFullyConfigured",
-                    target:"summarize"
-                },{
-                    target:"promptRecipient"
+                    target: "summarize"
+                }, {
+                    target: "promptRecipient"
                 }],
                 "omo.cancel": "stop"
             }
@@ -58,7 +57,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
                     actions: "storeTransferRecipientToContext",
                     cond: "transferValueIsPreconfigured",
                     target: "summarize"
-                },{
+                }, {
                     actions: "storeTransferRecipientToContext",
                     target: "promptValue"
                 }],
@@ -162,7 +161,7 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
             }),
         "promptError": promptError,
         "notifyInProgress": notifyInProgress,
-        "promptSuccess":promptSuccess,
+        "promptSuccess": promptSuccess,
         "storeTransferValueToContext": storeTransferValueToContext,
         "storeTransferRecipientToContext": storeTransferRecipientToContext,
         "promptRecipient": promptRecipient,

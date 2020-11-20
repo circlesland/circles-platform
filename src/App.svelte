@@ -11,12 +11,12 @@
   import omo_en from "src/dapps/omo/data/languages/en.json";
   import omo_de from "src/dapps/omo/data/languages/de.json";
 
-  import website_en from "src/dapps/website/languages/en.json";
-  import website_de from "src/dapps/website/languages/de.json";
-  import wallet_de from "src/dapps/wallet/languages/de.json";
-  import wallet_en from "src/dapps/wallet/languages/en.json";
-  import identity_de from "src/dapps/identity/languages/de.json";
-  import identity_en from "src/dapps/identity/languages/en.json";
+  import website_en from "src/dapps/website/data/languages/en.json";
+  import website_de from "src/dapps/website/data/languages/de.json";
+  import wallet_de from "src/dapps/wallet/data/languages/de.json";
+  import wallet_en from "src/dapps/wallet/data/languages/en.json";
+  import identity_de from "src/dapps/identity/data/languages/de.json";
+  import identity_en from "src/dapps/identity/data/languages/en.json";
 
   import Button from "./libs/o-views/atoms/Button.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";

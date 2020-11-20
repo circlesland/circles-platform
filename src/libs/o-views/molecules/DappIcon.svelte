@@ -23,7 +23,7 @@
   </div>
 {:else}
   <div
-    class="flex items-center justify-center h-full p-6 text-center bg-white border-2 border-gray-200 rounded cursor-pointer text-secondary hover:text-secondary-lighter hover:border-secondary-lighter">
+    class="flex items-center justify-center h-full p-6 text-center bg-white border-2 rounded cursor-pointer border-gray-20w0 text-secondary hover:text-secondary-lighter hover:border-secondary-lighter">
     <div class="">
       <i class="text-5xl fas fa-{design.icon}" />
       <p class="pt-3 font-title">{data.title}</p>

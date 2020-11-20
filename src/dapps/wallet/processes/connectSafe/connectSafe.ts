@@ -1,35 +1,35 @@
-import {assign, createMachine} from "xstate";
-import {ProcessContext} from "src/libs/o-processes/processContext";
-import {ProcessEvent} from "src/libs/o-processes/processEvent";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
-import {ByteString} from "../../../../libs/o-circles-protocol/interfaces/byteString";
-import {promptSuccess} from "../promptSuccess";
-import {promptError} from "../promptError";
-import {connectSafeService} from "./services/connectSafeService";
-import {notifyInProgress} from "./actions/notifyInProgress";
-import {promptSafeAddress} from "./actions/promptSafeAddress";
-import {promptPrivateKey} from "./actions/promptPrivateKey";
-import {summarize} from "./actions/summarize";
-import {storePrivateKeyToContext} from "./actions/storePrivateKeyToContext";
-import {storeSafeAddressToContext} from "./actions/storeSafeAddressToContext";
-import {strings} from "../../languages/strings";
-import {push} from "svelte-spa-router";
+import { assign, createMachine } from "xstate";
+import { ProcessContext } from "src/libs/o-processes/processContext";
+import { ProcessEvent } from "src/libs/o-processes/processEvent";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
+import { ByteString } from "../../../../libs/o-circles-protocol/interfaces/byteString";
+import { promptSuccess } from "../promptSuccess";
+import { promptError } from "../promptError";
+import { connectSafeService } from "./services/connectSafeService";
+import { notifyInProgress } from "./actions/notifyInProgress";
+import { promptSafeAddress } from "./actions/promptSafeAddress";
+import { promptPrivateKey } from "./actions/promptPrivateKey";
+import { summarize } from "./actions/summarize";
+import { storePrivateKeyToContext } from "./actions/storePrivateKeyToContext";
+import { storeSafeAddressToContext } from "./actions/storeSafeAddressToContext";
+import { strings } from "../../data/strings";
 
-export interface ConnectSafeContext extends ProcessContext
-{
+import { push } from "svelte-spa-router";
+
+export interface ConnectSafeContext extends ProcessContext {
     connectSafe?: {
         safeAddress?: {
-            type:"ethereumAddress",
-            data:Address
+            type: "ethereumAddress",
+            data: Address
         },
-        safeOwnerAddress?:  {
-            type:"ethereumAddress",
-            data:Address
+        safeOwnerAddress?: {
+            type: "ethereumAddress",
+            data: Address
         },
-        safeOwnerPrivateKey?:  {
-            type:"bytestring",
-            data:ByteString
+        safeOwnerPrivateKey?: {
+            type: "bytestring",
+            data: ByteString
         }
     }
 }
@@ -152,7 +152,7 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
             }),
         "notifyInProgress": notifyInProgress,
         "promptError": promptError,
-        "promptSuccess":promptSuccess,
+        "promptSuccess": promptSuccess,
         "promptSafeAddress": promptSafeAddress,
         "promptPrivateKey": promptPrivateKey,
         "summarize": summarize,
