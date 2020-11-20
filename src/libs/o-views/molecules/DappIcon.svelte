@@ -27,7 +27,7 @@
     <div class="">
       <i class="text-5xl fas fa-{design.icon}" />
       <p class="pt-3 font-title">{data.title}</p>
-      <span class="px-2 py-1 text-xs text-orange-800 rounded-full bg-info">
+      <span class="px-2 py-1 text-xs text-white rounded-full bg-secondary">
         {data.tag}
       </span>
     </div>
