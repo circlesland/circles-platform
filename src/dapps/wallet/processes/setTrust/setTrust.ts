@@ -1,29 +1,28 @@
-import {assign, createMachine} from "xstate";
-import {ProcessContext} from "src/libs/o-processes/processContext";
-import {ProcessEvent} from "src/libs/o-processes/processEvent";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
-import {setTrustService} from "./services/setTrustService";
-import {promptError} from "../promptError";
-import {promptSuccess} from "../promptSuccess";
-import {promptTrustReceiver} from "./actions/promptTrustReceiver";
-import {promptTrustLimit} from "./actions/promptTrustLimit";
-import {summarize} from "./actions/summarize";
-import {storeTrustReceiverToContext} from "./actions/storeTrustReceiverToContext";
-import {storeTrustLimitToContext} from "./actions/storeTrustLimitToContext";
-import {notifyInProgress} from "./actions/notifyInProgress";
-import {isTrustLimitAlreadySet} from "./guards/isTrustLimitAlreadySet";
-import {isTrustReceiverAlreadySet} from "./guards/isTrustReceiverAlreadySet";
-import {strings} from "../../languages/strings";
+import { assign, createMachine } from "xstate";
+import { ProcessContext } from "src/libs/o-processes/processContext";
+import { ProcessEvent } from "src/libs/o-processes/processEvent";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
+import { setTrustService } from "./services/setTrustService";
+import { promptError } from "../promptError";
+import { promptSuccess } from "../promptSuccess";
+import { promptTrustReceiver } from "./actions/promptTrustReceiver";
+import { promptTrustLimit } from "./actions/promptTrustLimit";
+import { summarize } from "./actions/summarize";
+import { storeTrustReceiverToContext } from "./actions/storeTrustReceiverToContext";
+import { storeTrustLimitToContext } from "./actions/storeTrustLimitToContext";
+import { notifyInProgress } from "./actions/notifyInProgress";
+import { isTrustLimitAlreadySet } from "./guards/isTrustLimitAlreadySet";
+import { isTrustReceiverAlreadySet } from "./guards/isTrustReceiverAlreadySet";
+import { strings } from "../../data/strings";
 
-export interface SetTrustContext extends ProcessContext
-{
+export interface SetTrustContext extends ProcessContext {
     setTrust?: {
-        trustReceiver: {
+        trustReceiver?: {
             type: "ethereumAddress",
             data: Address
         },
-        trustLimit: {
+        trustLimit?: {
             type: "percent",
             data: any
         }
@@ -160,11 +159,11 @@ const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
                 return context;
             }),
         "promptError": promptError,
-        "promptSuccess":promptSuccess,
+        "promptSuccess": promptSuccess,
         "promptTrustReceiver": promptTrustReceiver,
         "promptTrustLimit": promptTrustLimit,
         "notifyInProgress": notifyInProgress,
-        "summarize":summarize,
+        "summarize": summarize,
         "storeTrustReceiverToContext": storeTrustReceiverToContext,
         "storeTrustLimitToContext": storeTrustLimitToContext
     }

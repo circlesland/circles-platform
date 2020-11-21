@@ -1,5 +1,7 @@
+![dappscreens](https://user-images.githubusercontent.com/747161/99851260-29611000-2b7f-11eb-9223-e84578960e41.png)
+
 # Omo Li
-Building with Omo.Li a lightweight and hostless decentralized wallet and marketplace on top of the CirclesUBI protocol, ipfs and the fission Webnative SDK
+Building with Omo.Li a lightweight and hostless decentralized wallet and marketplace on top of the CirclesUBI protocol, ipfs and the fission Webnative SDK and identity key management
 
 - DAPP (early alpha WIP): https://omo.fission.app/
 
@@ -9,7 +11,19 @@ Building with Omo.Li a lightweight and hostless decentralized wallet and marketp
 - Wishes & Bugs: https://github.com/omoearth/omo/issues
 - Roadmap: https://github.com/omoearth/omo/projects/1
 - Twitter: https://twitter.com/OmoEarth
+- Circles Whitepaper: https://github.com/CirclesUBI/whitepaper/blob/master/README.md
+## Dapp
 
+
+## Tech Stack, architecture and status
+- Circles Protocol (UBI-Currency) as non-custodial self-owned personal currency (alpha ready)
+- xDAI Blockchain for fast and low-fee transactions (alpha ready)
+- Transitive circles payments via a clientside pathfinder (planned)
+- Fission: Identity and Key-Management mit keystore-idb, DID and UCAN (planned)
+- Fission: Hostless and user-owned IPFS Storage with service workers syncing P2P between the browser clients (planned)
+- Caching trust graph and limits in ipfs and sync via fission (planned)
+- Svelte as reactive frontend compiler
+- Tailwind for the UI-Designsystem
 
 ## Install
 
@@ -72,20 +86,24 @@ npm run deploy
 This will first build and then publish your dapp to ipfs via the fission service
 
 
-## Svelte typescript, webpack, tailwind
+## Frontend Frameworks: Svelte typescript, webpack, tailwind
 ---
 
-- [Getting started](#getting-started)
-	- [Installation](#installation)
-	- [Starting the development server](#starting-the-development-server)
-	- [Building for production](#building-for-production)
-- [Usage](#usage)
-	- [Global styles](#global-styles)
-	- [Single page applications](#single-page-applications)
-	- [Targeting browsers](#targeting-browsers)
-	- [Disabling Babel](#disabling-babel)
-	- [Enabling source maps in production](#enabling-source-maps-in-production)
-	- [Path mapping](#path-mapping)
+- [Omo Li](#omo-li)
+	- [Overview](#overview)
+	- [Dapp](#dapp)
+	- [Tech Stack, architecture and status](#tech-stack-architecture-and-status)
+	- [Install](#install)
+		- [Building for production](#building-for-production)
+		- [Hostless deployment to ipfs via fission](#hostless-deployment-to-ipfs-via-fission)
+	- [## Frontend Frameworks: Svelte typescript, webpack, tailwind](#-frontend-frameworks-svelte-typescript-webpack-tailwind)
+	- [Usage](#usage)
+		- [Global styles](#global-styles)
+		- [Single page applications](#single-page-applications)
+		- [Targeting browsers](#targeting-browsers)
+		- [Disabling Babel](#disabling-babel)
+		- [Enabling source maps in production](#enabling-source-maps-in-production)
+		- [Path mapping](#path-mapping)
 
 ---
 

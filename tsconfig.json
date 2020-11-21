@@ -19,6 +19,7 @@
 			"svelte/transition",
 			"svelte/animate",
 			"svelte/easing"
-		]
+		],
+		"lib": ["DOM"]
 	}
 }

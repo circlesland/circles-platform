@@ -1,49 +1,22 @@
 <script lang="ts">
   // imports
-  import { afterUpdate } from "svelte";
+  import { afterUpdate, createEventDispatcher } from "svelte";
   import { fade, scale, fly } from "svelte/transition";
   import ProgressBar from "../atoms/ProgressBar.svelte";
+  import InfoBox from "./InfoBox.svelte";
 
+  const dispatch = createEventDispatcher();
   // public props
-  export let triggerRef = undefined;
+  // export let triggerRef = undefined;
   export let isOpen = false;
   export let role = "dialog";
   // local props
   let buttonRef;
   // functions
-  const handleBack = () => {
-    const runningProcess = window.stateMachines.current();
-    if (!runningProcess) {
-      return;
-    }
-    runningProcess.sendEvent({
-      type: "omo.back",
-    });
-  };
   const handleClose = () => {
-    const runningProcess = window.stateMachines.current();
-    if (!runningProcess) {
-      isOpen = false;
-      return;
-    }
-
-    if (confirm("Do you want to cancel the running process?")) {
-      runningProcess.sendEvent({
-        type: "omo.cancel",
-      });
-    }
+    dispatch("closeRequest");
   };
   const handleEsc = (e) => e.key === "Escape" && handleClose();
-
-  // lifecycle
-  afterUpdate(() => {
-    if (isOpen) {
-      buttonRef.focus();
-    } else {
-      triggerRef && triggerRef.focus();
-    }
-  });
-
   let progressSeries: number[] = [33, 66, 100];
 </script>
 
@@ -77,7 +50,7 @@
     out:fade
     on:click|self={handleClose}
     class="z-40 overlay">
-    <div class="w-full max-w-lg bg-white rounded-t-xl">
+    <div class="w-full max-w-2xl bg-white rounded-t-xl">
       <header class="rounded-t-lg">
         <div
           class="flex items-center justify-center py-2 overflow-hidden text-base text-center text-white rounded-t-xl bg-primary">
@@ -85,35 +58,11 @@
             -- step title --
           </div>
         </div>
-        <ProgressBar />
+        <!-- <ProgressBar /> -->
       </header>
-      <div style="padding-bottom: 1rem">
-        <div class="p-4">
-          <slot>No content provided</slot>
-        </div>
-        <div class="flex w-full">
-          <div
-            aria-label="Close modal"
-            bind:this={buttonRef}
-            on:click={handleBack}
-            class="w-full mx-auto text-center text-light-400 ">
-            <i class="my-2 text-4xl fas fa-arrow-left " />
-          </div>
-          <div
-            aria-label="Close modal"
-            bind:this={buttonRef}
-            on:click={handleClose}
-            class="w-full mx-auto text-center text-light-400 ">
-            <i class="my-2 text-4xl fas fa-times-circle " />
-          </div>
-          <div
-            aria-label="Close modal"
-            bind:this={buttonRef}
-            on:click={handleClose}
-            class="w-full mx-auto text-center text-light-400 ">
-            <!--<i class="my-2 text-4xl fas fa-arrow-right " />-->
-          </div>
-        </div>
+      <InfoBox />
+      <div class="p-4 space-y-2">
+        <slot />
       </div>
     </div>
   </aside>

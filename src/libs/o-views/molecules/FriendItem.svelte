@@ -9,6 +9,7 @@
     SetTrustContext,
   } from "../../../dapps/wallet/processes/setTrust/setTrust";
   import ButtonIcon from "../atoms/ButtonIcon.svelte";
+  import { RunProcess } from "../../o-events/runProcess";
 
   export let data = {
     image: "",
@@ -55,8 +56,10 @@
       };
       return context;
     };
-    window.stateMachines.run(setTrust, contextInitializer);
-    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
+    //window.stateMachines.run(setTrust, contextInitializer);
+    window.eventBroker
+      .getTopic("omo", "shell")
+      .publish(new RunProcess(setTrust, contextInitializer));
   }
 
   function runUntrust(recipientAddress: Address) {
@@ -73,8 +76,11 @@
       };
       return context;
     };
-    window.stateMachines.run(setTrust, contextInitializer);
-    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
+    window.eventBroker
+      .getTopic("omo", "shell")
+      .publish(new RunProcess(setTrust, contextInitializer));
+    // window.stateMachines.run(setTrust, contextInitializer);
+    // window.eventBroker.getTopic("omo", "shell").publish("openMenu");
   }
 </script>
 

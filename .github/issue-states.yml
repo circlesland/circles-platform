@@ -4,6 +4,7 @@
 # Open issues that are moved to these project columns. Set to `[]` to disable
 openIssueColumns: 
   - OPEN
+  - BACKLOG
   - TODAY
   - THIS WEEK
   - THIS MONTH

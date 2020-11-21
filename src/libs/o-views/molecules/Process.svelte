@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { Process } from "../../../main";
-  import { ProcessEvent, PromptField } from "../../o-processes/processEvent";
+  import { PromptField } from "../../o-processes/processEvent";
   import { ProcessDefinition } from "../../o-processes/processManifest";
   import Prompt from "./Prompt.svelte";
   import { ProcessContext } from "../../o-processes/processContext";
   import { createEventDispatcher } from "svelte";
   import { Jumper } from "svelte-loading-spinners";
+  import { faArrowLeft, faTimes } from "@fortawesome/free-solid-svg-icons";
+  import NavItem from "../atoms/NavItem.svelte";
 
   let statusType: "none" | "message" | "notification" | "prompt" = "none";
   let status: string = "";
@@ -59,15 +61,33 @@
         status = next.event.message ?? "Continue";
       } else if (next.stopped) {
         dispatch("stopped");
-        setTimeout(() => {
-          process = null;
-        }, 3000);
+        process = null;
       }
     });
   }
+
+  const handleBack = () => {
+    const runningProcess = window.stateMachines.current();
+    if (!runningProcess) {
+      return;
+    }
+    console.log("Going one step back.");
+    runningProcess.sendEvent({
+      type: "omo.back",
+    });
+  };
+  const handleCancel = () => {
+    const runningProcess = window.stateMachines.current();
+    if (!runningProcess) {
+      return;
+    }
+    runningProcess.sendEvent({
+      type: "omo.cancel",
+    });
+  };
 </script>
 
-<div class="w-full border-t border-gray-300">
+<div class="w-full">
   {#if process}
     {#if statusType === 'message'}
       <h1 class="px-4 py-8 mb-4 text-center rounded text-primary bg-light-100">
@@ -87,3 +107,21 @@
     <h1>Process ended</h1>
   {/if}
 </div>
+
+<footer class="flex justify-between px-4 pb-2 text-gray-400 bg-white ">
+  <a on:click={handleBack}>
+    <NavItem icon={faArrowLeft} text="Back" />
+  </a>
+  <a on:click={handleCancel}>
+    <NavItem icon={faTimes} text="Close" />
+  </a>
+  <a on:click={() => {}}>
+    <div
+      class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
+      <span>
+        <i class="text-2xl" />
+        <p class="lowercase font-title" />
+      </span>
+    </div>
+  </a>
+</footer>

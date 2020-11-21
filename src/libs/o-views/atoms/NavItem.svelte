@@ -1,11 +1,15 @@
 <script lang="ts">
-  export let text: string = "Link";
-  export let icon: string = "home";
+  import Icon from "fa-svelte";
+
+  export let icon;
+  export let text;
 </script>
 
 <div
   class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
   <span>
-    <i class="text-2xl fas fa-{icon}" />
+    {#if icon}
+      <Icon {icon} class="text-2xl" />
+    {/if}
     <p class="lowercase font-title">{text}</p></span>
 </div>

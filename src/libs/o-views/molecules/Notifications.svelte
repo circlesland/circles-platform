@@ -13,14 +13,14 @@
   };
 </script>
 
-<div class="w-full bg-info">
-  <div
-    href="https://discord.gg/Rbhy4j9"
-    class="w-full p-2 text-xs text-yellow-800 ">
-    {$_('notes_text')}
-    <span
-      class="px-2 py-1 font-bold text-orange-800 uppercase bg-orange-400 rounded">
-      {$_('notes_button')}
-    </span>
-  </div>
-</div>
+<a
+  href="https://discord.gg/Rbhy4j9"
+  class="w-full p-2 text-xs text-white bg-secondary ">
+  {$_('notes_text')}
+  <span
+    class="px-2 py-1 font-bold uppercase rounded text-action bg-secondary-lighter">
+    -
+    {$_('notes_button')}
+    -
+  </span>
+</a>

@@ -1,31 +1,30 @@
-import {assign, createMachine} from "xstate";
-import {ProcessContext} from "src/libs/o-processes/processContext";
-import {ProcessEvent} from "src/libs/o-processes/processEvent";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {BN} from "ethereumjs-util";
-import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
-import {transferXDaiService} from "./services/transferXDaiService";
-import {promptError} from "../promptError";
-import {promptSuccess} from "../promptSuccess";
-import {notifyInProgress} from "./actions/notifyInProgress";
-import {isTransferPreconfigured} from "./guards/isTransferPreconfigured";
-import {storeTransferRecipientToContext} from "./actions/storeTransferRecipientToContext";
-import {storeTransferValueToContext} from "./actions/storeTransferValueToContext";
-import {promptRecipient} from "./actions/promptRecipient";
-import {promptValue} from "./actions/promptValue";
-import {summarize} from "./actions/summarize";
-import {strings} from "../../languages/strings";
+import { assign, createMachine } from "xstate";
+import { ProcessContext } from "src/libs/o-processes/processContext";
+import { ProcessEvent } from "src/libs/o-processes/processEvent";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { BN } from "ethereumjs-util";
+import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
+import { transferXDaiService } from "./services/transferXDaiService";
+import { promptError } from "../promptError";
+import { promptSuccess } from "../promptSuccess";
+import { notifyInProgress } from "./actions/notifyInProgress";
+import { isTransferPreconfigured } from "./guards/isTransferPreconfigured";
+import { storeTransferRecipientToContext } from "./actions/storeTransferRecipientToContext";
+import { storeTransferValueToContext } from "./actions/storeTransferValueToContext";
+import { promptRecipient } from "./actions/promptRecipient";
+import { promptValue } from "./actions/promptValue";
+import { summarize } from "./actions/summarize";
+import { strings } from "../../data/strings";
 
-export interface TransferXDaiContext extends ProcessContext
-{
+export interface TransferXDaiContext extends ProcessContext {
     transfer?: {
         recipient: {
-            type:string,
-            data:Address
+            type: string,
+            data: Address
         },
         value: {
-            type:string,
-            data:BN
+            type: string,
+            data: BN
         }
     }
 }
@@ -40,9 +39,9 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
             on: {
                 "omo.trigger": [{
                     cond: "isTransferPreconfigured",
-                    target:"summarize"
-                },{
-                    target:"promptRecipient"
+                    target: "summarize"
+                }, {
+                    target: "promptRecipient"
                 }],
                 "omo.cancel": "stop"
             }
@@ -141,18 +140,18 @@ const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
     },
     actions: {
         "setError": assign(
-        context => {
-            context.result = strings.wallet.processes.transferXDai.errorMessage(context)
-            return context;
-        }),
+            context => {
+                context.result = strings.wallet.processes.transferXDai.errorMessage(context)
+                return context;
+            }),
         "setResult": assign(
-        context => {
-            context.result = strings.wallet.processes.transferXDai.successMessage(context)
-            return context;
-        }),
+            context => {
+                context.result = strings.wallet.processes.transferXDai.successMessage(context)
+                return context;
+            }),
         "notifyInProgress": notifyInProgress,
         "promptError": promptError,
-        "promptSuccess":promptSuccess,
+        "promptSuccess": promptSuccess,
         "storeTransferRecipientToContext": storeTransferRecipientToContext,
         "storeTransferValueToContext": storeTransferValueToContext,
         "promptRecipient": promptRecipient,
