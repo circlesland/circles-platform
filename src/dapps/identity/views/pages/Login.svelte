@@ -1,7 +1,6 @@
 <script lang="ts">
   import Button from "src/libs/o-views/atoms/Button.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import Folder from "src/libs/o-views/atoms/Folder.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import { onMount } from "svelte";
   import * as wn from "webnative";
@@ -27,7 +26,7 @@
         // Will ask the user permission to store
         // your apps data in `private/Apps/{creator}}/{name}`
         app: {
-          name: "OmoTest2",
+          name: "OmoTest",
           creator: "MamaOmo",
         },
       },
@@ -78,8 +77,6 @@
     console.log("my apps:", myApps);
   }
 
-  async function addFolder() {}
-
   async function updateDirectoryList() {
     const list = await fs.ls(fs.appPath());
     appFolders = [];
@@ -92,6 +89,10 @@
 
   function toggleExpand() {
     openDetail = !openDetail;
+  }
+
+  function fissionAuth() {
+    wn.redirectToLobby(state.permissions);
   }
 
   let title = { title: "Omo Test App by Mama Omo" };
@@ -117,14 +118,12 @@
         waiting
       {:then}
         {authState}
-        -
-        <!-- {#await state.scenario}scenario loading{:then}{state.scenario}{/await} -->
 
-        <!-- {#if state == undefined || state.Scenario == 'NOT_AUTHORISED'}
-        <div on:click={login}>
-          <Button text="Auth Now" type="primary" />
-        </div>
-      {/if} -->
+        {#if state != undefined && !state.authenticated}
+          <div on:click={fissionAuth}>
+            <Button text="Auth with Fission" type="primary" />
+          </div>
+        {/if}
         <div class="p-2 font-bold">-- authentication --</div>
 
         {#if state != undefined}
@@ -139,11 +138,11 @@
           </div>
         {/if}
 
-        <div class="p-2 font-bold">-- my apps --</div>
+        <!-- <div class="p-2 font-bold">-- my apps --</div>
 
         {#if state != undefined}
           {#each myApps as data}{data}{/each}
-        {/if}
+        {/if} -->
 
         <div class="p-2">
           <span class="font-bold">-- ipfs --</span>
