@@ -43,6 +43,15 @@
       <Button text="Logout" type="danger" />
     </a>
   </Compose>
+{:else if $location == '/identity/login'}
+  <Compose
+    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    columns="1fr"
+    rows="1fr">
+    <a href="#/omo/dapps" class="w-full">
+      <Button text="Back Home" type="primary" />
+    </a>
+  </Compose>
 {:else if safeAddress}
   <Compose
     rows="1fr"

@@ -1,29 +1,63 @@
 <script lang="ts">
   import Button from "src/libs/o-views/atoms/Button.svelte";
+  import Compose from "src/libs/o-views/atoms/Compose.svelte";
+  import Folder from "src/libs/o-views/atoms/Folder.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import { onMount } from "svelte";
   import * as wn from "webnative";
 
   let state;
-  let appFolders;
-  let a = [];
+  let appFolders = [];
   let path;
+  let fs;
 
-  async function init() {
+  let myApps;
+
+  let authState;
+
+  onMount(async () => {
+    await initAuth();
+    await initFS();
+    await listApps();
+  });
+
+  async function initAuth() {
     state = await wn.initialise({
       permissions: {
         // Will ask the user permission to store
-        // your apps data in `private/Apps/Nullsoft/Winamp`
+        // your apps data in `private/Apps/{creator}}/{name}`
         app: {
-          name: "OmoTest",
+          name: "OmoTest2",
           creator: "MamaOmo",
         },
       },
     });
-    if (!state.authenticated) {
-      wn.redirectToLobby(state.permissions);
+    switch (state.scenario) {
+      case wn.Scenario.AuthCancelled:
+        authState = "you cancelled the access authorisation";
+        break;
+
+      case wn.Scenario.AuthSucceeded:
+      case wn.Scenario.Continuation:
+        authState = "Welcome, you authenticated successfully";
+        // State:
+        // state.authenticated    -  Will always be `true` in these scenarios
+        // state.newUser          -  If the user is new to Fission
+        // state.throughLobby     -  If the user authenticated through the lobby, or just came back.
+        // state.username         -  The user's username.
+        //
+        // ☞ We can now interact with our file system (more on that later)
+        state.fs;
+        break;
+
+      case wn.Scenario.NotAuthorised:
+        authState = "you are not authorized, please allow access";
+        wn.redirectToLobby(state.permissions);
+        break;
     }
-    const fs = state.fs;
+  }
+  async function initFS() {
+    fs = state.fs;
     const appPath = fs.appPath();
     if (await fs.exists(appPath)) {
       await fs.ls(appPath);
@@ -32,83 +66,124 @@
       await fs.mkdir(appPath);
       await fs.publish();
     }
-    console.log("fs ls app path:", await fs.ls(appPath));
-    appFolders = await fs.ls(appPath);
+    console.log("fs ls root path:", await fs.ls(appPath));
     path = appPath;
 
-    // await fs.mkdir(fs.appPath(["Test2"]));
-    // await fs.publish();
-
-    const content = "hello omo2";
-    const updatedCID = await fs.add(fs.appPath("hola2", content));
-    await fs.publish();
-
-    // const objectArray = Object.entries(appFolders);
-
-    // objectArray.forEach(([key, value]) => {
-    //   console.log("descructured: ", { key: value });
-    // });
-
-    // a = Object.entries(await appFolders);
-
-    // a = await Object.keys(appFolders);
+    await updateDirectoryList();
   }
 
-  function login() {
-    if (state.authenticated) {
-      alert("you are already authenticated");
-    } else {
-      wn.redirectToLobby(state.permissions);
-    }
+  async function listApps() {
+    const a = await wn.apps.index();
+    myApps = Object.values(a)[0];
+    console.log("my apps:", myApps);
   }
 
-  onMount(async () => {
-    await init();
-  });
+  async function addFolder() {}
+
+  async function updateDirectoryList() {
+    const list = await fs.ls(fs.appPath());
+    appFolders = [];
+    Object.keys(list).forEach(function (key) {
+      appFolders.push(list[key]);
+    });
+  }
+
+  let openDetail: boolean = false;
+
+  function toggleExpand() {
+    openDetail = !openDetail;
+  }
 
   let title = { title: "Omo Test App by Mama Omo" };
 </script>
 
-<div class="bg-white">
-  <div class="h-14">
+<style>
+  .card {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr 1fr;
+    grid-template-rows: 3.5rem;
+    max-width: 100%;
+  }
+</style>
+
+<Compose rows="40px 1fr" columns="1fr" tw="bg-white">
+  <Compose tw="h-14">
     <Header data={title} />
-  </div>
-  <div class="p-4">
-    {#if state == undefined}
-      <div on:click={login}>
-        <Button text="login" type="primary" />
-      </div>
-    {/if}
-    <span class="p-2 font-bold">-- authentication --</span>
+  </Compose>
 
-    {#if state != undefined}
-      <div class="p-2">
-        <div>Scenario: {state.scenario}</div>
-        <div>UserName: {state.username}</div>
-        <div>AppName: {state.permissions.app.name}</div>
-        <div>AppCreator: {state.permissions.app.creator}</div>
-        <div>Authenticated: {state.authenticated}</div>
-        <div>Auth Through Lobby: {state.throughLobby}</div>
-        <div>New User: {state.newUser}</div>
-        <!-- <div>List of my apps:</div> -->
-      </div>
-    {/if}
+  <Compose tw="p-4" gap="10px" overflowY>
+    <div>
+      {#await state}
+        waiting
+      {:then}
+        {authState}
+        -
+        <!-- {#await state.scenario}scenario loading{:then}{state.scenario}{/await} -->
 
-    <div class="p-2"><span class="font-bold">-- ipfs --</span></div>
-    {#if state != undefined}
-      <div>{path}</div>
-      <!-- <div class="max-w-2xl break-all text-xxs">
-        {#each a as a}{JSON.stringify(a)}{/each}
-      </div> -->
-
-      <!-- {#each a as [key, value]}
-        <div>
-          {key}:
-          {#if value.isFile}
-            {JSON.stringify(value)}
-          {:else}{JSON.stringify(value)}{/if}
+        <!-- {#if state == undefined || state.Scenario == 'NOT_AUTHORISED'}
+        <div on:click={login}>
+          <Button text="Auth Now" type="primary" />
         </div>
-      {/each} -->
-    {/if}
-  </div>
-</div>
+      {/if} -->
+        <div class="p-2 font-bold">-- authentication --</div>
+
+        {#if state != undefined}
+          <div class="p-2">
+            <div>Scenario: {state.scenario}</div>
+            <div>UserName: {state.username}</div>
+            <div>AppName: {state.permissions.app.name}</div>
+            <div>AppCreator: {state.permissions.app.creator}</div>
+            <div>Authenticated: {state.authenticated}</div>
+            <div>Auth Through Lobby: {state.throughLobby}</div>
+            <div>New User: {state.newUser}</div>
+          </div>
+        {/if}
+
+        <div class="p-2 font-bold">-- my apps --</div>
+
+        {#if state != undefined}
+          {#each myApps as data}{data}{/each}
+        {/if}
+
+        <div class="p-2">
+          <span class="font-bold">-- ipfs --</span>
+          {#if state != undefined}
+            <div>App path: {path}</div>
+            <div>Data in my app:</div>
+
+            <div class="space-y-2 ">
+              {#each appFolders as data}
+                <div
+                  on:click={toggleExpand}
+                  class="w-full bg-white border rounded card border-light-200">
+                  <div class="flex items-center justify-center p-2">
+                    <!-- <img src={data.image} alt="CRC" /> -->
+                    {#if data.isFile}FILE{:else}DIR{/if}
+                  </div>
+                  <div class="px-1 py-2">
+                    <div class="text-base text-primary">{data.name}</div>
+                    <p class="text-xs text-gray-500">
+                      <span class="text-xs text-gray-500">{data.mtime}</span>
+                    </p>
+                  </div>
+                  <div class="p-1 px-4 text-right">
+                    <div class="py-1 text-3xl font-light text-action">
+                      {data.size}
+                    </div>
+                  </div>
+                </div>
+                {#if data.pointer && openDetail}
+                  <div
+                    class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
+                    Address:
+                    <span class="text-primary">{data.pointer}</span>
+                  </div>
+                {/if}
+              {/each}
+            </div>
+          {/if}
+        </div>
+      {/await}
+    </div>
+  </Compose>
+</Compose>

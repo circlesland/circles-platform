@@ -37,11 +37,11 @@ export const dapps = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "identity/login",
     },
     design: {
       icon: "user-astronaut",
-      type: "disabled",
+      type: "",
     },
   },
   {
