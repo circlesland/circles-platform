@@ -5,7 +5,6 @@
   import { Jumper } from "svelte-loading-spinners";
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
-  import Compose from "src/libs/o-views/atoms/Compose.svelte";
 
   export let address: string;
   let accountAddress: string = localStorage.getItem("omo.address");
@@ -21,6 +20,7 @@
   let personalEtherBalance: string;
 
   let person: Person;
+  let tokensITrust: any[] = [];
 
   function init(addr: string) {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -53,6 +53,25 @@
     );
     const personalEthDot = personalEthBalanceStr.indexOf(".");
     personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
+
+    let t2 = await person.getTokenBalances();
+    tokensITrust = Object.keys(t2)
+      .map((k) => t2[k])
+      .filter((o) => o.balanceString && o.balanceString !== "0")
+      .map((token) => {
+        return {
+          image:
+            "https://avatars.dicebear.com/api/avataaars/" +
+            token.owner.address +
+            ".svg ",
+          balanceBN: token.balance,
+          title: token.owner.address.slice(0, 8),
+          description: token.owner.address,
+          balance: token.balanceString,
+          currency: "CRC",
+        };
+      });
+    tokensITrust.sort((a, b) => -a.balanceBN.cmp(b.balanceBN));
   }
 
   $: {
@@ -88,7 +107,7 @@
   currency balances
 </div>
 
-<Compose gap="0.5rem">
+<div class="space-y-2">
   {#if circlesBalance || safeEtherBalance}
     <TokenItem data={circlesSafe} />
     <TokenItem data={xDaiSafe} />
@@ -98,4 +117,20 @@
       <Jumper size="150" color="#071D69" unit="px" />
     </div>
   {/if}
-</Compose>
+</div>
+
+<div class="pt-4 pb-1 pl-1 text-gray-500 lowercase font-title">
+  detailed circles distribution
+</div>
+
+<div class="space-y-2">
+  {#if tokensITrust.length > 0}
+    {#each tokensITrust as token}
+      <TokenItem data={token} />
+    {/each}
+  {:else}
+    <div class="flex items-center justify-center h-full mx-auto">
+      <Jumper size="150" color="#071D69" unit="px" />
+    </div>
+  {/if}
+</div>
