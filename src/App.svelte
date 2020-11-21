@@ -130,29 +130,28 @@
           bind:safeAddress
           on:actionButtonClick={toggleOpen}
           {quickActions} />
-        <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
-          {#if runningProcess}
-            <Process
-              process={runningProcess}
-              on:stopped={() => {
-                isOpen = false;
-                runningProcess = null;
-              }} />
-          {:else}
-            {#each overflowActions as action}
-              <div class="w-full">
-                <div class="space-y-2">
-                  <div
-                    on:click={() => window.dispatchShellEvent(action.event())}>
-                    <Button text={action.label} type="secondary" />
-                  </div>
+      </Compose>
+      <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
+        {#if runningProcess}
+          <Process
+            process={runningProcess}
+            on:stopped={() => {
+              isOpen = false;
+              runningProcess = null;
+            }} />
+        {:else}
+          {#each overflowActions as action}
+            <div class="w-full">
+              <div class="space-y-2">
+                <div on:click={() => window.dispatchShellEvent(action.event())}>
+                  <Button text={action.label} type="secondary" />
                 </div>
               </div>
-            {/each}
-            <ProcessNav bind:isOpen />
-          {/if}
-        </Modal>
-      </Compose>
+            </div>
+          {/each}
+          <ProcessNav bind:isOpen />
+        {/if}
+      </Modal>
     </Compose>
   </Compose>
 </ComposeApp>
