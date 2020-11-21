@@ -1,7 +1,7 @@
 ![dappscreens](https://user-images.githubusercontent.com/747161/99851260-29611000-2b7f-11eb-9223-e84578960e41.png)
 
 # Omo Li
-Building with Omo.Li a lightweight and hostless decentralized wallet and marketplace on top of the CirclesUBI protocol, ipfs and the fission Webnative SDK and idenitiy key management
+Building with Omo.Li a lightweight and hostless decentralized wallet and marketplace on top of the CirclesUBI protocol, ipfs and the fission Webnative SDK and identity key management
 
 - DAPP (early alpha WIP): https://omo.fission.app/
 
@@ -19,7 +19,7 @@ Building with Omo.Li a lightweight and hostless decentralized wallet and marketp
 - Circles Protocol (UBI-Currency) as non-custodial self-owned personal currency (alpha ready)
 - xDAI Blockchain for fast and low-fee transactions (alpha ready)
 - Transitive circles payments via a clientside pathfinder (planned)
-- Fission: Identity and Key-Management mit WebCrypto, DID, UCAN (planned)
+- Fission: Identity and Key-Management mit keystore-idb, DID and UCAN (planned)
 - Fission: Hostless and user-owned IPFS Storage with service workers syncing P2P between the browser clients (planned)
 - Caching trust graph and limits in ipfs and sync via fission (planned)
 - Svelte as reactive frontend compiler
