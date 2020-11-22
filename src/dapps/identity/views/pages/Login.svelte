@@ -3,12 +3,13 @@
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import { onMount } from "svelte";
-  import * as wn from "webnative";
+
+  const wn = window.wn;
 
   let state;
   let appFolders = [];
   let path;
-  let fs;
+  let fs: any;
 
   let myApps;
 
