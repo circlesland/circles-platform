@@ -39,9 +39,9 @@
     tw="justify-center items-center p-4 bg-white  border-t border-light-300"
     columns="1fr"
     rows="1fr">
-    <a on:click={logout} class="w-full">
+    <button on:click={logout} class="w-full">
       <Button text="Logout" type="danger" />
-    </a>
+    </button>
   </Compose>
 {:else if safeAddress}
   <Compose
@@ -65,13 +65,13 @@
       </a>
     </Compose>
     <Compose rows="1fr" columns="1fr">
-      <div
+      <button
         on:click={onActionButtonClick}
         class="w-16 h-16 mx-auto mb-3 text-white rounded-full action bg-secondary hover:bg-secondary-lighter">
         <div class="flex items-center justify-center">
-          <i class="mt-4 text-3xl fas fa-plus " />
+          <i class="text-3xl fas fa-plus " />
         </div>
-      </div>
+      </button>
     </Compose>
     <Compose rows="1fr" columns="1fr">
       <a
@@ -104,8 +104,8 @@
     tw="justify-center items-center p-4 bg-white  border-t border-light-300"
     columns="1fr"
     rows="1fr">
-    <a on:click={onActionButtonClick} class="w-full p-2">
+    <button on:click={onActionButtonClick} class="w-full p-2">
       <Button text="Login" type="primary" />
-    </a>
+    </button>
   </Compose>
 {/if}
