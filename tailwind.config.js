@@ -1,8 +1,7 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
-  future: {
-    purgeLayersByDefault: true,
-    removeDeprecatedGapUtilities: true,
-  },
+  darkMode: false, 
   purge: {
     mode: 'layers',
     layers: ['base', 'components', 'utilities'],
@@ -16,6 +15,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        gray: colors.blueGray,
         dark: "#051F45",
         primary: '#0C266A',
         'primary-darker': "#0A1A52",

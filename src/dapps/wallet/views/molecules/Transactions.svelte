@@ -81,7 +81,7 @@
       {#each transactions as t}
         <div>
           <div
-            class="flex w-full bg-white border border-gray-300 rounded"
+            class="flex w-full bg-white border rounded border-light-200"
             on:click={() => (t.openDetail = !t.openDetail)}>
             <div class="flex items-center justify-center w-10 text-sm ">
               <i
@@ -117,12 +117,12 @@
             </div>
             {#if t.direction === 'out'}
               <div
-                class="w-1/3 h-12 px-3 py-1 text-3xl font-light text-right text-primary">
+                class="w-1/3 h-12 px-3 py-2.5 text-3xl font-light text-right text-primary">
                 <span>-{t.amount}</span>
               </div>
             {:else}
               <div
-                class="w-1/3 h-12 px-3 py-2 text-3xl font-light text-right text-action">
+                class="w-1/3 h-12 px-3 py-2.5 text-3xl font-light text-right text-action">
                 {t.amount}
               </div>
             {/if}
