@@ -1,13 +1,13 @@
 {
 	"private": true,
 	"scripts": {
-		"build": "npm run build:tailwind && cross-env NODE_ENV=production webpack ",
+		"build": "npm run build:tailwind && cross-env NODE_ENV=production webpack",
 		"dev": "webpack-dev-server --content-base public --hot & npm run watch:tailwind",
 		"start": "serve public -l 8080",
 		"validate": "svelte-check",
 		"deploy": "npm run build && fission app publish --verbose",
-		"watch:tailwind": "postcss public/tailwind.css -o public/index.css -w",
-		"build:tailwind": "cross-env NODE_ENV=production postcss public/tailwind.css -o public/index.css"
+		"watch:tailwind": "postcss src/tailwind.css -o public/index.css -w",
+		"build:tailwind": "cross-env NODE_ENV=production postcss src/tailwind.css -o public/index.css"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^5.15.1",
