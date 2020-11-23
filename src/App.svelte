@@ -154,6 +154,7 @@
               <div on:click={() => {
                 isOpen = false;
                 askForCancel = false;
+                window.stateMachines.cancel();
                 runningProcess = null;
               }}>
                 <button>Cancel</button>
