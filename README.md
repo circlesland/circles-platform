@@ -3,7 +3,7 @@
 # Omo Li
 Building with Omo.Li a lightweight and hostless decentralized wallet and marketplace on top of the CirclesUBI protocol, ipfs and the fission Webnative SDK and identity key management
 
-- DAPP (early alpha WIP): https://omo.fission.app/
+- DAPP (early alpha WIP): https://omo.li/
 
 ## Overview
 
