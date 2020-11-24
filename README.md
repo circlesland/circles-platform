@@ -7,7 +7,7 @@ Building with Omo.Li a lightweight and hostless decentralized wallet and marketp
 
 ## Overview
 
-- Chat: https://discord.gg/Rbhy4j9
+- Chat: https://discord.gg/gxCpSX2q
 - Wishes & Bugs: https://github.com/omoearth/omo/issues
 - Roadmap: https://github.com/omoearth/omo/projects/1
 - Twitter: https://twitter.com/OmoEarth

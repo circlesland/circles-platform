@@ -35,6 +35,7 @@ declare global {
     dispatchShellEvent: (event: OmoEvent) => void,
     stateMachines: {
       current(): Process | null,
+      cancel(),
       run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => ProcessContext) => Process
     }
     wn: any
@@ -72,6 +73,9 @@ window.stateMachines = <any>{
   _current: null,
   current(): Process {
     return this._current;
+  },
+  cancel() {
+    this._current = null;
   },
   run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => TContext) {
     const { service, state, send } = useMachine(

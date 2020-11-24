@@ -109,13 +109,13 @@
 </div>
 
 <footer class="flex justify-between px-4 pb-2 text-gray-400 bg-white ">
-  <a on:click={handleBack}>
+  <button on:click={handleBack}>
     <NavItem icon={faArrowLeft} text="Back" />
-  </a>
-  <a on:click={handleCancel}>
+  </button>
+  <button on:click={handleCancel}>
     <NavItem icon={faTimes} text="Close" />
-  </a>
-  <a on:click={() => {}}>
+  </button>
+  <button on:click={() => {}}>
     <div
       class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
       <span>
@@ -123,5 +123,5 @@
         <p class="lowercase font-title" />
       </span>
     </div>
-  </a>
+  </button>
 </footer>

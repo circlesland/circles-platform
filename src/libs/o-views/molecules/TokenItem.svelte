@@ -36,8 +36,8 @@
         <span class="text-xs text-gray-500">{data.currency}</span>
       </p>
     </div>
-    <div class="p-1 px-4 text-right">
-      <div class="py-1 text-3xl font-light text-action">
+    <div class="flex items-center pt-0.5 justify-end px-4 text-right">
+      <div class="text-3xl font-light text-action">
         {#if parseFloat(data.balance) < 1}
           {parseFloat(data.balance).toFixed(4)}
         {:else}{parseFloat(data.balance).toFixed(2)}{/if}
