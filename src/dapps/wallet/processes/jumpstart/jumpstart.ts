@@ -1,6 +1,6 @@
 import { assign, createMachine, send } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
+// import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
 import { transferXDai } from "../transferXDai/transferXDai";
@@ -8,6 +8,7 @@ import { config } from "../../../../libs/o-circles-protocol/config";
 import { promptError } from "../promptError";
 import { promptSuccess } from "../promptSuccess";
 import { strings } from "../../data/strings";
+import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
 
 export interface JumpstartContext extends ProcessContext {
@@ -22,7 +23,7 @@ export interface JumpstartContext extends ProcessContext {
 /**
  * Transfer xDai
  */
-const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
+const processDefinition = createMachine<JumpstartContext, OmoEvent>({
     initial: "ready",
     states: {
         ready: {

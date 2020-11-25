@@ -1,13 +1,14 @@
 import { BN } from "ethereumjs-util";
 import { Address } from "src/libs/o-circles-protocol/interfaces/address";
 
+/*
 export type PromptField = {
     type: "ethereumAddress"|"wei"|"bytestring"|"percent"|"string"|"text",
     icon?: string,
     label: string,
     description?: string,
     triggers?: string,
-    value?: string // Default value
+    value?:  any
 };
 
 export type ProcessEvent =
@@ -41,10 +42,7 @@ export type ProcessEvent =
         data: {
             id: string,
             fields: {
-                [id: string]: {
-                    type: string,
-                    data: any
-                }
+                [id: string]: PromptField
             }
         }
     }
@@ -69,3 +67,4 @@ export type ProcessEvent =
         }
     }
     | { type: "omo.stopped" };
+*/

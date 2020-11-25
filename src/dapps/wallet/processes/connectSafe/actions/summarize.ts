@@ -13,13 +13,13 @@ export const summarize = send((context:ConnectSafeContext) =>
                     isReadonly: true,
                     type: "ethereumAddress",
                     label: "Safe owner address",
-                    value: context.connectSafe.safeOwnerAddress
+                    value: context.connectSafe.safeOwnerAddress.data
                 },
                 "safeAddress": {
                     isReadonly: true,
                     type: "ethereumAddress",
                     label: "Safe address",
-                    value: context.connectSafe.safeAddress
+                    value: context.connectSafe.safeAddress.data
                 }
             }
         }

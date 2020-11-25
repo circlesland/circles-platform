@@ -1,6 +1,5 @@
 import { assign, createMachine, send } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { BN } from "ethereumjs-util";
 import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
@@ -16,6 +15,7 @@ import { transferRecipientIsPreconfigured } from "./guards/transferRecipientIsPr
 import { notifyInProgress } from "./actions/notifyInProgress";
 import { transferValueIsPreconfigured } from "./guards/transferValuetIsPreconfigured";
 import { strings } from "../../data/strings";
+import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
 export interface TransferCirclesContext extends ProcessContext {
     transfer?: {
@@ -33,7 +33,7 @@ export interface TransferCirclesContext extends ProcessContext {
 /**
  * Transfer circles
  */
-const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
+const processDefinition = createMachine<TransferCirclesContext, OmoEvent>({
     initial: "ready",
     states: {
         ready: {

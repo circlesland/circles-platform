@@ -6,5 +6,5 @@ export const storeTransferRecipientToContext = assign((context: any, event: any)
     {
         context.transfer = {};
     }
-    context.transfer.recipient = event.data.fields.address;
+    context.transfer.recipient = event.data.fields[0].value;
 })

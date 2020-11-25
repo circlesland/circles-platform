@@ -1,5 +1,6 @@
 import {send} from "xstate";
 import {TransferXDaiContext} from "../transferXDai";
+import {BN} from "ethereumjs-util";
 
 export const summarize = send((context: TransferXDaiContext) =>
 {

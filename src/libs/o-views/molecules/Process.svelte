@@ -1,126 +1,84 @@
 <script lang="ts">
-  import type { Process } from "../../../main";
-  import { PromptField } from "../../o-processes/processEvent";
-  import { ProcessDefinition } from "../../o-processes/processManifest";
+  import type {Process} from "../../../main";
   import Prompt from "./Prompt.svelte";
-  import { ProcessContext } from "../../o-processes/processContext";
-  import { createEventDispatcher } from "svelte";
-  import { Jumper } from "svelte-loading-spinners";
-  import { faArrowLeft, faTimes } from "@fortawesome/free-solid-svg-icons";
+  import {Prompt as PromptEvent, PromptField} from "../../o-events/prompt";
+  import {createEventDispatcher} from "svelte";
+  import {Jumper} from "svelte-loading-spinners";
+  import {faArrowLeft, faTimes} from "@fortawesome/free-solid-svg-icons";
   import NavItem from "../atoms/NavItem.svelte";
+  import {Trigger} from "../../o-events/trigger";
+  import {Back} from "../../o-events/back";
+  import {Cancel} from "../../o-events/cancel";
 
-  let statusType: "none" | "message" | "notification" | "prompt" = "none";
-  let status: string = "";
-
-  let promptId: string = "";
-  let promptFields: { key: string; field: PromptField }[] = [];
-
-  export let definition: ProcessDefinition;
   export let process: Process;
-  export let contextInitializer: (
-    processContext: ProcessContext
-  ) => ProcessContext;
+
+  let fields:PromptField[] = [];
 
   const dispatch = createEventDispatcher();
 
   $: {
-    if (process) {
+    if (process)
+    {
       subscribeToProcess(process);
-
-      process.sendEvent(<ProcessEvent>{
-        type: "omo.trigger",
-      });
-    } else if (definition) {
-      process = window.stateMachines.run(definition, contextInitializer);
-
-      subscribeToProcess(process);
-
-      process.sendEvent(<ProcessEvent>{
-        type: "omo.trigger",
-      });
+      process.sendEvent(new Trigger());
     }
   }
 
-  function subscribeToProcess(process: Process) {
-    process.events.subscribe((next) => {
-      if (next.event?.type === "omo.notification") {
-        statusType = "notification";
-        status = next.event.message;
-      } else if (next.event?.type === "omo.prompt") {
-        statusType = "prompt";
-        status = next.event.message;
-        promptId = next.event.data.id;
-        promptFields = Object.keys(next.event.data.fields).map((key) => {
-          return {
-            key: key,
-            field: next.event.data.fields[key],
-          };
-        });
-      } else if (next.event?.type === "omo.continue") {
-        statusType = "message";
-        status = next.event.message ?? "Continue";
-      } else if (next.stopped) {
+  function subscribeToProcess(process: Process)
+  {
+    process.events.subscribe((next) =>
+    {
+      if (next.event?.type === "omo.prompt")
+      {
+        let prompt = <PromptEvent>next.event;
+        fields = prompt.fields;
+      }
+      else if (next.stopped)
+      {
         dispatch("stopped");
         process = null;
       }
     });
   }
 
-  const handleBack = () => {
+  const handleBack = () =>
+  {
     const runningProcess = window.stateMachines.current();
-    if (!runningProcess) {
+    if (!runningProcess)
+    {
       return;
     }
-    console.log("Going one step back.");
-    runningProcess.sendEvent({
-      type: "omo.back",
-    });
+    runningProcess.sendEvent(new Back());
   };
-  const handleCancel = () => {
+
+  const handleCancel = () =>
+  {
     const runningProcess = window.stateMachines.current();
-    if (!runningProcess) {
+    if (!runningProcess)
+    {
       return;
     }
-    runningProcess.sendEvent({
-      type: "omo.cancel",
-    });
+    runningProcess.sendEvent(new Cancel());
   };
 </script>
 
 <div class="w-full">
-  {#if process}
-    {#if statusType === 'message'}
-      <h1 class="px-4 py-8 mb-4 text-center rounded text-primary bg-light-100">
-        {status}
-      </h1>
-    {:else if statusType === 'notification'}
-      <div class="flex items-center justify-center mx-auto">
-        <Jumper size="60" color="#0C266A" unit="px" />
-      </div>
-      <h1 class="px-4 py-8 mb-4 text-center bg-white rounded text-primary">
-        {status}
-      </h1>
-    {:else if statusType === 'prompt'}
-      <Prompt {status} {process} {promptFields} {promptId} />
-    {/if}
-  {:else}
-    <h1>Process ended</h1>
-  {/if}
+  <Prompt process={process} fields={fields} />
 </div>
 
 <footer class="flex justify-between px-4 pb-2 text-gray-400 bg-white ">
   <button on:click={handleBack}>
-    <NavItem icon={faArrowLeft} text="Back" />
+    <NavItem icon={faArrowLeft} text="Back"/>
   </button>
   <button on:click={handleCancel}>
-    <NavItem icon={faTimes} text="Close" />
+    <NavItem icon={faTimes} text="Close"/>
   </button>
   <button on:click={() => {}}>
     <div
       class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
       <span>
-        <i class="text-2xl" />
-        <p class="lowercase font-title" />
+        <i class="text-2xl"/>
+        <p class="lowercase font-title"/>
       </span>
     </div>
   </button>

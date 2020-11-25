@@ -106,13 +106,13 @@ export default {
                     label: "Get UBI",
                     event: () => new RunProcess(requestUbi)
                 },
-                // {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: faCoins,
-                //     label: "Send xDai",
-                //     event: () => new RunProcess(transferXDai)
-                // }, 
+                {
+                    type: "trigger",
+                    pos: "overflow",
+                    icon: faCoins,
+                    label: "Send xDai",
+                    event: () => new RunProcess(transferXDai)
+                },
                 {
                     type: "trigger",
                     pos: "overflow",

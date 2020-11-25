@@ -4,7 +4,6 @@ import { useMachine } from "xstate-svelte";
 import { Subject } from "rxjs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
 import App from "src/App.svelte";
 import { Account } from "src/libs/o-circles-protocol/interfaces/account";
 import { config } from "src/libs/o-circles-protocol/config";
@@ -13,18 +12,24 @@ import { ProcessContext } from "src/libs/o-processes/processContext";
 import { GnosisSafeProxy } from "src/libs/o-circles-protocol/safe/gnosisSafeProxy";
 import { Person } from "src/libs/o-circles-protocol/model/person";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import {EventBroker} from "./eventBroker";
 import {OmoEvent} from "./libs/o-events/omoEvent";
 
 dayjs.extend(relativeTime)
 
+export type ProcessEvent = {
+  stopped: boolean,
+  currentState?: State<any, OmoEvent, any>,
+  previousState?: State<any, OmoEvent, any>,
+  event?: OmoEvent
+};
+
 export interface Process {
   id: number;
-  events: Observable<any>;
+  events: Observable<ProcessEvent>;
+  context: ProcessContext;
   sendEvent(event: any);
 }
-
 
 declare global {
   interface Window {
@@ -61,7 +66,7 @@ function getServiceContext(): ProcessContext {
     safe: !account.address ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
     account: account,
     person: !safeAddress ? null : new Person(circlesHub, safeAddress),
-    other: {}
+    data: {}
   };
   return processContext;
 }
@@ -72,23 +77,27 @@ window.stateMachines = <any>{
   {
     return this._current;
   },
-  cancel() {
+  cancel()
+  {
     this._current = null;
   },
-  run<TContext>(definition: ProcessDefinition, contextModifier?:(processContext:ProcessContext)=>TContext) {
+  run<TContext extends ProcessContext>(definition: ProcessDefinition, contextModifier?:(processContext:ProcessContext)=>TContext)
+  {
+    const context = contextModifier
+      ? contextModifier(getServiceContext())
+      : getServiceContext();
+
     const { service, state, send } = useMachine(
       definition.stateMachine,
       {
-        context: contextModifier
-            ? contextModifier(getServiceContext())
-            : getServiceContext()
+        context: context
       });
 
     const processEvents = new Subject<{
       stopped: boolean,
       currentState?: State<any, any, any>,
       previousState?: State<any, any, any>,
-      event?: ProcessEvent
+      event?: OmoEvent
     }>();
 
     service.onTransition((state1, event) => {
@@ -109,6 +118,7 @@ window.stateMachines = <any>{
     const process: Process = {
       id: 0,
       events: processEvents,
+      context,
       sendEvent: (event: any) => send(event)
     };
 

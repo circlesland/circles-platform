@@ -1,2 +1,16 @@
 export type OmoEventTypes =
-    "runProcess" | "showModal"
+    "runProcess"
+  | "showModal"
+  | "omo.trigger"
+  | "omo.stop"
+  | "omo.back"
+  | "omo.skip"
+  | "omo.continue"
+  | "omo.notification"
+  | "omo.cancel"
+  | "omo.prompt"
+  | "omo.answer"
+  | "omo.error"
+  | "omo.success"
+  | "omo.stopped"
+

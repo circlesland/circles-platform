@@ -7,6 +7,9 @@ export const storeSafeAddressToContext = assign((context:ConnectSafeContext, eve
     {
         context.connectSafe = {};
     }
-    context.connectSafe.safeAddress = event.data.fields.safeAddress;
+    context.connectSafe.safeAddress = {
+      type:"ethereumAddress",
+      data: event.data.fields[0].value
+    };
     return context;
 })

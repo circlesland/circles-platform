@@ -1,6 +1,5 @@
 import { assign, createMachine, send } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { recentlyGotUbi } from "./guards/recentlyGotUbi";
 import { getUbi } from "./services/getUbi";
@@ -10,12 +9,12 @@ import { setLastSuccessfulUbiRetrieval } from "./actions/setLastSuccessfulUbiRet
 import { notifyInProgress } from "./actions/notifyInProgress";
 import { promptAlreadyRequested } from "./actions/promptAlreadyRequested";
 import { strings } from "../../data/strings";
-
+import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
 /**
  * Requests UBI
  */
-const processDefinition = createMachine<ProcessContext, ProcessEvent>({
+const processDefinition = createMachine<ProcessContext, OmoEvent>({
     initial: "ready",
     states: {
         ready: {

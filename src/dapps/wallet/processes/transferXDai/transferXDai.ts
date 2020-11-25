@@ -1,6 +1,6 @@
 import { assign, createMachine } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
+// import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { BN } from "ethereumjs-util";
 import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
@@ -15,6 +15,7 @@ import { promptRecipient } from "./actions/promptRecipient";
 import { promptValue } from "./actions/promptValue";
 import { summarize } from "./actions/summarize";
 import { strings } from "../../data/strings";
+import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
 export interface TransferXDaiContext extends ProcessContext {
     transfer?: {
@@ -32,7 +33,7 @@ export interface TransferXDaiContext extends ProcessContext {
 /**
  * Transfer xDai
  */
-const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
+const processDefinition = createMachine<TransferXDaiContext, OmoEvent>({
     initial: "ready",
     states: {
         ready: {

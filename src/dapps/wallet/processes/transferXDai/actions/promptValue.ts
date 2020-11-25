@@ -1,6 +1,7 @@
 import {send} from "xstate";
 import {TransferXDaiContext} from "../transferXDai";
 import {BN} from "ethereumjs-util";
+// import {ProcessEvent} from "../../../../../libs/o-processes/processEvent";
 
 export const promptValue = send((context: TransferXDaiContext) =>
 {

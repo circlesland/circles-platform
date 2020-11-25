@@ -1,6 +1,5 @@
 import { assign, createMachine } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
 import { setTrustService } from "./services/setTrustService";
@@ -15,6 +14,7 @@ import { notifyInProgress } from "./actions/notifyInProgress";
 import { isTrustLimitAlreadySet } from "./guards/isTrustLimitAlreadySet";
 import { isTrustReceiverAlreadySet } from "./guards/isTrustReceiverAlreadySet";
 import { strings } from "../../data/strings";
+import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
 export interface SetTrustContext extends ProcessContext {
     setTrust?: {
@@ -32,7 +32,7 @@ export interface SetTrustContext extends ProcessContext {
 /**
  * Transfer circles
  */
-const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
+const processDefinition = createMachine<SetTrustContext, OmoEvent>({
     initial: "ready",
     states: {
         ready: {

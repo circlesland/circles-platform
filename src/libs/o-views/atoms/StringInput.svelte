@@ -1,19 +1,8 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-
-  const dispatch = createEventDispatcher();
-
   let isValid = true;
   export let line: string;
   export let label: string;
   export let isReadonly: boolean = false;
-
-  $: {
-    dispatch("value", {
-      type: "string",
-      data: line,
-    });
-  }
 </script>
 
 <div class="w-full">

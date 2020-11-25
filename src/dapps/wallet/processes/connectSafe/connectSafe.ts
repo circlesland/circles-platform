@@ -1,6 +1,6 @@
 import { assign, createMachine } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
+// import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
 import { ByteString } from "../../../../libs/o-circles-protocol/interfaces/byteString";
@@ -16,6 +16,7 @@ import { storeSafeAddressToContext } from "./actions/storeSafeAddressToContext";
 import { strings } from "../../data/strings";
 
 import { push } from "svelte-spa-router";
+import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
 export interface ConnectSafeContext extends ProcessContext {
     connectSafe?: {
@@ -37,7 +38,7 @@ export interface ConnectSafeContext extends ProcessContext {
 /**
  * Connect safe
  */
-const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
+const processDefinition = createMachine<ConnectSafeContext, OmoEvent>({
     initial: "ready",
     states: {
         ready: {
