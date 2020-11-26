@@ -2,11 +2,11 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   darkMode: false, 
-  purge: {
-    mode: 'layers',
-    layers: ['base', 'components', 'utilities'],
-    content: ["./src/**/*.svelte","./src/**/*.html"]
-  },
+  purge: [
+    './src/**/*.svelte',
+    './src/**/*.css',
+    './public/*.html',
+  ],
   theme: {
     fontFamily: {
       'title': ['Comfortaa', 'cursive'],

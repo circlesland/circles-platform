@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import App from "src/App.svelte";
+import './tailwind.css';
+
 import { Account } from "src/libs/o-circles-protocol/interfaces/account";
 import { config } from "src/libs/o-circles-protocol/config";
 import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
@@ -14,8 +16,8 @@ import { GnosisSafeProxy } from "src/libs/o-circles-protocol/safe/gnosisSafeProx
 import { Person } from "src/libs/o-circles-protocol/model/person";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { ProcessEvent } from "src/libs/o-processes/processEvent";
-import {EventBroker} from "./eventBroker";
-import {OmoEvent} from "./libs/o-events/omoEvent";
+import { EventBroker } from "./eventBroker";
+import { OmoEvent } from "./libs/o-events/omoEvent";
 
 dayjs.extend(relativeTime)
 
@@ -25,16 +27,15 @@ export interface Process {
   sendEvent(event: any);
 }
 
-
 declare global {
   interface Window {
-    mySafeAddress:string,
+    mySafeAddress: string,
     eventBroker: EventBroker,
-    dispatchShellEvent:(event:OmoEvent) => void,
+    dispatchShellEvent: (event: OmoEvent) => void,
     stateMachines: {
-      current():Process|null,
+      current(): Process | null,
       cancel(),
-      run: (definition: ProcessDefinition, contextModifier?:(processContext:ProcessContext)=>ProcessContext) => Process
+      run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => ProcessContext) => Process
     }
   }
 }
@@ -68,20 +69,19 @@ function getServiceContext(): ProcessContext {
 
 window.stateMachines = <any>{
   _current: null,
-  current(): Process
-  {
+  current(): Process {
     return this._current;
   },
   cancel() {
     this._current = null;
   },
-  run<TContext>(definition: ProcessDefinition, contextModifier?:(processContext:ProcessContext)=>TContext) {
+  run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => TContext) {
     const { service, state, send } = useMachine(
       definition.stateMachine,
       {
         context: contextModifier
-            ? contextModifier(getServiceContext())
-            : getServiceContext()
+          ? contextModifier(getServiceContext())
+          : getServiceContext()
       });
 
     const processEvents = new Subject<{
