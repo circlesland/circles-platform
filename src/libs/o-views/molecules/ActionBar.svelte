@@ -2,9 +2,12 @@
   import NavItem from "../atoms/NavItem.svelte";
   import { location, push } from "svelte-spa-router";
   import { createEventDispatcher } from "svelte";
-  import { ActionBarAction } from "../../../routes";
+  import type { ActionBarAction } from "../../../routes";
   import Button from "../atoms/Button.svelte";
   import Compose from "../atoms/Compose.svelte";
+  import Icon from "fa-svelte";
+
+  import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
   export let safeAddress: string;
 
@@ -69,7 +72,7 @@
         on:click={onActionButtonClick}
         class="w-16 h-16 mx-auto mb-3 text-white rounded-full action bg-secondary hover:bg-secondary-lighter">
         <div class="flex items-center justify-center">
-          <i class="text-3xl fas fa-plus " />
+          <Icon icon={faPlus} class="text-3xl" />
         </div>
       </button>
     </Compose>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Address } from "../../o-circles-protocol/interfaces/address";
+  import type { Address } from "../../o-circles-protocol/interfaces/address";
   import {
     transferCircles,
     TransferCirclesContext,
@@ -10,6 +10,17 @@
   } from "../../../dapps/wallet/processes/setTrust/setTrust";
   import ButtonIcon from "../atoms/ButtonIcon.svelte";
   import { RunProcess } from "../../o-events/runProcess";
+
+  import Icon from "fa-svelte";
+  import {
+    faArrowLeft,
+    faArrowRight,
+    faExchangeAlt,
+    faHeart,
+    faMinus,
+    faMinusCircle,
+    faMoneyBill,
+  } from "@fortawesome/free-solid-svg-icons";
 
   export let data = {
     image: "",
@@ -103,17 +114,13 @@
       <div class="text-base text-primary">{data.title}</div>
       <p class="text-xs text-gray-500 ">
         {#if data.connection == 'trustedMutual'}
-          <i class="fas fa-exchange-alt" /><span class="ml-2">
-            mutual trust</span>
+          <Icon icon={faExchangeAlt} /><span class="ml-2"> mutual trust</span>
         {:else if data.connection == 'trustingMe'}
-          <i class="fas fa-arrow-right" /><span class="ml-2">
-            is trusting you</span>
+          <Icon icon={faArrowRight} /><span class="ml-2"> is trusting you</span>
         {:else if data.connection == 'trustedByMe'}
-          <i class="fas fa-arrow-left" /><span class="ml-2">
-            trusted by you</span>
+          <Icon icon={faArrowLeft} /><span class="ml-2"> trusted by you</span>
         {:else if data.connection == 'trustRevoked'}
-          <i class="fas fa-minus-circle" /><span class="ml-2">
-            revoked trust</span>
+          <Icon icon={faMinusCircle} /><span class="ml-2"> revoked trust</span>
         {/if}
       </p>
     </div>
@@ -121,15 +128,15 @@
       {#each data.actions as a}
         {#if a == 'send'}
           <div on:click={() => runTransferCircles(data.detail.address)}>
-            <ButtonIcon icon="money-bill-wave" type="primary" />
+            <ButtonIcon icon={faMoneyBill} type="primary" />
           </div>
         {:else if a == 'trust'}
           <div on:click={() => runTrust(data.detail.address)}>
-            <ButtonIcon icon="heart" type="primary" />
+            <ButtonIcon icon={faHeart} type="primary" />
           </div>
         {:else if a == 'untrust'}
           <div on:click={() => runUntrust(data.detail.address)}>
-            <ButtonIcon icon="minus" type="light-danger" />
+            <ButtonIcon icon={faMinus} type="light-danger" />
           </div>
         {/if}
       {/each}
@@ -148,15 +155,3 @@
     </div>
   {/if}
 </div>
-
-<!-- 
-<div class="flex items-center content-end justify-center">
-  <div
-    class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded ">
-    <img src="icons/removeTrust.svg" alt="add" />
-  </div>
-  <div
-    class="flex items-center content-end justify-center w-12 h-12 p-3 border-l border-gray-300 rounded bg-primary">
-    <i class="fas fa-money-bill-wave" />
-  </div>
-</div> -->

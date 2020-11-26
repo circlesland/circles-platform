@@ -1,3 +1,4 @@
+import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
 
 export const profile = {
   subtitle: "to unlock your first dapp please login",
@@ -12,9 +13,9 @@ export const locked = {
     route: "omo/dapps",
   },
   design: {
-    icon: "piggy-bank",
     type: "disabled",
   },
+  icon: faPiggyBank,
 };
 
 export const dapps = [
@@ -27,9 +28,9 @@ export const dapps = [
       route: "wallet/safe",
     },
     design: {
-      icon: "piggy-bank",
       type: "",
     },
+    icon: faPiggyBank,
   },
   {
     data: {
@@ -40,9 +41,9 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      icon: "user-astronaut",
       type: "disabled",
     },
+    icon: faUserAstronaut,
   },
   {
     data: {
@@ -53,9 +54,9 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      icon: "comments",
       type: "disabled",
     },
+    icon: faComments,
   },
   {
     data: {
@@ -66,9 +67,9 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      icon: "store",
       type: "disabled",
     },
+    icon: faStore,
   },
   {
     data: {
@@ -79,9 +80,9 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      icon: "people-carry",
       type: "disabled",
     },
+    icon: faPeopleCarry,
   },
   {
     data: {
@@ -92,9 +93,9 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      icon: "headphones",
       type: "disabled",
     },
+    icon: faFilm,
   },
   {
     data: {
@@ -105,9 +106,9 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      icon: "headphones",
       type: "disabled",
     },
+    icon: faHeadphones,
   },
   {
     data: {
@@ -118,8 +119,8 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      icon: "book",
       type: "disabled",
     },
+    icon: faBook,
   },
 ];

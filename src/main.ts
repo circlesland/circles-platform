@@ -1,23 +1,22 @@
 import type { Observable } from "rxjs";
-import { State } from "xstate";
+import type { State } from "xstate";
 import { useMachine } from "xstate-svelte";
 import { Subject } from "rxjs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import App from "src/App.svelte";
-import './tailwind.css';
 
-import { Account } from "src/libs/o-circles-protocol/interfaces/account";
+import type { Account } from "src/libs/o-circles-protocol/interfaces/account";
 import { config } from "src/libs/o-circles-protocol/config";
 import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-import { ProcessContext } from "src/libs/o-processes/processContext";
+import type { ProcessContext } from "src/libs/o-processes/processContext";
 import { GnosisSafeProxy } from "src/libs/o-circles-protocol/safe/gnosisSafeProxy";
 import { Person } from "src/libs/o-circles-protocol/model/person";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
+import type { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import type { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { EventBroker } from "./eventBroker";
-import { OmoEvent } from "./libs/o-events/omoEvent";
+import type { OmoEvent } from "./libs/o-events/omoEvent";
 
 dayjs.extend(relativeTime)
 

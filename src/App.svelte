@@ -21,8 +21,8 @@
   import Button from "./libs/o-views/atoms/Button.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
-  import { OmoEvent } from "./libs/o-events/omoEvent";
-  import { RunProcess } from "./libs/o-events/runProcess";
+  import type { OmoEvent } from "./libs/o-events/omoEvent";
+  import type { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
   import { onMount } from "svelte";
   import Notifications from "./libs/o-views/molecules/Notifications.svelte";
@@ -118,7 +118,6 @@
   }
 </script>
 
-<Tailwind />
 <ComposeApp tw="font-primary bg-light-300">
   <Compose tw="mx-auto bg-light-100 w-full max-w-2xl">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">

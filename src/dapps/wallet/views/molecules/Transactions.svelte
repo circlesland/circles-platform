@@ -6,7 +6,8 @@
   import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";
-  import Account from "./Account.svelte";
+  import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+  import Icon from "fa-svelte";
 
   export let address: string;
 
@@ -144,7 +145,7 @@
                       class="h-12" />
                   {/if}
                   <div class="py-4 text-xl">
-                    <i class="fas fa-arrow-right" />
+                    <Icon icon={faArrowRight} />
                   </div>
                   <img
                     src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"

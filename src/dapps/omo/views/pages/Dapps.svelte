@@ -24,13 +24,16 @@
     overflowY>
     {#if !address}
       <a href="#/{locked.action.route}">
-        <DappIcon data={locked.data} design={locked.design} />
+        <DappIcon
+          data={locked.data}
+          design={locked.design}
+          icon={locked.icon} />
       </a>
     {:else}
       {#each dapps as item}
         <Compose columns="1fr" rows="1fr">
           <a href="#/{item.action.route}">
-            <DappIcon data={item.data} design={item.design} />
+            <DappIcon data={item.data} design={item.design} icon={item.icon} />
           </a>
         </Compose>
       {/each}
