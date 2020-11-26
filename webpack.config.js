@@ -1,5 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 
@@ -74,6 +75,7 @@ module.exports = {
 		}),
 	],
 	optimization: {
+		minimize: true,
 		minimize: prod,
 		minimizer: [
 			new CssMinimizerPlugin(),
