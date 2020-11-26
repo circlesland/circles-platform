@@ -18,7 +18,7 @@ import { transferXDai } from "./dapps/wallet/processes/transferXDai/transferXDai
 import { setTrust, SetTrustContext } from "./dapps/wallet/processes/setTrust/setTrust";
 import { transferCircles } from "./dapps/wallet/processes/transferCircles/transferCircles";
 import { connectSafe } from "./dapps/wallet/processes/connectSafe/connectSafe";
-import { faCoins, faHome, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
+import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 
 export type ActionBarAction = {
     type: "route" | "trigger",
@@ -50,7 +50,7 @@ const safeDefaultActions = [{
 }, {
     type: "route",
     pos: "4",
-    icon: faHome,
+    icon: faUserCircle,
     label: "Home",
     route: "#/omo/dapps"
 }];

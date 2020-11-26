@@ -12,7 +12,7 @@
 </script>
 
 <Compose rows="48px 160px 1fr" columns="1fr">
-  <Header data={header} />
+  <Header data={header} {address} />
   <Balance {address} />
   <Compose rows="1fr" columns="1fr" overflowY>
     <Transactions {address} />
