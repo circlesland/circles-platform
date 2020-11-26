@@ -36,15 +36,6 @@ module.exports = {
         'light-300': '#D0D6DF',
         'light-400': "#BBC4CC",
         'light-500': '#97A3B1'
-      },
-      height: {
-        '14': '3.5rem' 
-      },
-      width: {
-        '14': '3.5rem' 
-      },
-      fontSize: {
-        'xxs': '.50rem'
       }
     }
   },

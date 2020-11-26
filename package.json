@@ -3,31 +3,32 @@
   "scripts": {
     "clean:all": "npx shx rm -rf public/bundle.* && npx shx rm -rf node_modules",
     "clean": "npx shx rm -rf public/bundle.*",
-    "dev": "webpack-dev-server --content-base public",
+    "dev": "webpack-dev-server --config webpack.config.js --mode=development",
     "build": "cross-env NODE_ENV=production webpack",
-    "deploy": "npm run build && fission app publish --verbose"
+    "deploy": "npm i && npm run build && fission app publish --verbose"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.1",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "bip39": "^3.0.3",
     "dayjs": "^1.9.6",
     "eth-lib": "^0.1.29",
     "ethereumjs-util": "^7.0.7",
     "rxjs": "^6.6.3",
-    "solc": "0.5.17",
+    "svelte": "^3.29.7",
     "svelte-i18n": "^3.2.6",
     "svelte-loading-spinners": "^0.1.1",
-    "svelte-qrcode": "0.0.2",
     "svelte-spa-router": "^3.0.5",
     "web3": "^1.3.0",
     "webnative": "^0.19.12"
   },
   "devDependencies": {
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@tsconfig/svelte": "^1.0.10",
     "@types/web3": "^1.2.2",
+    "@xstate/fsm": "^1.5.1",
     "autoprefixer": "^10.0.2",
+    "brotli-webpack-plugin": "^1.1.0",
     "clean-webpack-plugin": "^3.0.0",
+    "compression-webpack-plugin": "^6.1.1",
+    "bip39": "^3.0.3",
     "cross-env": "^7.0.2",
     "css-loader": "^4.3.0",
     "css-minimizer-webpack-plugin": "^1.1.5",
@@ -39,9 +40,8 @@
     "postcss-loader": "^4.0.3",
     "postcss-preset-env": "^6.7.0",
     "style-loader": "^2.0.0",
-    "svelte": "^3.29.7",
-    "svelte-loader-hot": "^0.3.1",
     "svelte-loader": "^2.13.6",
+    "svelte-loader-hot": "^0.3.1",
     "svelte-preprocess": "^4.6.1",
     "tailwindcss": "^2.0.1",
     "ts-loader": "^8.0.11",
@@ -51,8 +51,7 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "xstate": "^4.14.0",
-    "xstate-svelte": "^1.0.1",
-    "@xstate/fsm": "^1.5.1"
+    "xstate-svelte": "^1.0.1"
   },
   "browserslist": [
     "defaults"

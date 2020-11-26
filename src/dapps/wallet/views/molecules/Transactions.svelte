@@ -6,8 +6,13 @@
   import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";
-  import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+  import {
+    faArrowRight,
+    faMinus,
+    faPlus,
+  } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
+  import type { t } from "svelte-i18n";
 
   export let address: string;
 
@@ -84,11 +89,13 @@
           <div
             class="flex w-full bg-white border rounded border-light-200"
             on:click={() => (t.openDetail = !t.openDetail)}>
-            <div class="flex items-center justify-center w-10 text-sm ">
-              <i
-                class="text-light-400 fas"
-                class:fa-plus={!t.openDetail}
-                class:fa-minus={t.openDetail} />
+            <div
+              class="flex items-center justify-center w-10 text-sm text-light-400 ">
+              {#if !t.openDetail}
+                <Icon icon={faPlus} />
+              {:else if t.openDetail}
+                <Icon icon={faMinus} />
+              {/if}
             </div>
             <div class="flex-1 w-2/3 py-2 pr-2 text-sm">
               <b class="text-primary">

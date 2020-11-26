@@ -71,7 +71,7 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 			chunkFilename: 'bundle.[name].css',
-		})
+		}),
 	],
 	optimization: {
 		minimize: prod,
@@ -80,4 +80,12 @@ module.exports = {
 		],
 	},
 	devtool: prod ? false: 'source-map',
+	devServer: {
+		watchContentBase: true,
+		compress: true,
+		contentBase: [path.join(__dirname, 'public')],
+		port: 5000,
+		open: true,
+		https: true,
+	  }
 };
