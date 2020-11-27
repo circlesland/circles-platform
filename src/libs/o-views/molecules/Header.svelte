@@ -4,13 +4,13 @@
   export let data = {
     title: "title",
   };
-  export let address: string = "";
+  // export let address: string = "";
 </script>
 
 <Compose
   columns="auto 1fr auto"
   rows="1fr"
-  tw="text-white lowercase bg-primary">
+  tw="text-white lowercase bg-primary ">
   <div class="flex items-center justify-center" />
   <div
     class="flex items-center justify-center pt-1 text-xl font-bold text-center ">

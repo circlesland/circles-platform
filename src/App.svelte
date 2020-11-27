@@ -4,9 +4,12 @@
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
   import Router from "svelte-spa-router";
   import routes from "src/routes";
-  import Tailwind from "src/Tailwind.svelte";
   import { getLocaleFromNavigator, addMessages, init } from "svelte-i18n";
   import { _ } from "svelte-i18n";
+
+  import "src/css/base.css";
+  import "src/css/components.css";
+  import "src/css/utilities.css";
 
   import omo_en from "src/dapps/omo/data/languages/en.json";
   import omo_de from "src/dapps/omo/data/languages/de.json";
