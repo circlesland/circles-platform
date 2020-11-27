@@ -1,8 +1,0 @@
-{
-    "i18n-ally.localesPaths": [
-        "src/dapps/identity/data/languages",
-        "src/dapps/omo/data/languages",
-        "src/dapps/wallet/data/languages",
-        "src/dapps/website/data/languages"
-    ]
-}

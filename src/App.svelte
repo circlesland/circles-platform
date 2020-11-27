@@ -16,7 +16,6 @@
   import type { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
   import Announcement from "./libs/o-views/molecules/Announcement.svelte";
-  import { json } from "svelte-i18n";
 
   let safeAddress;
 
