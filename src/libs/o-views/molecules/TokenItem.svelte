@@ -1,11 +1,13 @@
 <script lang="ts">
-  export let data = {
-    image: "",
-    title: "",
-    description: "",
-    balance: "",
-    currency: "",
-  };
+  interface TokenItem {
+    image: string;
+    title: string;
+    description: string;
+    balance: string | number;
+    currency: string | number;
+  }
+
+  export let data: TokenItem;
 
   let openDetail: boolean = false;
 

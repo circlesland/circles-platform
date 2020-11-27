@@ -2,18 +2,13 @@
   import DappIcon from "../../../../libs/o-views/molecules/DappIcon.svelte";
   import { onMount } from "svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import { dapps, locked, profile } from "src/dapps/omo/data/dapps";
+  import { dapps, locked, profile, address } from "src/dapps/omo/data/dapps";
   import ProfileHeader from "src/libs/o-views/molecules/ProfileHeader.svelte";
-
-  let address: string;
-  onMount(() => {
-    address = localStorage.getItem("omo.safeAddress");
-  });
 </script>
 
 <Compose areas="'header''main'" rows="auto 1fr">
   <Compose area="header">
-    <ProfileHeader data={profile} {address} />
+    <ProfileHeader mapping={profile} />
   </Compose>
   <Compose
     area="main"

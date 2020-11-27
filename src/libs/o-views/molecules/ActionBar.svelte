@@ -56,7 +56,7 @@
         href={quickActions[0].route}
         class:active={isActive(quickActions[0])}
         class="mx-auto">
-        <NavItem icon={quickActions[0].icon} text={quickActions[0].label} />
+        <NavItem mapping={quickActions[0].mapping} />
       </a>
     </Compose>
     <Compose rows="1fr" columns="1fr">
@@ -64,7 +64,7 @@
         href={quickActions[1].route}
         class:active={isActive(quickActions[1])}
         class="mx-auto">
-        <NavItem icon={quickActions[1].icon} text={quickActions[1].label} />
+        <NavItem mapping={quickActions[1].mapping} />
       </a>
     </Compose>
     <Compose rows="1fr" columns="1fr">
@@ -81,7 +81,7 @@
         href={quickActions[2].route}
         class:active={isActive(quickActions[2])}
         class="mx-auto">
-        <NavItem icon={quickActions[2].icon} text={quickActions[2].label} />
+        <NavItem mapping={quickActions[2].mapping} />
       </a>
     </Compose>
     <Compose rows="1fr" columns="1fr">
@@ -89,7 +89,7 @@
         href={quickActions[3].route}
         class:active={isActive(quickActions[3])}
         class="mx-auto">
-        <NavItem icon={quickActions[3].icon} text={quickActions[3].label} />
+        <NavItem mapping={quickActions[3].mapping} />
       </a>
     </Compose>
   </Compose>

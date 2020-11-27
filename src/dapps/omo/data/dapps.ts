@@ -1,7 +1,12 @@
+import Avatars from '@dicebear/avatars';
+import sprites from '@dicebear/avatars-avataaars-sprites';
 import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
 
+export const address: string = localStorage.getItem("omo.safeAddress");
+
 export const profile = {
-  subtitle: "to unlock your first dapp please login",
+  subtitle: "Welcome Omo",
+  image: address,
 };
 
 export const locked = {

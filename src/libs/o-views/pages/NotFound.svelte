@@ -1,5 +1,5 @@
 <div
-  class="absolute flex items-end justify-center w-full h-full py-16 z-100 bg-dark">
+  class="absolute flex items-end justify-center w-full h-full py-16 z-100 bg-light-100">
   <div>
     <div class="m-6 text-xl text-white uppercase font-title text-bold">
       page not found

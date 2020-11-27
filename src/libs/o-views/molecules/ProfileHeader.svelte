@@ -1,27 +1,32 @@
 <script lang="ts">
-  export let data = {
-    subtitle: "",
-  };
+  import Avataaar from "../atoms/Avataaar.svelte";
 
-  export let address: string = "";
+  interface DataProfileHeader {
+    subtitle: string;
+    image: string;
+  }
+  export let mapping: DataProfileHeader;
+
+  let avataar = {
+    seed: mapping.image,
+  };
 </script>
 
 <div
-  class="flex items-center justify-center text-4xl font-bold text-center text-white bg-primary">
+  class="flex items-center justify-center font-bold text-center text-white bg-primary">
   <div>
-    {#if address}
-      <img
-        src="https://avatars.dicebear.com/api/avataaars/{address}.svg"
+    {#if mapping.image}
+      <div
+        class="w-32 h-32 mx-auto mt-4 bg-white border-4 rounded-full border-light-300">
+        <Avataaar mapping={avataar} />
+      </div>
+      <!-- <img
+        src={data.image}
         class="w-32 h-32 mx-auto mt-4 bg-white border-4 rounded-full border-light-300"
-        alt="name" />
+        alt="img" /> -->
     {/if}
     <div class="py-4 mt-2 font-bold">
-      <div class="text-3xl">
-        {#if address}Hello Omo{:else}Welcome{/if}
-      </div>
-      {#if !address}
-        <div class="text-base">{data.subtitle}</div>
-      {/if}
+      <div class="text-2xl">{mapping.subtitle}</div>
     </div>
   </div>
 </div>

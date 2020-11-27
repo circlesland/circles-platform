@@ -23,37 +23,120 @@ import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/
 export type ActionBarAction = {
     type: "route" | "trigger",
     pos: "1" | "2" | "3" | "4" | "overflow",
-    icon: any,
-    label: string,
+    mapping: {
+        design: {
+            icon: any
+        },
+        data: {
+            label: string
+        }
+    }
     event?: () => OmoEvent,
     route?: string
 }
 
-const safeDefaultActions = [{
-    type: "route",
-    pos: "1",
-    icon: faPiggyBank,
-    label: "Safe",
-    route: "#/wallet/safe"
-}, {
-    type: "route",
-    pos: "2",
-    icon: faCoins,
-    label: "Tokens",
-    route: "#/wallet/tokens"
-}, {
-    type: "route",
-    pos: "3",
-    icon: faUserFriends,
-    label: "Friends",
-    route: "#/wallet/friends"
-}, {
-    type: "route",
-    pos: "4",
-    icon: faUserCircle,
-    label: "Home",
-    route: "#/omo/dapps"
-}];
+const safeDefaultActions = [
+    {
+        type: "route",
+        pos: "1",
+        mapping: {
+            design: {
+                icon: faPiggyBank
+            },
+            data: {
+                label: "Safe"
+            }
+        },
+        route: "#/wallet/safe"
+    }, {
+        type: "route",
+        pos: "2",
+        mapping: {
+            design: {
+                icon: faCoins,
+            },
+            data: {
+                label: "Tokens"
+            }
+        },
+        route: "#/wallet/tokens"
+    }, {
+        type: "route",
+        pos: "3",
+        mapping: {
+            design: {
+                icon: faUserFriends,
+            },
+            data: {
+                label: "Friends",
+            }
+        },
+        route: "#/wallet/friends"
+    }, {
+        type: "route",
+        pos: "4",
+        mapping: {
+            design: {
+                icon: faUserCircle,
+            },
+            data: {
+                label: "Home",
+            }
+        },
+        route: "#/omo/dapps"
+    }];
+
+const safeOverflowActions = [
+    {
+        type: "trigger",
+        pos: "overflow",
+        mapping: {
+            design: {
+                icon: faCoins
+            },
+            data: {
+                label: "Get UBI"
+            }
+        },
+        event: () => new RunProcess(requestUbi)
+    },
+    // {
+    //     type: "trigger",
+    //     pos: "overflow",
+    //     icon: faCoins,
+    //     label: "Send xDai",
+    //     event: () => new RunProcess(transferXDai)
+    // }, 
+    {
+        type: "trigger",
+        pos: "overflow",
+        mapping: {
+            design: {
+                icon: faCoins,
+            },
+            data: {
+                label: "Trust friend",
+            }
+        },
+        event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
+            context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
+            return context;
+        })
+    }
+    // {
+    //     type: "trigger",
+    //     pos: "overflow",
+    //     icon: "coins",
+    //     label: "Send money",
+    //     event: () => new RunProcess(transferCircles)
+    // }, {
+    //     type: "trigger",
+    //     pos: "overflow",
+    //     icon: "coins",
+    //     label: "Receive money",
+    //     //event: () => new RunProcess(requestUbi)
+    // }
+];
 
 location.subscribe(event => {
     console.log(event);
@@ -71,8 +154,14 @@ export default {
             actions: [{
                 type: "trigger",
                 pos: "overflow",
-                icon: faCoins,
-                label: "Connect Circles Safe",
+                mapping: {
+                    design: {
+                        icon: faCoins,
+                    },
+                    data: {
+                        label: "Connect Circles Safe"
+                    }
+                },
                 event: () => new RunProcess(connectSafe)
             }]
         }
@@ -98,44 +187,8 @@ export default {
         component: Safe,
         userData: {
             actions: <ActionBarAction[]>[
-                ...safeDefaultActions
-                , {
-                    type: "trigger",
-                    pos: "overflow",
-                    icon: faCoins,
-                    label: "Get UBI",
-                    event: () => new RunProcess(requestUbi)
-                },
-                // {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: faCoins,
-                //     label: "Send xDai",
-                //     event: () => new RunProcess(transferXDai)
-                // }, 
-                {
-                    type: "trigger",
-                    pos: "overflow",
-                    icon: faCoins,
-                    label: "Trust friend",
-                    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
-                        context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
-                        return context;
-                    })
-                },
-                // {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: "coins",
-                //     label: "Send money",
-                //     event: () => new RunProcess(transferCircles)
-                // }, {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: "coins",
-                //     label: "Receive money",
-                //     //event: () => new RunProcess(requestUbi)
-                // }
+                ...safeDefaultActions,
+                ...safeOverflowActions
             ]
         }
     }),
@@ -143,44 +196,8 @@ export default {
         component: Friends,
         userData: {
             actions: <ActionBarAction[]>[
-                ...safeDefaultActions
-                , {
-                    type: "trigger",
-                    pos: "overflow",
-                    icon: faCoins,
-                    label: "Get UBI",
-                    event: () => new RunProcess(requestUbi)
-                },
-                // {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: faCoins,
-                //     label: "Send xDai",
-                //     event: () => new RunProcess(transferXDai)
-                // }, 
-                {
-                    type: "trigger",
-                    pos: "overflow",
-                    icon: faCoins,
-                    label: "Trust friend",
-                    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
-                        context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
-                        return context;
-                    })
-                },
-                // {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: "coins",
-                //     label: "Send money",
-                //     event: () => new RunProcess(transferCircles)
-                // }, {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: "coins",
-                //     label: "Receive money",
-                //     //event: () => new RunProcess(requestUbi)
-                // }
+                ...safeDefaultActions,
+                ...safeOverflowActions
             ]
         }
     }),
@@ -188,44 +205,8 @@ export default {
         component: Tokens,
         userData: {
             actions: <ActionBarAction[]>[
-                ...safeDefaultActions
-                , {
-                    type: "trigger",
-                    pos: "overflow",
-                    icon: faCoins,
-                    label: "Get UBI",
-                    event: () => new RunProcess(requestUbi)
-                },
-                // {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: faCoins,
-                //     label: "Send xDai",
-                //     event: () => new RunProcess(transferXDai)
-                // }, 
-                {
-                    type: "trigger",
-                    pos: "overflow",
-                    icon: faCoins,
-                    label: "Trust friend",
-                    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
-                        context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
-                        return context;
-                    })
-                },
-                // {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: "coins",
-                //     label: "Send money",
-                //     event: () => new RunProcess(transferCircles)
-                // }, {
-                //     type: "trigger",
-                //     pos: "overflow",
-                //     icon: "coins",
-                //     label: "Receive money",
-                //     //event: () => new RunProcess(requestUbi)
-                // }
+                ...safeDefaultActions,
+                ...safeOverflowActions
             ]
         }
     }),
