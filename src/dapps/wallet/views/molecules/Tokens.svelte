@@ -60,15 +60,17 @@
       .filter((o) => o.balanceString && o.balanceString !== "0")
       .map((token) => {
         return {
-          image:
-            "https://avatars.dicebear.com/api/avataaars/" +
-            token.owner.address +
-            ".svg ",
-          balanceBN: token.balance,
-          title: token.owner.address.slice(0, 8),
-          description: token.owner.address,
-          balance: token.balanceString,
-          currency: "CRC",
+          data: {
+            image:
+              "https://avatars.dicebear.com/api/avataaars/" +
+              token.owner.address +
+              ".svg ",
+            balanceBN: token.balance,
+            title: token.owner.address.slice(0, 8),
+            description: token.owner.address,
+            balance: parseFloat(token.balanceString),
+            subtitle: "CRC",
+          },
         };
       });
     tokensITrust.sort((a, b) => -a.balanceBN.cmp(b.balanceBN));
@@ -81,25 +83,31 @@
   }
 
   $: circlesSafe = {
-    image: "images/logo/circles.svg",
-    title: "Safe Circles",
-    description: safeAddress,
-    balance: circlesBalance,
-    currency: "Account: Safe",
+    data: {
+      image: "images/logo/circles.svg",
+      title: "Safe Circles",
+      description: safeAddress,
+      balance: parseFloat(circlesBalance),
+      subtitle: "Account: Safe",
+    },
   };
   $: xDaiSafe = {
-    image: "images/logo/xdai.png",
-    title: "Safe xDai",
-    description: safeAddress,
-    balance: safeEtherBalance,
-    currency: "Account: Safe",
+    data: {
+      image: "images/logo/xdai.png",
+      title: "Safe xDai",
+      description: safeAddress,
+      balance: parseFloat(safeEtherBalance),
+      subtitle: "Account: Safe",
+    },
   };
   $: xDaiOwner = {
-    image: "images/logo/xdai.png",
-    title: "SafeOwner xDai",
-    description: accountAddress,
-    balance: personalEtherBalance,
-    currency: "Account: SafeOwner",
+    data: {
+      image: "images/logo/xdai.png",
+      title: "SafeOwner xDai",
+      description: accountAddress,
+      balance: parseFloat(personalEtherBalance),
+      subtitle: "Account: SafeOwner",
+    },
   };
 </script>
 
@@ -109,9 +117,9 @@
 
 <div class="space-y-2">
   {#if circlesBalance || safeEtherBalance}
-    <TokenItem data={circlesSafe} />
-    <TokenItem data={xDaiSafe} />
-    <TokenItem data={xDaiOwner} />
+    <TokenItem mapping={circlesSafe} />
+    <TokenItem mapping={xDaiSafe} />
+    <TokenItem mapping={xDaiOwner} />
   {:else}
     <div class="flex items-center justify-center h-full mx-auto">
       <Jumper size="150" color="#071D69" unit="px" />
@@ -126,7 +134,7 @@
 <div class="space-y-2">
   {#if tokensITrust.length > 0}
     {#each tokensITrust as token}
-      <TokenItem data={token} />
+      <TokenItem mapping={token} />
     {/each}
   {:else}
     <div class="flex items-center justify-center h-full mx-auto">

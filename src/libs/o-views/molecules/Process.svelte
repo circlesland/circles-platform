@@ -85,6 +85,24 @@
       type: "omo.cancel",
     });
   };
+
+  const back = {
+    data: {
+      label: "Back",
+    },
+    design: {
+      icon: faArrowLeft,
+    },
+  };
+
+  const cancel = {
+    data: {
+      label: "Cancel",
+    },
+    design: {
+      icon: faTimes,
+    },
+  };
 </script>
 
 <div class="w-full">
@@ -110,10 +128,10 @@
 
 <footer class="flex justify-between px-4 pb-2 text-gray-400 bg-white ">
   <button on:click={handleBack}>
-    <NavItem icon={faArrowLeft} text="Back" />
+    <NavItem mapping={back} />
   </button>
   <button on:click={handleCancel}>
-    <NavItem icon={faTimes} text="Close" />
+    <NavItem mapping={cancel} />
   </button>
   <button on:click={() => {}}>
     <div

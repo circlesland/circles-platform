@@ -3,11 +3,8 @@ import Website from "src/dapps/website/views/pages/Website.svelte"
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import Dapps from 'src/dapps/omo/views/pages/Dapps.svelte'
 import Safe from 'src/dapps/wallet/views/pages/Safe.svelte'
-import Start from 'src/dapps/wallet/views/pages/Start.svelte'
 import Friends from 'src/dapps/wallet/views/pages/Friends.svelte'
 import Tokens from 'src/dapps/wallet/views/pages/Tokens.svelte'
-import Register from 'src/dapps/wallet/views/pages/Register.svelte'
-import Settings from 'src/dapps/identity/views/pages/Settings.svelte'
 import Login from 'src/dapps/identity/views/pages/Login.svelte'
 import wrap from "svelte-spa-router/wrap";
 import { location } from 'svelte-spa-router'
@@ -167,22 +164,11 @@ export default {
         }
     }),
     // Identity
-    '/identity/settings': wrap({
-        component: Settings,
-        userData: {
-            actions: []
-        }
+    '/identity/login': wrap({
+        component: Login,
+        userData: {}
     }),
-    '/identity/login': Login,
     // Wallet
-    '/wallet/start': wrap({
-        component: Start,
-        userData: {
-            actions: safeDefaultActions
-        }
-    }),
-    '/wallet/register': Register,
-    //'/wallet/jumpstart/:address': Jumpstart,
     '/wallet/safe': wrap({
         component: Safe,
         userData: {

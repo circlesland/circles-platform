@@ -1,12 +1,12 @@
-import Avatars from '@dicebear/avatars';
-import sprites from '@dicebear/avatars-avataaars-sprites';
 import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
 
 export const address: string = localStorage.getItem("omo.safeAddress");
 
 export const profile = {
-  subtitle: "Welcome Omo",
-  image: address,
+  data: {
+    subtitle: "Welcome Omo",
+    image: address,
+  }
 };
 
 export const locked = {
@@ -19,8 +19,8 @@ export const locked = {
   },
   design: {
     type: "disabled",
-  },
-  icon: faPiggyBank,
+    icon: faPiggyBank,
+  }
 };
 
 export const dapps = [
@@ -34,8 +34,8 @@ export const dapps = [
     },
     design: {
       type: "",
+      icon: faPiggyBank,
     },
-    icon: faPiggyBank,
   },
   {
     data: {
@@ -47,8 +47,8 @@ export const dapps = [
     },
     design: {
       type: "disabled",
+      icon: faUserAstronaut,
     },
-    icon: faUserAstronaut,
   },
   {
     data: {
@@ -60,8 +60,8 @@ export const dapps = [
     },
     design: {
       type: "disabled",
+      icon: faComments,
     },
-    icon: faComments,
   },
   {
     data: {
@@ -73,8 +73,8 @@ export const dapps = [
     },
     design: {
       type: "disabled",
+      icon: faStore,
     },
-    icon: faStore,
   },
   {
     data: {
@@ -86,8 +86,8 @@ export const dapps = [
     },
     design: {
       type: "disabled",
+      icon: faPeopleCarry,
     },
-    icon: faPeopleCarry,
   },
   {
     data: {
@@ -99,8 +99,8 @@ export const dapps = [
     },
     design: {
       type: "disabled",
+      icon: faFilm,
     },
-    icon: faFilm,
   },
   {
     data: {
@@ -112,8 +112,8 @@ export const dapps = [
     },
     design: {
       type: "disabled",
+      icon: faHeadphones,
     },
-    icon: faHeadphones,
   },
   {
     data: {
@@ -125,7 +125,7 @@ export const dapps = [
     },
     design: {
       type: "disabled",
+      icon: faBook,
     },
-    icon: faBook,
   },
 ];

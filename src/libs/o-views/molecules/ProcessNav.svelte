@@ -4,6 +4,15 @@
   import NavItem from "../atoms/NavItem.svelte";
 
   export let isOpen: boolean;
+
+  const close = {
+    data: {
+      label: "Close",
+    },
+    design: {
+      icon: faTimes,
+    },
+  };
 </script>
 
 <Compose tw="mx-auto text-gray-500 mt-2">
@@ -11,6 +20,6 @@
     on:click={() => {
       isOpen = false;
     }}>
-    <NavItem icon={faTimes} text="close" />
+    <NavItem mapping={close} />
   </div>
 </Compose>

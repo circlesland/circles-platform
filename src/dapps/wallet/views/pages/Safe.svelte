@@ -7,12 +7,14 @@
   let address = localStorage.getItem("omo.safeAddress");
 
   let header = {
-    title: "Safe",
+    data: {
+      title: "Safe",
+    },
   };
 </script>
 
 <Compose rows="48px 160px 1fr" columns="1fr">
-  <Header data={header} {address} />
+  <Header mapping={header} />
   <Balance {address} />
   <Compose rows="1fr" columns="1fr" overflowY>
     <Transactions {address} />

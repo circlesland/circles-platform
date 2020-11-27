@@ -28,25 +28,14 @@
   import type { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
   import { onMount } from "svelte";
-  import Notifications from "./libs/o-views/molecules/Notifications.svelte";
+  import Announcement from "./libs/o-views/molecules/Announcement.svelte";
 
   let safeAddress;
 
   onMount(() => {});
 
-  let notes_en = {
-    notes_text:
-      "This dapp is an early alpha test version. For feedback join our",
-    notes_button: "chat",
-  };
-  let notes_de = {
-    notes_text:
-      "Diese App is noch in früher Testphase. Für Feedback schreib uns im",
-    notes_button: "chat",
-  };
-
-  addMessages("en", omo_en, website_en, notes_en, wallet_en, identity_en);
-  addMessages("de", omo_de, website_de, notes_de, wallet_de, identity_de);
+  addMessages("en", omo_en, website_en, wallet_en, identity_en);
+  addMessages("de", omo_de, website_de, wallet_de, identity_de);
 
   init({
     fallbackLocale: "en",
@@ -54,6 +43,17 @@
   });
 
   let actions = [];
+
+  let alpha = {
+    data: {
+      text:
+        "This dapp is an early alpha test version. For wishes and feedback join our",
+      button: "Chat",
+    },
+    action: {
+      link: "https://discord.gg/Rbhy4j9",
+    },
+  };
 
   let isOpen = false;
   let askForCancel = false;
@@ -125,7 +125,7 @@
   <Compose tw="mx-auto bg-light-100 w-full max-w-2xl">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
       <Compose>
-        <Notifications />
+        <Announcement mapping={alpha} />
       </Compose>
       <Compose rows="1fr" columns="1fr">
         <Router {routes} on:routeLoading={routeLoading} />

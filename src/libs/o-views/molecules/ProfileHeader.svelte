@@ -1,21 +1,28 @@
 <script lang="ts">
   import Avataaar from "../atoms/Avataaar.svelte";
 
-  interface DataProfileHeader {
-    subtitle: string;
-    image: string;
+  interface ProfileHeader {
+    data: {
+      subtitle: string;
+      image?: string;
+    };
   }
-  export let mapping: DataProfileHeader;
+  export let mapping: ProfileHeader;
 
   let avataar = {
-    seed: mapping.image,
+    data: {
+      seed: mapping.data.image,
+    },
+    design: {
+      radius: 100,
+    },
   };
 </script>
 
 <div
   class="flex items-center justify-center font-bold text-center text-white bg-primary">
   <div>
-    {#if mapping.image}
+    {#if mapping.data.image}
       <div
         class="w-32 h-32 mx-auto mt-4 bg-white border-4 rounded-full border-light-300">
         <Avataaar mapping={avataar} />
@@ -26,7 +33,7 @@
         alt="img" /> -->
     {/if}
     <div class="py-4 mt-2 font-bold">
-      <div class="text-2xl">{mapping.subtitle}</div>
+      <div class="text-2xl">{mapping.data.subtitle}</div>
     </div>
   </div>
 </div>

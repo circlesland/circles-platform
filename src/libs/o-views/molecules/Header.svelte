@@ -1,10 +1,12 @@
 <script lang="ts">
   import Compose from "../atoms/Compose.svelte";
 
-  export let data = {
-    title: "title",
-  };
-  // export let address: string = "";
+  interface Header {
+    data: {
+      title: string;
+    };
+  }
+  export let mapping: Header;
 </script>
 
 <Compose
@@ -14,11 +16,7 @@
   <div class="flex items-center justify-center" />
   <div
     class="flex items-center justify-center pt-1 text-xl font-bold text-center ">
-    {data.title}
+    {mapping.data.title}
   </div>
-  <div class="flex items-center justify-center">
-    <!-- <img
-      src="https://avatars.dicebear.com/api/avataaars/{address}.svg"
-      alt="home" /> -->
-  </div>
+  <div class="flex items-center justify-center" />
 </Compose>
