@@ -72,12 +72,12 @@ const processDefinition = createMachine<JumpstartContext, ProcessEvent>({
     actions: {
         "setError": assign(
             context => {
-                context.result = strings.wallet.processes.jumpstart.errorMessage(context)
+                context.result = strings.safe.processes.jumpstart.errorMessage(context)
                 return context;
             }),
         "setResult": assign(
             context => {
-                context.result = strings.wallet.processes.jumpstart.successMessage(context)
+                context.result = strings.safe.processes.jumpstart.successMessage(context)
                 return context;
             }),
         "promptError": promptError,

@@ -1,31 +1,30 @@
-import { assign, createMachine, send } from "xstate";
+import { assign, createMachine } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
 import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import { BN } from "ethereumjs-util";
 import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
-import { transferCirclesService } from "./services/transferCirclesService";
+import { setTrustService } from "./services/setTrustService";
 import { promptError } from "../promptError";
 import { promptSuccess } from "../promptSuccess";
-import { storeTransferValueToContext } from "./actions/storeTransferValueToContext";
-import { storeTransferRecipientToContext } from "./actions/storeTransferRecipientToContext";
-import { promptRecipient } from "./actions/promptRecipient";
-import { promptValue } from "./actions/promptValue";
+import { promptTrustReceiver } from "./actions/promptTrustReceiver";
+import { promptTrustLimit } from "./actions/promptTrustLimit";
 import { summarize } from "./actions/summarize";
-import { transferRecipientIsPreconfigured } from "./guards/transferRecipientIsPreconfigured";
+import { storeTrustReceiverToContext } from "./actions/storeTrustReceiverToContext";
+import { storeTrustLimitToContext } from "./actions/storeTrustLimitToContext";
 import { notifyInProgress } from "./actions/notifyInProgress";
-import { transferValueIsPreconfigured } from "./guards/transferValuetIsPreconfigured";
+import { isTrustLimitAlreadySet } from "./guards/isTrustLimitAlreadySet";
+import { isTrustReceiverAlreadySet } from "./guards/isTrustReceiverAlreadySet";
 import { strings } from "../../data/strings";
 
-export interface TransferCirclesContext extends ProcessContext {
-    transfer?: {
-        recipient?: {
+export interface SetTrustContext extends ProcessContext {
+    setTrust?: {
+        trustReceiver?: {
             type: "ethereumAddress",
             data: Address
         },
-        value?: {
-            type: "wei",
-            data: BN
+        trustLimit?: {
+            type: "percent",
+            data: any
         }
     }
 }
@@ -33,74 +32,73 @@ export interface TransferCirclesContext extends ProcessContext {
 /**
  * Transfer circles
  */
-const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
+const processDefinition = createMachine<SetTrustContext, ProcessEvent>({
     initial: "ready",
     states: {
         ready: {
             on: {
                 "omo.trigger": [{
-                    cond: "transferRecipientIsPreconfigured",
-                    target: "promptValue"
-                }, {
                     cond: "isFullyConfigured",
                     target: "summarize"
                 }, {
-                    target: "promptRecipient"
+                    cond: "isTrustReceiverAlreadySet",
+                    target: "promptTrustLimit"
+                }, {
+                    target: "promptTrustReceiver"
                 }],
                 "omo.cancel": "stop"
             }
         },
-        promptRecipient: {
-            entry: "promptRecipient",
+        promptTrustReceiver: {
+            entry: "promptTrustReceiver",
             on: {
                 "omo.answer": [{
-                    actions: "storeTransferRecipientToContext",
-                    cond: "transferValueIsPreconfigured",
+                    cond: "isTrustLimitAlreadySet",
+                    actions: "storeTrustReceiverToContext",
                     target: "summarize"
                 }, {
-                    actions: "storeTransferRecipientToContext",
-                    target: "promptValue"
+                    target: "promptTrustLimit"
                 }],
+                "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: "promptRecipient"
-                },
-                "omo.cancel": "stop"
+                    actions: "promptTrustReceiver"
+                }
             }
         },
-        promptValue: {
-            entry: "promptValue",
+        promptTrustLimit: {
+            entry: "promptTrustLimit",
             on: {
                 "omo.back": {
-                    target: "promptRecipient"
+                    target: "promptTrustReceiver"
                 },
                 "omo.answer": {
-                    actions: "storeTransferValueToContext",
+                    actions: "storeTrustLimitToContext",
                     target: "summarize"
                 },
+                "omo.cancel": "stop",
                 "omo.trigger": {
-                    actions: "promptValue"
-                },
-                "omo.cancel": "stop"
+                    actions: "promptTrustLimit"
+                }
             }
         },
         summarize: {
             entry: "summarize",
             on: {
                 "omo.back": {
-                    target: "promptValue"
+                    target: "promptTrustLimit"
                 },
+                "omo.cancel": "stop",
+                "omo.answer": "setTrust",
                 "omo.trigger": {
                     actions: "summarize"
-                },
-                "omo.answer": "transferCircles",
-                "omo.cancel": "stop"
+                }
             }
         },
-        transferCircles: {
+        setTrust: {
             entry: "notifyInProgress",
             invoke: {
-                id: 'transferCircles',
-                src: "transferCirclesService",
+                id: 'setTrust',
+                src: "setTrustService",
                 onError: {
                     actions: [
                         "setError",
@@ -141,36 +139,37 @@ const processDefinition = createMachine<TransferCirclesContext, ProcessEvent>({
     }
 }, {
     services: {
-        "transferCirclesService": transferCirclesService
+        "setTrustService": setTrustService
     },
     guards: {
-        "transferRecipientIsPreconfigured": transferRecipientIsPreconfigured,
-        "transferValueIsPreconfigured": transferValueIsPreconfigured,
-        "isFullyConfigured": context => transferRecipientIsPreconfigured(context) && transferValueIsPreconfigured(context)
+        "isTrustLimitAlreadySet": isTrustLimitAlreadySet,
+        "isTrustReceiverAlreadySet": isTrustReceiverAlreadySet,
+        "isFullyConfigured": (context => isTrustReceiverAlreadySet(context) && isTrustLimitAlreadySet(context)),
+        "isTrustLimitNotSet": (context => !isTrustLimitAlreadySet(context)),
     },
     actions: {
         "setError": assign(
             context => {
-                context.result = strings.wallet.processes.transferCircles.errorMessage(context)
+                context.result = strings.safe.processes.setTrust.errorMessage(context)
                 return context;
             }),
         "setResult": assign(
             context => {
-                context.result = strings.wallet.processes.transferCircles.successMessage(context)
+                context.result = strings.safe.processes.setTrust.successMessage(context)
                 return context;
             }),
         "promptError": promptError,
-        "notifyInProgress": notifyInProgress,
         "promptSuccess": promptSuccess,
-        "storeTransferValueToContext": storeTransferValueToContext,
-        "storeTransferRecipientToContext": storeTransferRecipientToContext,
-        "promptRecipient": promptRecipient,
-        "promptValue": promptValue,
-        "summarize": summarize
+        "promptTrustReceiver": promptTrustReceiver,
+        "promptTrustLimit": promptTrustLimit,
+        "notifyInProgress": notifyInProgress,
+        "summarize": summarize,
+        "storeTrustReceiverToContext": storeTrustReceiverToContext,
+        "storeTrustLimitToContext": storeTrustLimitToContext
     }
 });
 
-export const transferCircles: ProcessDefinition = {
-    name: "transferCircles",
+export const setTrust: ProcessDefinition = {
+    name: "setTrust",
     stateMachine: processDefinition
 };

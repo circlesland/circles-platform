@@ -30,7 +30,7 @@ export const dapps = [
       tag: "alpha 0.1.0",
     },
     action: {
-      route: "wallet/safe",
+      route: "safe/transactions",
     },
     design: {
       type: "",

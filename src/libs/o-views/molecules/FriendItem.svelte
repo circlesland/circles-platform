@@ -3,11 +3,11 @@
   import {
     transferCircles,
     TransferCirclesContext,
-  } from "../../../dapps/wallet/processes/transferCircles/transferCircles";
+  } from "../../../dapps/safe/processes/transferCircles/transferCircles";
   import {
     setTrust,
     SetTrustContext,
-  } from "../../../dapps/wallet/processes/setTrust/setTrust";
+  } from "../../../dapps/safe/processes/setTrust/setTrust";
   import ButtonIcon from "../atoms/ButtonIcon.svelte";
   import { RunProcess } from "../../o-events/runProcess";
 

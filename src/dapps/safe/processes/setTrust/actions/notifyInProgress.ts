@@ -7,6 +7,6 @@ import { strings } from "../../../data/strings";
 export const notifyInProgress = send((context: SetTrustContext) => {
     return {
         type: "omo.notification",
-        message: strings.wallet.processes.setTrust.setTrustProgress(context)
+        message: strings.safe.processes.setTrust.setTrustProgress(context)
     }
 })

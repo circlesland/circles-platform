@@ -2,75 +2,75 @@ import { assign, createMachine } from "xstate";
 import { ProcessContext } from "src/libs/o-processes/processContext";
 import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { BN } from "ethereumjs-util";
 import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
-import { ByteString } from "../../../../libs/o-circles-protocol/interfaces/byteString";
-import { promptSuccess } from "../promptSuccess";
+import { transferXDaiService } from "./services/transferXDaiService";
 import { promptError } from "../promptError";
-import { connectSafeService } from "./services/connectSafeService";
+import { promptSuccess } from "../promptSuccess";
 import { notifyInProgress } from "./actions/notifyInProgress";
-import { promptSafeAddress } from "./actions/promptSafeAddress";
-import { promptPrivateKey } from "./actions/promptPrivateKey";
+import { isTransferPreconfigured } from "./guards/isTransferPreconfigured";
+import { storeTransferRecipientToContext } from "./actions/storeTransferRecipientToContext";
+import { storeTransferValueToContext } from "./actions/storeTransferValueToContext";
+import { promptRecipient } from "./actions/promptRecipient";
+import { promptValue } from "./actions/promptValue";
 import { summarize } from "./actions/summarize";
-import { storePrivateKeyToContext } from "./actions/storePrivateKeyToContext";
-import { storeSafeAddressToContext } from "./actions/storeSafeAddressToContext";
 import { strings } from "../../data/strings";
 
-import { push } from "svelte-spa-router";
-
-export interface ConnectSafeContext extends ProcessContext {
-    connectSafe?: {
-        safeAddress?: {
-            type: "ethereumAddress",
+export interface TransferXDaiContext extends ProcessContext {
+    transfer?: {
+        recipient: {
+            type: string,
             data: Address
         },
-        safeOwnerAddress?: {
-            type: "ethereumAddress",
-            data: Address
-        },
-        safeOwnerPrivateKey?: {
-            type: "bytestring",
-            data: ByteString
+        value: {
+            type: string,
+            data: BN
         }
     }
 }
 
 /**
- * Connect safe
+ * Transfer xDai
  */
-const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
+const processDefinition = createMachine<TransferXDaiContext, ProcessEvent>({
     initial: "ready",
     states: {
         ready: {
             on: {
-                "omo.trigger": "promptSafeAddress",
+                "omo.trigger": [{
+                    cond: "isTransferPreconfigured",
+                    target: "summarize"
+                }, {
+                    target: "promptRecipient"
+                }],
                 "omo.cancel": "stop"
             }
         },
-        promptSafeAddress: {
-            entry: "promptSafeAddress",
+        promptRecipient: {
+            entry: "promptRecipient",
             on: {
                 "omo.answer": {
-                    actions: "storeSafeAddressToContext",
-                    target: "promptPrivateKey"
+                    actions: "storeTransferRecipientToContext",
+                    target: "promptValue"
                 },
                 "omo.trigger": {
-                    actions: "promptSafeAddress"
+                    actions: "promptRecipient"
                 },
                 "omo.cancel": "stop"
             }
         },
-        promptPrivateKey: {
-            entry: "promptPrivateKey",
+        promptValue: {
+            entry: "promptValue",
             on: {
                 "omo.back": {
-                    target: "promptSafeAddress"
+                    target: "promptRecipient"
                 },
                 "omo.answer": {
-                    actions: "storePrivateKeyToContext",
+                    actions: "storeTransferValueToContext",
                     target: "summarize"
                 },
                 "omo.trigger": {
-                    actions: "promptPrivateKey"
+                    actions: "promptValue"
                 },
                 "omo.cancel": "stop"
             }
@@ -79,22 +79,20 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
             entry: "summarize",
             on: {
                 "omo.back": {
-                    target: "promptPrivateKey"
+                    target: "promptValue"
                 },
-                "omo.answer": {
-                    target: "connectSafe"
-                },
+                "omo.cancel": "stop",
                 "omo.trigger": {
                     actions: "summarize"
                 },
-                "omo.cancel": "stop"
+                "omo.answer": "transferXDai"
             }
         },
-        connectSafe: {
+        transferXDai: {
             entry: "notifyInProgress",
             invoke: {
-                id: 'connectSafe',
-                src: "connectSafeService",
+                id: 'transferXDai',
+                src: "transferXDaiService",
                 onError: {
                     actions: [
                         "setError",
@@ -105,8 +103,7 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 onDone: {
                     actions: [
                         "setResult",
-                        "promptSuccess",
-                        () => push('#/wallet/safe'),
+                        "promptSuccess"
                     ],
                     target: "success"
                 }
@@ -117,7 +114,7 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
                 "omo.answer": "stop",
                 "omo.cancel": "stop",
                 "omo.trigger": {
-                    //actions: "promptSuccess"
+                    actions: "promptSuccess"
                 }
             }
         },
@@ -136,32 +133,34 @@ const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
     }
 }, {
     services: {
-        "connectSafeService": connectSafeService
+        "transferXDaiService": transferXDaiService
     },
-    guards: {},
+    guards: {
+        "isTransferPreconfigured": isTransferPreconfigured
+    },
     actions: {
         "setError": assign(
             context => {
-                context.result = strings.wallet.processes.connectSafe.errorMessage(context)
+                context.result = strings.safe.processes.transferXDai.errorMessage(context)
                 return context;
             }),
         "setResult": assign(
             context => {
-                context.result = strings.wallet.processes.connectSafe.successMessage(context)
+                context.result = strings.safe.processes.transferXDai.successMessage(context)
                 return context;
             }),
         "notifyInProgress": notifyInProgress,
         "promptError": promptError,
         "promptSuccess": promptSuccess,
-        "promptSafeAddress": promptSafeAddress,
-        "promptPrivateKey": promptPrivateKey,
-        "summarize": summarize,
-        "storePrivateKeyToContext": storePrivateKeyToContext,
-        "storeSafeAddressToContext": storeSafeAddressToContext
+        "storeTransferRecipientToContext": storeTransferRecipientToContext,
+        "storeTransferValueToContext": storeTransferValueToContext,
+        "promptRecipient": promptRecipient,
+        "promptValue": promptValue,
+        "summarize": summarize
     }
 });
 
-export const connectSafe: ProcessDefinition = {
-    name: "connectSafe",
+export const transferXDai: ProcessDefinition = {
+    name: "transferXDai",
     stateMachine: processDefinition
 };

@@ -6,7 +6,7 @@ import { TransferCirclesContext } from "../processes/transferCircles/transferCir
 import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
 
 export const strings = {
-    wallet: {
+    safe: {
         processes: {
             setTrust: {
                 "successMessage": (context: SetTrustContext) => context.setTrust.trustLimit.data > 0
