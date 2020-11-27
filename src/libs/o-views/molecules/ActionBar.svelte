@@ -50,7 +50,7 @@
   <Compose
     rows="1fr"
     columns="1fr 1fr 80px 1fr 1fr"
-    tw="bg-white border-t border-light-300 text-light-400 h-20 justify-center items-center px-4">
+    tw="bg-white border-t border-light-300 text-light-400 h-20 justify-center items-center px-2 md:px-3 lg:px-4">
     <Compose rows="1fr" columns="1fr">
       <a
         href={quickActions[0].route}
@@ -70,7 +70,7 @@
     <Compose rows="1fr" columns="1fr">
       <button
         on:click={onActionButtonClick}
-        class="w-16 h-16 mx-auto mb-3 text-white rounded-full action bg-secondary hover:bg-secondary-lighter">
+        class="w-16 h-16 mx-auto text-white rounded-full action bg-secondary hover:bg-secondary-lighter">
         <div class="flex items-center justify-center">
           <Icon icon={faPlus} class="text-3xl" />
         </div>
