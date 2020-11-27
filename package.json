@@ -5,15 +5,15 @@
 		"clean": "npx shx rm -rf public/bundle.*",
 		"dev": "webpack-dev-server --config webpack.config.js --mode=development",
 		"build": "cross-env NODE_ENV=production webpack",
-		"deploy": "npm i && npm run build && fission app publish --verbose"
+		"deploy": "npm run clean:all && npm i && npm run build && fission app publish --verbose"
 	},
 	"dependencies": {
 		"@dicebear/avatars": "^4.4.1",
 		"@dicebear/avatars-avataaars-sprites": "^4.4.1",
 		"dayjs": "^1.9.6",
+		"rxjs": "^6.6.3",
 		"eth-lib": "^0.1.29",
 		"ethereumjs-util": "^7.0.7",
-		"rxjs": "^6.6.3",
 		"svelte": "^3.30.0",
 		"svelte-i18n": "^3.3.0",
 		"svelte-loading-spinners": "^0.1.1",
@@ -28,9 +28,7 @@
 		"@xstate/fsm": "^1.5.2",
 		"autoprefixer": "^10.0.3",
 		"bip39": "^3.0.3",
-		"brotli-webpack-plugin": "^1.1.0",
 		"clean-webpack-plugin": "^3.0.0",
-		"compression-webpack-plugin": "^6.1.1",
 		"cross-env": "^7.0.2",
 		"css-loader": "^4.3.0",
 		"css-minimizer-webpack-plugin": "^1.1.5",
