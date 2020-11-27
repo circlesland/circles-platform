@@ -93,6 +93,25 @@
     // window.stateMachines.run(setTrust, contextInitializer);
     // window.eventBroker.getTopic("omo", "shell").publish("openMenu");
   }
+
+  const sendMoney = {
+    design: {
+      icon: faMoneyBill,
+      type: "primary",
+    },
+  };
+  const addTrust = {
+    design: {
+      icon: faHeart,
+      type: "primary",
+    },
+  };
+  const removeTrust = {
+    design: {
+      icon: faMinus,
+      type: "light-danger",
+    },
+  };
 </script>
 
 <style>
@@ -128,15 +147,15 @@
       {#each data.actions as a}
         {#if a == 'send'}
           <div on:click={() => runTransferCircles(data.detail.address)}>
-            <ButtonIcon icon={faMoneyBill} type="primary" />
+            <ButtonIcon mapping={sendMoney} />
           </div>
         {:else if a == 'trust'}
           <div on:click={() => runTrust(data.detail.address)}>
-            <ButtonIcon icon={faHeart} type="primary" />
+            <ButtonIcon mapping={addTrust} />
           </div>
         {:else if a == 'untrust'}
           <div on:click={() => runUntrust(data.detail.address)}>
-            <ButtonIcon icon={faMinus} type="light-danger" />
+            <ButtonIcon mapping={removeTrust} />
           </div>
         {/if}
       {/each}

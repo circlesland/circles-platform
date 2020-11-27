@@ -29,6 +29,42 @@
     localStorage.removeItem("omo.privateKey");
     push("/");
   }
+
+  const buttonLogout = {
+    data: {
+      label: "Logout",
+    },
+    design: {
+      type: "danger",
+    },
+  };
+
+  const buttonHome = {
+    data: {
+      label: "Back Home",
+    },
+    design: {
+      type: "primary",
+    },
+  };
+
+  const buttonLogin = {
+    data: {
+      label: "Login",
+    },
+    design: {
+      type: "primary",
+    },
+  };
+
+  const buttonGoToApp = {
+    data: {
+      label: "Go To App",
+    },
+    design: {
+      type: "primary",
+    },
+  };
 </script>
 
 <style global>
@@ -43,8 +79,17 @@
     columns="1fr"
     rows="1fr">
     <button on:click={logout} class="w-full">
-      <Button text="Logout" type="danger" />
+      <Button mapping={buttonLogout} />
     </button>
+  </Compose>
+{:else if $location == '/identity/login'}
+  <Compose
+    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    columns="1fr"
+    rows="1fr">
+    <a href="#/omo/dapps" class="w-full">
+      <Button mapping={buttonHome} />
+    </a>
   </Compose>
 {:else if safeAddress}
   <Compose
@@ -99,7 +144,7 @@
     columns="1fr"
     rows="1fr">
     <a href="#/omo/dapps" class="w-full p-2">
-      <Button text="Go to app" type="primary" />
+      <Button mapping={buttonGoToApp} />
     </a>
   </Compose>
 {:else}
@@ -108,7 +153,7 @@
     columns="1fr"
     rows="1fr">
     <button on:click={onActionButtonClick} class="w-full p-2">
-      <Button text="Login" type="primary" />
+      <Button mapping={buttonLogin} />
     </button>
   </Compose>
 {/if}

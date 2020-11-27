@@ -1,54 +1,54 @@
 <script lang="ts">
-  export let text: string = "";
-  export let type: string = "";
-  export let disabled: Boolean = false;
+  interface Button {
+    data: {
+      label: string;
+    };
+    design: {
+      type: string;
+      disabled?: boolean;
+    };
+  }
+  export let mapping: Button;
 </script>
 
-{#if type == 'primary' && !disabled}
-  <div
-    class="w-full p-3 font-bold text-center text-white lowercase border-2 rounded-lg cursor-pointer border-secondary bg-secondary hover:border-secondary-lighter hover:bg-secondary-lighter">
-    {text}
-  </div>
-{/if}
+<style>
+  .button {
+    @apply w-full p-3 font-bold text-center lowercase border-2 rounded-lg;
+  }
+</style>
 
-{#if type == 'secondary' && !disabled}
-  <div
-    class="w-full p-3 font-bold text-center lowercase bg-white border-2 rounded-lg cursor-pointer border-secondary text-secondary hover:border-secondary-lighter hover:text-white hover:bg-secondary-lighter">
-    {text}
+{#if mapping.design.disabled}
+  <div class="button bg-light-100 border-light-300 text-light-300">
+    {mapping.data.label}
   </div>
-{/if}
-
-{#if type == 'danger' && !disabled}
+{:else if mapping.design.type == 'primary'}
   <div
-    class="w-full p-3 font-bold text-center lowercase bg-white border-2 rounded-lg cursor-pointer border-danger text-danger hover:bg-danger hover:text-white">
-    {text}
+    class="text-white cursor-pointer button border-secondary bg-secondary hover:border-secondary-lighter hover:bg-secondary-lighter">
+    {mapping.data.label}
   </div>
-{/if}
-
-{#if type == 'light' && !disabled}
+{:else if mapping.design.type == 'secondary'}
   <div
-    class="w-full p-3 font-bold text-center lowercase bg-white border-2 rounded-lg cursor-pointer border-light-400 text-light-400 hover:border-secondary-lighter hover:text-secondary-lighter">
-    {text}
+    class="bg-white cursor-pointer button border-secondary text-secondary hover:border-secondary-lighter hover:text-white hover:bg-secondary-lighter">
+    {mapping.data.label}
   </div>
-{/if}
-
-{#if type == 'light-danger' && !disabled}
+{:else if mapping.design.type == 'danger'}
   <div
-    class="w-full p-3 font-bold text-center lowercase bg-white border-2 rounded-lg cursor-pointer border-light-400 text-light-400 hover:border-danger hover:text-danger">
-    {text}
+    class="bg-white cursor-pointer button border-danger text-danger hover:bg-danger hover:text-white">
+    {mapping.data.label}
   </div>
-{/if}
-
-{#if type == 'light-danger' && !disabled}
+{:else if mapping.design.type == 'light'}
   <div
-    class="w-full p-3 font-bold text-center lowercase bg-white border-2 rounded-lg cursor-pointer border-danger text-danger hover:text-white hover:bg-danger">
-    {text}
+    class="bg-white cursor-pointer button border-light-400 text-light-400 hover:border-secondary-lighter hover:text-secondary-lighter">
+    {mapping.data.label}
   </div>
-{/if}
-
-{#if disabled}
+{:else if mapping.design.type == 'light-danger'}
   <div
-    class="w-full p-3 font-bold text-center lowercase border-2 rounded-lg bg-light-100 border-light-300 text-light-300">
-    {text}
+    class="bg-white cursor-pointer button border-light-400 text-light-400 hover:border-danger hover:text-danger">
+    {mapping.data.label}
+  </div>
+{:else if mapping.design.type == 'light-danger'}
+  <div
+    class="bg-white cursor-pointer button border-danger text-danger hover:text-white hover:bg-danger">
+    {mapping.data.label}
   </div>
 {/if}

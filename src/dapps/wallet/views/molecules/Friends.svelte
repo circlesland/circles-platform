@@ -41,6 +41,7 @@
     untrusted = Object.keys(t2)
       .map((k) => <TokenAndOwner>t2[k])
       .filter((o) => o && o.limit == 0)
+
       .map((mutualTrust) => {
         untrusted_[mutualTrust.owner.address] = true;
         return {

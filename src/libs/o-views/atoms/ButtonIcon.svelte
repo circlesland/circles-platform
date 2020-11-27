@@ -1,41 +1,44 @@
 <script lang="ts">
   import Icon from "fa-svelte";
-  export let icon: string = "";
-  export let type: string = "";
-  export let disabled: Boolean = false;
+
+  type ButtonIcon = {
+    design: {
+      icon: any;
+      type: string;
+      disabled?: boolean;
+    };
+  };
+  export let mapping: ButtonIcon;
 </script>
 
-{#if type == 'primary' && !disabled}
-  <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 text-white border-2 rounded-lg cursor-pointer border-secondary bg-secondary hover:border-secondary-lighter hover:bg-secondary-lighter">
-    <Icon {icon} />
-  </div>
-{/if}
+<style>
+  .button {
+    @apply flex items-center content-end justify-center w-10 h-10 p-2 border-2 rounded-lg;
+  }
+</style>
 
-{#if type == 'secondary' && !disabled}
-  <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-secondary text-secondary hover:border-secondary-lighter hover:text-secondary-lighter">
-    <Icon {icon} />
+{#if mapping.design.disabled}
+  <div class="button bg-light-100 border-light-300 text-light-300 ">
+    <Icon icon={mapping.design.icon} />
   </div>
-{/if}
-
-{#if type == 'light' && !disabled}
+{:else if mapping.design.type == 'primary'}
   <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-light-400 text-light-400 hover:border-secondary-lighter hover:text-secondary-lighter">
-    <Icon {icon} />
+    class="text-white cursor-pointer button border-secondary bg-secondary hover:border-secondary-lighter hover:bg-secondary-lighter">
+    <Icon icon={mapping.design.icon} />
   </div>
-{/if}
-
-{#if type == 'light-danger' && !disabled}
+{:else if mapping.design.type == 'secondary'}
   <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 bg-white border-2 rounded-lg cursor-pointer border-light-300 text-light-300 hover:bg-danger hover:border-danger hover:text-white">
-    <Icon {icon} />
+    class="cursor-pointer button border-secondary text-secondary hover:border-secondary-lighter hover:text-secondary-lighter">
+    <Icon icon={mapping.design.icon} />
   </div>
-{/if}
-
-{#if disabled}
+{:else if mapping.design.type == 'light'}
   <div
-    class="flex items-center content-end justify-center w-10 h-10 p-2 border-2 rounded-lg bg-light-100 border-light-300 text-light-300 ">
-    <Icon {icon} />
+    class="cursor-pointer button border-light-400 text-light-400 hover:border-secondary-lighter hover:text-secondary-lighter">
+    <Icon icon={mapping.design.icon} />
+  </div>
+{:else if mapping.design.type == 'light-danger'}
+  <div
+    class="cursor-pointer  button border-light-300 text-light-300 hover:bg-danger hover:border-danger hover:text-white">
+    <Icon icon={mapping.design.icon} />
   </div>
 {/if}

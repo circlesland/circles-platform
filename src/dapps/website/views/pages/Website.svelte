@@ -1,8 +1,6 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-
   import { onMount } from "svelte";
-  import { _ } from "svelte-i18n";
   import { push } from "svelte-spa-router";
 
   $: safeAddress = "";

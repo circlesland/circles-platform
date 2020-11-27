@@ -46,8 +46,8 @@ export const dapps = [
       route: "omo/dapps",
     },
     design: {
-      type: "disabled",
       icon: faUserAstronaut,
+      type: "disabled",
     },
   },
   {

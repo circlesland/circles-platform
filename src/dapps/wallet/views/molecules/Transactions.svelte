@@ -12,7 +12,6 @@
     faPlus,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
-  import type { t } from "svelte-i18n";
 
   export let address: string;
 

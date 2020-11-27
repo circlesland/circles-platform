@@ -15,6 +15,15 @@
   export let status;
 
   let promptFieldValues: { [key: string]: { type: string; data: any } } = {};
+
+  const buttonNext = {
+    data: {
+      label: "Next",
+    },
+    design: {
+      type: "primary",
+    },
+  };
 </script>
 
 {#if promptId === 'success'}
@@ -101,7 +110,7 @@
           console.log('Sent', answer);
           promptFieldValues = {};
         }}>
-        <Button text="Next" type="primary" />
+        <Button mapping={buttonNext} />
       </div>
     </div>
   </div>

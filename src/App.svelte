@@ -4,43 +4,21 @@
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
   import Router from "svelte-spa-router";
   import routes from "src/routes";
-  import { getLocaleFromNavigator, addMessages, init } from "svelte-i18n";
-  import { _ } from "svelte-i18n";
 
   import "src/css/base.css";
   import "src/css/components.css";
   import "src/css/utilities.css";
 
-  import omo_en from "src/dapps/omo/data/languages/en.json";
-  import omo_de from "src/dapps/omo/data/languages/de.json";
-
-  import website_en from "src/dapps/website/data/languages/en.json";
-  import website_de from "src/dapps/website/data/languages/de.json";
-  import wallet_de from "src/dapps/wallet/data/languages/de.json";
-  import wallet_en from "src/dapps/wallet/data/languages/en.json";
-  import identity_de from "src/dapps/identity/data/languages/de.json";
-  import identity_en from "src/dapps/identity/data/languages/en.json";
-
-  import Button from "./libs/o-views/atoms/Button.svelte";
+  import OverFlowAction from "./libs/o-views/atoms/OverFlowAction.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
   import type { OmoEvent } from "./libs/o-events/omoEvent";
   import type { RunProcess } from "./libs/o-events/runProcess";
   import Process from "./libs/o-views/molecules/Process.svelte";
-  import { onMount } from "svelte";
   import Announcement from "./libs/o-views/molecules/Announcement.svelte";
+  import { json } from "svelte-i18n";
 
   let safeAddress;
-
-  onMount(() => {});
-
-  addMessages("en", omo_en, website_en, wallet_en, identity_en);
-  addMessages("de", omo_de, website_de, wallet_de, identity_de);
-
-  init({
-    fallbackLocale: "en",
-    initialLocale: getLocaleFromNavigator(),
-  });
 
   let actions = [];
 
@@ -96,14 +74,31 @@
       actionAt = actionAt ?? {
         type: "trigger",
         pos: (index + 1).toString(),
-        icon: "",
-        label: "",
+        mapping: {
+          data: {
+            label: "",
+          },
+          design: {
+            type: "",
+          },
+        },
       };
       return actionAt;
     });
 
-    overflowActions = actions.filter((o) => !o.pos || o.pos === "overflow");
-    console.log(overflowActions);
+    overflowActions = actions
+      .filter((o) => !o.pos || o.pos === "overflow")
+      .map((item) => {
+        return {
+          data: {
+            label: item.mapping.data.label,
+          },
+          design: {
+            type: "secondary",
+          },
+          event: item.event,
+        };
+      });
   }
 
   function toggleOpen() {
@@ -166,7 +161,7 @@
             <div class="w-full">
               <div class="space-y-2">
                 <div on:click={() => window.dispatchShellEvent(action.event())}>
-                  <Button text={action.label} type="secondary" />
+                  <OverFlowAction mapping={action} />
                 </div>
               </div>
             </div>

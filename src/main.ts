@@ -13,10 +13,12 @@ import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
 import type { ProcessContext } from "src/libs/o-processes/processContext";
 import { GnosisSafeProxy } from "src/libs/o-circles-protocol/safe/gnosisSafeProxy";
 import { Person } from "src/libs/o-circles-protocol/model/person";
-import type { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import type { ProcessEvent } from "src/libs/o-processes/processEvent";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { ProcessEvent } from "src/libs/o-processes/processEvent";
 import { EventBroker } from "./eventBroker";
-import type { OmoEvent } from "./libs/o-events/omoEvent";
+import { OmoEvent } from "./libs/o-events/omoEvent";
+import * as webnative from "webnative";
+
 
 dayjs.extend(relativeTime)
 
@@ -36,9 +38,10 @@ declare global {
       cancel(),
       run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => ProcessContext) => Process
     }
+    wn: any
   }
 }
-
+window.wn = webnative
 window.mySafeAddress = localStorage.getItem("omo.safeAddress");
 
 const eventBroker = new EventBroker();
