@@ -3,11 +3,11 @@
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
   import Router from "svelte-spa-router";
-  import routes from "src/routes";
+  import routes from "./libs/o-os/routes";
 
-  import "src/css/base.css";
-  import "src/css/components.css";
-  import "src/css/utilities.css";
+  import "./libs/o-views/css/base.css";
+  import "./libs/o-views/css/components.css";
+  import "./libs/o-views/css/utilities.css";
 
   import OverFlowAction from "./libs/o-views/atoms/OverFlowAction.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";

@@ -10,7 +10,7 @@ import Transactions from "./views/pages/Transactions.svelte"
 import Friends from "./views/pages/Friends.svelte"
 import Tokens from "./views/pages/Tokens.svelte"
 
-import { ActionBarAction } from "src/routes";
+import { ActionBarAction } from "src/libs/o-os/routes";
 
 
 export const safeDefaultActions = [

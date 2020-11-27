@@ -88,7 +88,6 @@ module.exports = {
 		compress: true,
 		contentBase: [path.join(__dirname, 'public')],
 		port: 5000,
-		open: true,
 		https: true,
 	  }
 };

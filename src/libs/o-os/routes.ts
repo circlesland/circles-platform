@@ -2,12 +2,12 @@
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import wrap from "svelte-spa-router/wrap";
 import { location } from 'svelte-spa-router'
-import { OmoEvent } from "./libs/o-events/omoEvent";
+import { OmoEvent } from "../o-events/omoEvent";
 
-import { transactions, tokens, friends } from "./dapps/safe/manifest";
-import { omo } from "./dapps/omo/manifest"
-import { identity } from "./dapps/identity/manifest"
-import { website } from "./dapps/website/manifest"
+import { transactions, tokens, friends } from "../../dapps/safe/manifest";
+import { omo } from "../../dapps/omo/manifest"
+import { identity } from "../../dapps/identity/manifest"
+import { website } from "../../dapps/website/manifest"
 
 export type ActionBarAction = {
     type: "route" | "trigger",

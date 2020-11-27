@@ -2,7 +2,7 @@
   import NavItem from "../atoms/NavItem.svelte";
   import { location, push } from "svelte-spa-router";
   import { createEventDispatcher } from "svelte";
-  import type { ActionBarAction } from "../../../routes";
+  import type { ActionBarAction } from "../../o-os/routes";
   import Button from "../atoms/Button.svelte";
   import Compose from "../atoms/Compose.svelte";
   import Icon from "fa-svelte";
