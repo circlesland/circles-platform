@@ -96,6 +96,8 @@
             type: "secondary",
           },
           event: item.event,
+          type: item.type,
+          pos: item.pos,
         };
       });
   }

@@ -5,7 +5,7 @@
 		"clean": "npx shx rm -rf public/bundle.*",
 		"dev": "webpack-dev-server --config webpack.config.js --mode=development",
 		"build": "cross-env NODE_ENV=production webpack",
-		"deploy": "npm run clean:all && npm i && npm run build && fission app publish --verbose"
+		"deploy": "npm run clean && npm i && npm run build && fission app publish --verbose"
 	},
 	"dependencies": {
 		"@dicebear/avatars": "^4.4.1",
