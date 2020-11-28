@@ -75,7 +75,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
         data: {
           value: {
             key: "value",
-            type: "number",
+            type: "ether",
             label: str.titleValue()
           },
           banner: {
@@ -111,7 +111,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           },
           value: {
             key: "value",
-            type: "number",
+            type: "ether",
             isReadonly: true,
             label: str.titleValue()
           },

@@ -7,7 +7,6 @@ import type {SendAction} from "xstate/lib/types";
 import Error from "../../o-views/atoms/Error.svelte"
 import Success from "../../o-views/atoms/Success.svelte"
 import Progress from "../../o-views/atoms/Progress.svelte"
-import {Cancel} from "../events/cancel";
 
 export const sendSuccessPrompt = send((context:ProcessContext) => {
   return <Prompt>{

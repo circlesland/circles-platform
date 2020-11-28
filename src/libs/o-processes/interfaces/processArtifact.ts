@@ -29,9 +29,17 @@ export interface ProcessArtifact {
    */
   isReadonly?: boolean,
   /**
+   * If an artifact is invalid and non-optional, the process cannot proceed.
+   */
+  isValid?:boolean,
+  /**
    * If set, the value is used as <label> for the rendered input.
    */
   label?: string,
+  /**
+   * A placeholder value for the ui.
+   */
+  placeholder?:string,
   /**
    * When this object is used in a Prompt/Continue scenario,
    * this property must be set to 'true' if the 'value' of this
