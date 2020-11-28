@@ -37,19 +37,24 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     promptSafeAddress: {
-      entry: sendPrompt(str.titleSafeAddress(), {
-        safeAddress: {
-          key: "safeAddress",
-          type: "ethereumAddress",
-          label: str.titleSafeAddress()
-        },
-        banner: {
-          key: "banner",
-          type: "string",
-          isHidden: true,
-          value: str.bannerSafeAddress()
+      entry: sendPrompt({
+        title: str.titleSafeAddress(),
+        nextButtonTitle: "Next",
+        bannerComponent: Banner,
+        data: {
+          safeAddress: {
+            key: "safeAddress",
+            type: "ethereumAddress",
+            label: str.titleSafeAddress()
+          },
+          banner: {
+            key: "banner",
+            type: "string",
+            isHidden: true,
+            value: str.bannerSafeAddress()
+          }
         }
-      }, Banner),
+      }),
       on: {
         "process.continue": {
           actions: storePromptResponse,
@@ -59,19 +64,24 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     promptPrivateKey: {
-      entry: sendPrompt(str.titleSeedPhrase(), {
-        privateKey: {
-          key: "privateKey",
-          type: "string",
-          label: "Key phrase"
-        },
-        banner: {
-          key: "banner",
-          type: "string",
-          isHidden: true,
-          value: strings.safe.processes.connectSafe.bannerSeedPhrase()
+      entry: sendPrompt({
+        title: str.titleSeedPhrase(),
+        nextButtonTitle: "Next",
+        bannerComponent: Banner,
+        data: {
+          privateKey: {
+            key: "privateKey",
+            type: "string",
+            label: "Key phrase"
+          },
+          banner: {
+            key: "banner",
+            type: "string",
+            isHidden: true,
+            value: strings.safe.processes.connectSafe.bannerSeedPhrase()
+          }
         }
-      }, Banner),
+      }),
       on: {
         "process.back": {
           target: "promptSafeAddress"
@@ -84,7 +94,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     connectSafe: {
-      entry: sendPrompt(str.titleProgress(), {}, Jumper),
+      entry: sendPrompt({title: str.titleProgress(), bannerComponent: Jumper, data:{} }),
       invoke: {
         id: 'connectSafe',
         src: connectSafeService,
@@ -103,7 +113,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       entry: () => push('#/safe/transactions')
     },
     error: {
-      entry: sendPrompt("Error", {}, Error),
+      entry: sendPrompt({title: "Error", bannerComponent: Error, data:{} }),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

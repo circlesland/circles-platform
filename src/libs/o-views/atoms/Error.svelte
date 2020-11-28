@@ -4,4 +4,6 @@
   export let data: { [key: string]: ProcessArtifact };
 </script>
 
-<h1 class="p-10 text-xl text-white rounded-lg bg-danger text-center">Error</h1>
+<h1 class="p-8 py-16 text-xl text-center text-white rounded-lg bg-danger">
+  Error
+</h1>

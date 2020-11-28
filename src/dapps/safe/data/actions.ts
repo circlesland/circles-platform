@@ -6,6 +6,7 @@ import { transferXDai } from "./../processes/transferXDai/transferXDai";
 import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "src/libs/o-events/runProcess";
 import { ActionBarAction } from "src/libs/o-os/routes";
+import {setTrust, SetTrustContext} from "../processes/setTrust/setTrust";
 
 export const safeDefaultActions: ActionBarAction[] = [
     {
@@ -97,10 +98,9 @@ export const safeOverflowActions: ActionBarAction[] = [
                 label: "Trust friend",
             }
         },
-    /*event: () =>{}new RunProcess(setTrust, (context: SetTrustContext) => {
-            context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
+        event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
             return context;
-        })*/
+        })
     },
     // {
     //     type: "trigger",

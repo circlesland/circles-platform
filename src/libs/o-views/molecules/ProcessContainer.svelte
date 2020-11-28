@@ -60,8 +60,6 @@
     ensureProcess((process) => {
       subscription = process.events.subscribe((next) => {
         if (next.event?.type === "process.prompt") {
-          console.log("process.prompt:", next.event);
-
           prompt = <PromptEvent>next.event;
           let artifactsArr = Object.keys(prompt.data).map(
             (key) => prompt.data[key]
@@ -115,13 +113,14 @@
 </script>
 
 {#if process && prompt}
-  <div class="flex items-center justify-center overflow-hidden ">
-    <div
-      class="flex items-center justify-between text-xl font-bold text-center lowercase font-title text-primary">
-      {prompt.title}
+  {#if prompt.title}
+    <div class="flex items-center justify-center overflow-hidden ">
+      <div
+        class="flex items-center justify-between text-xl font-bold text-center lowercase font-title text-primary">
+        {prompt.title}
+      </div>
     </div>
-  </div>
-
+  {/if}
   <div class="w-full">
     <Prompt {process} {prompt} />
   </div>
