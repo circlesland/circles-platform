@@ -4,7 +4,8 @@
   import Header from "src/libs/o-views/molecules/Header.svelte";
   import { Jumper } from "svelte-loading-spinners";
   import { onMount } from "svelte";
-  import { buttonLogin, title } from "./../../data/profile";
+  import { buttonLogin, title, avataaar } from "./../../data/profile";
+  import Avataaar from "src/libs/o-views/atoms/Avataaar.svelte";
 
   const wn = window.wn;
 
@@ -134,7 +135,11 @@
         {#if state != undefined}
           <div class="">
             <div
-              class="px-4 py-12 text-xl text-center bg-white border rounded text-primary border-light-200 font-title">
+              class="px-4 py-10 text-xl text-center bg-white border rounded text-primary border-light-200 font-title">
+              <div
+                class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
+                <Avataaar mapping={avataaar} />
+              </div>
               Welcome,
               {state.username}<br />
               <span class="text-sm text-light-500">{authState}</span>
