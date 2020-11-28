@@ -6,6 +6,8 @@
   import { onMount } from "svelte";
   import { buttonLogin, title, avataaar } from "./../../data/profile";
   import Avataaar from "src/libs/o-views/atoms/Avataaar.svelte";
+  import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
+  import { firstname, lastname, city } from "./../../data/profile";
 
   const wn = window.wn;
 
@@ -145,7 +147,10 @@
               <span class="text-sm text-light-500">{authState}</span>
             </div>
           </div>
-          <div class="p-2">
+          <div class="pt-2 space-y-2">
+            <ProfileItem mapping={firstname} />
+            <ProfileItem mapping={lastname} />
+            <ProfileItem mapping={city} />
             <!-- 
             <div>Scenario:  {state.scenario}</div>
             <div>AppName: {state.permissions.app.name}</div>

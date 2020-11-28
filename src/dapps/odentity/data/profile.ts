@@ -13,3 +13,24 @@ export let avataaar = {
         radius: 100,
     },
 };
+
+export let firstname = {
+    data: {
+        title: "Samuel",
+        subtitle: "first name"
+    }
+}
+
+export let lastname = {
+    data: {
+        title: "Andert",
+        subtitle: "last name"
+    }
+}
+
+export let city = {
+    data: {
+        title: "Munich, Germany",
+        subtitle: "city"
+    }
+}

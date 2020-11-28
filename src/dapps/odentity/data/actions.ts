@@ -1,4 +1,4 @@
-import { faUserCircle, faUserAstronaut, faLock, faKey } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle, faUserAstronaut, faLock, faKey, faCoins } from "@fortawesome/free-solid-svg-icons";
 
 export const odentityDefaultActions = [
     {
@@ -50,4 +50,67 @@ export const odentityDefaultActions = [
         },
         route: "#/omo/dapps"
     }
+];
+
+export const odentityOverflowActions = [
+    {
+        type: "trigger",
+        pos: "overflow",
+        mapping: {
+            design: {
+                icon: faCoins
+            },
+            data: {
+                label: "Add new access device"
+            }
+        },
+    },
+    {
+        type: "trigger",
+        pos: "overflow",
+        mapping: {
+            design: {
+                icon: faCoins,
+            },
+            data: {
+                label: "Remove access device",
+            }
+        },
+    },
+    {
+        type: "trigger",
+        pos: "overflow",
+        mapping: {
+            design: {
+                icon: faCoins,
+            },
+            data: {
+                label: "Change name",
+            }
+        },
+    },
+    {
+        type: "trigger",
+        pos: "overflow",
+        mapping: {
+            design: {
+                icon: faCoins,
+            },
+            data: {
+                label: "Change Profile image",
+            }
+        },
+    },
+    {
+        type: "trigger",
+        pos: "overflow",
+        mapping: {
+            design: {
+                icon: faCoins,
+            },
+            data: {
+                label: "Change city",
+            }
+        },
+    },
 ];
