@@ -2,14 +2,15 @@ export const keys = [
     {
         data: {
             image: "/icons/paperWallet.svg",
-            title: "Circles Seedphrase",
-            subtitle: "Gnosis Safe CirclesUBI",
+            title: "Circles SafeOwner",
+            subtitle: "PrivateKey",
+            description: localStorage.getItem("omo.privateKey"),
         },
     },
 ];
 
 export const labelKeys = {
     data: {
-        label: "Keys secretly stored in your keystore",
+        label: "Keys secretly stored in your localstorage",
     },
 };
