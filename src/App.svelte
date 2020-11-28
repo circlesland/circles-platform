@@ -23,8 +23,8 @@
 
   let alpha = {
     data: {
-      text:
-        "This dapp is an early alpha test version. For wishes and feedback join our",
+      type: "Attention",
+      text: "We are in early alpha testing. For feedback join our",
       button: "Chat",
     },
     action: {
