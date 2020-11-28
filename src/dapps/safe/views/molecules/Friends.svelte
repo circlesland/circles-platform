@@ -9,6 +9,12 @@
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import { Jumper } from "svelte-loading-spinners";
+  import {
+    labelTrusted,
+    labelMutual,
+    labelTrusting,
+    labelRevoked,
+  } from "./../../data/friends";
 
   export let address: string;
   let mySafeAddress: string;
@@ -139,27 +145,6 @@
       init(address);
     }
   }
-
-  const labelTrusted = {
-    data: {
-      label: "New friend trust requests",
-    },
-  };
-  const labelMutual = {
-    data: {
-      label: "Mutually trusted friends",
-    },
-  };
-  const labelTrusting = {
-    data: {
-      label: "Friends trusted only by you",
-    },
-  };
-  const labelRevoked = {
-    data: {
-      label: "Friends you revoked trust",
-    },
-  };
 </script>
 
 <div class="h-full space-y-2">
