@@ -75,27 +75,18 @@
 
 {#if safeAddress && $location == '/omo/dapps'}
   <Compose
-    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    tw="justify-center items-center p-4 bg-white border-t border-light-200"
     columns="1fr"
     rows="1fr">
     <button on:click={logout} class="w-full">
       <Button mapping={buttonLogout} />
     </button>
   </Compose>
-{:else if $location == '/identity/login'}
-  <Compose
-    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
-    columns="1fr"
-    rows="1fr">
-    <a href="#/omo/dapps" class="w-full">
-      <Button mapping={buttonHome} />
-    </a>
-  </Compose>
 {:else if safeAddress}
   <Compose
     rows="1fr"
     columns="1fr 1fr 80px 1fr 1fr"
-    tw="bg-white border-t border-light-300 text-light-400 h-20 justify-center items-center px-2 md:px-3 lg:px-4">
+    tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 md:px-3 lg:px-4">
     <Compose rows="1fr" columns="1fr">
       <a
         href={quickActions[0].route}

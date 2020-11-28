@@ -7,6 +7,7 @@
   } from "src/libs/o-circles-protocol/model/person";
   import { config } from "src/libs/o-circles-protocol/config";
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
+  import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import { Jumper } from "svelte-loading-spinners";
 
   export let address: string;
@@ -138,6 +139,27 @@
       init(address);
     }
   }
+
+  const labelTrusted = {
+    data: {
+      label: "New friend trust requests",
+    },
+  };
+  const labelMutual = {
+    data: {
+      label: "Mutually trusted friends",
+    },
+  };
+  const labelTrusting = {
+    data: {
+      label: "Friends trusted only by you",
+    },
+  };
+  const labelRevoked = {
+    data: {
+      label: "Friends you revoked trust",
+    },
+  };
 </script>
 
 <div class="h-full space-y-2">
@@ -147,9 +169,7 @@
     </div>
   {:else}
     {#if personsThatTrustMe.length > 0}
-      <div class="pl-1 text-gray-500 lowercase font-title">
-        New trust friend requests
-      </div>
+      <CategoryTitle mapping={labelTrusted} />
     {/if}
 
     {#each personsThatTrustMe as personThatTrustMe}
@@ -157,9 +177,7 @@
     {/each}
 
     {#if mutualFriends.length > 0}
-      <div class="pl-1 text-gray-500 lowercase font-title">
-        Mutually trusted friends
-      </div>
+      <CategoryTitle mapping={labelMutual} />
     {/if}
 
     {#each mutualFriends as mutualTrust}
@@ -167,9 +185,7 @@
     {/each}
 
     {#if personsITrust.length > 0}
-      <div class="pl-1 text-gray-500 lowercase font-title">
-        Friends, who only you trust
-      </div>
+      <CategoryTitle mapping={labelTrusting} />
     {/if}
 
     {#each personsITrust as personITrust}
@@ -177,9 +193,7 @@
     {/each}
 
     {#if untrusted.length > 0}
-      <div class="pl-1 text-gray-500 lowercase font-title">
-        Friends, where I revoked trust
-      </div>
+      <CategoryTitle mapping={labelRevoked} />
     {/if}
     {#each untrusted as ut}
       <FriendItem data={ut} />

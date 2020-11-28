@@ -125,7 +125,7 @@
 </style>
 
 <div>
-  <div class="w-full bg-white border rounded card border-light-200">
+  <div class="w-full bg-white border rounded-lg card border-light-200">
     <div on:click={toggleExpand} class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>

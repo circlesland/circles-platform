@@ -2,7 +2,9 @@
   import Button from "src/libs/o-views/atoms/Button.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import Header from "src/libs/o-views/molecules/Header.svelte";
+  import { Jumper } from "svelte-loading-spinners";
   import { onMount } from "svelte";
+  import { buttonLogin, title } from "./../../data/profile";
 
   const wn = window.wn;
 
@@ -95,13 +97,6 @@
   function fissionAuth() {
     wn.redirectToLobby(state.permissions);
   }
-
-  let title = { data: { title: "Omo Test App by Mama Omo" } };
-
-  const buttonLogin = {
-    data: { label: "Auth with Fission" },
-    design: { type: "primary" },
-  };
 </script>
 
 <style>
@@ -113,7 +108,7 @@
   }
 </style>
 
-<Compose rows="40px 1fr" columns="1fr" tw="bg-white">
+<Compose rows="auto 1fr" columns="1fr">
   <Compose tw="h-14">
     <Header mapping={title} />
   </Compose>
@@ -123,7 +118,11 @@
       {#await state}
         waiting
       {:then}
-        {authState}
+        {#if authState == undefined}
+          <div class="flex items-center justify-center h-full mx-auto">
+            <Jumper size="150" color="#071D69" unit="px" />
+          </div>
+        {:else}{authState}{/if}
 
         {#if state != undefined && !state.authenticated}
           <div on:click={fissionAuth}>

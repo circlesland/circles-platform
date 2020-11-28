@@ -12,10 +12,10 @@
 <Compose
   columns="auto 1fr auto"
   rows="1fr"
-  tw="text-white lowercase bg-primary ">
+  tw="text-primary lowercase bg-white border-b border-light-200">
   <div class="flex items-center justify-center" />
   <div
-    class="flex items-center justify-center pt-1 text-xl font-bold text-center ">
+    class="flex items-center justify-center py-2 text-lg font-bold text-center">
     {mapping.data.title}
   </div>
   <div class="flex items-center justify-center" />

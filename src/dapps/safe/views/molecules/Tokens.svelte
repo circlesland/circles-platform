@@ -5,6 +5,7 @@
   import { Jumper } from "svelte-loading-spinners";
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
+  import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
 
   export let address: string;
   let accountAddress: string = localStorage.getItem("omo.address");
@@ -109,36 +110,45 @@
       subtitle: "Account: SafeOwner",
     },
   };
+
+  const labelBalances = {
+    data: {
+      label: "currency balances",
+    },
+  };
+  const labelDistribution = {
+    data: {
+      label: "detailed circles distribution",
+    },
+  };
 </script>
 
-<div class="pb-1 pl-1 text-gray-500 lowercase font-title">
-  currency balances
-</div>
+<div>
+  <CategoryTitle mapping={labelBalances} />
 
-<div class="space-y-2">
-  {#if circlesBalance || safeEtherBalance}
-    <TokenItem mapping={circlesSafe} />
-    <TokenItem mapping={xDaiSafe} />
-    <TokenItem mapping={xDaiOwner} />
-  {:else}
-    <div class="flex items-center justify-center h-full mx-auto">
-      <Jumper size="150" color="#071D69" unit="px" />
-    </div>
-  {/if}
-</div>
+  <div class="space-y-2">
+    {#if circlesBalance || safeEtherBalance}
+      <TokenItem mapping={circlesSafe} />
+      <TokenItem mapping={xDaiSafe} />
+      <TokenItem mapping={xDaiOwner} />
+    {:else}
+      <div class="flex items-center justify-center h-full mx-auto">
+        <Jumper size="150" color="#071D69" unit="px" />
+      </div>
+    {/if}
+  </div>
 
-<div class="pt-4 pb-1 pl-1 text-gray-500 lowercase font-title">
-  detailed circles distribution
-</div>
+  <CategoryTitle mapping={labelDistribution} />
 
-<div class="space-y-2">
-  {#if tokensITrust.length > 0}
-    {#each tokensITrust as token}
-      <TokenItem mapping={token} />
-    {/each}
-  {:else}
-    <div class="flex items-center justify-center h-full mx-auto">
-      <Jumper size="150" color="#071D69" unit="px" />
-    </div>
-  {/if}
+  <div class="space-y-2">
+    {#if tokensITrust.length > 0}
+      {#each tokensITrust as token}
+        <TokenItem mapping={token} />
+      {/each}
+    {:else}
+      <div class="flex items-center justify-center h-full mx-auto">
+        <Jumper size="150" color="#071D69" unit="px" />
+      </div>
+    {/if}
+  </div>
 </div>

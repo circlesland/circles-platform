@@ -5,9 +5,9 @@ import { location } from 'svelte-spa-router'
 import { OmoEvent } from "../o-events/omoEvent";
 
 import { transactions, tokens, friends } from "../../dapps/safe/manifest";
-import { omo } from "../../dapps/omo/manifest"
-import { identity } from "../../dapps/identity/manifest"
-import { website } from "../../dapps/website/manifest"
+import { omo } from "../../dapps/omo/manifest";
+import { profile, access, keys } from "../../dapps/odentity/manifest";
+import { website } from "../../dapps/website/manifest";
 
 export type ActionBarAction = {
     type: "route" | "trigger",
@@ -36,10 +36,12 @@ export default {
     // Omo
     '/omo/*': wrap(omo),
 
-    // Identity
-    '/identity/login': wrap(identity),
+    // Odentity
+    '/odentity/profile': wrap(profile),
+    '/odentity/access': wrap(access),
+    '/odentity/keys': wrap(keys),
 
-    // safe
+    // Safe
     '/safe/transactions': wrap(transactions),
     '/safe/friends': wrap(friends),
     '/safe/tokens': wrap(tokens),

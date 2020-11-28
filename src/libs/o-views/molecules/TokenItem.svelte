@@ -30,7 +30,7 @@
 <div>
   <div
     on:click={toggleExpand}
-    class="w-full bg-white border rounded card border-light-200">
+    class="w-full bg-white border rounded-lg card border-light-200">
     <div class="flex items-center justify-center p-2">
       <img src={mapping.data.image} alt="CRC" />
     </div>

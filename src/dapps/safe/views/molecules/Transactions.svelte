@@ -12,6 +12,7 @@
     faPlus,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
+  import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
 
   export let address: string;
 
@@ -78,15 +79,21 @@
       init(address);
     }
   }
+  const labelTransactions = {
+    data: {
+      label: "Your Safe Transactions",
+    },
+  };
 </script>
 
 <div class="h-full">
+  <CategoryTitle mapping={labelTransactions} />
   {#if transactions.length > 0}
-    <div class="m-4 space-y-2">
+    <div class="space-y-2">
       {#each transactions as t}
         <div>
           <div
-            class="flex w-full bg-white border rounded border-light-200"
+            class="flex w-full bg-white border rounded-lg border-light-200"
             on:click={() => (t.openDetail = !t.openDetail)}>
             <div
               class="flex items-center justify-center w-10 text-sm text-light-400 ">
@@ -136,7 +143,7 @@
           </div>
           {#if t.openDetail}
             <div
-              class="flex max-w-full p-4 text-xs text-gray-500 bg-white border-b border-x border-light-300">
+              class="flex max-w-full p-4 mx-4 text-xs text-gray-500 bg-white">
               <div class="max-w-full text-gray-500 ">
                 <div class="flex text-sm">
                   {#if t.from === '0x0000000000000000000000000000000000000000'}

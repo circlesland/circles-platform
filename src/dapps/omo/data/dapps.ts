@@ -40,14 +40,14 @@ export const dapps = [
   {
     data: {
       title: "Odentity",
-      tag: "soon",
+      tag: "alpha 0.1.0",
     },
     action: {
-      route: "omo/dapps",
+      route: "odentity/profile",
     },
     design: {
       icon: faUserAstronaut,
-      type: "disabled",
+      type: "",
     },
   },
   {

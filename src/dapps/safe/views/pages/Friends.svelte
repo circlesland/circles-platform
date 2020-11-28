@@ -11,11 +11,11 @@
   let address = localStorage.getItem("omo.safeAddress");
 </script>
 
-<Compose rows="48px 1fr" columns="1fr">
+<Compose rows="50px 1fr" columns="1fr">
   <Compose>
     <Header mapping={header} />
   </Compose>
-  <Compose rows="1fr" columns="1fr" tw="p-4" overflowY>
+  <Compose rows="1fr" columns="1fr" tw="px-4" overflowY>
     <Friends {address} />
   </Compose>
 </Compose>
