@@ -1,11 +1,7 @@
 <script lang="ts">
   import Compose from "../atoms/Compose.svelte";
+  import { Header } from "./../interfaces/molecules";
 
-  interface Header {
-    data: {
-      title: string;
-    };
-  }
   export let mapping: Header;
 </script>
 

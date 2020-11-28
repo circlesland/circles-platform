@@ -1,12 +1,7 @@
 <script lang="ts">
   import Avataaar from "../atoms/Avataaar.svelte";
+  import { ProfileHeader } from "./../interfaces/molecules";
 
-  interface ProfileHeader {
-    data: {
-      subtitle: string;
-      image?: string;
-    };
-  }
   export let mapping: ProfileHeader;
 
   let avataar = {

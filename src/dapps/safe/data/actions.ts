@@ -5,8 +5,9 @@ import { transferXDai } from "./../processes/transferXDai/transferXDai";
 
 import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "src/libs/o-events/runProcess";
+import { ActionBarAction } from "src/libs/o-os/routes";
 
-export const safeDefaultActions = [
+export const safeDefaultActions: ActionBarAction[] = [
     {
         type: "route",
         pos: "1",
@@ -58,7 +59,7 @@ export const safeDefaultActions = [
     }
 ];
 
-export const safeOverflowActions = [
+export const safeOverflowActions: ActionBarAction[] = [
     {
         type: "trigger",
         pos: "overflow",

@@ -1,13 +1,6 @@
 <script lang="ts">
-  interface Button {
-    data: {
-      label: string;
-    };
-    design: {
-      type: string;
-      disabled?: boolean;
-    };
-  }
+  import { Button } from "./../interfaces/atoms";
+
   export let mapping: Button;
 </script>
 

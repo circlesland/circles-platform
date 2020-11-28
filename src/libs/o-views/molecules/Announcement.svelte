@@ -1,13 +1,6 @@
 <script lang="ts">
-  interface Announcement {
-    data: {
-      text: string;
-      button: string;
-    };
-    action: {
-      link: string;
-    };
-  }
+  import { Announcement } from "./../interfaces/molecules";
+
   export let mapping: Announcement;
 </script>
 

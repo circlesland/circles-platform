@@ -1,13 +1,7 @@
 <script lang="ts">
   import Icon from "fa-svelte";
+  import { ButtonIcon } from "./../interfaces/atoms";
 
-  type ButtonIcon = {
-    design: {
-      icon: any;
-      type: string;
-      disabled?: boolean;
-    };
-  };
   export let mapping: ButtonIcon;
 </script>
 
@@ -38,7 +32,7 @@
   </div>
 {:else if mapping.design.type == 'light-danger'}
   <div
-    class="cursor-pointer  button border-light-300 text-light-300 hover:bg-danger hover:border-danger hover:text-white">
+    class="cursor-pointer button border-light-300 text-light-300 hover:bg-danger hover:border-danger hover:text-white">
     <Icon icon={mapping.design.icon} />
   </div>
 {/if}

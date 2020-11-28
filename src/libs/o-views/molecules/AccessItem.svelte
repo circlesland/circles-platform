@@ -1,15 +1,8 @@
 <script lang="ts">
   import { faMinus } from "@fortawesome/free-solid-svg-icons";
   import ButtonIcon from "../atoms/ButtonIcon.svelte";
+  import { AccessItem } from "./../interfaces/molecules";
 
-  interface AccessItem {
-    data: {
-      image: string;
-      title: string;
-      subtitle: string;
-      description: string;
-    };
-  }
   export let mapping: AccessItem;
 
   const removeAccess = {

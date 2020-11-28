@@ -1,14 +1,6 @@
 <script lang="ts">
   import Icon from "fa-svelte";
-
-  interface NavItem {
-    data: {
-      label: string;
-    };
-    design: {
-      icon: any;
-    };
-  }
+  import { NavItem } from "./../interfaces/atoms";
 
   export let mapping: NavItem;
 </script>

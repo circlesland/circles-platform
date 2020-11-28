@@ -1,11 +1,14 @@
-export const title = { data: { title: "Profile" } };
+import { Avataaar, Button } from "src/libs/o-views/interfaces/atoms";
+import { Header, ProfileItem } from "src/libs/o-views/interfaces/molecules";
 
-export const buttonLogin = {
+export const title: Header = { data: { title: "Profile" } };
+
+export const buttonLogin: Button = {
     data: { label: "Auth with Fission" },
     design: { type: "secondary" },
 };
 
-export let avataaar = {
+export let avataaar: Avataaar = {
     data: {
         seed: localStorage.getItem("omo.safeAddress"),
     },
@@ -14,21 +17,21 @@ export let avataaar = {
     },
 };
 
-export let firstname = {
+export let firstname: ProfileItem = {
     data: {
         title: "Omo",
         subtitle: "my first name"
     }
 }
 
-export let lastname = {
+export let lastname: ProfileItem = {
     data: {
         title: "Sapiens",
         subtitle: "my last name"
     }
 }
 
-export let city = {
+export let city: ProfileItem = {
     data: {
         title: "Planet, Earth",
         subtitle: "my home town"

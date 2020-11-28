@@ -1,6 +1,7 @@
 import { faUserCircle, faUserAstronaut, faLock, faKey, faCoins } from "@fortawesome/free-solid-svg-icons";
+import { ActionBarAction } from "src/libs/o-os/routes";
 
-export const odentityDefaultActions = [
+export const odentityDefaultActions: ActionBarAction[] = [
     {
         type: "route",
         pos: "1",
@@ -52,7 +53,7 @@ export const odentityDefaultActions = [
     }
 ];
 
-export const odentityOverflowActions = [
+export const odentityOverflowActions: ActionBarAction[] = [
     {
         type: "trigger",
         pos: "overflow",

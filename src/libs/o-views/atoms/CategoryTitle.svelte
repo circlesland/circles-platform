@@ -1,9 +1,6 @@
 <script lang="ts">
-  interface CategoryTitle {
-    data: {
-      label: string;
-    };
-  }
+  import { CategoryTitle } from "./../interfaces/atoms";
+
   export let mapping: CategoryTitle;
 </script>
 

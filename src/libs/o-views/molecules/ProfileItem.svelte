@@ -1,13 +1,7 @@
 <script lang="ts">
-  import ButtonIcon from "../atoms/ButtonIcon.svelte";
+  import { ProfileItem } from "./../interfaces/molecules";
 
-  interface AccessItem {
-    data: {
-      title: string;
-      subtitle: string;
-    };
-  }
-  export let mapping: AccessItem;
+  export let mapping: ProfileItem;
 </script>
 
 <style>

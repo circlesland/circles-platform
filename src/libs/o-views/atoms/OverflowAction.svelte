@@ -1,13 +1,7 @@
 <script lang="ts">
   import Button from "./Button.svelte";
-  interface OverflowAction {
-    data: {
-      label: string;
-    };
-    design: {
-      type: string;
-    };
-  }
+  import { OverflowAction } from "./../interfaces/atoms";
+
   export let mapping: OverflowAction;
 </script>
 

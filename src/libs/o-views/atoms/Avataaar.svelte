@@ -1,15 +1,7 @@
 <script lang="ts">
   import Avatars from "@dicebear/avatars";
   import sprites from "@dicebear/avatars-avataaars-sprites";
-
-  interface Avataaar {
-    data: {
-      seed: string;
-    };
-    design: {
-      radius: number;
-    };
-  }
+  import { Avataaar } from "./../interfaces/atoms";
 
   export let mapping: Avataaar;
 

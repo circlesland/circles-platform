@@ -1,4 +1,7 @@
-export const accessDevices = [
+import { CategoryTitle } from "src/libs/o-views/interfaces/atoms";
+import { AccessItem } from "src/libs/o-views/interfaces/molecules";
+
+export const accessDevices: AccessItem[] = [
     {
         data: {
             image: "/icons/paperWallet.svg",
@@ -43,7 +46,7 @@ export const accessDevices = [
     },
 ];
 
-export const accessDapps = [
+export const accessDapps: AccessItem[] = [
     {
         data: {
             image: "/icons/dappOmoTest.svg",
@@ -53,13 +56,13 @@ export const accessDapps = [
     },
 ];
 
-export const labelDevices = {
+export const labelDevices: CategoryTitle = {
     data: {
         label: "Devices with Access to your Odentity",
     },
 };
 
-export const labelDapps = {
+export const labelDapps: CategoryTitle = {
     data: {
         label: "Dapps with Access to your Data",
     },

@@ -1,13 +1,5 @@
 <script lang="ts">
-  interface TokenItem {
-    data: {
-      image: string;
-      title: string;
-      subtitle: string;
-      balance: number;
-      description: string;
-    };
-  }
+  import { TokenItem } from "./../interfaces/molecules";
 
   export let mapping: TokenItem;
 

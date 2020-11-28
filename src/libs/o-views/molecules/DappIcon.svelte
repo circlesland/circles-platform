@@ -1,19 +1,6 @@
 <script lang="ts">
   import Icon from "fa-svelte";
-
-  interface DappIcon {
-    data: {
-      title: string;
-      tag: string;
-    };
-    design: {
-      type: string;
-      icon: any;
-    };
-    action: {
-      route: string;
-    };
-  }
+  import { DappIcon } from "./../interfaces/molecules";
 
   export let mapping: DappIcon;
 </script>

@@ -1,15 +1,16 @@
 import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
+import { DappIcon, ProfileHeader } from "src/libs/o-views/interfaces/molecules";
 
 export const address: string = localStorage.getItem("omo.safeAddress");
 
-export const profile = {
+export const profile: ProfileHeader = {
   data: {
     subtitle: "Welcome Omo",
     image: address,
   }
 };
 
-export const locked = {
+export const locked: DappIcon = {
   data: {
     title: "Safe",
     tag: "alpha 0.1.0",
@@ -23,7 +24,7 @@ export const locked = {
   }
 };
 
-export const dapps = [
+export const dapps: DappIcon[] = [
   {
     data: {
       title: "Safe",
