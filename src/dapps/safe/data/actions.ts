@@ -7,6 +7,7 @@ import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/
 import { RunProcess } from "src/libs/o-events/runProcess";
 import { ActionBarAction } from "src/libs/o-os/routes";
 import {setTrust, SetTrustContext} from "../processes/setTrust/setTrust";
+import {unTrust} from "../processes/unTrust/unTrust";
 
 export const safeDefaultActions: ActionBarAction[] = [
     {
@@ -87,21 +88,21 @@ export const safeOverflowActions: ActionBarAction[] = [
     //     },
     //     event: () => new RunProcess(transferXDai)
     // },
-    {
-        type: "trigger",
-        pos: "overflow",
-        mapping: {
-            design: {
-                icon: faCoins,
-            },
-            data: {
-                label: "Trust friend",
-            }
-        },
-        event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
-            return context;
-        })
+  {
+    type: "trigger",
+    pos: "overflow",
+    mapping: {
+      design: {
+        icon: faCoins,
+      },
+      data: {
+        label: "Trust friend",
+      }
     },
+    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
+      return context;
+    })
+  },
     // {
     //     type: "trigger",
     //     pos: "overflow",

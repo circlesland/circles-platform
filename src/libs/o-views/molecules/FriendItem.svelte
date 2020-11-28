@@ -1,10 +1,10 @@
-<!--
 <script lang="ts">
   import type { Address } from "../../o-circles-protocol/interfaces/address";
+  /*
   import {
     transferCircles,
     TransferCirclesContext,
-  } from "../../../dapps/safe/processes/transferCircles/transferCircles";
+  } from "../../../dapps/safe/processes/transferCircles/transferCircles"; */
   import {
     setTrust,
     SetTrustContext,
@@ -22,6 +22,7 @@
     faMinusCircle,
     faMoneyBill,
   } from "@fortawesome/free-solid-svg-icons";
+  import {unTrust, UnTrustContext} from "../../../dapps/safe/processes/unTrust/unTrust";
 
   export let data = {
     image: "",
@@ -40,7 +41,9 @@
     openDetail = !openDetail;
   }
 
+
   function runTransferCircles(recipientAddress: Address) {
+  /*
     const contextInitializer = (context: TransferCirclesContext) => {
       context.transfer = {
         recipient: {
@@ -52,47 +55,38 @@
     };
     window.stateMachines.run(transferCircles, contextInitializer);
     window.eventBroker.getTopic("omo", "shell").publish("openMenu");
+
+   */
   }
 
   function runTrust(recipientAddress: Address) {
     const contextInitializer = (context: SetTrustContext) => {
-      context.setTrust = {
-        trustReceiver: {
-          type: "ethereumAddress",
-          data: recipientAddress,
-        },
-        trustLimit: {
-          type: "percent",
-          data: 100,
-        },
+      context.data.trustReceiver = {
+        type: "ethereumAddress",
+        isReadonly: true,
+        key: "trustReceiver",
+        value: recipientAddress
       };
       return context;
     };
-    //window.stateMachines.run(setTrust, contextInitializer);
     window.eventBroker
       .getTopic("omo", "shell")
       .publish(new RunProcess(setTrust, contextInitializer));
   }
 
   function runUntrust(recipientAddress: Address) {
-    const contextInitializer = (context: SetTrustContext) => {
-      context.setTrust = {
-        trustReceiver: {
-          type: "ethereumAddress",
-          data: recipientAddress,
-        },
-        trustLimit: {
-          type: "percent",
-          data: 0,
-        },
+    const contextInitializer = (context: UnTrustContext) => {
+      context.data.trustReceiver = {
+        type: "ethereumAddress",
+        isReadonly: true,
+        key: "trustReceiver",
+        value: recipientAddress
       };
       return context;
     };
     window.eventBroker
       .getTopic("omo", "shell")
-      .publish(new RunProcess(setTrust, contextInitializer));
-    // window.stateMachines.run(setTrust, contextInitializer);
-    // window.eventBroker.getTopic("omo", "shell").publish("openMenu");
+      .publish(new RunProcess(unTrust, contextInitializer));
   }
 
   const sendMoney = {
@@ -175,4 +169,3 @@
     </div>
   {/if}
 </div>
--->

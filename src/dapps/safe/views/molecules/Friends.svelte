@@ -48,7 +48,6 @@
     untrusted = Object.keys(t2)
       .map((k) => <TokenAndOwner>t2[k])
       .filter((o) => o && o.limit == 0)
-
       .map((mutualTrust) => {
         untrusted_[mutualTrust.owner.address] = true;
         return {
@@ -65,6 +64,8 @@
           actions: ["trust"],
         };
       });
+
+    console.log("untrusted:", untrusted);
 
     let tt2 = {};
     Object.keys(t2)
@@ -99,6 +100,8 @@
         };
       });
 
+    console.log("mutualFriends:", mutualFriends);
+
     personsThatTrustMe = Object.keys(t1)
       .map((k) => <TokenAndOwner>t1[k])
       .filter((o) => o.limit > 0)
@@ -119,6 +122,8 @@
         };
       });
 
+    console.log("personsThatTrustMe:", personsThatTrustMe);
+
     personsITrust = Object.keys(t2)
       .map((k) => <TokenAndOwner>t2[k])
       .filter((o) => o.limit > 0)
@@ -138,6 +143,8 @@
           actions: ["untrust"],
         };
       });
+
+    console.log("personsITrust:", personsITrust);
   }
 
   $: {
