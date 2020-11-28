@@ -1,5 +1,4 @@
 /*import { setTrust, SetTrustContext } from "./../processes/setTrust/setTrust";
-import { requestUbi } from "./../processes/requestUbi/requestUbi";
 import { transferCircles } from "./../processes/transferCircles/transferCircles";
 import { transferXDai } from "./../processes/transferXDai/transferXDai";
 */
@@ -9,6 +8,7 @@ import {ActionBarAction} from "src/libs/o-os/routes";
 import {setTrust, SetTrustContext} from "../processes/setTrust/setTrust";
 import {unTrust} from "../processes/unTrust/unTrust";
 import {transferXDai} from "../processes/transferXDai/transferXDai";
+import {requestUbi} from "../processes/requestUbi/requestUbi";
 
 export const safeDefaultActions: ActionBarAction[] = [
   {
@@ -74,7 +74,7 @@ export const safeOverflowActions: ActionBarAction[] = [
         label: "Get UBI"
       }
     },
-    //event: () => {}new RunProcess(requestUbi)
+    event: () => new RunProcess(requestUbi)
   },
   {
     type: "trigger",

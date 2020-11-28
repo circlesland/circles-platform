@@ -7,6 +7,7 @@ import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
 import {ConnectSafeContext} from "../processes/connectSafe/connectSafe";
 import {SetTrustContext} from "../processes/setTrust/setTrust";
 import {TransferXDaiContext} from "../processes/transferXDai/transferXDai";
+import {ProcessContext} from "../../../libs/o-processes/interfaces/processContext";
 
 export const strings = {
   safe: {
@@ -44,13 +45,14 @@ export const strings = {
         bannerValue: () => "Please enter the value (in xDai)",
         titleProgress: () => "Working .."
       },
+      requestUbi: {
+        titleProgress: () => "Working ..",
+        "successMessage": (context: ProcessContext) => `UBI successfully requested`,
+        "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
+      },
       /* jumpstart: {
            "successMessage": (context: JumpstartContext) => `Successfully jumpstarted ${context.jumpstart.recipient.data.slice(0, 8)}.`,
            "errorMessage": (context: JumpstartContext) => `Couldn't jumpstart ${context.jumpstart.recipient.data.slice(0, 8)}`
-       },
-       requestUbi: {
-           "successMessage": (context: ProcessContext) => `UBI successfully requested`,
-           "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
        },
        transferCircles: {
            "successMessage": (context: TransferCirclesContext) => `Circles successfully transferred`,
