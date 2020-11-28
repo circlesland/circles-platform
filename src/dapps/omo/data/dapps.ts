@@ -43,11 +43,11 @@ export const dapps = [
       tag: "alpha 0.1.0",
     },
     action: {
-      route: "odentity/profile",
+      route: "omo/dapps",
     },
     design: {
       icon: faUserAstronaut,
-      type: "",
+      type: "disabled",
     },
   },
   {
