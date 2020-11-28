@@ -51,15 +51,6 @@
     on:click|self={handleClose}
     class="z-40 overlay">
     <div class="w-full max-w-2xl bg-white rounded-t-xl">
-      <header class="rounded-t-lg">
-        <div
-          class="flex items-center justify-center py-2 overflow-hidden text-base text-center text-white rounded-t-xl bg-primary">
-          <div class="flex items-center justify-between lowercase font-title">
-            -- step title --
-          </div>
-        </div>
-        <!-- <ProgressBar /> -->
-      </header>
       <InfoBox />
       <div class="p-4 space-y-2">
         <slot />

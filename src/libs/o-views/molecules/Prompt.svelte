@@ -1,117 +1,77 @@
 <script lang="ts">
-  import { PromptField } from "../../o-processes/processEvent";
-  import AddressInput from "../atoms/AddressInput.svelte";
-  import EtherInput from "../atoms/EtherInput.svelte";
-  import StringInput from "../atoms/StringInput.svelte";
-  import TextInput from "../atoms/TextInput.svelte";
-  import PrivateKeyInput from "../atoms/PrivateKeyInput.svelte";
-  import PercentInput from "../atoms/PercentInput.svelte";
-  import BN from "bn.js";
-  import Button from "../atoms/Button.svelte";
+  import Button from "../../o-views/atoms/Button.svelte";
+  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
+  import {Prompt} from "../../o-processes/events/prompt";
+  import {Continue} from "../../o-processes/events/continue";
+  import {Process} from "../../o-processes/interfaces/process";
 
-  export let promptFields: { key: string; field: PromptField }[] = [];
-  export let promptId: string = "";
-  export let process;
-  export let status;
+  export let process: Process;
+  export let prompt: Prompt;
 
-  let promptFieldValues: { [key: string]: { type: string; data: any } } = {};
+  let processArtifacts: ProcessArtifact[];
 
-  const buttonNext = {
-    data: {
-      label: "Next",
-    },
-    design: {
-      type: "primary",
-    },
-  };
+  $:{
+    if (prompt)
+    {
+      processArtifacts = Object.keys(prompt.data)
+        .map(key => prompt.data[key]);
+    }
+  }
+
+  function sendAnswer()
+  {
+    processArtifacts.forEach(changedArtifact =>
+    {
+      prompt.data[changedArtifact.key] = changedArtifact;
+      prompt.data[changedArtifact.key].changed = true; // TODO: Set this property only if the value changed
+    });
+
+    process.sendEvent(<Continue>{
+      type: "process.continue",
+      data: prompt.data
+    });
+  }
+
 </script>
 
-{#if promptId === 'success'}
-  <h1
-    class="w-full px-4 py-8 mb-4 text-center bg-white border rounded text-primary border-light-300">
-    {status}
-  </h1>
-{:else if promptId === 'error'}
-  <h1
-    class="w-full px-4 py-8 mb-4 text-center bg-white border rounded text-primary border-light-300">
-    {status}
-  </h1>
-{:else}
-  <div>
-    <h1
-      class="w-full px-4 py-8 mb-4 text-center bg-white border rounded text-primary border-light-300">
-      {status}
-    </h1>
-    {#each promptFields as promptField}
-      <div class="flex w-full">
-        {#if promptField.field.type === 'ethereumAddress'}
-          <AddressInput
-            label={promptField.field.label}
-            isReadonly={promptField.field.isReadonly}
-            hexByteString={promptField.field.value ? promptField.field.value.data : ''}
-            on:value={(event) => {
-              const key = promptField.key;
-              promptFieldValues[key] = event.detail;
-            }} />
-        {:else if promptField.field.type === 'wei'}
-          <EtherInput
-            label={promptField.field.label}
-            isReadonly={promptField.field.isReadonly}
-            weiValueBN={promptField.field.value ? promptField.field.value.data : new BN(0)}
-            on:value={(event) => {
-              const key = promptField.key;
-              promptFieldValues[key] = event.detail;
-            }} />
-        {:else if promptField.field.type === 'string'}
-          <StringInput
-            label={promptField.field.label}
-            isReadonly={promptField.field.isReadonly}
-            line={promptField.field.value ? promptField.field.value.data : ''}
-            on:value={(event) => {
-              const key = promptField.key;
-              promptFieldValues[key] = event.detail;
-            }} />
-        {:else if promptField.field.type === 'text'}
-          <TextInput
-            label={promptField.field.label}
-            isReadonly={promptField.field.isReadonly}
-            text={promptField.field.value ? promptField.field.value.data : ''}
-            on:value={(event) => {
-              const key = promptField.key;
-              promptFieldValues[key] = event.detail;
-            }} />
-        {:else if promptField.field.type === 'bytestring'}
-          <PrivateKeyInput
-            label={promptField.field.label}
-            isReadonly={promptField.field.isReadonly}
-            on:value={(event) => {
-              const key = promptField.key;
-              promptFieldValues[key] = event.detail;
-            }} />
-        {:else if promptField.field.type === 'percent'}
-          <PercentInput
-            label={promptField.field.label}
-            isReadonly={promptField.field.isReadonly}
-            percentValue={promptField.field.value ? promptField.field.value.data : 0}
-            on:value={(event) => {
-              const key = promptField.key;
-              promptFieldValues[key] = event.detail;
-            }} />
-        {:else}{JSON.stringify(promptField, null, 2)}{/if}
-      </div>
-    {/each}
-
-    <div class="flex justify-center w-full h-16 py-2 space-x-3 text-center">
-      <div
-        class="w-full"
-        on:click={() => {
-          const answer = { type: 'omo.answer', message: '', data: { id: promptId, fields: promptFieldValues } };
-          process.sendEvent(answer);
-          console.log('Sent', answer);
-          promptFieldValues = {};
-        }}>
-        <Button mapping={buttonNext} />
-      </div>
-    </div>
+{#if prompt && prompt.banner}
+  <div class="w-full">
+    <svelte:component this={prompt.banner} data={prompt.data} />
   </div>
 {/if}
+{#each processArtifacts.filter(o => !o.isHidden) as artifact}
+  <div class="w-full">
+    <p class="mb-1 text-xs text-gray-700 uppercase">{artifact.label}</p>
+    {#if artifact.type === "number"}
+      <input type="number" bind:value={artifact.value}
+             class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded text-primary"/>
+    {:else if artifact.type === "string"}
+      <input type="text" bind:value={artifact.value}
+             class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded text-primary"/>
+    {:else if artifact.type === "ethereumAddress"}
+      <input type="text" bind:value={artifact.value}
+             class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded text-primary"/>
+    {:else if artifact.type === "secretString"}
+      <input type="password" bind:value={artifact.value}
+             class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded text-primary"/>
+    {:else if artifact.type === "boolean"}
+      <input type="checkbox" bind:checked={artifact.value}
+             class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded text-primary"/>
+    {/if}
+  </div>
+{/each}
+
+<div class="flex justify-center w-full h-16 py-2 space-x-3 text-center">
+  <div
+    class="w-full"
+    on:click={sendAnswer}>
+    <Button mapping="{{
+    data: {
+        label: prompt.nextButtonTitle ? prompt.nextButtonTitle : 'Next'
+      },
+      design: {
+        type: 'primary'
+      }
+    }}"/>
+  </div>
+</div>

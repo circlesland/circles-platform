@@ -2,12 +2,12 @@ import type { Observable } from "rxjs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import App from "src/App.svelte";
-import type { ProcessContext } from "src/libs/o-processes/processContext";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { EventBroker } from "./libs/o-os/eventBroker";
 import { OmoEvent } from "./libs/o-events/omoEvent";
 import * as webnative from "webnative";
-import { stateMaschine } from "./libs/o-os/stateMaschine"
+import { stateMachine } from "./libs/o-os/stateMachine"
+import {ProcessContext} from "./libs/o-processes/interfaces/processContext";
 
 dayjs.extend(relativeTime)
 
@@ -44,7 +44,7 @@ window.dispatchShellEvent = (event) => {
   window.eventBroker.getTopic("omo", "shell").publish(event);
 }
 
-window.stateMachines = <any>stateMaschine
+window.stateMachines = <any>stateMachine
 
 const app = new App({
   target: document.body,

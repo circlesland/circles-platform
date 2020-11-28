@@ -1,2 +1,11 @@
 export type OmoEventTypes =
-    "runProcess" | "showModal"
+    "shell.runProcess"
+  | "shell.showModal"
+  | "process.back"
+  | "process.continue"
+  | "process.cancel"
+  | "process.prompt"
+  | "process.error"
+  | "process.success"
+  | "process.repeat"
+

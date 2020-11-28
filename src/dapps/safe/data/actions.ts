@@ -1,8 +1,8 @@
-import { setTrust, SetTrustContext } from "./../processes/setTrust/setTrust";
+/*import { setTrust, SetTrustContext } from "./../processes/setTrust/setTrust";
 import { requestUbi } from "./../processes/requestUbi/requestUbi";
 import { transferCircles } from "./../processes/transferCircles/transferCircles";
 import { transferXDai } from "./../processes/transferXDai/transferXDai";
-
+*/
 import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "src/libs/o-events/runProcess";
 import { ActionBarAction } from "src/libs/o-os/routes";
@@ -71,7 +71,7 @@ export const safeOverflowActions: ActionBarAction[] = [
                 label: "Get UBI"
             }
         },
-        event: () => new RunProcess(requestUbi)
+        //event: () => {}new RunProcess(requestUbi)
     },
     // {
     //     type: "trigger",
@@ -97,10 +97,10 @@ export const safeOverflowActions: ActionBarAction[] = [
                 label: "Trust friend",
             }
         },
-        event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
+    /*event: () =>{}new RunProcess(setTrust, (context: SetTrustContext) => {
             context.setTrust = { trustLimit: { type: 'percent', data: 100 } };
             return context;
-        })
+        })*/
     },
     // {
     //     type: "trigger",

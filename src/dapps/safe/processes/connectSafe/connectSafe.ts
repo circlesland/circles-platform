@@ -1,167 +1,121 @@
-import { assign, createMachine } from "xstate";
-import { ProcessContext } from "src/libs/o-processes/processContext";
-import { ProcessEvent } from "src/libs/o-processes/processEvent";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import { Address } from "../../../../libs/o-circles-protocol/interfaces/address";
-import { ByteString } from "../../../../libs/o-circles-protocol/interfaces/byteString";
-import { promptSuccess } from "../promptSuccess";
-import { promptError } from "../promptError";
-import { connectSafeService } from "./services/connectSafeService";
-import { notifyInProgress } from "./actions/notifyInProgress";
-import { promptSafeAddress } from "./actions/promptSafeAddress";
-import { promptPrivateKey } from "./actions/promptPrivateKey";
-import { summarize } from "./actions/summarize";
-import { storePrivateKeyToContext } from "./actions/storePrivateKeyToContext";
-import { storeSafeAddressToContext } from "./actions/storeSafeAddressToContext";
-import { strings } from "../../data/strings";
+import {createMachine} from "xstate";
+import {ProcessDefinition} from "src/libs/o-processes/processManifest";
+import {connectSafeService} from "./services/connectSafeService";
+import { Jumper } from "svelte-loading-spinners";
+import Error from "../../../../libs/o-views/atoms/Error.svelte"
+import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 
-import { push } from "svelte-spa-router";
+import {push} from "svelte-spa-router";
+import {OmoEvent} from "../../../../libs/o-events/omoEvent";
+import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
+import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
+import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt";
+import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
+import {setError} from "../../../../libs/o-processes/actions/setError";
+import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {strings} from "../../data/strings";
 
-export interface ConnectSafeContext extends ProcessContext {
-    connectSafe?: {
-        safeAddress?: {
-            type: "ethereumAddress",
-            data: Address
-        },
-        safeOwnerAddress?: {
-            type: "ethereumAddress",
-            data: Address
-        },
-        safeOwnerPrivateKey?: {
-            type: "bytestring",
-            data: ByteString
-        }
-    }
+export interface ConnectSafeContext extends ProcessContext
+{
+  data: {
+    safeAddress?: ProcessArtifact,
+    privateKey?: ProcessArtifact
+  }
 }
 
 /**
  * Connect safe
  */
-const processDefinition = createMachine<ConnectSafeContext, ProcessEvent>({
-    initial: "ready",
-    states: {
-        ready: {
-            on: {
-                "omo.trigger": "promptSafeAddress",
-                "omo.cancel": "stop"
-            }
-        },
-        promptSafeAddress: {
-            entry: "promptSafeAddress",
-            on: {
-                "omo.answer": {
-                    actions: "storeSafeAddressToContext",
-                    target: "promptPrivateKey"
-                },
-                "omo.trigger": {
-                    actions: "promptSafeAddress"
-                },
-                "omo.cancel": "stop"
-            }
-        },
-        promptPrivateKey: {
-            entry: "promptPrivateKey",
-            on: {
-                "omo.back": {
-                    target: "promptSafeAddress"
-                },
-                "omo.answer": {
-                    actions: "storePrivateKeyToContext",
-                    target: "summarize"
-                },
-                "omo.trigger": {
-                    actions: "promptPrivateKey"
-                },
-                "omo.cancel": "stop"
-            }
-        },
-        summarize: {
-            entry: "summarize",
-            on: {
-                "omo.back": {
-                    target: "promptPrivateKey"
-                },
-                "omo.answer": {
-                    target: "connectSafe"
-                },
-                "omo.trigger": {
-                    actions: "summarize"
-                },
-                "omo.cancel": "stop"
-            }
-        },
-        connectSafe: {
-            entry: "notifyInProgress",
-            invoke: {
-                id: 'connectSafe',
-                src: "connectSafeService",
-                onError: {
-                    actions: [
-                        "setError",
-                        "promptError"
-                    ],
-                    target: "error"
-                },
-                onDone: {
-                    actions: [
-                        "setResult",
-                        "promptSuccess",
-                        () => push('#/safe/transactions'),
-                    ],
-                    target: "success"
-                }
-            }
-        },
-        success: {
-            on: {
-                "omo.answer": "stop",
-                "omo.cancel": "stop",
-                "omo.trigger": {
-                    //actions: "promptSuccess"
-                }
-            }
-        },
-        error: {
-            on: {
-                "omo.answer": "stop",
-                "omo.cancel": "stop",
-                "omo.trigger": {
-                    actions: "promptError"
-                }
-            }
-        },
-        stop: {
-            type: "final"
-        }
-    }
-}, {
-    services: {
-        "connectSafeService": connectSafeService
+const str = strings.safe.processes.connectSafe;
+const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
+  initial: "ready",
+  states: {
+    ready: {
+      on: {
+        "process.continue": "promptSafeAddress",
+        "process.cancel": "stop"
+      }
     },
-    guards: {},
-    actions: {
-        "setError": assign(
-            context => {
-                context.result = strings.safe.processes.connectSafe.errorMessage(context)
-                return context;
-            }),
-        "setResult": assign(
-            context => {
-                context.result = strings.safe.processes.connectSafe.successMessage(context)
-                return context;
-            }),
-        "notifyInProgress": notifyInProgress,
-        "promptError": promptError,
-        "promptSuccess": promptSuccess,
-        "promptSafeAddress": promptSafeAddress,
-        "promptPrivateKey": promptPrivateKey,
-        "summarize": summarize,
-        "storePrivateKeyToContext": storePrivateKeyToContext,
-        "storeSafeAddressToContext": storeSafeAddressToContext
+    promptSafeAddress: {
+      entry: sendPrompt(str.titleSafeAddress(), {
+        safeAddress: {
+          key: "safeAddress",
+          type: "ethereumAddress",
+          label: str.titleSafeAddress()
+        },
+        banner: {
+          key: "banner",
+          type: "string",
+          isHidden: true,
+          value: str.bannerSafeAddress()
+        }
+      }, Banner),
+      on: {
+        "process.continue": {
+          actions: storePromptResponse,
+          target: "promptPrivateKey"
+        },
+        "process.cancel": "stop"
+      }
+    },
+    promptPrivateKey: {
+      entry: sendPrompt(str.titleSeedPhrase(), {
+        privateKey: {
+          key: "privateKey",
+          type: "string",
+          label: "Key phrase"
+        },
+        banner: {
+          key: "banner",
+          type: "string",
+          isHidden: true,
+          value: strings.safe.processes.connectSafe.bannerSeedPhrase()
+        }
+      }, Banner),
+      on: {
+        "process.back": {
+          target: "promptSafeAddress"
+        },
+        "process.continue": {
+          actions: storePromptResponse,
+          target: "connectSafe"
+        },
+        "process.cancel": "stop"
+      }
+    },
+    connectSafe: {
+      entry: sendPrompt(str.titleProgress(), {}, Jumper),
+      invoke: {
+        id: 'connectSafe',
+        src: connectSafeService,
+        onError: {
+          actions: setError,
+          target: "error"
+        },
+        onDone: {
+          actions: setResult,
+          target: "success"
+        }
+      }
+    },
+    success: {
+      type: "final",
+      entry: () => push('#/safe/transactions')
+    },
+    error: {
+      entry: sendPrompt("Error", {}, Error),
+      on: {
+        "process.continue": "stop",
+        "process.cancel": "stop"
+      }
+    },
+    stop: {
+      type: "final"
     }
+  }
 });
 
 export const connectSafe: ProcessDefinition = {
-    name: "connectSafe",
-    stateMachine: processDefinition
+  name: "connectSafe",
+  stateMachine: processDefinition
 };

@@ -1,3 +1,4 @@
+<!--
 <script lang="ts">
   import type { Address } from "../../o-circles-protocol/interfaces/address";
   import {
@@ -168,9 +169,10 @@
       <div>
         Address:<br /><span class=" text-primary">{data.detail.address}</span>
       </div>
-      <div>
+      <div>Con
         Limit:<span class="pl-2 text-primary">{data.detail.limit}%</span>
       </div>
     </div>
   {/if}
 </div>
+-->
