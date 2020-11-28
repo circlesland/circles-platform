@@ -11,14 +11,18 @@ export class Prompt implements OmoEvent {
   /**
    * The title.
    */
-  title:string;
+  title?:string;
+  /**
+   * When 'true', the next button won't be displayed.
+   */
+  hideNextButton?:boolean;
   /**
    * Can contain a svelte component which is displayed as banner
    * above of the inputs.
    * If the component exports a 'data' property, the 'ProcessArtifact' values
    * of this event's 'data' property will be set on the components 'data' property.
    */
-  banner?: SvelteComponent;
+  banner?: any;
   data: {
     [key: string]: ProcessArtifact
   };

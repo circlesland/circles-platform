@@ -73,9 +73,11 @@
   </div>
 {/each}
 
-<div class="flex justify-center w-full h-16 py-2 space-x-3 text-center">
-  <div class="w-full" on:click={sendAnswer}>
-    <Button
-      mapping={{ data: { label: prompt.nextButtonTitle ? prompt.nextButtonTitle : 'Next' }, design: { type: 'primary' } }} />
+{#if !prompt.hideNextButton}
+  <div class="flex justify-center w-full h-16 py-2 space-x-3 text-center">
+    <div class="w-full" on:click={sendAnswer}>
+      <Button
+        mapping={{ data: { label: prompt.nextButtonTitle ? prompt.nextButtonTitle : 'Next' }, design: { type: 'primary' } }} />
+    </div>
   </div>
-</div>
+{/if}

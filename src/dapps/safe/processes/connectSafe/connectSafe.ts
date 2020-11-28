@@ -9,7 +9,7 @@ import {push} from "svelte-spa-router";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt";
+import {sendErrorPrompt, sendInProgress, sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt";
 import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
@@ -94,7 +94,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     connectSafe: {
-      entry: sendPrompt({title: str.titleProgress(), bannerComponent: Jumper, data:{} }),
+      entry: sendInProgress(str.titleProgress),
       invoke: {
         id: 'connectSafe',
         src: connectSafeService,
@@ -103,7 +103,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: setResult,
+          actions: setResult(str.successMessage),
           target: "success"
         }
       }
@@ -113,7 +113,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       entry: () => push('#/safe/transactions')
     },
     error: {
-      entry: sendPrompt({title: "Error", bannerComponent: Error, data:{} }),
+      entry: sendErrorPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

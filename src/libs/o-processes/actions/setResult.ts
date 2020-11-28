@@ -1,10 +1,15 @@
 import {ProcessContext} from "../interfaces/processContext";
-import {assign} from "xstate";
+import {assign, AssignAction, EventObject} from "xstate";
 
-export const setResult = assign((context: ProcessContext, event) =>
+export const setResult = (message?:(context:ProcessContext) => string) =>
 {
-  context.result = {
-    success: event
-  };
-  return context;
-});
+  const action: AssignAction<ProcessContext, EventObject> = assign((context: ProcessContext, event) =>
+  {
+    context.result = {
+      success: message ?  message(context) : event
+    };
+    return context;
+  });
+
+  return action;
+};

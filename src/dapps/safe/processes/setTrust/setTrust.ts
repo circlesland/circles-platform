@@ -6,13 +6,15 @@ import {ProcessContext} from "../../../../libs/o-processes/interfaces/processCon
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import {setTrustService} from "./services/setTrustService";
 import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt";
-import { Jumper } from "svelte-loading-spinners";
-import Error from "../../../../libs/o-views/atoms/Error.svelte"
+import {
+  sendErrorPrompt,
+  sendInProgress,
+  sendPrompt,
+  sendSuccessPrompt
+} from "../../../../libs/o-processes/actions/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
-import {Success} from "../../../../libs/o-processes/events/success";
 
 export interface SetTrustContext extends ProcessContext {
   data: {
@@ -41,7 +43,7 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
     promptTrustReceiver: {
       entry: sendPrompt({
         title: str.titleTrustReceiver(),
-        nextButtonTitle: "Next",
+        nextButtonTitle: "Trust",
         bannerComponent: Banner,
         data: {
           trustReceiver: {
@@ -66,7 +68,7 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       }
     },
     setTrust: {
-      entry: sendPrompt({title: str.titleWorking(), bannerComponent: Jumper, data:{} }),
+      entry: sendInProgress(str.titleWorking),
       invoke: {
         id: 'setTrust',
         src: setTrustService,
@@ -75,20 +77,23 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: setResult,
+          actions: setResult(str.successMessage),
           target: "success"
         }
       }
     },
     success: {
-      entry: sendPrompt({title: "Success", bannerComponent: Success, data:{} }),
+      entry: sendSuccessPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
+      },
+      after: {
+        2000: { target: 'stop' }
       }
     },
     error: {
-      entry: sendPrompt({title: "Error", bannerComponent: Error, data:{} }),
+      entry: sendErrorPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
