@@ -16,21 +16,21 @@ export let avataaar = {
 
 export let firstname = {
     data: {
-        title: "Samuel",
-        subtitle: "first name"
+        title: "Omo",
+        subtitle: "my first name"
     }
 }
 
 export let lastname = {
     data: {
-        title: "Andert",
-        subtitle: "last name"
+        title: "Sapiens",
+        subtitle: "my last name"
     }
 }
 
 export let city = {
     data: {
-        title: "Munich, Germany",
-        subtitle: "city"
+        title: "Planet, Earth",
+        subtitle: "my home town"
     }
 }

@@ -10,35 +10,35 @@ export const accessDevices = [
         data: {
             image: "/icons/mobileOmo.svg",
             title: "iOS HomeScreen (D)app",
-            subtitle: "Samuel's iPhone",
+            subtitle: "My iPhone",
         },
     },
     {
         data: {
             image: "/icons/mobileSafari.svg",
             title: "iOS Safari Browser",
-            subtitle: "Samuel's iPhone",
+            subtitle: "My iPhone",
         },
     },
     {
         data: {
             image: "/icons/laptopChrome.svg",
             title: "macOS Chrome Browser",
-            subtitle: "Samuel's MacBook",
+            subtitle: "My MacBook",
         },
     },
     {
         data: {
             image: "/icons/laptopFirefox.svg",
             title: "macOS Firefox Browser",
-            subtitle: "Samuel's Macbook",
+            subtitle: "My Macbook",
         },
     },
     {
         data: {
             image: "/icons/laptopOmo.svg",
             title: "macOS Desktop D(app)",
-            subtitle: "Samuel's Macbook",
+            subtitle: "My Macbook",
         },
     },
 ];
@@ -48,7 +48,7 @@ export const accessDapps = [
         data: {
             image: "/icons/dappOmoTest.svg",
             title: "Omo Test",
-            subtitle: "by MamaOmo",
+            subtitle: "/private/apps/mamaomo/omotest",
         },
     },
 ];

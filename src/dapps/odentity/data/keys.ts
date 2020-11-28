@@ -4,7 +4,8 @@ export const keys = [
             image: "/icons/paperWallet.svg",
             title: "Circles SafeOwner",
             subtitle: "PrivateKey",
-            description: localStorage.getItem("omo.privateKey"),
+            privatekey: localStorage.getItem("omo.privateKey"),
+            seedphrase: "word1, word2, word3 etc"
         },
     },
 ];

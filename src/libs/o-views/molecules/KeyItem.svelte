@@ -7,7 +7,8 @@
       image: string;
       title: string;
       subtitle: string;
-      description: string;
+      privatekey: string;
+      seedphrase: string;
     };
   }
   export let mapping: AccessItem;
@@ -55,10 +56,17 @@
     </div>
   </div>
 
-  {#if mapping.data.description && openDetail}
+  {#if mapping.data.privatekey && openDetail}
     <div
       class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
-      <span class="text-primary">{mapping.data.description}</span>
+      <div>
+        PrivateKey:
+        <span class="text-primary">{mapping.data.privatekey}</span>
+      </div>
+      <div>
+        Seedphrase:
+        <span class="text-primary">{mapping.data.seedphrase}</span>
+      </div>
     </div>
   {/if}
 </div>
