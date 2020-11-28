@@ -8,7 +8,7 @@
       type: string;
     };
   }
-  export let mapping: OverFlowAction;
+  export let mapping: OverflowAction;
 </script>
 
 <Button {mapping} />
