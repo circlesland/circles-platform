@@ -9,7 +9,7 @@
   import "./libs/o-views/css/components.css";
   import "./libs/o-views/css/utilities.css";
 
-  import OverFlowAction from "./libs/o-views/atoms/OverFlowAction.svelte";
+  import OverflowAction from "./libs/o-views/atoms/OverflowAction.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
   import type { OmoEvent } from "./libs/o-events/omoEvent";
@@ -162,7 +162,7 @@
             <div class="w-full">
               <div class="space-y-2">
                 <div on:click={() => window.dispatchShellEvent(action.event())}>
-                  <OverFlowAction mapping={action} />
+                  <OverflowAction mapping={action} />
                 </div>
               </div>
             </div>
