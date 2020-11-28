@@ -41,7 +41,7 @@
 
       case wn.Scenario.AuthSucceeded:
       case wn.Scenario.Continuation:
-        authState = "Welcome, you authenticated successfully";
+        authState = "you authenticated successfully";
         // State:
         // state.authenticated    -  Will always be `true` in these scenarios
         // state.newUser          -  If the user is new to Fission
@@ -115,79 +115,79 @@
 
   <Compose tw="p-4" gap="10px" overflowY>
     <div>
-      {#await state}
-        waiting
-      {:then}
-        {#if authState == undefined}
-          <div class="flex items-center justify-center h-full mx-auto">
-            <Jumper size="150" color="#071D69" unit="px" />
+      {#if authState == undefined}
+        <div class="flex items-center justify-center h-full mx-auto">
+          <div>
+            <Jumper size="150" color="#071D69" unit="px" /><br />
+            <div class="text-sm text-center lowercase text-primary">
+              authenticating<br />
+            </div>
           </div>
-        {:else}{authState}{/if}
-
+        </div>
+      {:else}
         {#if state != undefined && !state.authenticated}
           <div on:click={fissionAuth}>
             <Button mapping={buttonLogin} />
           </div>
         {/if}
-        <div class="p-2 font-bold">-- authentication --</div>
 
         {#if state != undefined}
+          <div class="">
+            <div
+              class="px-4 py-12 text-xl text-center bg-white border rounded text-primary border-light-200 font-title">
+              Welcome,
+              {state.username}<br />
+              <span class="text-sm text-light-500">{authState}</span>
+            </div>
+          </div>
           <div class="p-2">
-            <div>Scenario: {state.scenario}</div>
-            <div>UserName: {state.username}</div>
+            <!-- 
+            <div>Scenario:  {state.scenario}</div>
             <div>AppName: {state.permissions.app.name}</div>
             <div>AppCreator: {state.permissions.app.creator}</div>
-            <div>Authenticated: {state.authenticated}</div>
-            <div>Auth Through Lobby: {state.throughLobby}</div>
-            <div>New User: {state.newUser}</div>
+            <div>Authenticated: {state.authenticated}</div> 
+          -->
           </div>
         {/if}
+      {/if}
 
-        <!-- <div class="p-2 font-bold">-- my apps --</div>
-
+      <!-- <div class="p-2">
+        <span class="font-bold">-- ipfs --</span>
         {#if state != undefined}
-          {#each myApps as data}{data}{/each}
-        {/if} -->
+          <div>App path: {path}</div>
+          <div>Data in my app:</div>
 
-        <div class="p-2">
-          <span class="font-bold">-- ipfs --</span>
-          {#if state != undefined}
-            <div>App path: {path}</div>
-            <div>Data in my app:</div>
-
-            <div class="space-y-2 ">
-              {#each appFolders as data}
-                <div
-                  on:click={toggleExpand}
-                  class="w-full bg-white border rounded card border-light-200">
-                  <div class="flex items-center justify-center p-2">
-                    <!-- <img src={data.image} alt="CRC" /> -->
-                    {#if data.isFile}FILE{:else}DIR{/if}
-                  </div>
-                  <div class="px-1 py-2">
-                    <div class="text-base text-primary">{data.name}</div>
-                    <p class="text-xs text-gray-500">
-                      <span class="text-xs text-gray-500">{data.mtime}</span>
-                    </p>
-                  </div>
-                  <div class="p-1 px-4 text-right">
-                    <div class="py-1 text-3xl font-light text-action">
-                      {data.size}
-                    </div>
+          <div class="space-y-2 ">
+            {#each appFolders as data}
+              <div
+                on:click={toggleExpand}
+                class="w-full bg-white border rounded card border-light-200">
+                <div class="flex items-center justify-center p-2">
+                  {#if data.isFile}FILE{:else}DIR{/if}
+                </div>
+                <div class="px-1 py-2">
+                  <div class="text-base text-primary">{data.name}</div>
+                  <p class="text-xs text-gray-500">
+                    <span class="text-xs text-gray-500">{data.mtime}</span>
+                  </p>
+                </div>
+                <div class="p-1 px-4 text-right">
+                  <div class="py-1 text-3xl font-light text-action">
+                    {data.size}
                   </div>
                 </div>
-                {#if data.pointer && openDetail}
-                  <div
-                    class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
-                    Address:
-                    <span class="text-primary">{data.pointer}</span>
-                  </div>
-                {/if}
-              {/each}
-            </div>
-          {/if}
-        </div>
-      {/await}
+              </div>
+              {#if data.pointer && openDetail}
+                <div
+                  class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
+                  Address:
+                  <span class="text-primary">{data.pointer}</span>
+                </div>
+              {/if}
+            {/each}
+          </div>
+        {/if}
+      </div>-->
     </div>
   </Compose>
 </Compose>
