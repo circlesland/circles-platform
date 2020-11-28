@@ -102,15 +102,6 @@
   }
 </script>
 
-<style>
-  .card {
-    display: grid;
-    grid-template-columns: 3.5rem 1fr 1fr;
-    grid-template-rows: 3.5rem;
-    max-width: 100%;
-  }
-</style>
-
 <Compose rows="auto 1fr" columns="1fr">
   <Compose tw="h-14">
     <Header mapping={title} />
