@@ -8,7 +8,7 @@
       title: string;
       subtitle: string;
       privatekey: string;
-      seedphrase: string;
+      seedphrase?: string;
     };
   }
   export let mapping: AccessItem;
@@ -63,10 +63,12 @@
         PrivateKey:
         <span class="text-primary">{mapping.data.privatekey}</span>
       </div>
-      <div>
-        Seedphrase:
-        <span class="text-primary">{mapping.data.seedphrase}</span>
-      </div>
+      {#if mapping.data.seedphrase}
+        <div>
+          Seedphrase:
+          <span class="text-primary">{mapping.data.seedphrase}</span>
+        </div>
+      {/if}
     </div>
   {/if}
 </div>

@@ -5,7 +5,6 @@ export const keys = [
             title: "Circles SafeOwner",
             subtitle: "PrivateKey",
             privatekey: localStorage.getItem("omo.privateKey"),
-            seedphrase: "word1, word2, word3 etc"
         },
     },
 ];
