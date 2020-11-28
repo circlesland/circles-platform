@@ -52,7 +52,7 @@
     class="z-40 overlay">
     <div class="w-full max-w-2xl bg-white rounded-t-xl">
       <InfoBox />
-      <div class="p-4 space-y-2">
+      <div class="p-4 space-y-2 lg:p-8">
         <slot />
       </div>
     </div>

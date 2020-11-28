@@ -15,7 +15,7 @@
   };
 </script>
 
-<Compose tw="mx-auto text-gray-500 mt-2">
+<Compose tw="mx-auto text-gray-400 mt-5">
   <div
     on:click={() => {
       isOpen = false;
