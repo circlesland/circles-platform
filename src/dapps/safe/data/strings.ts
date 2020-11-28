@@ -6,6 +6,7 @@ import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
 */
 import {ConnectSafeContext} from "../processes/connectSafe/connectSafe";
 import {SetTrustContext} from "../processes/setTrust/setTrust";
+import {TransferXDaiContext} from "../processes/transferXDai/transferXDai";
 
 export const strings = {
   safe: {
@@ -34,6 +35,15 @@ export const strings = {
         "successMessage": (context: ConnectSafeContext) => `The safe is now connected. (Please close the dialog)`,
         "errorMessage": (context: ConnectSafeContext) => `Couldn't connect the safe.`
       },
+      transferXDai: {
+        "successMessage": (context: TransferXDaiContext) => `xDai successfully transferred`,
+        "errorMessage": (context: TransferXDaiContext) => `xDai transfer failed`,
+        titleRecipient: () => "Recipient address",
+        bannerRecipient:() => "Please enter the recipient address",
+        titleValue: () => "Value",
+        bannerValue: () => "Please enter the value (in xDai)",
+        titleProgress: () => "Working .."
+      },
       /* jumpstart: {
            "successMessage": (context: JumpstartContext) => `Successfully jumpstarted ${context.jumpstart.recipient.data.slice(0, 8)}.`,
            "errorMessage": (context: JumpstartContext) => `Couldn't jumpstart ${context.jumpstart.recipient.data.slice(0, 8)}`
@@ -46,10 +56,7 @@ export const strings = {
            "successMessage": (context: TransferCirclesContext) => `Circles successfully transferred`,
            "errorMessage": (context: TransferCirclesContext) => `Circles transfer failed`
        },
-       transferXDai: {
-           "successMessage": (context: TransferXDaiContext) => `xDai successfully transferred`,
-           "errorMessage": (context: TransferXDaiContext) => `xDai transfer failed`
-       }*/
+       */
     }
   }
 }
