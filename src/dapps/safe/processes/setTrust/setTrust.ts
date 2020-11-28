@@ -106,8 +106,6 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
 }, {
   guards: {
     "isFullyConfigured": (context => !!context.data.trustReceiver && !!context.data.trustReceiver.value)
-  },
-  actions: {
   }
 });
 

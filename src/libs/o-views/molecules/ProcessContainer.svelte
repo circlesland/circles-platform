@@ -21,6 +21,7 @@
 
   let subscription: Subscription;
   let canSkip = false;
+  let canGoBack = false;
   let prompt: PromptEvent;
 
   const dispatch = createEventDispatcher();
@@ -59,6 +60,12 @@
   function subscribeToProcess() {
     ensureProcess((process) => {
       subscription = process.events.subscribe((next) => {
+        canGoBack = next.previousState
+          && next.previousState._event
+          && next.previousState._event.name == "process.prompt";
+
+        // console.log(next);
+
         if (next.event?.type === "process.prompt") {
           prompt = <PromptEvent>next.event;
           let artifactsArr = Object.keys(prompt.data).map(
@@ -126,9 +133,21 @@
   </div>
 {/if}
 <footer class="flex justify-between px-4 pt-4 text-gray-400 bg-white ">
+  {#if canGoBack}
   <button on:click={backPressed}>
     <NavItem mapping={back} />
   </button>
+  {:else}
+    <button on:click={() => {}}>
+      <div
+        class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
+        <span>
+          <i class="text-2xl" />
+          <p class="lowercase font-title" />
+        </span>
+      </div>
+    </button>
+  {/if}
   <button on:click={cancelPressed}>
     <NavItem mapping={cancel} />
   </button>
