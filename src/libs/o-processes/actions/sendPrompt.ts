@@ -5,19 +5,25 @@ import {Prompt} from "../events/prompt";
 import {ProcessArtifact} from "../interfaces/processArtifact";
 import type {SendAction} from "xstate/lib/types";
 
-export const sendPrompt = (title:string, data: { [key: string]: ProcessArtifact }, bannerComponent?: any) =>
+export const sendPrompt = (config:{
+  title?:string,
+  data: { [key: string]: ProcessArtifact },
+  bannerComponent?: any,
+  nextButtonTitle?:string,
+}) =>
 {
   const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
 
-    Object.keys(data)
+    Object.keys(config.data)
       .filter(key => context.data[key] !== undefined)
-      .forEach(key => data[key].value = context.data[key].value);
+      .forEach(key => config.data[key].value = context.data[key].value);
 
     return <Prompt>{
-      title,
+      title: config.title ? config.title : "",
+      nextButtonTitle: config.nextButtonTitle,
       type: "process.prompt",
-      banner: bannerComponent,
-      data: data
+      banner: config.bannerComponent,
+      data: config.data
     }
   });
 

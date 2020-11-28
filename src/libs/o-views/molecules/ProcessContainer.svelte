@@ -57,8 +57,6 @@
       {
         if (next.event?.type === "process.prompt")
         {
-          console.log("process.prompt:", next.event);
-
           prompt = <PromptEvent>next.event;
           let artifactsArr = Object.keys(prompt.data)
             .map(key => prompt.data[key]);
@@ -112,16 +110,17 @@
 </script>
 
 {#if process && prompt}
-  <header class="rounded-t-lg">
-    <div
-      class="flex items-center justify-center py-2 overflow-hidden text-base text-center text-white rounded-t-xl bg-primary">
-      <div class="flex items-center justify-between lowercase font-title">
-        {prompt.title}
+  {#if prompt.title}
+    <header class="rounded-t-lg">
+      <div
+        class="flex items-center justify-center py-2 overflow-hidden text-base text-center text-white rounded-t-xl bg-primary">
+        <div class="flex items-center justify-between lowercase font-title">
+          {prompt.title}
+        </div>
       </div>
-    </div>
-    <!-- <ProgressBar /> -->
-  </header>
-
+      <!-- <ProgressBar /> -->
+    </header>
+  {/if}
   <div class="w-full">
     <Prompt process={process} prompt={prompt} />
   </div>
