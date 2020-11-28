@@ -10,6 +10,6 @@ export const keys = [
 
 export const labelKeys = {
     data: {
-        label: "Keys secretly stored in your filesystem",
+        label: "Keys secretly stored in your keystore",
     },
 };
