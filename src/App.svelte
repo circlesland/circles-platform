@@ -12,11 +12,11 @@
   import OverflowAction from "./libs/o-views/atoms/OverflowAction.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
-  import type {OmoEvent} from "./libs/o-events/omoEvent";
-  import type {RunProcess} from "./libs/o-events/runProcess";
+  import type { OmoEvent } from "./libs/o-events/omoEvent";
+  import type { RunProcess } from "./libs/o-events/runProcess";
   import Announcement from "./libs/o-views/molecules/Announcement.svelte";
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
-  import {Cancel} from "./libs/o-processes/events/cancel";
+  import { Cancel } from "./libs/o-processes/events/cancel";
 
   let safeAddress;
 
@@ -40,25 +40,21 @@
 
   window.eventBroker
     .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) =>
-  {
-    runningProcess = window.stateMachines.current();
-    if (event.type === "shell.openMenu")
-    {
-      isOpen = true;
-    }
-    if (event.type == "shell.runProcess")
-    {
-      runningProcess = window.stateMachines.run(
-        (<RunProcess>event).definition,
-        (<RunProcess>event).contextModifier
-      );
-      isOpen = true;
-    }
-  });
+    .observable.subscribe((event: OmoEvent) => {
+      runningProcess = window.stateMachines.current();
+      if (event.type === "shell.openMenu") {
+        isOpen = true;
+      }
+      if (event.type == "shell.runProcess") {
+        runningProcess = window.stateMachines.run(
+          (<RunProcess>event).definition,
+          (<RunProcess>event).contextModifier
+        );
+        isOpen = true;
+      }
+    });
 
-  function routeLoading(e)
-  {
+  function routeLoading(e) {
     safeAddress = localStorage.getItem("omo.safeAddress");
 
     if (!e.detail.userData) return;
@@ -71,8 +67,7 @@
 
   $: {
     let _quickActions = actions.filter((o) => o.pos && o.pos !== "overflow");
-    quickActions = [0, 1, 2, 3].map((index) =>
-    {
+    quickActions = [0, 1, 2, 3].map((index) => {
       let actionAt: any = _quickActions.find(
         (action) => action.pos == index + 1
       );
@@ -93,8 +88,7 @@
 
     overflowActions = actions
       .filter((o) => !o.pos || o.pos === "overflow")
-      .map((item) =>
-      {
+      .map((item) => {
         return {
           data: {
             label: item.mapping.data.label,
@@ -109,13 +103,11 @@
       });
   }
 
-  function toggleOpen()
-  {
+  function toggleOpen() {
     isOpen = !isOpen;
   }
 
-  function modalWantsToClose()
-  {
+  function modalWantsToClose() {
     if (!runningProcess) {
       return;
     }
@@ -123,8 +115,8 @@
   }
 </script>
 
-<ComposeApp tw="font-primary bg-light-300">
-  <Compose tw="mx-auto bg-light-100 w-full max-w-2xl">
+<ComposeApp tw="font-primary bg-light-100">
+  <Compose tw="mx-auto bg-light-100 w-full max-w-5xl">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
       <Compose>
         <Announcement mapping={alpha} />
@@ -145,7 +137,7 @@
             on:stopped={() => {
               isOpen = false;
               runningProcess = null;
-            }}/>
+            }} />
         {:else}
           {#each overflowActions as action}
             <div class="w-full">

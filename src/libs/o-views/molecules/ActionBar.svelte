@@ -74,10 +74,7 @@
 </style>
 
 {#if safeAddress && $location == '/omo/dapps'}
-  <Compose
-    tw="justify-center items-center p-4 bg-white border-t border-light-200"
-    columns="1fr"
-    rows="1fr">
+  <Compose tw="justify-center items-center m-4" columns="1fr" rows="1fr">
     <button on:click={logout} class="w-full">
       <Button mapping={buttonLogout} />
     </button>
@@ -86,7 +83,7 @@
   <Compose
     rows="1fr"
     columns="1fr 1fr 80px 1fr 1fr"
-    tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 md:px-3 lg:px-4">
+    tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 md:px-4 md:border md:border-light-200 md:m-4 md:rounded-lg md:shadow-lg">
     <Compose rows="1fr" columns="1fr">
       <a
         href={quickActions[0].route}

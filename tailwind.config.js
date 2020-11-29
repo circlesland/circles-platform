@@ -17,13 +17,15 @@ module.exports = {
       colors: {
         gray: colors.blueGray,
         dark: "#051F45",
-        primary: '#0C266A',
+        primary: '#033784',
         'primary-darker': "#0A1A52",
         secondary: '#0D49A3',
         'secondary-lighter': "#1058C5",
         action: '#2AD78B',
-        info: '#FFDE69',
-        danger: "#F59172",
+        'info-lighter': '#FFF9C2',
+        info: '#FCDB85',
+        'info-darker': '#C67E13',
+        danger: "#FFC4B1",
         'smoke-darkest': 'rgba(0, 0, 0, 0.9)',
         'smoke-darker': 'rgba(0, 0, 0, 0.75)',
         'smoke-dark': 'rgba(0, 0, 0, 0.6)',
@@ -36,6 +38,9 @@ module.exports = {
         'light-300': '#D0D6DF',
         'light-400': "#BBC4CC",
         'light-500': '#97A3B1'
+      },
+      fontSize: {
+        'xxs': '.65rem'
       }
     }
   },
