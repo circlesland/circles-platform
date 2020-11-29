@@ -15,7 +15,7 @@ import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Nop} from "../o-processes/events/nop";
 
 export async function getServiceContext(): Promise<ProcessContext> {
-    const safeAddress = (await window.o.safe()).address;
+    const safeAddress = (await window.o.safe())?.address;
     const account: Account = {
         privateKey: localStorage.getItem("omo.privateKey"),
         address: localStorage.getItem("omo.address"),
@@ -23,7 +23,7 @@ export async function getServiceContext(): Promise<ProcessContext> {
     const web3 = config.getCurrent().web3();
     const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
     const environment: ProcessEnvironment = {
-        safe: !account.address ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
+        safe: (!account.address || !safeAddress) ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
         account: account,
         person: !safeAddress ? null : new Person(circlesHub, safeAddress),
         fissionAuth: window.o.fissionAuth
