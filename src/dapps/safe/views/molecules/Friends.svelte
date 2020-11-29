@@ -154,41 +154,54 @@
   }
 </script>
 
-<div class="h-full space-y-2">
+<div class="h-full">
   {#if personsThatTrustMe.length <= 1 && mutualFriends.length == 0 && mutualFriends.length == 0 && mutualFriends.length == 0}
     <div class="flex items-center justify-center h-full">
       <Jumper size="150" color="#071D69" unit="px" />
     </div>
   {:else}
     {#if personsThatTrustMe.length > 0}
-      <CategoryTitle mapping={labelTrusted} />
+      <div class="mb-4">
+        <CategoryTitle mapping={labelTrusted} />
+      </div>
+      <div class="mb-4 space-y-2">
+        {#each personsThatTrustMe as personThatTrustMe}
+          <FriendItem data={personThatTrustMe} />
+        {/each}
+      </div>
     {/if}
-
-    {#each personsThatTrustMe as personThatTrustMe}
-      <FriendItem data={personThatTrustMe} />
-    {/each}
 
     {#if mutualFriends.length > 0}
-      <CategoryTitle mapping={labelMutual} />
+      <div class="mb-4">
+        <CategoryTitle mapping={labelMutual} />
+      </div>
+      <div class="mb-4 space-y-2">
+        {#each mutualFriends as mutualTrust}
+          <FriendItem data={mutualTrust} />
+        {/each}
+      </div>
     {/if}
-
-    {#each mutualFriends as mutualTrust}
-      <FriendItem data={mutualTrust} />
-    {/each}
 
     {#if personsITrust.length > 0}
-      <CategoryTitle mapping={labelTrusting} />
+      <div class="mb-4">
+        <CategoryTitle mapping={labelTrusting} />
+      </div>
+      <div class="mb-4 space-y-2">
+        {#each personsITrust as personITrust}
+          <FriendItem data={personITrust} />
+        {/each}
+      </div>
     {/if}
-
-    {#each personsITrust as personITrust}
-      <FriendItem data={personITrust} />
-    {/each}
 
     {#if untrusted.length > 0}
-      <CategoryTitle mapping={labelRevoked} />
+      <div class="mb-4">
+        <CategoryTitle mapping={labelRevoked} />
+      </div>
+      <div class="mb-4 space-y-2">
+        {#each untrusted as ut}
+          <FriendItem data={ut} />
+        {/each}
+      </div>
     {/if}
-    {#each untrusted as ut}
-      <FriendItem data={ut} />
-    {/each}
   {/if}
 </div>

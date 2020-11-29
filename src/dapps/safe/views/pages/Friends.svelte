@@ -11,6 +11,6 @@
   let address = localStorage.getItem("omo.safeAddress");
 </script>
 
-<Compose rows="1fr" columns="1fr" overflowY tw="m-4 md:m-0">
+<Compose rows="1fr" columns="1fr" overflowY tw="mx-4 md:m-0">
   <Friends {address} />
 </Compose>

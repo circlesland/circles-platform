@@ -87,7 +87,9 @@
 </script>
 
 <div class="h-full">
-  <CategoryTitle mapping={labelTransactions} />
+  <div class="my-4">
+    <CategoryTitle mapping={labelTransactions} />
+  </div>
   {#if transactions.length > 0}
     <div class="space-y-2">
       {#each transactions as t}

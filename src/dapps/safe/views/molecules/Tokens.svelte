@@ -124,9 +124,10 @@
 </script>
 
 <div>
-  <CategoryTitle mapping={labelBalances} />
-
-  <div class="space-y-2">
+  <div class="mb-4">
+    <CategoryTitle mapping={labelBalances} />
+  </div>
+  <div class="mb-4 space-y-2">
     {#if circlesBalance || safeEtherBalance}
       <TokenItem mapping={circlesSafe} />
       <TokenItem mapping={xDaiSafe} />
@@ -137,10 +138,10 @@
       </div>
     {/if}
   </div>
-
-  <CategoryTitle mapping={labelDistribution} />
-
-  <div class="space-y-2">
+  <div class="mb-4">
+    <CategoryTitle mapping={labelDistribution} />
+  </div>
+  <div class="mb-4 space-y-2">
     {#if tokensITrust.length > 0}
       {#each tokensITrust as token}
         <TokenItem mapping={token} />

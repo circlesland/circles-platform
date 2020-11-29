@@ -6,6 +6,9 @@
   let address = localStorage.getItem("omo.safeAddress");
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" overflowY>
-  <Transactions {address} />
+<Compose rows="200px 1fr" columns="1fr">
+  <Balance {address} />
+  <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" overflowY>
+    <Transactions {address} />
+  </Compose>
 </Compose>
