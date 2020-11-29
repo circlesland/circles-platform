@@ -83,7 +83,7 @@
   <Compose
     rows="1fr"
     columns="1fr 1fr 80px 1fr 1fr"
-    tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 md:px-4 md:border md:border-light-200 md:m-4 md:rounded-lg md:shadow-lg">
+    tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 md:px-4 md:border md:border-light-200 md:m-4 md:rounded-xl md:shadow-lg">
     <Compose rows="1fr" columns="1fr">
       <a
         href={quickActions[0].route}

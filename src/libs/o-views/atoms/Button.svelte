@@ -6,7 +6,7 @@
 
 <style>
   .button {
-    @apply w-full p-3 font-bold text-center lowercase border-2 rounded-lg;
+    @apply w-full p-3 font-bold text-center lowercase border-2 rounded-xl;
   }
 </style>
 

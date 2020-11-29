@@ -15,7 +15,7 @@
 </script>
 
 <div
-  class="flex items-center justify-center font-bold text-center text-white bg-primary md:mx-4 md:rounded-lg">
+  class="flex items-center justify-center font-bold text-center text-white bg-primary md:mx-4 md:rounded-xl">
   <div>
     {#if mapping.data.image}
       <div

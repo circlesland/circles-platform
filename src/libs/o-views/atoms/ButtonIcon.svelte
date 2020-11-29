@@ -7,7 +7,7 @@
 
 <style>
   .button {
-    @apply flex items-center content-end justify-center w-10 h-10 p-2 border-2 rounded-lg;
+    @apply flex items-center content-end justify-center w-10 h-10 p-2 border-2 rounded-xl;
   }
 </style>
 

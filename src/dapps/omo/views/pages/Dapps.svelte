@@ -11,8 +11,8 @@
   </Compose>
   <Compose
     area="main"
-    columns="repeat(auto-fit, minmax(180px, 1fr))"
-    rows="repeat({dapps.length / 2}, 180px)"
+    columns="repeat(auto-fit, minmax(160px, 1fr))"
+    rows="repeat({dapps.length / 2}, 160px)"
     tw="p-4"
     gap="1rem"
     overflowY>
