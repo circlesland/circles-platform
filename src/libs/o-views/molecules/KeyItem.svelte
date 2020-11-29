@@ -53,18 +53,20 @@
   </div>
 
   {#if mapping.data.privatekey && openDetail}
-    <div
-      class="w-full p-2 mx-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200">
-      <div>
-        PrivateKey:
-        <span class="text-primary">{mapping.data.privatekey}</span>
-      </div>
-      {#if mapping.data.seedphrase}
+    <div class="px-3">
+      <div
+        class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200">
         <div>
-          Seedphrase:
-          <span class="text-primary">{mapping.data.seedphrase}</span>
+          PrivateKey:
+          <span class="text-primary">{mapping.data.privatekey}</span>
         </div>
-      {/if}
+        {#if mapping.data.seedphrase}
+          <div>
+            Seedphrase:
+            <span class="text-primary">{mapping.data.seedphrase}</span>
+          </div>
+        {/if}
+      </div>
     </div>
   {/if}
 </div>

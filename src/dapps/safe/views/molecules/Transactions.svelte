@@ -109,7 +109,7 @@
 </script>
 
 <div class="h-full">
-  <div class="my-4">
+  <div class="mb-2">
     <CategoryTitle mapping={labelTransactions} />
   </div>
   {#if transactions.length > 0}

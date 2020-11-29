@@ -1,4 +1,4 @@
-import {createMachine, send} from "xstate";
+import {createMachine} from "xstate";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {transferXDaiService} from "./services/transferXDaiService";
 import {strings} from "../../data/strings";
@@ -50,7 +50,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ethereumAddress("recipient", str.titleRecipient())
+          ...ethereumAddress("recipient")
         }
       }),
       on: {
@@ -73,7 +73,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ether("value", str.titleValue())
+          ...ether("value")
         }
       }),
       on: {
@@ -99,8 +99,8 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ethereumAddress("recipient", str.titleRecipient(), true),
-          ... ether("value", str.titleValue(), true)
+          ...ethereumAddress("recipient", str.titleRecipient(), true),
+          ...ether("value", str.titleValue(), true)
         }
       }),
       on: {

@@ -53,9 +53,11 @@
   </div>
 
   {#if mapping.data.description && openDetail}
-    <div
-      class="w-full p-2 mx-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xxs border-light-200">
-      <span class="text-primary">{mapping.data.description}</span>
+    <div class="px-3">
+      <div
+        class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xxs border-light-200">
+        <span class="text-primary">{mapping.data.description}</span>
+      </div>
     </div>
   {/if}
 </div>

@@ -10,15 +10,19 @@
   } from "./../../data/access";
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" overflowY>
+<Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 md:m-0" overflowY>
   <div>
-    <CategoryTitle mapping={labelDevices} />
+    <div class="mb-2">
+      <CategoryTitle mapping={labelDevices} />
+    </div>
     <div class="space-y-2">
       {#each accessDevices as item}
         <AccessItem mapping={item} />
       {/each}
     </div>
-    <CategoryTitle mapping={labelDapps} />
+    <div class="my-2">
+      <CategoryTitle mapping={labelDapps} />
+    </div>
     <div class="space-y-2">
       {#each accessDapps as item}
         <AccessItem mapping={item} />

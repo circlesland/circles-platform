@@ -1,4 +1,4 @@
-import {createMachine, send} from "xstate";
+import { createMachine } from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { strings } from "../../data/strings";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
@@ -51,7 +51,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ethereumAddress("trustReceiver",str.titleTrustReceiver())
+          ...ethereumAddress("trustReceiver")
         }
       }),
       on: {

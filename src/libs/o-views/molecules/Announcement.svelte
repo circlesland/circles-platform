@@ -6,7 +6,7 @@
 
 <a
   href={mapping.action.link}
-  class="w-full text-center whitespace-no-wrap rounded-xl ">
+  class="w-full text-center whitespace-no-wrap md:rounded-b-xl ">
   <div
     class="inline-flex w-full overflow-hidden bg-white md:rounded-xl md:shadow-sm">
     <div class="flex items-center justify-center w-16 p-2 bg-info ">
@@ -19,7 +19,7 @@
       </svg>
     </div>
     <div
-      class="flex items-center w-full px-3 text-left md:py-1 md:border-t md:border-r rounded-r-xl md:border-b md:border-gray-200">
+      class="flex items-center w-full px-3 text-left md:py-1 md:border-t md:border-r md:border-b md:border-gray-200">
       <div>
         <span
           class="hidden text-sm font-semibold text-info-darker md:block">Attention</span>

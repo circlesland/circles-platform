@@ -7,7 +7,9 @@
 
 <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0">
   <div>
-    <CategoryTitle mapping={labelKeys} />
+    <div class="mb-2">
+      <CategoryTitle mapping={labelKeys} />
+    </div>
     <div class="space-y-2">
       {#each keys as item}
         <KeyItem mapping={item} />

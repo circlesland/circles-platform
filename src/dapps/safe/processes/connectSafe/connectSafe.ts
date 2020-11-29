@@ -46,7 +46,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           }
         },
         artifacts: {
-          ...ethereumAddress("safeAddress", str.titleSafeAddress())
+          ...ethereumAddress("safeAddress")
         }
       }),
       on: {
@@ -72,7 +72,6 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           privateKey: {
             key: "privateKey",
             type: "keyphrase",
-            label: "Key phrase"
           }
         }
       }),
