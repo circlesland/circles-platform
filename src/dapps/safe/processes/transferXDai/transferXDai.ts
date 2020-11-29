@@ -1,23 +1,22 @@
-import {createMachine} from "xstate";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {transferXDaiService} from "./services/transferXDaiService";
-import {strings} from "../../data/strings";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
+import { createMachine } from "xstate";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { transferXDaiService } from "./services/transferXDaiService";
+import { strings } from "../../data/strings";
+import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
+import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {ether} from "../../../../libs/o-processes/artifacts/ether";
+import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
+import { setError } from "../../../../libs/o-processes/actions/setError";
+import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import { ether } from "../../../../libs/o-processes/artifacts/ether";
 
-export interface TransferXDaiContext extends ProcessContext
-{
+export interface TransferXDaiContext extends ProcessContext {
   data: {
     recipient?: ProcessArtifact,
     value?: ProcessArtifact
@@ -49,7 +48,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ethereumAddress("recipient", str.titleRecipient())
+          ...ethereumAddress("recipient")
         }
       }),
       on: {
@@ -72,7 +71,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ether("value", str.titleValue())
+          ...ether("value")
         }
       }),
       on: {
@@ -98,8 +97,8 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ethereumAddress("recipient", str.titleRecipient(), true),
-          ... ether("value", str.titleValue(), true)
+          ...ethereumAddress("recipient", str.titleRecipient(), true),
+          ...ether("value", str.titleValue(), true)
         }
       }),
       on: {
