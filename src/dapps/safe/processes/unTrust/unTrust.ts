@@ -1,4 +1,4 @@
-import { createMachine } from "xstate";
+import {createMachine, send} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { strings } from "../../data/strings";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
