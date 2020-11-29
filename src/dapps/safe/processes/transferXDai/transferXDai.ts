@@ -1,22 +1,18 @@
-import {assign, createMachine} from "xstate";
+import {createMachine} from "xstate";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {BN} from "ethereumjs-util";
-import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
 import {transferXDaiService} from "./services/transferXDaiService";
 import {strings} from "../../data/strings";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {
-  sendErrorPrompt,
-  sendInProgress,
-  sendPrompt,
-  sendSuccessPrompt
-} from "../../../../libs/o-processes/actions/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 
 export interface TransferXDaiContext extends ProcessContext
 {
@@ -44,7 +40,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleRecipient(),
         nextButtonTitle: "Next",
-        bannerComponent: Banner,
+        banner: Banner,
         data: {
           recipient: {
             key: "recipient",
@@ -71,7 +67,8 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleValue(),
         nextButtonTitle: "Next",
-        bannerComponent: Banner,
+        canGoBack: true,
+        banner: Banner,
         data: {
           value: {
             key: "value",
@@ -101,7 +98,8 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleValue(),
         nextButtonTitle: "Transfer xDai",
-        bannerComponent: Banner,
+        banner: Banner,
+        canGoBack: true,
         data: {
           recipient: {
             key: "recipient",
@@ -132,7 +130,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       }
     },
     transferXDai: {
-      entry: sendInProgress(str.titleProgress),
+      entry: sendInProgressPrompt(str.titleProgress),
       invoke: {
         id: 'transferXDai',
         src: transferXDaiService,

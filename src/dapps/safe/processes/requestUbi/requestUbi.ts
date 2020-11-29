@@ -4,9 +4,11 @@ import {strings} from "../../data/strings";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
 import {getUbi} from "./getUbi";
-import {sendErrorPrompt, sendInProgress, sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt";
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 
 /**
  * Requests UBI
@@ -24,7 +26,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     requestUbi: {
-      entry: sendInProgress(str.titleProgress),
+      entry: sendInProgressPrompt(str.titleProgress),
       invoke: {
         id: 'requestingUbi',
         src: getUbi,

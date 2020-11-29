@@ -70,8 +70,6 @@
     {
       subscription = process.events.subscribe((next) =>
       {
-        canGoBack = true;
-
         if (next.event?.type === "process.prompt")
         {
           prompt = <PromptEvent>next.event;
@@ -82,6 +80,8 @@
           canSkip = artifactsArr.length === 0
             || artifactsArr.filter((artifact) => artifact.isOptional)
               .length === artifactsArr.length;
+
+          canGoBack = prompt.canGoBack;
         }
         else if (next.stopped)
         {

@@ -1,19 +1,18 @@
 import {createMachine} from "xstate";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {connectSafeService} from "./services/connectSafeService";
-import { Jumper } from "svelte-loading-spinners";
-import Error from "../../../../libs/o-views/atoms/Error.svelte"
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
-
 import {push} from "svelte-spa-router";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {sendErrorPrompt, sendInProgress, sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt";
 import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
 import {strings} from "../../data/strings";
+import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 
 export interface ConnectSafeContext extends ProcessContext
 {
@@ -40,7 +39,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleSafeAddress(),
         nextButtonTitle: "Next",
-        bannerComponent: Banner,
+        banner: Banner,
         data: {
           safeAddress: {
             key: "safeAddress",
@@ -66,8 +65,9 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
     promptPrivateKey: {
       entry: sendPrompt({
         title: str.titleSeedPhrase(),
-        nextButtonTitle: "Next",
-        bannerComponent: Banner,
+        nextButtonTitle: "Connect safe",
+        canGoBack: true,
+        banner: Banner,
         data: {
           privateKey: {
             key: "privateKey",
@@ -94,7 +94,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     connectSafe: {
-      entry: sendInProgress(str.titleProgress),
+      entry: sendInProgressPrompt(str.titleProgress),
       invoke: {
         id: 'connectSafe',
         src: connectSafeService,

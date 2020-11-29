@@ -6,15 +6,13 @@ import {ProcessContext} from "../../../../libs/o-processes/interfaces/processCon
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import {setTrustService} from "./services/setTrustService";
 import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
-import {
-  sendErrorPrompt,
-  sendInProgress,
-  sendPrompt,
-  sendSuccessPrompt
-} from "../../../../libs/o-processes/actions/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 
 export interface SetTrustContext extends ProcessContext {
   data: {
@@ -44,7 +42,7 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleTrustReceiver(),
         nextButtonTitle: "Trust",
-        bannerComponent: Banner,
+        banner: Banner,
         data: {
           trustReceiver: {
             key: "trustReceiver",
@@ -68,7 +66,7 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       }
     },
     setTrust: {
-      entry: sendInProgress(str.titleWorking),
+      entry: sendInProgressPrompt(str.titleWorking),
       invoke: {
         id: 'setTrust',
         src: setTrustService,
