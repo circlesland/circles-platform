@@ -54,7 +54,7 @@
 
   {#if mapping.data.description && openDetail}
     <div
-      class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
+      class="w-full p-2 text-gray-500 bg-white border-b border-l border-r text-xxs md:text-xxs border-light-200">
       <span class="text-primary">{mapping.data.description}</span>
     </div>
   {/if}

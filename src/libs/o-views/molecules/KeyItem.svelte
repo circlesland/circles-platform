@@ -54,7 +54,7 @@
 
   {#if mapping.data.privatekey && openDetail}
     <div
-      class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
+      class="w-full p-2 text-gray-500 bg-white border-b border-l border-r text-xxs md:text-xs border-light-200">
       <div>
         PrivateKey:
         <span class="text-primary">{mapping.data.privatekey}</span>

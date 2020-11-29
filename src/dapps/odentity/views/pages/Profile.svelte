@@ -103,11 +103,11 @@
 </script>
 
 <Compose rows="auto 1fr" columns="1fr">
-  <Compose tw="h-14">
+  <Compose rows="1fr" columns="1fr" tw="h-14">
     <Header mapping={title} />
   </Compose>
 
-  <Compose tw="p-4" gap="10px" overflowY>
+  <Compose rows="1fr" columns="1fr" tw="p-4" gap="10px" overflowY>
     <div>
       {#if authState == undefined}
         <div class="flex items-center justify-center h-full mx-auto">
