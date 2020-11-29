@@ -38,13 +38,13 @@
 
   let runningProcess: Process = window.o.stateMachines.current();
 
-  window.o.shellEvents.subscribe((event: OmoEvent) => {
-      runningProcess = window.o.stateMachines.current();
+  window.o.shellEvents.subscribe(async (event: OmoEvent) => {
+      // runningProcess = window.o.stateMachines.current();
       if (event.type === "shell.openMenu") {
         isOpen = true;
       }
       if (event.type == "shell.runProcess") {
-        runningProcess = window.o.stateMachines.run(
+        runningProcess = await window.o.stateMachines.run(
           (<RunProcess>event).definition,
           (<RunProcess>event).contextModifier
         );
