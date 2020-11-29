@@ -7,9 +7,8 @@
       title: "Tokens",
     },
   };
-  let address = localStorage.getItem("omo.safeAddress");
 </script>
 
 <Compose rows="1fr" columns="1fr" overflowY tw="m-4 md:m-0">
-  <Tokens {address} />
+  <Tokens />
 </Compose>

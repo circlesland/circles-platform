@@ -16,16 +16,8 @@ import {RefreshView} from "../../../../libs/o-events/refreshView";
  */
 const str = strings.safe.processes.requestUbi;
 const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
-  initial: "ready",
+  initial: "requestUbi",
   states: {
-    ready: {
-      on: {
-        "process.continue": {
-          target: "requestUbi"
-        },
-        "process.cancel": "stop",
-      }
-    },
     requestUbi: {
       entry: sendInProgressPrompt(str.titleProgress),
       invoke: {

@@ -30,15 +30,8 @@ export interface TransferXDaiContext extends ProcessContext
  */
 const str = strings.safe.processes.transferXDai;
 const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
-  initial: "ready",
+  initial: "promptRecipient",
   states: {
-    ready: {
-      on: {
-        "process.continue": {
-          target: "promptRecipient"
-        }
-      }
-    },
     promptRecipient: {
       entry: sendPrompt({
         title: str.titleRecipient(),

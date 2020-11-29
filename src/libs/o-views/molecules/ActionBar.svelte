@@ -8,10 +8,9 @@
 
   import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-  export let safeAddress: string;
-
   const dispatch = createEventDispatcher();
   export let quickActions: ActionBarAction[] = [];
+
 
   function onActionButtonClick() {
     dispatch("actionButtonClick");

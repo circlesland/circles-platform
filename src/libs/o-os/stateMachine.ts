@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import { Process } from "src/main";
 import { State } from "xstate";
 import { useMachine } from "xstate-svelte";
@@ -12,9 +12,10 @@ import { Person } from "src/libs/o-circles-protocol/model/person";
 import {ProcessContext} from "../o-processes/interfaces/processContext";
 import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
+import {Nop} from "../o-processes/events/nop";
 
-function getServiceContext(): ProcessContext {
-    const safeAddress = localStorage.getItem("omo.safeAddress");
+export async function getServiceContext(): Promise<ProcessContext> {
+    const safeAddress = (await window.o.safe()).address;
     const account: Account = {
         privateKey: localStorage.getItem("omo.privateKey"),
         address: localStorage.getItem("omo.address"),
@@ -24,7 +25,8 @@ function getServiceContext(): ProcessContext {
     const environment: ProcessEnvironment = {
         safe: !account.address ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
         account: account,
-        person: !safeAddress ? null : new Person(circlesHub, safeAddress)
+        person: !safeAddress ? null : new Person(circlesHub, safeAddress),
+        fissionAuth: window.o.fissionAuth
     };
 
     return <ProcessContext> {
@@ -41,16 +43,21 @@ export const stateMachine = {
     cancel() {
         this._current = null;
     },
-    run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => TContext) {
+    async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => TContext) {
         const { service, state, send } = useMachine(
             definition.stateMachine(),
             {
                 context: contextModifier
-                    ? contextModifier(getServiceContext())
-                    : getServiceContext()
+                    ? contextModifier(await getServiceContext())
+                    : await getServiceContext()
             });
 
-        const processEvents = new Subject<ProcessEvent>();
+        const processEvents = new BehaviorSubject<ProcessEvent>({
+          stopped: false,
+          currentState: null,
+          previousState: null,
+          event: new Nop()
+        });
 
         service.onTransition((state1, event) => {
             processEvents.next({

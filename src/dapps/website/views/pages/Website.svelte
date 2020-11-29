@@ -6,8 +6,8 @@
 
   $: safeAddress = "";
 
-  onMount(() => {
-    safeAddress = localStorage.getItem("omo.safeAddress");
+  onMount(async () => {
+    safeAddress = (await window.o.safe()).address;
     if (safeAddress) {
       push("/omo/dapps");
     }

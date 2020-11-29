@@ -10,7 +10,7 @@ export const transactions: PageManifest = {
   conditions: [
     (detail) => {
       console.log("routeGuard.detail:", detail);
-      return window.fissionAuth !== undefined
+      return window.o.fissionAuth !== undefined
     }
   ],
   userData: {
@@ -28,7 +28,7 @@ export const friends: PageManifest = {
   conditions: [
     (detail) => {
       console.log("routeGuard.detail:", detail);
-      return window.fissionAuth !== undefined
+      return window.o.fissionAuth !== undefined
     }
   ],
   userData: {
@@ -46,7 +46,7 @@ export const tokens: PageManifest = {
   conditions: [
     (detail) => {
       console.log("routeGuard.detail:", detail);
-      return window.fissionAuth !== undefined
+      return window.o.fissionAuth !== undefined
     }
   ],
   userData: {

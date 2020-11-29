@@ -10,7 +10,7 @@ export const omo: PageManifest = {
   conditions: [
     (detail) => {
       console.log("routeGuard.detail:", detail);
-      return window.fissionAuth !== undefined
+      return window.o.fissionAuth !== undefined
     }
   ],
   userData: {

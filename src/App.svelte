@@ -19,8 +19,6 @@
   import { Cancel } from "./libs/o-processes/events/cancel";
   import {Process} from "./libs/o-processes/interfaces/process";
 
-  let safeAddress;
-
   let actions = [];
 
   let alpha = {
@@ -38,17 +36,15 @@
   let showActionBar = false;
   let askForCancel = false;
 
-  let runningProcess: Process = window.stateMachines.current();
+  let runningProcess: Process = window.o.stateMachines.current();
 
-  window.eventBroker
-    .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) => {
-      runningProcess = window.stateMachines.current();
+  window.o.shellEvents.subscribe((event: OmoEvent) => {
+      runningProcess = window.o.stateMachines.current();
       if (event.type === "shell.openMenu") {
         isOpen = true;
       }
       if (event.type == "shell.runProcess") {
-        runningProcess = window.stateMachines.run(
+        runningProcess = window.o.stateMachines.run(
           (<RunProcess>event).definition,
           (<RunProcess>event).contextModifier
         );
@@ -57,8 +53,6 @@
     });
 
   function routeLoading(e) {
-    safeAddress = localStorage.getItem("omo.safeAddress");
-
     if (!e.detail.userData) return;
 
     showActionBar = e.detail.userData.showActionBar;
@@ -136,7 +130,6 @@
       {#if showActionBar}
         <Compose>
           <ActionBar
-            bind:safeAddress
             on:actionButtonClick={toggleOpen}
             {quickActions} />
         </Compose>

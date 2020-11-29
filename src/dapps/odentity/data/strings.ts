@@ -16,6 +16,10 @@ export const strings = {
         buttonAvatar: () => `Save`,
         bannerAvatar: () => `Please upload an avatar`,
         bannerProgress: () => `Creating your odentity ...`,
+        titleConnectSafe: () => `Create or connect safe`,
+        bannerConnectSafe: () => `Connect an existing safe or create a new one`,
+        choiceExistingSafe: () => `Existing safe`,
+        choiceNewSafe: () => `New safe`,
       },
       authenticate: {
 

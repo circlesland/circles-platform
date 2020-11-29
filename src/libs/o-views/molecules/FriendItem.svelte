@@ -71,9 +71,7 @@
       };
       return context;
     };
-    window.eventBroker
-      .getTopic("omo", "shell")
-      .publish(new RunProcess(setTrust, contextInitializer));
+    window.o.dispatchShellEvent(new RunProcess(setTrust, contextInitializer));
   }
 
   function runUntrust(recipientAddress: Address) {
@@ -86,9 +84,7 @@
       };
       return context;
     };
-    window.eventBroker
-      .getTopic("omo", "shell")
-      .publish(new RunProcess(unTrust, contextInitializer));
+    window.o.dispatchShellEvent(new RunProcess(unTrust, contextInitializer));
   }
 
   const sendMoney = {

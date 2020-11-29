@@ -12,7 +12,8 @@ export type PromptSpec = {
     component:any,
     data:any
   },
-  nextButtonTitle?:string
+  nextButtonTitle?:string,
+  hideNextButton?:boolean,
   canGoBack?:boolean
 };
 
@@ -26,6 +27,7 @@ export const sendPrompt = (spec:PromptSpec) =>
     return <Prompt>{
       title: spec.title ? spec.title : "",
       nextButtonTitle: spec.nextButtonTitle,
+      hideNextButton: spec.hideNextButton,
       canGoBack: spec.canGoBack,
       type: "process.prompt",
       banner: spec.banner,

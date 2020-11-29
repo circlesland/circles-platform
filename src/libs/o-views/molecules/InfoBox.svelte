@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  let accountAddress: string = localStorage.getItem("omo.address");
-  let safeAddress: string = localStorage.getItem("omo.safeAddress");
+  let accountAddress: string;
+  let safeAddress: string;
 
   $: safeAddress = "";
 
-  onMount(() => {
-    safeAddress = localStorage.getItem("omo.safeAddress");
+  onMount(async () => {
+    accountAddress = (await window.o.safe()).owner;
+    safeAddress = (await window.o.safe()).address;
   });
 </script>
 

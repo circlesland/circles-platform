@@ -47,10 +47,6 @@
       canSkip = false;
       prompt = null;
     }
-    if (initial && process)
-    {
-      process.sendEvent(new Continue());
-    }
   }
 
   function ensureProcess(action: (p: Process) => void)

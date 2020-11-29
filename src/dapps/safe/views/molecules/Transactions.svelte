@@ -15,14 +15,15 @@
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy} from "svelte";
+  import {onDestroy, onMount} from "svelte";
 
   export let address: string;
 
   let person: Person;
   let transactions = [];
 
-  function init(address: Address) {
+  async function init() {
+    address = (await window.o.safe()).address;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
@@ -77,13 +78,11 @@
     });
   }
 
-  let subscription: Subscription = window.eventBroker
-    .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) =>
+  let subscription: Subscription = window.o.shellEvents.subscribe((event: OmoEvent) =>
     {
       if (event.type === "shell.refreshView")
       {
-        init(address);
+        init();
       }
     });
 
@@ -96,11 +95,8 @@
     subscription = null;
   });
 
-  $: {
-    if (config.getCurrent().web3().utils.isAddress(address)) {
-      init(address);
-    }
-  }
+  onMount(() => init());
+
   const labelTransactions = {
     data: {
       label: "Your Safe Transactions",

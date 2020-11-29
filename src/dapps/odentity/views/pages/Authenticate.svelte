@@ -4,7 +4,7 @@
   import {push} from "svelte-spa-router";
   import {Authenticated} from "../../events/authenticated";
 
-  const wn = window.wn;
+  const wn = window.o.wn;
 
   export let params;
 
@@ -39,7 +39,7 @@
         // state.username         -  The user's username.
         //
         // ☞ We can now interact with our file system (more on that later)
-        window.dispatchShellEvent(new Authenticated(state));
+        window.o.dispatchShellEvent(new Authenticated(state));
         if (params && params.redirectTo) {
           push(params.redirectTo);
         }  else {

@@ -7,28 +7,23 @@
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
-  export let address: string;
-
   let person: Person;
-
   let mySafeAddress: Address;
 
-  function init(safeAddress?: string)
+  async function init()
   {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-    mySafeAddress = localStorage.getItem("omo.safeAddress");
-    person = new Person(circlesHub, safeAddress ?? mySafeAddress);
+    mySafeAddress = (await window.o.safe()).address;
+    person = new Person(circlesHub, mySafeAddress);
   }
 
 
-  let subscription: Subscription = window.eventBroker
-    .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) =>
+  let subscription: Subscription = window.o.shellEvents.subscribe((event: OmoEvent) =>
     {
       if (event.type === "shell.refreshView")
       {
-        init(address);
+        init();
       }
     });
 
@@ -42,7 +37,7 @@
   });
 
   $: {
-    init(address);
+    init();
   }
 </script>
 

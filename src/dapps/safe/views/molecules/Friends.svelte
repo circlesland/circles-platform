@@ -17,9 +17,8 @@
   } from "./../../data/friends";
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy} from "svelte";
+  import {onDestroy, onMount} from "svelte";
 
-  export let address: string;
   let mySafeAddress: string;
 
   let person: Person;
@@ -30,12 +29,11 @@
   let untrusted: any[] = [];
   let untrusted_: { [address: string]: any } = {};
 
-  function init(addr: string) {
+  async function init() {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-    mySafeAddress = localStorage.getItem("omo.safeAddress");
-
-    person = new Person(circlesHub, addr);
+    mySafeAddress = (await window.o.safe()).address;
+    person = new Person(circlesHub, mySafeAddress);
 
     reload();
   }
@@ -150,13 +148,11 @@
     console.log("personsITrust:", personsITrust);
   }
 
-  let subscription: Subscription = window.eventBroker
-    .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) =>
+  let subscription: Subscription = window.o.shellEvents.subscribe((event: OmoEvent) =>
     {
       if (event.type === "shell.refreshView")
       {
-        init(address);
+        init();
       }
     });
 
@@ -169,11 +165,9 @@
     subscription = null;
   });
 
-  $: {
-    if (config.getCurrent().web3().utils.isAddress(address)) {
-      init(address);
-    }
-  }
+  onMount(() => {
+    init();
+  })
 </script>
 
 <div class="h-full">

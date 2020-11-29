@@ -1,6 +1,5 @@
-import { createMachine } from "xstate";
+import {assign, createMachine} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import { connectSafeService } from "./services/connectSafeService";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import { push } from "svelte-spa-router";
 import { OmoEvent } from "../../../../libs/o-events/omoEvent";
@@ -13,12 +12,11 @@ import { strings } from "../../data/strings";
 import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import {createAccount} from "./actions/createAccount";
 
-export interface ConnectSafeContext extends ProcessContext {
+export interface CreateSafeContext extends ProcessContext {
   data: {
-    safeAddress?: ProcessArtifact,
-    privateKey?: ProcessArtifact
+    account?: ProcessArtifact
   }
 }
 
@@ -26,34 +24,16 @@ export interface ConnectSafeContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.safe.processes.connectSafe;
-const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
-  initial: "promptSafeAddress",
+/*
+const processDefinition = () => createMachine<CreateSafeContext, OmoEvent>({
+  initial: "createAccount",
   states: {
-    promptSafeAddress: {
-      entry: [
-        () => {
-        console.log("promptSafeAddress")
-        },
-        sendPrompt({
-        title: str.titleSafeAddress(),
-        nextButtonTitle: str.buttonSafeAddress(),
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerSafeAddress()
-          }
-        },
-        artifacts: {
-          ...ethereumAddress("safeAddress")
-        }
-      })
-    ],
+    createAccount: {
+      entry: createAccount,
       on: {
         "process.continue": {
-          actions: storePromptResponse,
-          target: "promptPrivateKey"
-        },
-        "process.cancel": "stop"
+          target: ""
+        }
       }
     },
     promptPrivateKey: {
@@ -89,7 +69,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       entry: sendInProgressPrompt(str.titleProgress),
       invoke: {
         id: 'connectSafe',
-        src: connectSafeService,
+        src: createSafeService,
         onError: {
           actions: setError,
           target: "error"
@@ -117,7 +97,9 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
   }
 });
 
-export const connectSafe: ProcessDefinition = {
+export const createSafe: ProcessDefinition = {
   name: "connectSafe",
   stateMachine: processDefinition
 };
+*/
+export const none = "";

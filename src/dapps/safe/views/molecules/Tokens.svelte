@@ -8,11 +8,10 @@
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy} from "svelte";
+  import {onDestroy, onMount} from "svelte";
 
-  export let address: string;
   let accountAddress: string = localStorage.getItem("omo.address");
-  let safeAddress: string = localStorage.getItem("omo.safeAddress");
+  let safeAddress: string;
 
   let balance: BN;
   let circlesBalance: string;
@@ -26,11 +25,12 @@
   let person: Person;
   let tokensITrust: any[] = [];
 
-  function init(addr: string) {
+  async function init() {
+    safeAddress = (await window.o.safe()).address;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
-    person = new Person(circlesHub, addr);
+    person = new Person(circlesHub, safeAddress);
 
     reload();
   }
@@ -81,13 +81,11 @@
   }
 
 
-  let subscription: Subscription = window.eventBroker
-    .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) =>
+  let subscription: Subscription = window.o.shellEvents.subscribe((event: OmoEvent) =>
     {
       if (event.type === "shell.refreshView")
       {
-        init(address);
+        init();
       }
     });
 
@@ -100,11 +98,7 @@
     subscription = null;
   });
 
-  $: {
-    if (config.getCurrent().web3().utils.isAddress(address)) {
-      init(address);
-    }
-  }
+  onMount(() => init());
 
   $: circlesSafe = {
     data: {

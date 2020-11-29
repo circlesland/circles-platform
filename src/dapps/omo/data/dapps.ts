@@ -1,7 +1,7 @@
 import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
 import { DappIcon, ProfileHeader } from "src/libs/o-views/interfaces/molecules";
 
-export const address: string = localStorage.getItem("omo.safeAddress");
+export const address: string = "TODO";
 
 export const profile: ProfileHeader = {
   data: {

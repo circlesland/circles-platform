@@ -15,6 +15,11 @@ export interface ProcessArtifact {
    */
   type: ProcessArtifactType,
   /**
+   * Can be used when 'type' == 'choice' and contains the possible options.
+   * The selected option is stored in the 'value' property.
+   */
+  choices?: any[],
+  /**
    * If the artifact is optional it doesn't need to be included in a 'Continue'
    * event that responds to a 'Prompt' in order to proceed to the next state.
    */

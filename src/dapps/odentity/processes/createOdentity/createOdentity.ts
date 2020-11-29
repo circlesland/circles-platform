@@ -1,4 +1,4 @@
-import { createMachine } from "xstate";
+import {createMachine, send} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import { push } from "svelte-spa-router";
@@ -15,12 +15,17 @@ import {strings} from "../../data/strings";
 import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
 import {createOdentityService} from "./services/createOdentityService";
 import {file} from "../../../../libs/o-processes/artifacts/file";
+import {choice} from "../../../../libs/o-processes/artifacts/choice";
+import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
+import {getServiceContext} from "../../../../libs/o-os/stateMachine";
+import {RunProcess} from "../../../../libs/o-events/runProcess";
 
 export interface CreateOdentityContext extends ProcessContext {
   data: {
     firstName?: ProcessArtifact,
     lastName?: ProcessArtifact,
-    avatar?: ProcessArtifact
+    avatar?: ProcessArtifact,
+    safeChoice?: ProcessArtifact
   }
 }
 
@@ -28,15 +33,9 @@ export interface CreateOdentityContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.odentity.processes.createOdentity;
-const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent>({
-  initial: "ready",
+const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{type:"evaluateChoice"}>({
+  initial: "promptFirstName",
   states: {
-    ready: {
-      on: {
-        "process.continue": "promptFirstName",
-        "process.cancel": "stop"
-      }
-    },
     promptFirstName: {
       entry: sendPrompt({
         title: str.titleFirstName(),
@@ -61,6 +60,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent>({
     },
     promptLastName: {
       entry: sendPrompt({
+        canGoBack: true,
         title: str.titleLastName(),
         nextButtonTitle: str.buttonLastName(),
         banner: {
@@ -83,6 +83,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent>({
     },
     promptAvatar: {
       entry: sendPrompt({
+        canGoBack: true,
         title: str.titleAvatar(),
         nextButtonTitle: str.buttonAvatar(),
         banner: {
@@ -114,15 +115,79 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent>({
         },
         onDone: {
           actions: setResult(str.successMessage),
-          target: "success"
+          target: "connectSafe"
         }
       }
     },
-    success: {
-      type: "final",
+    connectSafe: {
+      entry: sendPrompt({
+        title: str.titleConnectSafe(),
+        hideNextButton: true,
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerConnectSafe()
+          }
+        },
+        artifacts: {
+          ...choice("safeChoice", undefined, [
+              str.choiceExistingSafe(),
+              str.choiceNewSafe()])
+        }
+      }),
       on: {
-        "process.continue": "stop",
+        "process.continue": {
+          actions: [
+            storePromptResponse,
+            send({
+              type: "evaluateChoice"
+            })
+          ]
+        },
+        "evaluateChoice": [{
+            target: 'existingSafe',
+            cond: (context) => {
+              console.log(context.data.safeChoice)
+              return context.data.safeChoice.value === str.choiceExistingSafe()
+            }
+          },{
+            target: 'newSafe',
+            cond: (context) => {
+              console.log(context.data.safeChoice)
+              return context.data.safeChoice.value === str.choiceNewSafe()
+            }
+          }],
         "process.cancel": "stop"
+      }
+    },
+    existingSafe: {
+      invoke: {
+        id: 'existingSafe',
+        src: async () => {
+          // TODO: Very 'rotzig'!
+          setTimeout(() => window.o.dispatchShellEvent(new RunProcess(connectSafe)), 100);
+        },
+        onError: {
+          target: "error"
+        },
+        onDone: {
+          target: "stop"
+        }
+      }
+    },
+    newSafe: {
+      invoke: {
+        id: 'newSafe',
+        src: async () => {
+          // TODO: Very 'rotzig'!
+          setTimeout(() => window.o.dispatchShellEvent(new RunProcess(connectSafe)), 100);
+        },
+        onError: {
+          target: "error"
+        },
+        onDone: {
+          target: "stop"
+        }
       }
     },
     error: {

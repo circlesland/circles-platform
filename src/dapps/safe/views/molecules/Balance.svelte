@@ -8,7 +8,8 @@
   import Account from "./Account.svelte";
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy} from "svelte";
+  import {onDestroy, onMount} from "svelte";
+  import {asyncWaterfall} from "webnative/common";
 
   export let address: string;
 
@@ -21,7 +22,8 @@
   let safeEtherBalance: string;
   let personalEtherBalance: string;
 
-  function init(address: string) {
+  async function init() {
+    address = (await window.o.safe()).address;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
@@ -54,13 +56,11 @@
     personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
   }
 
-  let subscription: Subscription = window.eventBroker
-    .getTopic("omo", "shell")
-    .observable.subscribe((event: OmoEvent) =>
+  let subscription: Subscription = window.o.shellEvents.subscribe((event: OmoEvent) =>
     {
       if (event.type === "shell.refreshView")
       {
-        init(address);
+        init();
       }
     });
 
@@ -73,11 +73,7 @@
     subscription = null;
   });
 
-  $: {
-    if (config.getCurrent().web3().utils.isAddress(address)) {
-      init(address);
-    }
-  }
+  onMount(() => init());
 </script>
 
 <div

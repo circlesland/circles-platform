@@ -11,11 +11,11 @@
   import {push} from "svelte-spa-router";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
-  const wn = window.wn;
+  const wn = window.o.wn;
 
   let profile:Profile;
 
-  window.eventBroker.getTopic("omo", "shell").observable.subscribe((event:OmoEvent) => {
+  window.o.shellEvents.subscribe((event:OmoEvent) => {
     if (event.type === "shell.gotProfile") {
       profile = (<GotProfile>event).profile;
     }
@@ -23,13 +23,13 @@
 
   onMount(async () =>
   {
-    if (!window.fissionAuth)
+    if (!window.o.fissionAuth)
     {
       push("#/odentity/authenticate");
       return;
     }
 
-    const session = window.fissionAuth;
+    const session = window.o.fissionAuth;
 
     if (await session.fs.exists(session.fs.appPath(["odentity", "profile.json"])))
     {
@@ -37,11 +37,11 @@
       const profileObj = JSON.parse(profileJson);
       const profile: Profile = profileObj;
 
-      window.dispatchShellEvent(new GotProfile(profile));
+      window.o.dispatchShellEvent(new GotProfile(profile));
     }
     else
     {
-      window.dispatchShellEvent(new RunProcess(createOdentity));
+      window.o.dispatchShellEvent(new RunProcess(createOdentity));
     }
   });
 

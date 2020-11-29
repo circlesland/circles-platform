@@ -1,8 +1,10 @@
 export type ProcessArtifactType =
   "string"
   | "text"
+  | "ethereumAccount"
   | "secretString"
   | "keyphrase"
+  | "choice"
   | "number"
   | "boolean"
   | "ethereumAddress"

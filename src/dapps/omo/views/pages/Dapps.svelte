@@ -9,14 +9,6 @@
   <Compose area="header" tw="">
     <ProfileHeader mapping={profile} />
   </Compose>
-  {#if !address}
-    <Compose rows="1fr" columns="1fr" tw="m-4 md:mx-0">
-      <div
-        class="flex items-center justify-center h-full p-10 text-xl font-bold text-center bg-white border text-primary font-primary rounded-xl border-light-200">
-        Please login with your circles seed phrase
-      </div>
-    </Compose>
-  {:else}
     <Compose
       area="main"
       columns="repeat(auto-fit, minmax(160px, 1fr))"
@@ -30,5 +22,4 @@
         </Compose>
       {/each}
     </Compose>
-  {/if}
 </Compose>

@@ -10,7 +10,7 @@ export const buttonLogin: Button = {
 
 export let avataaar: Avataaar = {
     data: {
-        seed: localStorage.getItem("omo.safeAddress"),
+        seed: null
     },
     design: {
         radius: 100,

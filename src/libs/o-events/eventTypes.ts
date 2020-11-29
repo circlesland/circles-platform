@@ -4,6 +4,8 @@ export type OmoEventTypes =
   | "shell.refreshView"
   | "shell.authenticated"
   | "shell.gotProfile"
+  | "shell.gotSafe"
+  | "process.nop"
   | "process.back"
   | "process.shellEvent"
   | "process.continue"
