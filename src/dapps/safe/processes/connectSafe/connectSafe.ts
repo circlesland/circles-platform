@@ -13,6 +13,7 @@ import {strings} from "../../data/strings";
 import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
 
 export interface ConnectSafeContext extends ProcessContext
 {
@@ -39,19 +40,14 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleSafeAddress(),
         nextButtonTitle: "Next",
-        banner: Banner,
-        data: {
-          safeAddress: {
-            key: "safeAddress",
-            type: "ethereumAddress",
-            label: str.titleSafeAddress()
-          },
-          banner: {
-            key: "banner",
-            type: "string",
-            isHidden: true,
-            value: str.bannerSafeAddress()
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerSafeAddress()
           }
+        },
+        artifacts: {
+          ... ethereumAddress("safeAddress", str.titleSafeAddress())
         }
       }),
       on: {
@@ -67,18 +63,17 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
         title: str.titleSeedPhrase(),
         nextButtonTitle: "Connect safe",
         canGoBack: true,
-        banner: Banner,
-        data: {
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerSeedPhrase()
+          }
+        },
+        artifacts: {
           privateKey: {
             key: "privateKey",
             type: "string",
             label: "Key phrase"
-          },
-          banner: {
-            key: "banner",
-            type: "string",
-            isHidden: true,
-            value: strings.safe.processes.connectSafe.bannerSeedPhrase()
           }
         }
       }),

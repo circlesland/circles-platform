@@ -7,16 +7,13 @@ export const sendSuccessPrompt = send((context:ProcessContext) => {
   return <Prompt>{
     nextButtonTitle: "Close",
     type: "process.prompt",
-    banner: Success,
-    hideNextButton: true,
-    data: {
-      success: {
-        key: "success",
-        isReadonly: true,
-        isHidden: true,
-        type: "string",
-        value: context.result.success
+    banner: {
+      component: Success,
+      data: {
+        text: context.result.success
       }
-    }
+    },
+    hideNextButton: true,
+    data: {}
   }
 });

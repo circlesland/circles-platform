@@ -43,7 +43,9 @@ export const strings = {
         bannerRecipient:() => "Please enter the recipient address",
         titleValue: () => "Value",
         bannerValue: () => "Please enter the value (in xDai)",
-        titleProgress: () => "Working .."
+        titleProgress: () => "Working ..",
+        titleSummary: () => "Confirm your transaction",
+        bannerSummary: () => "Please check the transaction details and click 'Transfer xDai' to confirm the transaction"
       },
       requestUbi: {
         titleProgress: () => "Working ..",

@@ -7,27 +7,29 @@
   const dispatch = createEventDispatcher();
 
   function validate() {
-    processArtifact.isValid = processArtifact.value && processArtifact.value.startsWith("0x");
-    if (processArtifact.isValid)
+    if ((!processArtifact.value || processArtifact.value.toString().trim() === "")
+      && processArtifact.isOptional)
     {
-      processArtifact.isValid = config.getCurrent().web3().utils.isAddress(processArtifact.value);
+      processArtifact.isValid = true;
     }
-    dispatch('isValidChanged', processArtifact.isValid);
+    else
+    {
+      processArtifact.isValid = processArtifact.value && processArtifact.value.startsWith("0x");
+      if (processArtifact.isValid)
+      {
+        processArtifact.isValid = config.getCurrent().web3().utils.isAddress(processArtifact.value);
+      }
+    }
+    dispatch('validated', processArtifact.isValid);
   }
 
   $:{
-    if (processArtifact)
+    if (processArtifact && processArtifact.value)
     {
       validate();
     }
   }
 
-  $:{
-    if (processArtifact)
-    {
-      validate();
-    }
-  }
   onMount(() => {
     validate();
   });

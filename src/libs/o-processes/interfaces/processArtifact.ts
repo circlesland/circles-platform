@@ -15,11 +15,6 @@ export interface ProcessArtifact {
    */
   type: ProcessArtifactType,
   /**
-   * Hidden artifacts won't be shown to the user. They can be used to configure
-   * the 'banner' of a Prompt message.
-   */
-  isHidden?: boolean,
-  /**
    * If the artifact is optional it doesn't need to be included in a 'Continue'
    * event that responds to a 'Prompt' in order to proceed to the next state.
    */

@@ -28,9 +28,8 @@
   }
 
   function setIsValid() {
-    isValid = processArtifacts
-      && processArtifacts.filter(a => !a.isHidden)
-      .reduce((p,c) => p && (c.isValid ?? false), true);
+    isValid = !processArtifacts || processArtifacts.reduce((p,c) => p && (c.isValid ?? false), true);
+
     nextButton = {
       data: {
         label: prompt.nextButtonTitle ? prompt.nextButtonTitle : 'Next'
@@ -59,22 +58,21 @@
   setIsValid();
 </script>
 
-{#if prompt && prompt.banner}
+{#if prompt.banner && prompt.banner.component}
   <div class="w-full">
-    <svelte:component this={prompt.banner} data={prompt.data} />
+    <svelte:component this={prompt.banner.component} data={prompt.banner.data} />
   </div>
 {/if}
-{#each processArtifacts.filter((o) => !o.isHidden) as artifact}
+{#each processArtifacts as artifact}
   <div class="w-full">
-    <!-- <p class="mb-1 text-xs text-gray-700 uppercase">{artifact.label}</p> -->
     {#if artifact.type === 'ether'}
-      <EtherEditor on:isValidChanged={() => setIsValid()} processArtifact={artifact}/>
+      <EtherEditor on:validated={() => setIsValid()} processArtifact={artifact}/>
     {:else if artifact.type === 'string'}
-      <StringEditor on:isValidChanged={() => setIsValid()} processArtifact={artifact}/>
+      <StringEditor on:validated={() => setIsValid()} processArtifact={artifact}/>
     {:else if artifact.type === 'text'}
-      <TextEditor on:isValidChanged={() => setIsValid()} processArtifact={artifact}/>
+      <TextEditor on:validated={() => setIsValid()} processArtifact={artifact}/>
     {:else if artifact.type === 'ethereumAddress'}
-      <AddressEditor on:isValidChanged={() => setIsValid()} processArtifact={artifact}/>
+      <AddressEditor on:validated={() => setIsValid()} processArtifact={artifact}/>
     {:else if artifact.type === 'secretString'}
       <input
         type="password"

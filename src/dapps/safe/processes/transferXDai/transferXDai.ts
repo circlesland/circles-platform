@@ -13,6 +13,8 @@ import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPr
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import {ether} from "../../../../libs/o-processes/artifacts/ether";
 
 export interface TransferXDaiContext extends ProcessContext
 {
@@ -40,19 +42,14 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleRecipient(),
         nextButtonTitle: "Next",
-        banner: Banner,
-        data: {
-          recipient: {
-            key: "recipient",
-            type: "ethereumAddress",
-            label: str.titleRecipient()
-          },
-          banner: {
-            key: "banner",
-            type: "string",
-            isHidden: true,
-            value: str.bannerRecipient()
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerRecipient()
           }
+        },
+        artifacts: {
+          ... ethereumAddress("recipient", str.titleRecipient())
         }
       }),
       on: {
@@ -68,19 +65,14 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
         title: str.titleValue(),
         nextButtonTitle: "Next",
         canGoBack: true,
-        banner: Banner,
-        data: {
-          value: {
-            key: "value",
-            type: "ether",
-            label: str.titleValue()
-          },
-          banner: {
-            key: "banner",
-            type: "string",
-            isHidden: true,
-            value: str.bannerValue()
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerValue()
           }
+        },
+        artifacts: {
+          ... ether("value", str.titleValue())
         }
       }),
       on: {
@@ -96,29 +88,18 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
     },
     summarize: {
       entry: sendPrompt({
-        title: str.titleValue(),
+        title: str.titleSummary(),
         nextButtonTitle: "Transfer xDai",
-        banner: Banner,
         canGoBack: true,
-        data: {
-          recipient: {
-            key: "recipient",
-            type: "ethereumAddress",
-            isReadonly: true,
-            label: str.titleRecipient()
-          },
-          value: {
-            key: "value",
-            type: "ether",
-            isReadonly: true,
-            label: str.titleValue()
-          },
-          banner: {
-            key: "banner",
-            type: "string",
-            isHidden: true,
-            value: str.bannerValue()
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerSummary()
           }
+        },
+        artifacts: {
+          ... ethereumAddress("recipient", str.titleRecipient(), true),
+          ... ether("value", str.titleValue(), true)
         }
       }),
       on: {

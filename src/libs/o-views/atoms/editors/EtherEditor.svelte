@@ -4,24 +4,36 @@
   import {BN} from "ethereumjs-util";
   import {createEventDispatcher, onMount} from "svelte";
 
-  export let processArtifact:ProcessArtifact;
+  export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();
 
-  function validate() {
+  function validate()
+  {
     const web3 = config.getCurrent().web3();
-    try {
-      const weiStr = web3.utils.toWei(processArtifact.value.toString(), "ether");
-      const weiValueBN = new BN(weiStr);
-      processArtifact.isValid =
-        processArtifact.value.toString().trim() !== ""
-        && weiValueBN !== undefined
-        && !weiValueBN.eq(new BN("0"))
-        && !weiValueBN.isNeg();
-    } catch (e) {
-      console.warn("EtherInput validation failed:", e);
-      processArtifact.isValid = false;
+    if ((!processArtifact.value || processArtifact.value.toString().trim() === "")
+      && processArtifact.isOptional)
+    {
+      processArtifact.isValid = true;
     }
-    dispatch('isValidChanged', processArtifact.isValid);
+    else
+    {
+      try
+      {
+        const weiStr = web3.utils.toWei(processArtifact.value.toString(), "ether");
+        const weiValueBN = new BN(weiStr);
+        processArtifact.isValid =
+          processArtifact.value.toString().trim() !== ""
+          && weiValueBN !== undefined
+          && !weiValueBN.eq(new BN("0"))
+          && !weiValueBN.isNeg();
+      }
+      catch (e)
+      {
+        console.warn("EtherInput validation failed:", e);
+        processArtifact.isValid = false;
+      }
+    }
+    dispatch('validated', processArtifact.isValid);
   }
 
   $:{
@@ -30,7 +42,9 @@
       validate();
     }
   }
-  onMount(() => {
+
+  onMount(() =>
+  {
     validate();
   });
 </script>
@@ -47,6 +61,6 @@
       class:border={!processArtifact.isValid}
       class:border-red-500={!processArtifact.isValid}
       bind:value={processArtifact.value}
-      class="w-full px-2 mb-2 text-6xl bg-transparent border border-gray-300 rounded text-primary" />
+      class="w-full px-2 mb-2 text-6xl bg-transparent border border-gray-300 rounded text-primary"/>
   </div>
 {/if}

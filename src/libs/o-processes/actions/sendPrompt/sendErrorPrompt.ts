@@ -7,15 +7,13 @@ export const sendErrorPrompt = send((context:ProcessContext) => {
   return <Prompt>{
     nextButtonTitle: "Close",
     type: "process.prompt",
-    banner: Error,
-    data: {
-      error: {
-        key: "error",
-        isReadonly: true,
-        isHidden: true,
-        type: "string",
-        value: context.result.error
+    banner: {
+      component: Error,
+      data: {
+        text: context.result.error
       }
+    },
+    data: {
     }
   }
 });

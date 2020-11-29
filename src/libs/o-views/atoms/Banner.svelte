@@ -1,8 +1,6 @@
 <script lang="ts">
-  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
-
-  export let data:{[key:string]:ProcessArtifact};
+  export let data:{text:string};
 </script>
-{#if data.banner && data.banner.value}
-<div class="text-center p-10 text-primary">{data.banner.value}</div>
+{#if data && data.text}
+<div class="text-center p-10 text-primary">{data.text}</div>
 {/if}

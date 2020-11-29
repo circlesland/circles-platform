@@ -1,11 +1,9 @@
 <script lang="ts">
-  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
-
-  export let data:{[key:string]:ProcessArtifact};
+  export let data:{text:string};
 </script>
 
-{#if data.success && data.success.value}
+{#if data && data.text}
   <h1 class="px-8 py-16 text-xl text-center text-white rounded-lg bg-action">
-    {data.success.value}
+    {data.text}
   </h1>
 {/if}

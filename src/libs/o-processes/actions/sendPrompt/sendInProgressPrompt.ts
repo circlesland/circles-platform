@@ -8,15 +8,12 @@ export const sendInProgressPrompt = (message?:(context:ProcessContext) => string
     return <Prompt>{
       hideNextButton: true,
       type: "process.prompt",
-      banner: Progress,
-      data: {
-        progress: {
-          key: "progress",
-          isReadonly: true,
-          isHidden: true,
-          type: "string",
-          value: message ? message(context) : undefined
+      banner: {
+        component: Progress,
+        data: {
+          text: message ? message(context) : undefined
         }
-      }
+      },
+      data: {}
     };
   });

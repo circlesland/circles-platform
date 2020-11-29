@@ -7,8 +7,11 @@ import {Prompt} from "../../events/prompt";
 
 export type PromptSpec = {
   title?:string,
-  data: { [key: string]: ProcessArtifact },
-  banner?: any,
+  artifacts: { [key: string]: ProcessArtifact },
+  banner?: {
+    component:any,
+    data:any
+  },
   nextButtonTitle?:string
   canGoBack?:boolean
 };
@@ -16,9 +19,9 @@ export type PromptSpec = {
 export const sendPrompt = (spec:PromptSpec) =>
 {
   const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
-    Object.keys(spec.data)
+    Object.keys(spec.artifacts)
       .filter(key => context.data[key] !== undefined)
-      .forEach(key => spec.data[key].value = context.data[key].value);
+      .forEach(key => spec.artifacts[key].value = context.data[key].value);
 
     return <Prompt>{
       title: spec.title ? spec.title : "",
@@ -26,7 +29,7 @@ export const sendPrompt = (spec:PromptSpec) =>
       canGoBack: spec.canGoBack,
       type: "process.prompt",
       banner: spec.banner,
-      data: spec.data
+      data: spec.artifacts
     }
   });
 

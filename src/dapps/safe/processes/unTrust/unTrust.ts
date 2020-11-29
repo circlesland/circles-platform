@@ -13,6 +13,7 @@ import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPr
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
 
 export interface UnTrustContext extends ProcessContext {
   data: {
@@ -42,19 +43,14 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
       entry: sendPrompt({
         title: str.titleTrustReceiver(),
         nextButtonTitle: "Trust",
-        banner: Banner,
-        data: {
-          trustReceiver: {
-            key: "trustReceiver",
-            type: "ethereumAddress",
-            label: str.titleTrustReceiver()
-          },
-          banner: {
-            key: "banner",
-            type: "string",
-            isHidden: true,
-            value: str.bannerTrustRecipient()
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerTrustRecipient()
           }
+        },
+        artifacts: {
+          ... ethereumAddress("trustReceiver",str.titleTrustReceiver())
         }
       }),
       on: {

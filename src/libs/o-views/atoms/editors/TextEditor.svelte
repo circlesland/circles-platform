@@ -1,13 +1,34 @@
 <script lang="ts">
   import {ProcessArtifact} from "../../../o-processes/interfaces/processArtifact";
-  import {createEventDispatcher} from "svelte";
+  import {createEventDispatcher, onMount} from "svelte";
 
   export let processArtifact:ProcessArtifact;
   const dispatch = createEventDispatcher();
-  $:{
-    processArtifact.isValid = processArtifact.isValid || true;
-    dispatch('isValidChanged', processArtifact.isValid);
+
+  function validate() {
+    if ((!processArtifact.value || processArtifact.value.toString().trim() === "")
+      && processArtifact.isOptional)
+    {
+      processArtifact.isValid = true;
+    }
+    else
+    {
+      processArtifact.isValid = processArtifact.value.toString().trim() !== "";
+    }
+    dispatch('validated', processArtifact.isValid);
   }
+
+  $:{
+    if (processArtifact)
+    {
+      validate();
+    }
+  }
+
+  onMount(() =>
+  {
+    validate();
+  });
 </script>
 
 {#if processArtifact}
