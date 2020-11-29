@@ -77,9 +77,8 @@
             (key) => prompt.data[key]
           );
 
-          canSkip = artifactsArr.length === 0
-            || artifactsArr.filter((artifact) => artifact.isOptional)
-              .length === artifactsArr.length;
+          canSkip = artifactsArr.length > 0
+            && artifactsArr.filter((artifact) => artifact.isOptional).length === artifactsArr.length;
 
           canGoBack = prompt.canGoBack;
         }
