@@ -28,7 +28,7 @@ export const dapps: DappIcon[] = [
   {
     data: {
       title: "Safe",
-      tag: "alpha 0.1.0",
+      tag: "",
     },
     action: {
       route: "safe/transactions",
@@ -41,14 +41,14 @@ export const dapps: DappIcon[] = [
   {
     data: {
       title: "Odentity",
-      tag: "alpha 0.1.0",
+      tag: "soon",
     },
     action: {
-      route: "odentity/profile",
+      route: "omo/dapps",
     },
     design: {
       icon: faUserAstronaut,
-      type: "",
+      type: "disabled",
     },
   },
   {

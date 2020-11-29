@@ -93,7 +93,7 @@
       {#each transactions as t}
         <div>
           <div
-            class="flex w-full bg-white border rounded-lg border-light-200"
+            class="flex items-center w-full bg-white border rounded-xl border-light-200"
             on:click={() => (t.openDetail = !t.openDetail)}>
             <div
               class="flex items-center justify-center w-10 text-sm text-light-400 ">
@@ -103,49 +103,54 @@
                 <Icon icon={faMinus} />
               {/if}
             </div>
-            <div class="flex-1 w-2/3 py-2 pr-2 text-sm">
-              <b class="text-primary">
-                {#if t.from !== '0x0000000000000000000000000000000000000000'}
-                  {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
-                  {t.subject}
-                {:else}Universal basic income{/if}
-              </b>
-              <p class="text-xs text-gray-500">
-                {dayjs(t.timestamp).fromNow()}
-                {#if t.direction === 'in'}
+            <div
+              class="flex items-center flex-1 w-2/3 pb-1 pr-2 md:pb-2 md:pt-1">
+              <div>
+                <b class="text-xs md:text-sm text-primary">
                   {#if t.from !== '0x0000000000000000000000000000000000000000'}
-                    from
-                    <!-- <a href="#/safe/{t.from}/safe">-->
-                    {t.from.slice(0, 12)}...
+                    {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
+                    {t.subject}
+                  {:else}Universal basic income{/if}
+                </b>
+                <p class="text-gray-500 text-xxs md:text-xs">
+                  {dayjs(t.timestamp).fromNow()}
+                  {#if t.direction === 'in'}
+                    {#if t.from !== '0x0000000000000000000000000000000000000000'}
+                      from
+                      <!-- <a href="#/safe/{t.from}/safe">-->
+                      {t.from.slice(0, 12)}...
+
+                      <!-- </a> -->
+                    {:else}from MamaOmo{/if}
+                  {:else}
+                    to
+                    <!-- <a href="#/safe/{t.to}/safe"> -->
+                    {t.to.slice(0, 12)}...
 
                     <!-- </a> -->
-                  {:else}from MamaOmo{/if}
-                {:else}
-                  to
-                  <!-- <a href="#/safe/{t.to}/safe"> -->
-                  {t.to.slice(0, 12)}...
-
-                  <!-- </a> -->
-                {/if}
-              </p>
+                  {/if}
+                </p>
+              </div>
             </div>
-            {#if t.direction === 'out'}
-              <div
-                class="w-1/3 h-12 px-3 py-2.5 text-3xl font-light text-right text-primary">
-                <span>-{t.amount}</span>
-              </div>
-            {:else}
-              <div
-                class="w-1/3 h-12 px-3 py-2.5 text-3xl font-light text-right text-action">
-                {t.amount}
-              </div>
-            {/if}
+            <div class="flex items-center pt-1">
+              {#if t.direction === 'out'}
+                <div
+                  class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-primary">
+                  <span>-{t.amount}</span>
+                </div>
+              {:else}
+                <div
+                  class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-action">
+                  {t.amount}
+                </div>
+              {/if}
+            </div>
           </div>
           {#if t.openDetail}
             <div
-              class="flex max-w-full p-4 mx-4 text-xs text-gray-500 bg-white">
+              class="flex max-w-full p-4 mx-4 text-gray-500 bg-white text-xxs md:text-sm">
               <div class="max-w-full text-gray-500 ">
-                <div class="flex text-sm">
+                <div class="flex ">
                   {#if t.from === '0x0000000000000000000000000000000000000000'}
                     <img
                       src="https://avatars.dicebear.com/api/avataaars/mama.svg"
@@ -167,21 +172,18 @@
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Date:
-                  <span class="text-xs text-primary">
+                  <span class=" text-primary">
                     {dayjs(t.timestamp).format('YYYY D. MMM HH:MM')}</span>
                 </div>
-                <div>
-                  Sender:
-                  <span class="text-xs text-primary">{t.from}</span>
-                </div>
+                <div>Sender: <span class=" text-primary">{t.from}</span></div>
                 <div class="max-w-full text-gray-500 ">
                   Receiver:
-                  <span class="text-xs text-primary">{t.to}</span>
+                  <span class=" text-primary">{t.to}</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount:
                   <span
-                    class="text-xs text-primary">{t.o.returnValues.value / 1000000000000000000}</span>
+                    class=" text-primary">{t.o.returnValues.value / 1000000000000000000}</span>
                 </div>
                 <!-- <div
                   class="justify-center my-2 text-xs uppercase text-secondary "

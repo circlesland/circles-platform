@@ -22,7 +22,10 @@
     faMinusCircle,
     faMoneyBill,
   } from "@fortawesome/free-solid-svg-icons";
-  import {unTrust, UnTrustContext} from "../../../dapps/safe/processes/unTrust/unTrust";
+  import {
+    unTrust,
+    UnTrustContext,
+  } from "../../../dapps/safe/processes/unTrust/unTrust";
 
   export let data = {
     image: "",
@@ -41,9 +44,8 @@
     openDetail = !openDetail;
   }
 
-
   function runTransferCircles(recipientAddress: Address) {
-  /*
+    /*
     const contextInitializer = (context: TransferCirclesContext) => {
       context.transfer = {
         recipient: {
@@ -65,7 +67,7 @@
         type: "ethereumAddress",
         isReadonly: true,
         key: "trustReceiver",
-        value: recipientAddress
+        value: recipientAddress,
       };
       return context;
     };
@@ -80,7 +82,7 @@
         type: "ethereumAddress",
         isReadonly: true,
         key: "trustReceiver",
-        value: recipientAddress
+        value: recipientAddress,
       };
       return context;
     };
@@ -112,7 +114,7 @@
 <style>
   .card {
     display: grid;
-    grid-template-columns: 3.5rem 1fr 1fr;
+    grid-template-columns: 3.5rem 1fr auto;
     grid-template-rows: 3.5rem;
     max-width: 100%;
     overflow: hidden;
@@ -120,23 +122,27 @@
 </style>
 
 <div>
-  <div class="w-full bg-white border rounded-lg card border-light-200">
+  <div class="w-full bg-white border rounded-xl card border-light-200">
     <div on:click={toggleExpand} class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>
-    <div class="p-2" on:click={toggleExpand}>
-      <div class="text-base text-primary">{data.title}</div>
-      <p class="text-xs text-gray-500 ">
-        {#if data.connection == 'trustedMutual'}
-          <Icon icon={faExchangeAlt} /><span class="ml-2"> mutual trust</span>
-        {:else if data.connection == 'trustingMe'}
-          <Icon icon={faArrowRight} /><span class="ml-2"> is trusting you</span>
-        {:else if data.connection == 'trustedByMe'}
-          <Icon icon={faArrowLeft} /><span class="ml-2"> trusted by you</span>
-        {:else if data.connection == 'trustRevoked'}
-          <Icon icon={faMinusCircle} /><span class="ml-2"> revoked trust</span>
-        {/if}
-      </p>
+    <div class="flex items-center">
+      <div class="p-2" on:click={toggleExpand}>
+        <div class="text-xs md:text-base text-primary">{data.title}</div>
+        <p class="text-gray-500 text-xxs md:text-xs ">
+          {#if data.connection == 'trustedMutual'}
+            <Icon icon={faExchangeAlt} /><span class="ml-2"> mutual trust</span>
+          {:else if data.connection == 'trustingMe'}
+            <Icon icon={faArrowRight} /><span class="ml-2">
+              is trusting you</span>
+          {:else if data.connection == 'trustedByMe'}
+            <Icon icon={faArrowLeft} /><span class="ml-2"> trusted by you</span>
+          {:else if data.connection == 'trustRevoked'}
+            <Icon icon={faMinusCircle} /><span class="ml-2">
+              revoked trust</span>
+          {/if}
+        </p>
+      </div>
     </div>
     <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
       {#each data.actions as a}
@@ -159,12 +165,12 @@
 
   {#if data.detail && openDetail}
     <div
-      class="w-full p-2 overflow-hidden text-xs text-gray-500 bg-white border-b border-l border-r border-light-200 ">
+      class="mx-2 rounded-b-xl w-full p-2 overflow-hidden text-gray-500 bg-white border-b border-l border-r text-xxs md:text-xs border-light-200 ">
       <div>
         Address:<br /><span class=" text-primary">{data.detail.address}</span>
       </div>
-      <div>Con
-        Limit:<span class="pl-2 text-primary">{data.detail.limit}%</span>
+      <div>
+        Con Limit:<span class="pl-2 text-primary">{data.detail.limit}%</span>
       </div>
     </div>
   {/if}

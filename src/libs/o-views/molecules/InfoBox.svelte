@@ -12,7 +12,7 @@
 </script>
 
 {#if safeAddress}
-  <div class="w-full p-4 text-xs text-yellow-800 bg-info">
+  <div class="w-full p-4 text-xs text-yellow-800 bg-info rounded-t-xl">
     <div>
       Please Note: To be able to request UBI or (un)trust someone, please send
       EACH 0.01 xDai to your gnosis safe address and to your safe owner address.

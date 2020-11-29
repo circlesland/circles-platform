@@ -75,7 +75,7 @@
 
 {#if safeAddress && $location == '/omo/dapps'}
   <Compose
-    tw="justify-center items-center p-4 bg-white border-t border-light-200"
+    tw="justify-center items-center mx-4 mb-4 md:mx-0"
     columns="1fr"
     rows="1fr">
     <button on:click={logout} class="w-full">
@@ -86,7 +86,7 @@
   <Compose
     rows="1fr"
     columns="1fr 1fr 80px 1fr 1fr"
-    tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 md:px-3 lg:px-4">
+    tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 md:px-4 md:border md:border-light-200 md:m-4 md:rounded-xl md:shadow-lg">
     <Compose rows="1fr" columns="1fr">
       <a
         href={quickActions[0].route}
@@ -131,19 +131,19 @@
   </Compose>
 {:else if $location == '/'}
   <Compose
-    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    tw="justify-center items-center mx-4 mb-4 md:mx-0"
     columns="1fr"
     rows="1fr">
-    <a href="#/omo/dapps" class="w-full p-2">
+    <a href="#/omo/dapps" class="w-full">
       <Button mapping={buttonGoToApp} />
     </a>
   </Compose>
 {:else}
   <Compose
-    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    tw="justify-center items-center mx-4 mb-4 md:mx-0"
     columns="1fr"
     rows="1fr">
-    <button on:click={onActionButtonClick} class="w-full p-2">
+    <button on:click={onActionButtonClick} class="w-full">
       <Button mapping={buttonLogin} />
     </button>
   </Compose>
