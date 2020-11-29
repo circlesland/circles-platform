@@ -1,22 +1,21 @@
-import {createMachine} from "xstate";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {connectSafeService} from "./services/connectSafeService";
+import { createMachine } from "xstate";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { connectSafeService } from "./services/connectSafeService";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
-import {push} from "svelte-spa-router";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
-import {strings} from "../../data/strings";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import { push } from "svelte-spa-router";
+import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
+import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
+import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
+import { setError } from "../../../../libs/o-processes/actions/setError";
+import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { strings } from "../../data/strings";
+import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
 
-export interface ConnectSafeContext extends ProcessContext
-{
+export interface ConnectSafeContext extends ProcessContext {
   data: {
     safeAddress?: ProcessArtifact,
     privateKey?: ProcessArtifact
@@ -39,7 +38,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
     promptSafeAddress: {
       entry: sendPrompt({
         title: str.titleSafeAddress(),
-        nextButtonTitle: "Next",
+        nextButtonTitle: str.buttonSafeAddress(),
         banner: {
           component: Banner,
           data: {
@@ -47,7 +46,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           }
         },
         artifacts: {
-          ... ethereumAddress("safeAddress", str.titleSafeAddress())
+          ...ethereumAddress("safeAddress", str.titleSafeAddress())
         }
       }),
       on: {

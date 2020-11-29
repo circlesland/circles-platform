@@ -123,7 +123,7 @@
       {#if state != undefined}
         <div class="">
           <div
-            class="px-4 py-10 text-xl text-center bg-white border rounded text-primary border-light-200 font-title">
+            class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200 font-title">
             <div
               class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
               <Avataaar mapping={avataaar} />

@@ -42,5 +42,5 @@
     placeholder="word1 word2 word3 word4 .... word23 word24"
     type="text"
     bind:value={privateKeyPhrase}
-    class="w-full h-24 px-2 mb-2 bg-transparent border border-gray-300 rounded text-primary" />
+    class="w-full h-24 px-2 mb-2 bg-transparent border border-gray-300 rounded-xl text-primary" />
 </div>
