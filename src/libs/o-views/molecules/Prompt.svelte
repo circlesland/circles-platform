@@ -24,6 +24,7 @@
       processArtifacts = Object.keys(prompt.data).map(
         (key) => prompt.data[key]
       );
+      setIsValid();
     }
   }
 
