@@ -6,6 +6,9 @@
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
+  import {Subscription} from "rxjs";
+  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
+  import {onDestroy} from "svelte";
 
   export let address: string;
   let accountAddress: string = localStorage.getItem("omo.address");
@@ -76,6 +79,26 @@
       });
     tokensITrust.sort((a, b) => -a.balanceBN.cmp(b.balanceBN));
   }
+
+
+  let subscription: Subscription = window.eventBroker
+    .getTopic("omo", "shell")
+    .observable.subscribe((event: OmoEvent) =>
+    {
+      if (event.type === "shell.refreshView")
+      {
+        init(address);
+      }
+    });
+
+  onDestroy(() =>
+  {
+    if (!subscription)
+      return;
+
+    subscription.unsubscribe();
+    subscription = null;
+  });
 
   $: {
     if (config.getCurrent().web3().utils.isAddress(address)) {

@@ -6,6 +6,9 @@
 
   import { Jumper } from "svelte-loading-spinners";
   import Account from "./Account.svelte";
+  import {Subscription} from "rxjs";
+  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
+  import {onDestroy} from "svelte";
 
   export let address: string;
 
@@ -50,6 +53,25 @@
     const personalEthDot = personalEthBalanceStr.indexOf(".");
     personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
   }
+
+  let subscription: Subscription = window.eventBroker
+    .getTopic("omo", "shell")
+    .observable.subscribe((event: OmoEvent) =>
+    {
+      if (event.type === "shell.refreshView")
+      {
+        init(address);
+      }
+    });
+
+  onDestroy(() =>
+  {
+    if (!subscription)
+      return;
+
+    subscription.unsubscribe();
+    subscription = null;
+  });
 
   $: {
     if (config.getCurrent().web3().utils.isAddress(address)) {

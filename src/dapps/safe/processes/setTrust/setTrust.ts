@@ -1,4 +1,4 @@
-import { createMachine } from "xstate";
+import {createMachine, send} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { strings } from "../../data/strings";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
@@ -14,6 +14,7 @@ import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPro
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import {RefreshView} from "../../../../libs/o-events/refreshView";
 
 export interface SetTrustContext extends ProcessContext {
   data: {
@@ -77,7 +78,13 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: [
+        sendSuccessPrompt,
+        send({
+          type: "process.shellEvent",
+          payload: new RefreshView("safe.friends")
+        })
+      ],
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

@@ -1,4 +1,4 @@
-import {createMachine} from "xstate";
+import {createMachine, send} from "xstate";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {strings} from "../../data/strings";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
@@ -9,6 +9,7 @@ import {setResult} from "../../../../libs/o-processes/actions/setResult";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import {RefreshView} from "../../../../libs/o-events/refreshView";
 
 /**
  * Requests UBI
@@ -41,7 +42,17 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: [
+        sendSuccessPrompt,
+        send({
+          type: "process.shellEvent",
+          payload: new RefreshView("safe.balance")
+        }),
+        send({
+          type: "process.shellEvent",
+          payload: new RefreshView("safe.transactions")
+        })
+      ],
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

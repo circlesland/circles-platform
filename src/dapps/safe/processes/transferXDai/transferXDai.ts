@@ -1,4 +1,4 @@
-import {createMachine} from "xstate";
+import {createMachine, send} from "xstate";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {transferXDaiService} from "./services/transferXDaiService";
 import {strings} from "../../data/strings";
@@ -15,6 +15,7 @@ import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
 import {ether} from "../../../../libs/o-processes/artifacts/ether";
+import {RefreshView} from "../../../../libs/o-events/refreshView";
 
 export interface TransferXDaiContext extends ProcessContext
 {
@@ -126,7 +127,13 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: [
+        sendSuccessPrompt,
+        send({
+          type: "process.shellEvent",
+          payload: new RefreshView("safe.tokens")
+        })
+      ],
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

@@ -13,6 +13,9 @@
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
+  import {Subscription} from "rxjs";
+  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
+  import {onDestroy} from "svelte";
 
   export let address: string;
 
@@ -73,6 +76,25 @@
       return o;
     });
   }
+
+  let subscription: Subscription = window.eventBroker
+    .getTopic("omo", "shell")
+    .observable.subscribe((event: OmoEvent) =>
+    {
+      if (event.type === "shell.refreshView")
+      {
+        init(address);
+      }
+    });
+
+  onDestroy(() =>
+  {
+    if (!subscription)
+      return;
+
+    subscription.unsubscribe();
+    subscription = null;
+  });
 
   $: {
     if (config.getCurrent().web3().utils.isAddress(address)) {

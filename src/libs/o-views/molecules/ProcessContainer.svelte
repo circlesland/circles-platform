@@ -13,6 +13,7 @@
   import {Continue} from "../../o-processes/events/continue";
   import {createEventDispatcher} from "svelte";
   import {Subscription} from "rxjs";
+  import {ShellEvent} from "../../o-processes/events/shellEvent";
 
   /**
    * A channel to an already running process.
@@ -70,7 +71,11 @@
     {
       subscription = process.events.subscribe((next) =>
       {
-        if (next.event?.type === "process.prompt")
+        if (next.event?.type === "process.shellEvent")
+        {
+          window.dispatchShellEvent((<ShellEvent>next.event).payload)
+        }
+        else if (next.event?.type === "process.prompt")
         {
           prompt = <PromptEvent>next.event;
           let artifactsArr = Object.keys(prompt.data).map(

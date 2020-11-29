@@ -15,6 +15,9 @@
     labelTrusting,
     labelRevoked,
   } from "./../../data/friends";
+  import {Subscription} from "rxjs";
+  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
+  import {onDestroy} from "svelte";
 
   export let address: string;
   let mySafeAddress: string;
@@ -146,6 +149,25 @@
 
     console.log("personsITrust:", personsITrust);
   }
+
+  let subscription: Subscription = window.eventBroker
+    .getTopic("omo", "shell")
+    .observable.subscribe((event: OmoEvent) =>
+    {
+      if (event.type === "shell.refreshView")
+      {
+        init(address);
+      }
+    });
+
+  onDestroy(() =>
+  {
+    if (!subscription)
+      return;
+
+    subscription.unsubscribe();
+    subscription = null;
+  });
 
   $: {
     if (config.getCurrent().web3().utils.isAddress(address)) {
