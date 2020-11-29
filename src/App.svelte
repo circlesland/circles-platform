@@ -108,6 +108,7 @@
   }
 
   function modalWantsToClose() {
+    isOpen = false;
     if (!runningProcess) {
       return;
     }
