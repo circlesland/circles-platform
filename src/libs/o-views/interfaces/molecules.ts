@@ -20,7 +20,7 @@ export interface Announcement {
 export interface DappIcon {
     data: {
         title: string;
-        tag: string;
+        tag?: string;
     };
     design: {
         type: string;

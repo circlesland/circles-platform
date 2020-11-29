@@ -74,7 +74,10 @@
 </style>
 
 {#if safeAddress && $location == '/omo/dapps'}
-  <Compose tw="justify-center items-center m-4" columns="1fr" rows="1fr">
+  <Compose
+    tw="justify-center items-center mx-4 mb-4 md:mx-0"
+    columns="1fr"
+    rows="1fr">
     <button on:click={logout} class="w-full">
       <Button mapping={buttonLogout} />
     </button>
@@ -128,19 +131,19 @@
   </Compose>
 {:else if $location == '/'}
   <Compose
-    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    tw="justify-center items-center mx-4 mb-4 md:mx-0"
     columns="1fr"
     rows="1fr">
-    <a href="#/omo/dapps" class="w-full p-2">
+    <a href="#/omo/dapps" class="w-full">
       <Button mapping={buttonGoToApp} />
     </a>
   </Compose>
 {:else}
   <Compose
-    tw="justify-center items-center p-4 bg-white  border-t border-light-300"
+    tw="justify-center items-center mx-4 mb-4 md:mx-0"
     columns="1fr"
     rows="1fr">
-    <button on:click={onActionButtonClick} class="w-full p-2">
+    <button on:click={onActionButtonClick} class="w-full">
       <Button mapping={buttonLogin} />
     </button>
   </Compose>

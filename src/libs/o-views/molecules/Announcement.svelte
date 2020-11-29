@@ -19,7 +19,7 @@
 
 <a
   href={mapping.action.link}
-  class="w-full text-center whitespace-no-wrap rounded-xl md:p-4 ">
+  class="w-full text-center whitespace-no-wrap rounded-xl">
   <div
     class="inline-flex w-full overflow-hidden bg-white border-b md:rounded-xl md:shadow-sm border-light-200">
     <div class="flex items-center justify-center w-16 p-2 bg-info ">

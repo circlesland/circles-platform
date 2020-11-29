@@ -102,57 +102,52 @@
   }
 </script>
 
-<Compose rows="auto 1fr" columns="1fr">
-  <Compose rows="1fr" columns="1fr" tw="h-14">
-    <Header mapping={title} />
-  </Compose>
-
-  <Compose rows="1fr" columns="1fr" tw="p-4" gap="10px" overflowY>
-    <div>
-      {#if authState == undefined}
-        <div class="flex items-center justify-center h-full mx-auto">
-          <div>
-            <Jumper size="150" color="#071D69" unit="px" /><br />
-            <div class="text-sm text-center lowercase text-primary">
-              authenticating<br />
-            </div>
+<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
+  <div>
+    {#if authState == undefined}
+      <div class="flex items-center justify-center h-full mx-auto">
+        <div>
+          <Jumper size="150" color="#071D69" unit="px" /><br />
+          <div class="text-sm text-center lowercase text-primary">
+            authenticating<br />
           </div>
         </div>
-      {:else}
-        {#if state != undefined && !state.authenticated}
-          <div on:click={fissionAuth}>
-            <Button mapping={buttonLogin} />
-          </div>
-        {/if}
+      </div>
+    {:else}
+      {#if state != undefined && !state.authenticated}
+        <div on:click={fissionAuth}>
+          <Button mapping={buttonLogin} />
+        </div>
+      {/if}
 
-        {#if state != undefined}
-          <div class="">
+      {#if state != undefined}
+        <div class="">
+          <div
+            class="px-4 py-10 text-xl text-center bg-white border rounded text-primary border-light-200 font-title">
             <div
-              class="px-4 py-10 text-xl text-center bg-white border rounded text-primary border-light-200 font-title">
-              <div
-                class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
-                <Avataaar mapping={avataaar} />
-              </div>
-              Welcome,
-              {state.username}<br />
-              <span class="text-sm text-light-500">{authState}</span>
+              class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
+              <Avataaar mapping={avataaar} />
             </div>
+            Welcome,
+            {state.username}<br />
+            <span class="text-sm text-light-500">{authState}</span>
           </div>
-          <div class="pt-2 space-y-2">
-            <ProfileItem mapping={firstname} />
-            <ProfileItem mapping={lastname} />
-            <ProfileItem mapping={city} />
-            <!-- 
+        </div>
+        <div class="pt-2 space-y-2">
+          <ProfileItem mapping={firstname} />
+          <ProfileItem mapping={lastname} />
+          <ProfileItem mapping={city} />
+          <!-- 
             <div>Scenario:  {state.scenario}</div>
             <div>AppName: {state.permissions.app.name}</div>
             <div>AppCreator: {state.permissions.app.creator}</div>
             <div>Authenticated: {state.authenticated}</div> 
           -->
-          </div>
-        {/if}
+        </div>
       {/if}
+    {/if}
 
-      <!-- <div class="p-2">
+    <!-- <div class="p-2">
         <span class="font-bold">-- ipfs --</span>
         {#if state != undefined}
           <div>App path: {path}</div>
@@ -189,6 +184,5 @@
           </div>
         {/if}
       </div>-->
-    </div>
-  </Compose>
+  </div>
 </Compose>

@@ -118,7 +118,7 @@
 <ComposeApp tw="font-primary bg-light-100">
   <Compose tw="mx-auto bg-light-100 w-full max-w-4xl">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
-      <Compose>
+      <Compose tw="m-0 md:my-4">
         <Announcement mapping={alpha} />
       </Compose>
       <Compose rows="1fr" columns="1fr">

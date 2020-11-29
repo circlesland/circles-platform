@@ -10,7 +10,7 @@
   } from "./../../data/access";
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="px-4 lg:p-6" overflowY>
+<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" overflowY>
   <div>
     <CategoryTitle mapping={labelDevices} />
     <div class="space-y-2">
