@@ -38,7 +38,7 @@ export default {
 
     // Odentity
     '/odentity/profile': wrap(profile),
-    '/odentity/authenticate': wrap(authenticate),
+    '/odentity/authenticate/:redirectTo?': wrap(authenticate),
     '/odentity/access': wrap(access),
     '/odentity/keys': wrap(keys),
 

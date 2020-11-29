@@ -1,5 +1,6 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
+  import Button from "src/libs/o-views/atoms/Button.svelte";
   import { onMount } from "svelte";
   import { push } from "svelte-spa-router";
 
@@ -19,6 +20,16 @@
     <div
       class="mx-auto text-xl text-center text-secondary font-title max-w-4/5">
       empowering your abundance
+    </div>
+    <div on:click={() => push("#/odentity/authenticate")}>
+      <Button mapping={{
+        data: {
+          label: "Login"
+        },
+        design: {
+            type: "primary"
+        }
+      }} />
     </div>
   </Compose>
 </Compose>

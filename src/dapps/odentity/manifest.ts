@@ -2,46 +2,71 @@ import Profile from 'src/dapps/odentity/views/pages/Profile.svelte'
 import Access from 'src/dapps/odentity/views/pages/Access.svelte'
 import Authenticate from 'src/dapps/odentity/views/pages/Authenticate.svelte'
 import Keys from 'src/dapps/odentity/views/pages/Keys.svelte'
-import { ActionBarAction } from 'src/libs/o-os/routes';
 
-import { odentityDefaultActions, odentityOverflowActions } from "./data/actions"
+import {odentityDefaultActions, odentityOverflowActions} from "./data/actions"
+import {PageManifest} from "../../libs/o-os/pageManifest";
 
-export const profile = {
+export const profile: PageManifest = {
   component: Profile,
+  conditions: [
+    (detail) => {
+      console.log("routeGuard.detail:", detail);
+      return window.fissionAuth !== undefined
+    }
+  ],
   userData: {
-    actions: <ActionBarAction[]>[
+    dapp: "odentity",
+    showActionBar: true,
+    actions: [
       ...odentityDefaultActions,
       ...odentityOverflowActions
     ]
   }
 }
 
-export const authenticate = {
+export const authenticate: PageManifest = {
   component: Authenticate,
   userData: {
-    actions: <ActionBarAction[]>[
+    dapp: "odentity",
+    actions: [
       ...odentityDefaultActions,
       ...odentityOverflowActions
     ]
   }
 }
 
-export const access = {
-    component: Access,
-    userData: {
-        actions: <ActionBarAction[]>[
-            ...odentityDefaultActions,
-            ...odentityOverflowActions
-        ]
+export const access: PageManifest = {
+  component: Access,
+  conditions: [
+    (detail) => {
+      console.log("routeGuard.detail:", detail);
+      return window.fissionAuth !== undefined
     }
+  ],
+  userData: {
+    dapp: "odentity",
+    showActionBar: true,
+    actions: [
+      ...odentityDefaultActions,
+      ...odentityOverflowActions
+    ]
+  }
 }
 
-export const keys = {
-    component: Keys,
-    userData: {
-        actions: <ActionBarAction[]>[
-            ...odentityDefaultActions,
-            ...odentityOverflowActions
-        ]
+export const keys: PageManifest = {
+  component: Keys,
+  conditions: [
+    (detail) => {
+      console.log("routeGuard.detail:", detail);
+      return window.fissionAuth !== undefined
     }
+  ],
+  userData: {
+    dapp: "odentity",
+    showActionBar: true,
+    actions: [
+      ...odentityDefaultActions,
+      ...odentityOverflowActions
+    ]
+  }
 }

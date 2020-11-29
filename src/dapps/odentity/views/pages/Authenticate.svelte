@@ -6,6 +6,8 @@
 
   const wn = window.wn;
 
+  export let params;
+
   let state;
 
   onMount(async () => {
@@ -38,7 +40,12 @@
         //
         // ☞ We can now interact with our file system (more on that later)
         window.dispatchShellEvent(new Authenticated(state));
-        push("#/odentity/profile")
+        if (params && params.redirectTo) {
+          push(params.redirectTo);
+        }  else {
+          push("#/odentity/profile");
+        }
+
         break;
 
       case wn.Scenario.NotAuthorised:

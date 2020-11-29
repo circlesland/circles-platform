@@ -2,7 +2,7 @@
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router from "svelte-spa-router";
+  import Router, {push} from "svelte-spa-router";
   import routes from "./libs/o-os/routes";
 
   import "./libs/o-views/css/base.css";
@@ -17,6 +17,7 @@
   import Announcement from "./libs/o-views/molecules/Announcement.svelte";
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
+  import {Process} from "./libs/o-processes/interfaces/process";
 
   let safeAddress;
 
@@ -34,6 +35,7 @@
   };
 
   let isOpen = false;
+  let showActionBar = false;
   let askForCancel = false;
 
   let runningProcess: Process = window.stateMachines.current();
@@ -59,6 +61,7 @@
 
     if (!e.detail.userData) return;
 
+    showActionBar = e.detail.userData.showActionBar;
     actions = e.detail.userData.actions;
   }
 
@@ -114,6 +117,11 @@
     }
     runningProcess.sendEvent(new Cancel());
   }
+
+  function conditionsFailed(event) {
+    console.log("Escaped redirect url:", encodeURIComponent(event.detail.location));
+    push(`#/odentity/authenticate/${encodeURIComponent(event.detail.location)}`);
+  }
 </script>
 
 <ComposeApp tw="font-primary bg-light-100">
@@ -123,14 +131,16 @@
         <Announcement mapping={alpha} />
       </Compose>
       <Compose rows="1fr" columns="1fr">
-        <Router {routes} on:routeLoading={routeLoading} />
+        <Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoading={routeLoading} />
       </Compose>
-      <Compose>
-        <ActionBar
-          bind:safeAddress
-          on:actionButtonClick={toggleOpen}
-          {quickActions} />
-      </Compose>
+      {#if showActionBar}
+        <Compose>
+          <ActionBar
+            bind:safeAddress
+            on:actionButtonClick={toggleOpen}
+            {quickActions} />
+        </Compose>
+      {/if}
       <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
         {#if runningProcess}
           <ProcessContainer
