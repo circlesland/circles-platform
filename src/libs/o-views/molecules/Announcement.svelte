@@ -21,7 +21,7 @@
   href={mapping.action.link}
   class="w-full text-center whitespace-no-wrap rounded-xl">
   <div
-    class="inline-flex w-full overflow-hidden bg-white border-b md:rounded-xl md:shadow-sm border-light-200">
+    class="inline-flex w-full overflow-hidden bg-white md:rounded-xl md:shadow-sm">
     <div class="flex items-center justify-center w-16 p-2 bg-info ">
       <svg
         class="w-6 h-6 text-white fill-current"
