@@ -11,7 +11,7 @@
     {
       processArtifact.isValid = true;
     }
-    else
+    else if (processArtifact.value)
     {
       processArtifact.isValid = processArtifact.value.toString().trim() !== "";
     }

@@ -11,7 +11,7 @@
     {
       processArtifact.isValid = true;
     }
-    else
+    else if (processArtifact.value)
     {
       processArtifact.isValid = processArtifact.value.toString().trim() !== "";
     }
@@ -41,6 +41,7 @@
       placeholder={processArtifact.placeholder ? processArtifact.placeholder : "Lorem ipsum dolor .."}
       class:border={!processArtifact.isValid}
       class:border-red-500={!processArtifact.isValid}
+      class="w-full"
       bind:value={processArtifact.value}></textarea>
   </div>
 {/if}
