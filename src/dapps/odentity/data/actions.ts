@@ -1,5 +1,8 @@
 import { faUserCircle, faUserAstronaut, faLock, faKey, faCoins } from "@fortawesome/free-solid-svg-icons";
 import { ActionBarAction } from "src/libs/o-os/routes";
+import {RunProcess} from "../../../libs/o-events/runProcess";
+import {requestUbi} from "../../safe/processes/requestUbi/requestUbi";
+import {createOdentity} from "../processes/createOdentity/createOdentity";
 
 export const odentityDefaultActions: ActionBarAction[] = [
     {
@@ -86,32 +89,9 @@ export const odentityOverflowActions: ActionBarAction[] = [
                 icon: faCoins,
             },
             data: {
-                label: "Change name",
+                label: "Create odentity",
             }
         },
-    },
-    {
-        type: "trigger",
-        pos: "overflow",
-        mapping: {
-            design: {
-                icon: faCoins,
-            },
-            data: {
-                label: "Change Profile image",
-            }
-        },
-    },
-    {
-        type: "trigger",
-        pos: "overflow",
-        mapping: {
-            design: {
-                icon: faCoins,
-            },
-            data: {
-                label: "Change city",
-            }
-        },
+        event: () => new RunProcess(createOdentity)
     },
 ];

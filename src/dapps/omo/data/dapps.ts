@@ -44,11 +44,11 @@ export const dapps: DappIcon[] = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "odentity/profile",
     },
     design: {
       icon: faUserAstronaut,
-      type: "disabled",
+      type: "",
     },
   },
   {

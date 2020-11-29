@@ -6,7 +6,7 @@ import { OmoEvent } from "../o-events/omoEvent";
 
 import { transactions, tokens, friends } from "../../dapps/safe/manifest";
 import { omo } from "../../dapps/omo/manifest";
-import { profile, access, keys } from "../../dapps/odentity/manifest";
+import {profile, access, keys, authenticate} from "../../dapps/odentity/manifest";
 import { website } from "../../dapps/website/manifest";
 
 export type ActionBarAction = {
@@ -38,6 +38,7 @@ export default {
 
     // Odentity
     '/odentity/profile': wrap(profile),
+    '/odentity/authenticate': wrap(authenticate),
     '/odentity/access': wrap(access),
     '/odentity/keys': wrap(keys),
 

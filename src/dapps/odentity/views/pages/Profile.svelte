@@ -1,188 +1,89 @@
 <script lang="ts">
-  import Button from "src/libs/o-views/atoms/Button.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import Header from "src/libs/o-views/molecules/Header.svelte";
-  import { Jumper } from "svelte-loading-spinners";
-  import { onMount } from "svelte";
-  import { buttonLogin, title, avataaar } from "./../../data/profile";
+  import {onMount} from "svelte";
   import Avataaar from "src/libs/o-views/atoms/Avataaar.svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
-  import { firstname, lastname, city } from "./../../data/profile";
+  import {firstname, lastname, city} from "./../../data/profile";
+  import {Profile} from "../../interfaces/profile";
+  import {GotProfile} from "../../events/gotProfile";
+  import {RunProcess} from "../../../../libs/o-events/runProcess";
+  import {createOdentity} from "../../processes/createOdentity/createOdentity";
+  import {push} from "svelte-spa-router";
+  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 
   const wn = window.wn;
 
-  let state;
-  let appFolders = [];
-  let path;
-  let fs: any;
+  let profile:Profile;
 
-  let myApps;
-
-  let authState;
-
-  onMount(async () => {
-    await initAuth();
-    await initFS();
-    await listApps();
+  window.eventBroker.getTopic("omo", "shell").observable.subscribe((event:OmoEvent) => {
+    if (event.type === "shell.gotProfile") {
+      profile = (<GotProfile>event).profile;
+    }
   });
 
-  async function initAuth() {
-    state = await wn.initialise({
-      permissions: {
-        // Will ask the user permission to store
-        // your apps data in `private/Apps/{creator}}/{name}`
-        app: {
-          name: "OmoTest",
-          creator: "MamaOmo",
-        },
-      },
-    });
-    switch (state.scenario) {
-      case wn.Scenario.AuthCancelled:
-        authState = "you cancelled the access authorisation";
-        break;
-
-      case wn.Scenario.AuthSucceeded:
-      case wn.Scenario.Continuation:
-        authState = "you authenticated successfully";
-        // State:
-        // state.authenticated    -  Will always be `true` in these scenarios
-        // state.newUser          -  If the user is new to Fission
-        // state.throughLobby     -  If the user authenticated through the lobby, or just came back.
-        // state.username         -  The user's username.
-        //
-        // ☞ We can now interact with our file system (more on that later)
-        state.fs;
-        break;
-
-      case wn.Scenario.NotAuthorised:
-        authState = "you are not authorized, please allow access";
-        wn.redirectToLobby(state.permissions);
-        break;
+  onMount(async () =>
+  {
+    if (!window.fissionAuth)
+    {
+      push("#/odentity/authenticate");
+      return;
     }
-  }
-  async function initFS() {
-    fs = state.fs;
-    const appPath = fs.appPath();
-    if (await fs.exists(appPath)) {
-      await fs.ls(appPath);
-      console.log("before create:", fs.ls(appPath));
-    } else {
-      await fs.mkdir(appPath);
-      await fs.publish();
+
+    const session = window.fissionAuth;
+
+    if (await session.fs.exists(session.fs.appPath(["odentity", "profile.json"])))
+    {
+      const profileJson = <string>(await session.fs.cat(session.fs.appPath(["odentity", "profile.json"])));
+      const profileObj = JSON.parse(profileJson);
+      const profile: Profile = profileObj;
+
+      window.dispatchShellEvent(new GotProfile(profile));
     }
-    console.log("fs ls root path:", await fs.ls(appPath));
-    path = appPath;
+    else
+    {
+      window.dispatchShellEvent(new RunProcess(createOdentity));
+    }
+  });
 
-    await updateDirectoryList();
-  }
-
-  async function listApps() {
-    const a = await wn.apps.index();
-    myApps = Object.values(a)[0];
-    console.log("my apps:", myApps);
-  }
-
-  async function updateDirectoryList() {
-    const list = await fs.ls(fs.appPath());
-    appFolders = [];
-    Object.keys(list).forEach(function (key) {
-      appFolders.push(list[key]);
-    });
-  }
 
   let openDetail: boolean = false;
 
-  function toggleExpand() {
+  function toggleExpand()
+  {
     openDetail = !openDetail;
-  }
-
-  function fissionAuth() {
-    wn.redirectToLobby(state.permissions);
   }
 </script>
 
 <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
-  <div>
-    {#if authState == undefined}
-      <div class="flex items-center justify-center h-full mx-auto">
-        <div>
-          <Jumper size="150" color="#071D69" unit="px" /><br />
-          <div class="text-sm text-center lowercase text-primary">
-            authenticating<br />
+  {#if profile}
+    <div>
+      <div class="">
+        <div
+          class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200 font-title">
+          <div
+            class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
+            <!--<Avataaar mapping={avataaar}/>-->
+            <img src="{profile.avatar}" />
           </div>
+          Welcome,
+          {profile.firstName} {profile.lastName}
         </div>
       </div>
-    {:else}
-      {#if state != undefined && !state.authenticated}
-        <div on:click={fissionAuth}>
-          <Button mapping={buttonLogin} />
-        </div>
-      {/if}
-
-      {#if state != undefined}
-        <div class="">
-          <div
-            class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200 font-title">
-            <div
-              class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
-              <Avataaar mapping={avataaar} />
-            </div>
-            Welcome,
-            {state.username}<br />
-            <span class="text-sm text-light-500">{authState}</span>
-          </div>
-        </div>
-        <div class="pt-2 space-y-2">
-          <ProfileItem mapping={firstname} />
-          <ProfileItem mapping={lastname} />
-          <ProfileItem mapping={city} />
-          <!-- 
-            <div>Scenario:  {state.scenario}</div>
-            <div>AppName: {state.permissions.app.name}</div>
-            <div>AppCreator: {state.permissions.app.creator}</div>
-            <div>Authenticated: {state.authenticated}</div> 
-          -->
-        </div>
-      {/if}
-    {/if}
-
-    <!-- <div class="p-2">
-        <span class="font-bold">-- ipfs --</span>
-        {#if state != undefined}
-          <div>App path: {path}</div>
-          <div>Data in my app:</div>
-
-          <div class="space-y-2 ">
-            {#each appFolders as data}
-              <div
-                on:click={toggleExpand}
-                class="w-full bg-white border rounded card border-light-200">
-                <div class="flex items-center justify-center p-2">
-                  {#if data.isFile}FILE{:else}DIR{/if}
-                </div>
-                <div class="px-1 py-2">
-                  <div class="text-base text-primary">{data.name}</div>
-                  <p class="text-xs text-gray-500">
-                    <span class="text-xs text-gray-500">{data.mtime}</span>
-                  </p>
-                </div>
-                <div class="p-1 px-4 text-right">
-                  <div class="py-1 text-3xl font-light text-action">
-                    {data.size}
-                  </div>
-                </div>
-              </div>
-              {#if data.pointer && openDetail}
-                <div
-                  class="w-full p-2 text-xs text-gray-500 bg-white border-b border-l border-r border-light-200">
-                  Address:
-                  <span class="text-primary">{data.pointer}</span>
-                </div>
-              {/if}
-            {/each}
-          </div>
-        {/if}
-      </div>-->
-  </div>
+      <div class="pt-2 space-y-2">
+        <ProfileItem mapping={{
+          data: {
+            title: profile.firstName,
+            subtitle: "my first name"
+          }
+        }}/>
+        <ProfileItem mapping={ {
+          data: {
+            title: profile.lastName,
+            subtitle: "my last name"
+          }
+        }}/>
+        <ProfileItem mapping={city}/>
+      </div>
+    </div>
+  {/if}
 </Compose>

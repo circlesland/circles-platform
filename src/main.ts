@@ -8,6 +8,10 @@ import { OmoEvent } from "./libs/o-events/omoEvent";
 import * as webnative from "webnative";
 import { stateMachine } from "./libs/o-os/stateMachine"
 import {ProcessContext} from "./libs/o-processes/interfaces/processContext";
+import {AuthSucceeded, Continuation} from "webnative";
+import {Profile} from "./dapps/odentity/interfaces/profile";
+import {GotProfile} from "./dapps/odentity/events/gotProfile";
+import {Authenticated} from "./dapps/odentity/events/authenticated";
 
 dayjs.extend(relativeTime)
 
@@ -26,8 +30,10 @@ declare global {
       current(): Process | null,
       cancel(),
       run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => ProcessContext) => Process
-    }
-    wn: any
+    },
+    fissionAuth: AuthSucceeded|Continuation,
+    wn: any,
+    profile: Profile
   }
 }
 
@@ -36,7 +42,16 @@ window.wn = webnative
 window.mySafeAddress = localStorage.getItem("omo.safeAddress");
 
 const eventBroker = new EventBroker();
-eventBroker.createTopic("omo", "shell");
+const shellEvents = eventBroker.createTopic("omo", "shell");
+
+shellEvents.observable.subscribe((event:OmoEvent) => {
+  if (event.type === "shell.authenticated") {
+    window.fissionAuth = (<Authenticated>event).fissionAuth;
+  }
+  else if (event.type === "shell.gotProfile") {
+    window.profile = (<GotProfile>event).profile;
+  }
+});
 
 window.eventBroker = eventBroker;
 

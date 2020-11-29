@@ -2,6 +2,8 @@ export type OmoEventTypes =
     "shell.runProcess"
   | "shell.showModal"
   | "shell.refreshView"
+  | "shell.authenticated"
+  | "shell.gotProfile"
   | "process.back"
   | "process.shellEvent"
   | "process.continue"

@@ -10,6 +10,7 @@
   import AddressEditor from "../atoms/editors/AddressEditor.svelte";
   import TextEditor from "../atoms/editors/TextEditor.svelte";
   import KeyphraseEditor from "../atoms/editors/KeyphraseEditor.svelte";
+  import FileEditor from "../atoms/editors/FileEditor.svelte";
 
   export let process: Process;
   export let prompt: Prompt;
@@ -90,6 +91,10 @@
         processArtifact={artifact} />
     {:else if artifact.type === 'ethereumAddress'}
       <AddressEditor
+        on:validated={() => setIsValid()}
+        processArtifact={artifact} />
+    {:else if artifact.type === 'file'}
+      <FileEditor
         on:validated={() => setIsValid()}
         processArtifact={artifact} />
     {:else if artifact.type === 'secretString'}

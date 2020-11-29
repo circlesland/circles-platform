@@ -7,4 +7,5 @@ export type ProcessArtifactType =
   | "boolean"
   | "ethereumAddress"
   | "ether"
+  | "file"
   | "byteString"
