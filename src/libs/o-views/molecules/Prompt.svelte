@@ -1,14 +1,15 @@
 <script lang="ts">
   import Button from "../../o-views/atoms/Button.svelte";
-  import { Button as ButtonMapping } from "./../interfaces/atoms";
-  import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
-  import { Prompt } from "../../o-processes/events/prompt";
-  import { Continue } from "../../o-processes/events/continue";
-  import { Process } from "../../o-processes/interfaces/process";
+  import {Button as ButtonMapping} from "./../interfaces/atoms";
+  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
+  import {Prompt} from "../../o-processes/events/prompt";
+  import {Continue} from "../../o-processes/events/continue";
+  import {Process} from "../../o-processes/interfaces/process";
   import EtherEditor from "../atoms/editors/EtherEditor.svelte";
   import StringEditor from "../atoms/editors/StringEditor.svelte";
   import AddressEditor from "../atoms/editors/AddressEditor.svelte";
   import TextEditor from "../atoms/editors/TextEditor.svelte";
+  import KeyphraseEditor from "../atoms/editors/KeyphraseEditor.svelte";
 
   export let process: Process;
   export let prompt: Prompt;
@@ -19,7 +20,8 @@
   let nextButton: ButtonMapping;
 
   $: {
-    if (prompt) {
+    if (prompt)
+    {
       processArtifacts = Object.keys(prompt.data).map(
         (key) => prompt.data[key]
       );
@@ -27,7 +29,8 @@
     }
   }
 
-  function setIsValid() {
+  function setIsValid()
+  {
     isValid =
       !processArtifacts ||
       processArtifacts.reduce((p, c) => p && (c.isValid ?? false), true);
@@ -43,8 +46,10 @@
     };
   }
 
-  function sendAnswer() {
-    processArtifacts.forEach((changedArtifact) => {
+  function sendAnswer()
+  {
+    processArtifacts.forEach((changedArtifact) =>
+    {
       prompt.data[changedArtifact.key] = changedArtifact;
       prompt.data[changedArtifact.key].changed = true; // TODO: Set this property only if the value changed
     });
@@ -77,6 +82,10 @@
         processArtifact={artifact} />
     {:else if artifact.type === 'text'}
       <TextEditor
+        on:validated={() => setIsValid()}
+        processArtifact={artifact} />
+    {:else if artifact.type === 'keyphrase'}
+      <KeyphraseEditor
         on:validated={() => setIsValid()}
         processArtifact={artifact} />
     {:else if artifact.type === 'ethereumAddress'}

@@ -72,7 +72,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
         artifacts: {
           privateKey: {
             key: "privateKey",
-            type: "text",
+            type: "keyphrase",
             label: "Key phrase"
           }
         }
