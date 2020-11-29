@@ -146,7 +146,7 @@
           {#each overflowActions as action}
             <div class="w-full">
               <div class="space-y-2">
-                <div on:click={() => window.dispatchShellEvent(action.event())}>
+                <div on:click={() => window.o.dispatchShellEvent(action.event())}>
                   <OverflowAction mapping={action} />
                 </div>
               </div>

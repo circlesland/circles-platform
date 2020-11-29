@@ -69,7 +69,7 @@
       {
         if (next.event?.type === "process.shellEvent")
         {
-          window.dispatchShellEvent((<ShellEvent>next.event).payload)
+          window.o.dispatchShellEvent((<ShellEvent>next.event).payload)
         }
         else if (next.event?.type === "process.prompt")
         {
