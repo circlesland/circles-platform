@@ -10,7 +10,7 @@
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
 
-  let accountAddress: string = localStorage.getItem("omo.address");
+  let accountAddress: string;
   let safeAddress: string;
 
   let balance: BN;
@@ -26,7 +26,9 @@
   let tokensITrust: any[] = [];
 
   async function init() {
-    safeAddress = (await window.o.safe()).address;
+    const safe = await window.o.safe();
+    safeAddress = safe.address;
+    accountAddress = safe.owner;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
@@ -37,6 +39,7 @@
 
   async function reload() {
     const web3 = config.getCurrent().web3();
+    const safe = await window.o.safe()
 
     balance = await person.getTokenBalance();
     const balanceStr = web3.utils.fromWei(balance, "ether");
@@ -48,9 +51,7 @@
     const ethDot = ethBalanceStr.indexOf(".");
     safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
 
-    personalEthBalance = await web3.eth.getBalance(
-      localStorage.getItem("omo.address")
-    );
+    personalEthBalance = await web3.eth.getBalance(safe.owner);
     const personalEthBalanceStr = web3.utils.fromWei(
       personalEthBalance,
       "ether"

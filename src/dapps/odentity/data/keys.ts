@@ -7,7 +7,7 @@ export const keys: KeyItem[] = [
             image: "/icons/paperWallet.svg",
             title: "Circles SafeOwner",
             subtitle: "PrivateKey",
-            privatekey: localStorage.getItem("omo.privateKey"),
+            privatekey: "TODO",
         },
     },
 ];

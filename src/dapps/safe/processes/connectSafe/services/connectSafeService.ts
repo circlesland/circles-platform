@@ -17,12 +17,6 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
     .privateKeyToAccount("0x" + privateKey)
     .address;
 
-  /*
-  localStorage.setItem("omo.address", ownerAddress);
-  localStorage.setItem("omo.privateKey", "0x" + privateKey);
-  localStorage.setItem("omo.safeAddress", context.data.safeAddress.value);
-  */
-
   if(!context.environment.fissionAuth) {
     throw new Error("You're not authenticated.");
   }

@@ -22,13 +22,6 @@
     return action.route.indexOf($location) > -1;
   }
 
-  function logout() {
-    localStorage.removeItem("omo.address");
-    localStorage.removeItem("omo.safeAddress");
-    localStorage.removeItem("omo.privateKey");
-    push("/");
-  }
-
 </script>
 
 <style global>

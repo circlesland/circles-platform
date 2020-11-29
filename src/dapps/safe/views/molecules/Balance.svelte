@@ -34,6 +34,7 @@
 
   async function reload() {
     const web3 = config.getCurrent().web3();
+    const safe = await window.o.safe()
 
     balance = await person.getTokenBalance();
     const balanceStr = web3.utils.fromWei(balance, "ether");
@@ -45,9 +46,7 @@
     const ethDot = ethBalanceStr.indexOf(".");
     safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
 
-    personalEthBalance = await web3.eth.getBalance(
-      localStorage.getItem("omo.address")
-    );
+    personalEthBalance = await web3.eth.getBalance(safe.owner);
     const personalEthBalanceStr = web3.utils.fromWei(
       personalEthBalance,
       "ether"

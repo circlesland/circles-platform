@@ -15,10 +15,11 @@ import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Nop} from "../o-processes/events/nop";
 
 export async function getServiceContext(): Promise<ProcessContext> {
-    const safeAddress = (await window.o.safe())?.address;
+  const safe = await window.o.safe();
+    const safeAddress = safe?.address;
     const account: Account = {
-        privateKey: localStorage.getItem("omo.privateKey"),
-        address: localStorage.getItem("omo.address"),
+        privateKey: safe?.privateKey,
+        address: safe?.owner,
     };
     const web3 = config.getCurrent().web3();
     const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
