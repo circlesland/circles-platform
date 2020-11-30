@@ -38,21 +38,26 @@ function unformatValue(value) {
 }
 
 function getPath(from, to, value) {
-  if (typeof value !== "string")
-    throw new Error("The value parameter must contain the transfer value in wei in BN-string format or '0'.");
+  try {
+    if (typeof value !== "string")
+      throw new Error("The value parameter must contain the transfer value in wei in BN-string format or '0'.");
 
-  if (value === "0") {
-    value = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
-  } else {
-    value = unformatValue(value)
+    if (value === "0") {
+      value = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+    } else {
+      value = unformatValue(value)
+    }
+    let parameters = JSON.stringify({"from": from, "to": to, "value": value});
+    var buffer = Module._malloc(parameters.length + 1);
+    Module.stringToUTF8(parameters, buffer, parameters.length + 1);
+    let output = Module.UTF8ToString(Module._flow(buffer));
+    Module._free(buffer);
+    let data = JSON.parse(output);
+    return data;
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
-  let parameters = JSON.stringify({"from": from, "to": to, "value": value});
-  var buffer = Module._malloc(parameters.length + 1);
-  Module.stringToUTF8(parameters, buffer, parameters.length + 1);
-  let output = Module.UTF8ToString(Module._flow(buffer));
-  Module._free(buffer);
-  let data = JSON.parse(output);
-  return data;
 }
 
 // Optional:

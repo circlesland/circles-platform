@@ -62,7 +62,7 @@
             limit: "0",
             address: mutualTrust.owner.address,
           },
-          actions: ["trust"],
+          actions: ["trust", "send"],
         };
       });
 
@@ -97,7 +97,7 @@
             address: mutualTrust.owner.address,
             limit: mutualTrust.limit,
           },
-          actions: ["untrust"],
+          actions: ["untrust", "send"],
         };
       });
 
@@ -119,7 +119,7 @@
             address: personsThatTrustMe.owner.address,
             limit: personsThatTrustMe.limit,
           },
-          actions: ["trust"],
+          actions: ["trust", "send"],
         };
       });
 
@@ -141,7 +141,7 @@
             address: personsITrust.owner.address,
             limit: personsITrust.limit,
           },
-          actions: ["untrust"],
+          actions: ["untrust", "send"],
         };
       });
 

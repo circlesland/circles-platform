@@ -27,6 +27,8 @@
     UnTrustContext,
   } from "../../../dapps/safe/processes/unTrust/unTrust";
   import {cat} from "webnative/ipfs";
+  import {transferCircles, TransferCirclesContext} from "../../../dapps/safe/processes/transferCircles/transferCircles";
+  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
 
   export let data = {
     image: "",
@@ -46,20 +48,15 @@
   }
 
   function runTransferCircles(recipientAddress: Address) {
-    /*
     const contextInitializer = (context: TransferCirclesContext) => {
-      context.transfer = {
-        recipient: {
-          type: "ethereumAddress",
-          data: recipientAddress,
-        },
+      context.data.recipient = <ProcessArtifact>{
+        key: "recipient",
+        type: "ethereumAddress",
+        value: recipientAddress
       };
       return context;
     };
-    window.stateMachines.run(transferCircles, contextInitializer);
-    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
-
-   */
+    window.o.publishEvent(new RunProcess(transferCircles, contextInitializer));
   }
 
   function runTrust(recipientAddress: Address) {
@@ -72,7 +69,7 @@
       };
       return context;
     };
-    window.o.dispatchShellEvent(new RunProcess(setTrust, contextInitializer));
+    window.o.publishEvent(new RunProcess(setTrust, contextInitializer));
   }
 
   function runUntrust(recipientAddress: Address) {
@@ -85,20 +82,9 @@
       };
       return context;
     };
-    window.o.dispatchShellEvent(new RunProcess(unTrust, contextInitializer));
+    window.o.publishEvent(new RunProcess(unTrust, contextInitializer));
   }
 
-  async function getPath (to) {
-    try
-    {
-      const from = "0xDE374ece6fA50e781E81Aac78e811b33D16912c7";
-      console.log("getPath(from, to)", from, to)
-      const result = window.o.getPath(from, to, 0);
-      console.log("Getpath result:", result);
-    } catch(e) {
-      console.error(e);
-    }
-  }
 
   const sendMoney = {
     design: {

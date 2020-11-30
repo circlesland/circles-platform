@@ -69,14 +69,18 @@ export class GnosisSafeProxy extends Web3Contract
     return await this.execTransaction(account, safeTransaction);
   }
 
-  async execTransaction(account: Account, safeTransaction: GnosisSafeTransaction) : Promise<TransactionReceipt>
+  async execTransaction(account: Account, safeTransaction: GnosisSafeTransaction, dontEstimate?:boolean) : Promise<TransactionReceipt>
   {
     this.validateSafeTransaction(safeTransaction);
 
-    const estimatedBaseGas = this.estimateBaseGasCosts(safeTransaction, 1)
-      .add(new BN(this.web3.utils.toWei("10000", "wei")));
+    const estimatedBaseGas = dontEstimate
+      ? new BN(this.web3.utils.toWei("1000000", "wei"))
+      : this.estimateBaseGasCosts(safeTransaction, 1)
+        .add(new BN(this.web3.utils.toWei("10000", "wei")));
 
-    const estimatedSafeTxGas = (await this.estimateSafeTxGasCosts(safeTransaction))
+    const estimatedSafeTxGas = dontEstimate
+      ? new BN(this.web3.utils.toWei("1000000", "wei"))
+      : (await this.estimateSafeTxGasCosts(safeTransaction))
       .add(new BN(this.web3.utils.toWei("10000", "wei")));
 
     const nonce = await this.getNonce();

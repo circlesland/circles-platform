@@ -15,17 +15,6 @@ export async function initPathFinder() {
   } else if (registration.active) {
     // Re-used the same service worker
     console.log("inner worker: Re-used the same service worker")
-    setTimeout(async () => {
-      const result = await sendMessage({
-        call: "findPath",
-        args: {
-          from: "0xFd637F5890fc12C2422efF4A02Ec91485517CE81",
-          to: "0x7A3Ae5e44DACb14E711E668CBC6AadEFe3c90D60",
-          value: "0"
-        }
-      });
-      console.log(result);
-    }, 10000);
 
   }
 
