@@ -1,6 +1,4 @@
-import {BehaviorSubject, Subject} from "rxjs";
-import { Process } from "src/main";
-import { State } from "xstate";
+import {BehaviorSubject} from "rxjs";
 import { useMachine } from "xstate-svelte";
 import { ProcessDefinition } from "../o-processes/processManifest";
 
@@ -13,6 +11,7 @@ import {ProcessContext} from "../o-processes/interfaces/processContext";
 import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Nop} from "../o-processes/events/nop";
+import {Process} from "../o-processes/interfaces/process";
 
 export async function getServiceContext(): Promise<ProcessContext> {
   const safe = await window.o.safe();

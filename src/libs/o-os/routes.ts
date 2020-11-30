@@ -9,25 +9,6 @@ import { omo } from "../../dapps/omo/manifest";
 import {profile, access, keys, authenticate} from "../../dapps/odentity/manifest";
 import { website } from "../../dapps/website/manifest";
 
-export type ActionBarAction = {
-    type: "route" | "trigger",
-    pos: "1" | "2" | "3" | "4" | "overflow",
-    mapping: {
-        design: {
-            icon: any
-        },
-        data: {
-            label: string
-        }
-    }
-    event?: () => OmoEvent,
-    route?: string
-}
-
-location.subscribe(event => {
-    console.log(event);
-})
-
 // Export the route definition object
 export default {
     // Website

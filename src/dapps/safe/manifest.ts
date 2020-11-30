@@ -2,8 +2,8 @@ import Transactions from "./views/pages/Transactions.svelte"
 import Friends from "./views/pages/Friends.svelte"
 import Tokens from "./views/pages/Tokens.svelte"
 import {safeDefaultActions, safeOverflowActions} from "./data/actions"
-import {ActionBarAction} from "src/libs/o-os/routes";
-import {PageManifest} from "../../libs/o-os/pageManifest";
+import {PageManifest} from "../../libs/o-os/interfaces/pageManifest";
+import {QuickAction} from "../../libs/o-os/types/quickAction";
 
 export const transactions: PageManifest = {
   component: Transactions,
@@ -16,7 +16,7 @@ export const transactions: PageManifest = {
   userData: {
     showActionBar: true,
     dapp: "safe",
-    actions: <ActionBarAction[]>[
+    actions: <QuickAction[]>[
       ...safeDefaultActions,
       ...safeOverflowActions
     ]
@@ -34,7 +34,7 @@ export const friends: PageManifest = {
   userData: {
     showActionBar: true,
     dapp: "safe",
-    actions: <ActionBarAction[]>[
+    actions: <QuickAction[]>[
       ...safeDefaultActions,
       ...safeOverflowActions
     ]
@@ -52,7 +52,7 @@ export const tokens: PageManifest = {
   userData: {
     showActionBar: true,
     dapp: "safe",
-    actions: <ActionBarAction[]>[
+    actions: <QuickAction[]>[
       ...safeDefaultActions,
       ...safeOverflowActions
     ]

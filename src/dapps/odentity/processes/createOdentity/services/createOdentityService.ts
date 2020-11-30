@@ -1,6 +1,6 @@
 import {CreateOdentityContext} from "../createOdentity";
 import {AuthSucceeded, Continuation} from "webnative";
-import {FissionPaths} from "../../../../../main";
+import {FissionPaths} from "../../../../../libs/o-os/fissionPaths";
 
 export const createOdentityService = async (context: CreateOdentityContext) =>
 {

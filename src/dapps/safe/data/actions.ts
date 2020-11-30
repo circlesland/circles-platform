@@ -1,16 +1,11 @@
-/*import { setTrust, SetTrustContext } from "./../processes/setTrust/setTrust";
-import { transferCircles } from "./../processes/transferCircles/transferCircles";
-import { transferXDai } from "./../processes/transferXDai/transferXDai";
-*/
 import {faCoins, faUserCircle, faPiggyBank, faUserFriends} from "@fortawesome/free-solid-svg-icons";
 import {RunProcess} from "src/libs/o-events/runProcess";
-import {ActionBarAction} from "src/libs/o-os/routes";
 import {setTrust, SetTrustContext} from "../processes/setTrust/setTrust";
-import {unTrust} from "../processes/unTrust/unTrust";
 import {transferXDai} from "../processes/transferXDai/transferXDai";
 import {requestUbi} from "../processes/requestUbi/requestUbi";
+import {QuickAction} from "../../../libs/o-os/types/quickAction";
 
-export const safeDefaultActions: ActionBarAction[] = [
+export const safeDefaultActions: QuickAction[] = [
   {
     type: "route",
     pos: "1",
@@ -62,7 +57,7 @@ export const safeDefaultActions: ActionBarAction[] = [
   }
 ];
 
-export const safeOverflowActions: ActionBarAction[] = [
+export const safeOverflowActions: QuickAction[] = [
   {
     type: "trigger",
     pos: "overflow",

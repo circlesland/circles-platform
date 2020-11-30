@@ -2,21 +2,21 @@
   import NavItem from "../atoms/NavItem.svelte";
   import { location, push } from "svelte-spa-router";
   import { createEventDispatcher } from "svelte";
-  import type { ActionBarAction } from "../../o-os/routes";
+  import type { QuickAction } from "../../o-os/routes";
   import Compose from "../atoms/Compose.svelte";
   import Icon from "fa-svelte";
 
   import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
   const dispatch = createEventDispatcher();
-  export let quickActions: ActionBarAction[] = [];
+  export let quickActions: QuickAction[] = [];
 
 
   function onActionButtonClick() {
     dispatch("actionButtonClick");
   }
 
-  function isActive(action: ActionBarAction) {
+  function isActive(action: QuickAction) {
     if (!action || !action.route) return;
 
     return action.route.indexOf($location) > -1;

@@ -1,4 +1,4 @@
-import {ActionBarAction} from "./routes";
+import {QuickAction} from "../types/quickAction";
 
 export interface PageManifest {
   component:any;
@@ -6,6 +6,6 @@ export interface PageManifest {
   userData: {
     dapp: "odentity"|"omo"|"safe"|"website";
     showActionBar?:boolean;
-    actions:ActionBarAction[]
+    actions:QuickAction[]
   }
 }

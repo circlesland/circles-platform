@@ -2,7 +2,7 @@ import {ConnectSafeContext} from "../connectSafe";
 import {mnemonicToEntropy} from "bip39";
 import {config} from "../../../../../libs/o-circles-protocol/config";
 import {GotSafe} from "../../../events/gotSafe";
-import {FissionPaths} from "../../../../../main";
+import {FissionPaths} from "../../../../../libs/o-os/fissionPaths";
 
 export const connectSafeService = async (context: ConnectSafeContext) =>
 {

@@ -1,10 +1,9 @@
 import { faUserCircle, faUserAstronaut, faLock, faKey, faCoins } from "@fortawesome/free-solid-svg-icons";
-import { ActionBarAction } from "src/libs/o-os/routes";
 import {RunProcess} from "../../../libs/o-events/runProcess";
-import {requestUbi} from "../../safe/processes/requestUbi/requestUbi";
 import {createOdentity} from "../processes/createOdentity/createOdentity";
+import {QuickAction} from "../../../libs/o-os/types/quickAction";
 
-export const odentityDefaultActions: ActionBarAction[] = [
+export const odentityDefaultActions: QuickAction[] = [
     {
         type: "route",
         pos: "1",
@@ -56,7 +55,7 @@ export const odentityDefaultActions: ActionBarAction[] = [
     }
 ];
 
-export const odentityOverflowActions: ActionBarAction[] = [
+export const odentityOverflowActions: QuickAction[] = [
     {
         type: "trigger",
         pos: "overflow",
