@@ -24,7 +24,7 @@
   let alpha = {
     data: {
       type: "Attention",
-      text: "We are in early alpha testing. For feedback join our",
+      text: "Early alpha testing, use at own risk! For feedback join our",
       button: "Chat",
     },
     action: {

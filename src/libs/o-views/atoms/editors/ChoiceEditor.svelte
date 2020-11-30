@@ -6,7 +6,6 @@
 
   export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();
-
 </script>
 
 {#if processArtifact}
@@ -16,23 +15,17 @@
         {processArtifact.label}
       </p>
     {/if}
-    <div class="flex">
+    <div class="flex w-full space-x-4">
       {#each processArtifact.choices as choice}
         <div
+          class="w-full"
           on:click={() => {
             processArtifact.value = choice;
             processArtifact.isValid = true;
-            dispatch("submit");
+            dispatch('submit');
           }}>
-        <Button
-          mapping={{
-            data: {
-              label: choice
-            },
-            design: {
-              type: 'primary'
-            }
-          }} />
+          <Button
+            mapping={{ data: { label: choice }, design: { type: 'secondary' } }} />
         </div>
       {/each}
     </div>
