@@ -104,15 +104,15 @@
       title: "Circles",
       description: "Address: " + safeAddress,
       balance: parseFloat(circlesBalance).toFixed(2),
-      subtitle: "circles in your safe account",
+      subtitle: "Circles in your safe account",
     },
   };
   $: xDaiSafe = {
     data: {
       image: "logos/omo.svg",
-      title: "Omo Sapien invites",
+      title: "Invite Credits",
       balance: Math.floor(parseFloat(safeEtherBalance) * 10) - 1,
-      subtitle: "invites you have left",
+      subtitle: "Invites you have left",
       description: "xDai balance: " + parseFloat(safeEtherBalance),
     },
   };
