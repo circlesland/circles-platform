@@ -83,12 +83,12 @@ module.exports = {
 		],
 	},
 	devtool: prod ? false: 'source-map',
-	devServer: {
-		watchContentBase: true,
-		compress: true,
-		contentBase: [path.join(__dirname, 'public')],
-		port: 5000,
-		open: true,
-		https: true,
-	  }
+  devServer: {
+    watchContentBase: true,
+    compress: true,
+    contentBase: [path.join(__dirname, 'public')],
+    port: 5000,
+    open: true,
+    https: false,
+  }
 };
