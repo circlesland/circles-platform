@@ -73,13 +73,10 @@ self.addEventListener('message', function(event) {
       console.log(`Pathfinder is searching for a path to send ${event.data.args.value} wei between ${event.data.args.from} and ${event.data.args.to}`);
       const data = getPath(event.data.args.from, event.data.args.to, event.data.args.value);
 
-      console.log(data);
-
-      postMessage({
-        result: {
-          data
-        }
-      })
+      event.ports[0].postMessage({
+        error:null,
+        data
+      });
     }
   }
 });
