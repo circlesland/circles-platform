@@ -10,34 +10,7 @@ export const profile: ProfileHeader = {
   }
 };
 
-export const locked: DappIcon = {
-  data: {
-    title: "Safe",
-    tag: "alpha 0.1.0",
-  },
-  action: {
-    route: "omo/dapps",
-  },
-  design: {
-    type: "disabled",
-    icon: faPiggyBank,
-  }
-};
-
 export const dapps: DappIcon[] = [
-  {
-    data: {
-      title: "Safe",
-      tag: "",
-    },
-    action: {
-      route: "safe/transactions",
-    },
-    design: {
-      type: "",
-      icon: faPiggyBank,
-    },
-  },
   {
     data: {
       title: "Odentity",
@@ -49,6 +22,19 @@ export const dapps: DappIcon[] = [
     design: {
       icon: faUserAstronaut,
       type: "",
+    },
+  },
+  {
+    data: {
+      title: "Safe",
+      tag: "",
+    },
+    action: {
+      route: "safe/transactions",
+    },
+    design: {
+      type: "",
+      icon: faPiggyBank,
     },
   },
   {

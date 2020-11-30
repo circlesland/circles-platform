@@ -2,7 +2,7 @@
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, {push} from "svelte-spa-router";
+  import Router, { push } from "svelte-spa-router";
   import routes from "./libs/o-os/routes";
 
   import "./libs/o-views/css/base.css";
@@ -17,7 +17,7 @@
   import Announcement from "./libs/o-views/molecules/Announcement.svelte";
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
-  import {Process} from "./libs/o-processes/interfaces/process";
+  import { Process } from "./libs/o-processes/interfaces/process";
 
   let actions = [];
 
@@ -39,18 +39,18 @@
   let runningProcess: Process = window.o.stateMachines.current();
 
   window.o.events.subscribe(async (event: OmoEvent) => {
-      // runningProcess = window.o.stateMachines.current();
-      if (event.type === "shell.openMenu") {
-        isOpen = true;
-      }
-      if (event.type == "shell.runProcess") {
-        runningProcess = await window.o.stateMachines.run(
-          (<RunProcess>event).definition,
-          (<RunProcess>event).contextModifier
-        );
-        isOpen = true;
-      }
-    });
+    // runningProcess = window.o.stateMachines.current();
+    if (event.type === "shell.openMenu") {
+      isOpen = true;
+    }
+    if (event.type == "shell.runProcess") {
+      runningProcess = await window.o.stateMachines.run(
+        (<RunProcess>event).definition,
+        (<RunProcess>event).contextModifier
+      );
+      isOpen = true;
+    }
+  });
 
   function routeLoading(e) {
     if (!e.detail.userData) return;
@@ -113,8 +113,13 @@
   }
 
   function conditionsFailed(event) {
-    console.log("Escaped redirect url:", encodeURIComponent(event.detail.location));
-    push(`#/odentity/authenticate/${encodeURIComponent(event.detail.location)}`);
+    console.log(
+      "Escaped redirect url:",
+      encodeURIComponent(event.detail.location)
+    );
+    push(
+      `#/odentity/authenticate/${encodeURIComponent(event.detail.location)}`
+    );
   }
 </script>
 
@@ -125,13 +130,14 @@
         <Announcement mapping={alpha} />
       </Compose>
       <Compose rows="1fr" columns="1fr">
-        <Router {routes} on:conditionsFailed={conditionsFailed} on:routeLoading={routeLoading} />
+        <Router
+          {routes}
+          on:conditionsFailed={conditionsFailed}
+          on:routeLoading={routeLoading} />
       </Compose>
       {#if showActionBar}
         <Compose>
-          <ActionBar
-            on:actionButtonClick={toggleOpen}
-            {quickActions} />
+          <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
         </Compose>
       {/if}
       <Modal bind:isOpen on:closeRequest={modalWantsToClose}>

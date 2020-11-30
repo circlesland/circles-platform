@@ -41,7 +41,7 @@
       placeholder={processArtifact.placeholder ? processArtifact.placeholder : 'Lorem ipsum dolor ..'}
       class:border-action={processArtifact.isValid}
       class:border-danger={!processArtifact.isValid}
-      class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded-xl text-primary"
+      class="w-full p-3 mb-2 text-xl bg-transparent border-2 border-gray-300 rounded-lg outline-none text-primary"
       bind:value={processArtifact.value} />
   </div>
 {/if}
