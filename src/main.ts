@@ -16,12 +16,6 @@ declare global {
 
 window.o = o;
 
-o.shellEvents.subscribe((event:OmoEvent) => {
-  if (event.type === "shell.authenticated") {
-    window.o.fissionAuth = (<Authenticated>event).fissionAuth;
-  }
-});
-
 const app = new App({
   target: document.body,
 });

@@ -15,7 +15,7 @@
 
   let profile:Profile;
 
-  window.o.shellEvents.subscribe((event:OmoEvent) => {
+  window.o.events.subscribe((event:OmoEvent) => {
     if (event.type === "shell.gotProfile") {
       profile = (<GotProfile>event).profile;
     }
@@ -37,11 +37,11 @@
       const profileObj = JSON.parse(profileJson);
       const profile: Profile = profileObj;
 
-      window.o.dispatchShellEvent(new GotProfile(profile));
+      window.o.publishEvent(new GotProfile(profile));
     }
     else
     {
-      window.o.dispatchShellEvent(new RunProcess(createOdentity));
+      window.o.publishEvent(new RunProcess(createOdentity));
     }
   });
 

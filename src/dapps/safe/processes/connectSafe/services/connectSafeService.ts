@@ -39,5 +39,5 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
   }));
   await fs.publish();
 
-  window.o.dispatchShellEvent(new GotSafe());
+  window.o.publishEvent(new GotSafe());
 }

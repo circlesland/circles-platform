@@ -38,7 +38,7 @@
 
   let runningProcess: Process = window.o.stateMachines.current();
 
-  window.o.shellEvents.subscribe(async (event: OmoEvent) => {
+  window.o.events.subscribe(async (event: OmoEvent) => {
       // runningProcess = window.o.stateMachines.current();
       if (event.type === "shell.openMenu") {
         isOpen = true;
@@ -146,7 +146,7 @@
           {#each overflowActions as action}
             <div class="w-full">
               <div class="space-y-2">
-                <div on:click={() => window.o.dispatchShellEvent(action.event())}>
+                <div on:click={() => window.o.publishEvent(action.event())}>
                   <OverflowAction mapping={action} />
                 </div>
               </div>

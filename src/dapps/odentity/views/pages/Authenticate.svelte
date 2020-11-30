@@ -4,18 +4,17 @@
   import {push} from "svelte-spa-router";
   import {Authenticated} from "../../events/authenticated";
 
+
   const wn = window.o.wn;
 
   export let params;
-
-  let state;
 
   onMount(async () => {
     await initAuth();
   });
 
   async function initAuth() {
-    state = await wn.initialise({
+    const state = await wn.initialise({
       permissions: {
         // Will ask the user permission to store
         // your apps data in `private/Apps/{creator}}/{name}`
@@ -23,6 +22,9 @@
           name: "OmoTest",
           creator: "MamaOmo",
         },
+        fs: {
+          publicPaths: [ "omo.odentity" ]
+        }
       },
     });
 
@@ -39,7 +41,7 @@
         // state.username         -  The user's username.
         //
         // ☞ We can now interact with our file system (more on that later)
-        window.o.dispatchShellEvent(new Authenticated(state));
+        window.o.publishEvent(new Authenticated(state));
         if (params && params.redirectTo) {
           push(params.redirectTo);
         }  else {

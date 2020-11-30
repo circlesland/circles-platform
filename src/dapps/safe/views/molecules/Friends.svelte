@@ -148,7 +148,7 @@
     console.log("personsITrust:", personsITrust);
   }
 
-  let subscription: Subscription = window.o.shellEvents.subscribe((event: OmoEvent) =>
+  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
     {
       if (event.type === "shell.refreshView")
       {

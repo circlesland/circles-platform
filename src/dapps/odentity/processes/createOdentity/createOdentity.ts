@@ -1,7 +1,6 @@
 import {createMachine, send} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
-import { push } from "svelte-spa-router";
 import { OmoEvent } from "../../../../libs/o-events/omoEvent";
 import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
 import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
@@ -165,7 +164,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
         id: 'existingSafe',
         src: async () => {
           // TODO: Very 'rotzig'!
-          setTimeout(() => window.o.dispatchShellEvent(new RunProcess(connectSafe)), 100);
+          setTimeout(() => window.o.publishEvent(new RunProcess(connectSafe)), 100);
         },
         onError: {
           target: "error"
@@ -180,7 +179,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
         id: 'newSafe',
         src: async () => {
           // TODO: Very 'rotzig'!
-          setTimeout(() => window.o.dispatchShellEvent(new RunProcess(connectSafe)), 100);
+          setTimeout(() => window.o.publishEvent(new RunProcess(connectSafe)), 100);
         },
         onError: {
           target: "error"

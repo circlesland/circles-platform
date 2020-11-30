@@ -9,8 +9,8 @@ import {Profile} from "../../../dapps/odentity/interfaces/profile";
 
 export interface Shell {
   fissionAuth: AuthSucceeded|Continuation,
-  shellEvents: Observable<any>,
-  dispatchShellEvent: (event: OmoEvent) => void,
+  events: Observable<any>,
+  publishEvent: (event: OmoEvent) => void,
   stateMachines: {
     current(): Process | null,
     cancel(),

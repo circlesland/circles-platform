@@ -55,7 +55,7 @@
     personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
   }
 
-  let subscription: Subscription = window.o.shellEvents.subscribe((event: OmoEvent) =>
+  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
     {
       if (event.type === "shell.refreshView")
       {
