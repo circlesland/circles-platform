@@ -26,9 +26,10 @@
     unTrust,
     UnTrustContext,
   } from "../../../dapps/safe/processes/unTrust/unTrust";
-  import {cat} from "webnative/ipfs";
   import {transferCircles, TransferCirclesContext} from "../../../dapps/safe/processes/transferCircles/transferCircles";
   import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
+  import {stateMachine} from "../../o-os/stateMachine";
+  import {config} from "../../o-circles-protocol/config";
 
   export let data = {
     image: "",
@@ -47,8 +48,11 @@
     openDetail = !openDetail;
   }
 
-  function runTransferCircles(recipientAddress: Address) {
-    const contextInitializer = (context: TransferCirclesContext) => {
+  async function runTransferCircles(recipientAddress: Address) {
+    const env = await window.o.getEnvironment();
+    const myToken = await env.person.getOwnToken();
+    const myBalance = config.getCurrent().web3().utils.fromWei(await myToken.getBalanceOf(env.safe.address), "ether");
+    const contextInitializer = async (context: TransferCirclesContext) => {
       context.data.recipient = <ProcessArtifact>{
         key: "recipient",
         type: "ethereumAddress",
@@ -56,11 +60,17 @@
       };
       return context;
     };
-    window.o.publishEvent(new RunProcess(transferCircles, contextInitializer));
+    window.o.publishEvent(new RunProcess({
+      id: transferCircles.id,
+      name: transferCircles.name,
+      stateMachine: () => {
+        return transferCircles.stateMachine(myBalance);
+      }
+    }, contextInitializer));
   }
 
   function runTrust(recipientAddress: Address) {
-    const contextInitializer = (context: SetTrustContext) => {
+    const contextInitializer = async (context: SetTrustContext) => {
       context.data.trustReceiver = {
         type: "ethereumAddress",
         isReadonly: true,
@@ -73,7 +83,7 @@
   }
 
   function runUntrust(recipientAddress: Address) {
-    const contextInitializer = (context: UnTrustContext) => {
+    const contextInitializer = async (context: UnTrustContext) => {
       context.data.trustReceiver = {
         type: "ethereumAddress",
         isReadonly: true,
@@ -118,7 +128,7 @@
 
 <div>
   <div class="w-full bg-white border rounded-xl card border-light-200">
-    <div on:click={() => getPath(data.detail.address)} class="flex items-center justify-center p-2">
+    <div on:click={() => toggleExpand()} class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>
     <div class="flex items-center">

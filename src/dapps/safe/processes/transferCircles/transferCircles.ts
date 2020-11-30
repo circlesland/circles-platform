@@ -29,23 +29,24 @@ export interface TransferCirclesContext extends ProcessContext
  * Transfer xDai
  */
 const str = strings.safe.processes.transferCircles;
-const processDefinition = () => createMachine<TransferCirclesContext, OmoEvent>({
+const processDefinition = (maxBalance:number) => createMachine<TransferCirclesContext, OmoEvent>({
   initial: "promptRecipient",
   states: {
     promptRecipient: {
       entry: sendPrompt({
-        title: str.titleRecipient(),
-        nextButtonTitle: "Next",
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerRecipient()
+          title: str.titleRecipient(),
+          nextButtonTitle: "Next",
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerRecipient()
+            }
+          },
+          artifacts: {
+            ...ethereumAddress("recipient")
           }
-        },
-        artifacts: {
-          ...ethereumAddress("recipient")
         }
-      }),
+      ),
       on: {
         "process.continue": {
           actions: storePromptResponse,
@@ -56,19 +57,20 @@ const processDefinition = () => createMachine<TransferCirclesContext, OmoEvent>(
     },
     promptValue: {
       entry: sendPrompt({
-        title: str.titleValue(),
-        nextButtonTitle: "Next",
-        canGoBack: true,
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerValue()
+          title: str.titleValue(),
+          nextButtonTitle: "Next",
+          canGoBack: true,
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerValue()
+            }
+          },
+          artifacts: {
+            ...ether("value", undefined, undefined, maxBalance)
           }
-        },
-        artifacts: {
-          ...ether("value")
         }
-      }),
+      ),
       on: {
         "process.back": {
           target: "promptRecipient"
@@ -82,20 +84,21 @@ const processDefinition = () => createMachine<TransferCirclesContext, OmoEvent>(
     },
     summarize: {
       entry: sendPrompt({
-        title: str.titleSummary(),
-        nextButtonTitle: "Transfer xDai",
-        canGoBack: true,
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerSummary()
+          title: str.titleSummary(),
+          nextButtonTitle: "Transfer xDai",
+          canGoBack: true,
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerSummary()
+            }
+          },
+          artifacts: {
+            ...ethereumAddress("recipient", str.titleRecipient(), true),
+            ...ether("value", str.titleValue(), true)
           }
-        },
-        artifacts: {
-          ...ethereumAddress("recipient", str.titleRecipient(), true),
-          ...ether("value", str.titleValue(), true)
         }
-      }),
+      ),
       on: {
         "process.back": {
           target: "promptValue"
@@ -140,7 +143,7 @@ const processDefinition = () => createMachine<TransferCirclesContext, OmoEvent>(
         "process.cancel": "stop"
       },
       after: {
-        2000: { target: 'stop' }
+        2000: {target: 'stop'}
       }
     },
     error: {

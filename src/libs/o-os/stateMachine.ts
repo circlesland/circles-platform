@@ -12,6 +12,7 @@ import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Nop} from "../o-processes/events/nop";
 import {Process} from "../o-processes/interfaces/process";
+import {StateMachine} from "xstate";
 
 export async function getServiceContext(): Promise<ProcessContext> {
   const safe = await window.o.safe();
@@ -43,12 +44,12 @@ export const stateMachine = {
     cancel() {
         this._current = null;
     },
-    async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => TContext) {
+    async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>) {
         const { service, state, send } = useMachine(
-            definition.stateMachine(),
+          (<any>definition).stateMachine(),
             {
                 context: contextModifier
-                    ? contextModifier(await getServiceContext())
+                    ? await contextModifier(await getServiceContext())
                     : await getServiceContext()
             });
 
@@ -60,7 +61,7 @@ export const stateMachine = {
         });
 
         service.onTransition((state1, event) => {
-            processEvents.next({
+            processEvents.next(<any>{
                 stopped: false,
                 currentState: state1,
                 previousState: state1.history,

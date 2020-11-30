@@ -6,5 +6,5 @@ export interface ProcessManifest {
 }
 
 export interface ProcessDefinition extends ProcessManifest{
-    stateMachine: () => StateMachine<any, any, any>;
+    stateMachine: (() => StateMachine<any, any, any>)|((args:any) => StateMachine<any, any, any>);
 }

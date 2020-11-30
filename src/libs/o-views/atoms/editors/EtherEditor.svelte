@@ -27,6 +27,10 @@
           weiValueBN !== undefined &&
           !weiValueBN.eq(new BN("0")) &&
           !weiValueBN.isNeg();
+
+        processArtifact.isValid = (processArtifact.isValid
+          && !processArtifact.max)
+          || (processArtifact.isValid && parseFloat(processArtifact.value) <= parseFloat(processArtifact.max.toString()));
       } catch (e) {
         console.warn("EtherInput validation failed:", e);
         processArtifact.isValid = false;
@@ -56,6 +60,7 @@
     <input
       readonly={processArtifact.isReadonly ? 'readonly' : ''}
       placeholder={processArtifact.placeholder ? processArtifact.placeholder : '0'}
+      max={processArtifact.max ? processArtifact.max : 99999999}
       type="number"
       class:border-action={processArtifact.isValid}
       class:border-danger={!processArtifact.isValid}
