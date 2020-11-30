@@ -1,55 +1,52 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import {onMount} from "svelte";
+  import { onMount } from "svelte";
   import Avataaar from "src/libs/o-views/atoms/Avataaar.svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
-  import {firstname, lastname, city} from "./../../data/profile";
-  import {Profile} from "../../interfaces/profile";
-  import {GotProfile} from "../../events/gotProfile";
-  import {RunProcess} from "../../../../libs/o-events/runProcess";
-  import {createOdentity} from "../../processes/createOdentity/createOdentity";
-  import {push} from "svelte-spa-router";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
+  import { firstname, lastname, city } from "./../../data/profile";
+  import { Profile } from "../../interfaces/profile";
+  import { GotProfile } from "../../events/gotProfile";
+  import { RunProcess } from "../../../../libs/o-events/runProcess";
+  import { createOdentity } from "../../processes/createOdentity/createOdentity";
+  import { push } from "svelte-spa-router";
+  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
 
   const wn = window.o.wn;
 
-  let profile:Profile;
+  let profile: Profile;
 
-  window.o.events.subscribe((event:OmoEvent) => {
+  window.o.events.subscribe((event: OmoEvent) => {
     if (event.type === "shell.gotProfile") {
       profile = (<GotProfile>event).profile;
     }
   });
 
-  onMount(async () =>
-  {
-    if (!window.o.fissionAuth)
-    {
+  onMount(async () => {
+    if (!window.o.fissionAuth) {
       push("#/odentity/authenticate");
       return;
     }
 
     const session = window.o.fissionAuth;
 
-    if (await session.fs.exists(session.fs.appPath(["odentity", "profile.json"])))
-    {
-      const profileJson = <string>(await session.fs.cat(session.fs.appPath(["odentity", "profile.json"])));
+    if (
+      await session.fs.exists(session.fs.appPath(["odentity", "profile.json"]))
+    ) {
+      const profileJson = <string>(
+        await session.fs.cat(session.fs.appPath(["odentity", "profile.json"]))
+      );
       const profileObj = JSON.parse(profileJson);
       const profile: Profile = profileObj;
 
       window.o.publishEvent(new GotProfile(profile));
-    }
-    else
-    {
+    } else {
       window.o.publishEvent(new RunProcess(createOdentity));
     }
   });
 
-
   let openDetail: boolean = false;
 
-  function toggleExpand()
-  {
+  function toggleExpand() {
     openDetail = !openDetail;
   }
 </script>
@@ -63,26 +60,19 @@
           <div
             class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
             <!--<Avataaar mapping={avataaar}/>-->
-            <img src="{profile.avatar}" />
+            <img src={profile.avatar} />
           </div>
           Welcome,
-          {profile.firstName} {profile.lastName}
+          {profile.firstName}
+          {profile.lastName}
         </div>
       </div>
       <div class="pt-2 space-y-2">
-        <ProfileItem mapping={{
-          data: {
-            title: profile.firstName,
-            subtitle: "my first name"
-          }
-        }}/>
-        <ProfileItem mapping={ {
-          data: {
-            title: profile.lastName,
-            subtitle: "my last name"
-          }
-        }}/>
-        <ProfileItem mapping={city}/>
+        <ProfileItem
+          mapping={{ data: { title: profile.firstName, subtitle: 'my first name' } }} />
+        <ProfileItem
+          mapping={{ data: { title: profile.lastName, subtitle: 'my last name' } }} />
+        <ProfileItem mapping={city} />
       </div>
     </div>
   {/if}

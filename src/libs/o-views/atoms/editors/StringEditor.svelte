@@ -40,9 +40,9 @@
       type="text"
       readonly={processArtifact.isReadonly ? 'readonly' : ''}
       placeholder={processArtifact.placeholder ? processArtifact.placeholder : 'Lorem ipsum dolor ..'}
-      class:border={!processArtifact.isValid}
-      class:border-red-500={!processArtifact.isValid}
+      class:border-action={processArtifact.isValid}
+      class:border-danger={!processArtifact.isValid}
       bind:value={processArtifact.value}
-      class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded-xl text-primary" />
+      class="w-full p-3 mb-2 text-xl bg-transparent border-2 border-gray-300 rounded-lg outline-none text-primary" />
   </div>
 {/if}

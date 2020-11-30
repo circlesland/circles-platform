@@ -1,9 +1,9 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import { onMount } from "svelte";
-  import {push} from "svelte-spa-router";
-  import {Authenticated} from "../../events/authenticated";
-
+  import { push } from "svelte-spa-router";
+  import { Authenticated } from "../../events/authenticated";
+  import { Jumper } from "svelte-loading-spinners";
 
   const wn = window.o.wn;
 
@@ -23,8 +23,8 @@
           creator: "MamaOmo",
         },
         fs: {
-          publicPaths: [ "omo.odentity" ]
-        }
+          publicPaths: ["omo.odentity"],
+        },
       },
     });
 
@@ -44,7 +44,7 @@
         window.o.publishEvent(new Authenticated(state));
         if (params && params.redirectTo) {
           push(params.redirectTo);
-        }  else {
+        } else {
           push("#/odentity/profile");
         }
 
@@ -58,6 +58,12 @@
 </script>
 
 <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
-  <div>
+  <div class="flex items-center justify-center">
+    <div>
+      <Jumper size="150" color="#071D69" unit="px" /><br />
+      <div class="text-sm text-center text-primary foont-primary">
+        authenticating ...
+      </div>
+    </div>
   </div>
 </Compose>

@@ -1,16 +1,11 @@
-import { Avataaar, Button } from "src/libs/o-views/interfaces/atoms";
+import { Avataaar } from "src/libs/o-views/interfaces/atoms";
 import { Header, ProfileItem } from "src/libs/o-views/interfaces/molecules";
 
 export const title: Header = { data: { title: "Profile" } };
 
-export const buttonLogin: Button = {
-    data: { label: "Auth with Fission" },
-    design: { type: "secondary" },
-};
-
 export let avataaar: Avataaar = {
     data: {
-        seed: null
+        seed: "(await window.o.safe()).address"
     },
     design: {
         radius: 100,
