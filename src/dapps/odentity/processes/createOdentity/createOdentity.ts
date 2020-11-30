@@ -18,6 +18,7 @@ import {choice} from "../../../../libs/o-processes/artifacts/choice";
 import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
 import {getServiceContext} from "../../../../libs/o-os/stateMachine";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
+import {createSafe} from "../../../safe/processes/createSafe/createSafe";
 
 export interface CreateOdentityContext extends ProcessContext {
   data: {
@@ -179,7 +180,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
         id: 'newSafe',
         src: async () => {
           // TODO: Very 'rotzig'!
-          setTimeout(() => window.o.publishEvent(new RunProcess(connectSafe)), 100);
+          setTimeout(() => window.o.publishEvent(new RunProcess(createSafe)), 100);
         },
         onError: {
           target: "error"

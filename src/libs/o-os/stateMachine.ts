@@ -1,90 +1,99 @@
 import {BehaviorSubject} from "rxjs";
-import { useMachine } from "xstate-svelte";
-import { ProcessDefinition } from "../o-processes/processManifest";
+import {useMachine} from "xstate-svelte";
+import {ProcessDefinition} from "../o-processes/processManifest";
 
-import type { Account } from "src/libs/o-circles-protocol/interfaces/account";
-import { config } from "src/libs/o-circles-protocol/config";
-import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-import { GnosisSafeProxy } from "src/libs/o-circles-protocol/safe/gnosisSafeProxy";
-import { Person } from "src/libs/o-circles-protocol/model/person";
+import type {Account} from "src/libs/o-circles-protocol/interfaces/account";
+import {config} from "src/libs/o-circles-protocol/config";
+import {CirclesHub} from "src/libs/o-circles-protocol/circles/circlesHub";
+import {GnosisSafeProxy} from "src/libs/o-circles-protocol/safe/gnosisSafeProxy";
+import {Person} from "src/libs/o-circles-protocol/model/person";
 import {ProcessContext} from "../o-processes/interfaces/processContext";
 import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Nop} from "../o-processes/events/nop";
 import {Process} from "../o-processes/interfaces/process";
 import {StateMachine} from "xstate";
+import {BN} from "ethereumjs-util";
 
-export async function getServiceContext(): Promise<ProcessContext> {
+export async function getServiceContext(): Promise<ProcessContext>
+{
   const safe = await window.o.safe();
-    const safeAddress = safe?.address;
-    const account: Account = {
-        privateKey: safe?.privateKey,
-        address: safe?.owner,
-    };
-    const web3 = config.getCurrent().web3();
-    const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
-    const environment: ProcessEnvironment = {
-        safe: (!account.address || !safeAddress) ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
-        account: account,
-        person: !safeAddress ? null : new Person(circlesHub, safeAddress),
-        fissionAuth: window.o.fissionAuth
-    };
+  const safeAddress = safe?.address;
+  const account: Account = {
+    privateKey: safe?.privateKey,
+    address: safe?.owner,
+  };
+  const accountxDaiBalance = account.address ? new BN(await config.getCurrent().web3().eth.getBalance(account.address)) : new BN("0");
+  const web3 = config.getCurrent().web3();
+  const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
+  const environment: ProcessEnvironment = {
+    safe: (!account.address || !safeAddress) ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
+    account: account,
+    person: !safeAddress ? null : new Person(circlesHub, safeAddress),
+    fissionAuth: window.o.fissionAuth,
+    accountxDaiBalance: accountxDaiBalance
+  };
 
-    return <ProcessContext> {
-      environment,
-      data:{}
-    };
+  return <ProcessContext>{
+    environment,
+    data: {}
+  };
 }
 
 export const stateMachine = {
-    _current: null,
-    current(): Process {
-        return this._current;
-    },
-    cancel() {
-        this._current = null;
-    },
-    async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>) {
-        const { service, state, send } = useMachine(
-          (<any>definition).stateMachine(),
-            {
-                context: contextModifier
-                    ? await contextModifier(await getServiceContext())
-                    : await getServiceContext()
-            });
+  _current: null,
+  current(): Process
+  {
+    return this._current;
+  },
+  cancel()
+  {
+    this._current = null;
+  },
+  async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>)
+  {
+    const {service, state, send} = useMachine(
+      (<any>definition).stateMachine(),
+      {
+        context: contextModifier
+          ? await contextModifier(await getServiceContext())
+          : await getServiceContext()
+      });
 
-        const processEvents = new BehaviorSubject<ProcessEvent>({
-          stopped: false,
-          currentState: null,
-          previousState: null,
-          event: new Nop()
-        });
+    const processEvents = new BehaviorSubject<ProcessEvent>({
+      stopped: false,
+      currentState: null,
+      previousState: null,
+      event: new Nop()
+    });
 
-        service.onTransition((state1, event) => {
-            processEvents.next(<any>{
-                stopped: false,
-                currentState: state1,
-                previousState: state1.history,
-                event: event
-            });
-        });
-        service.onStop(() => {
-            processEvents.next({
-                stopped: true
-            });
-            this._current = null;
-        });
+    service.onTransition((state1, event) =>
+    {
+      processEvents.next(<any>{
+        stopped: false,
+        currentState: state1,
+        previousState: state1.history,
+        event: event
+      });
+    });
+    service.onStop(() =>
+    {
+      processEvents.next({
+        stopped: true
+      });
+      this._current = null;
+    });
 
-        const process: Process = {
-            id: 0,
-            events: processEvents,
-            sendEvent: (event: any) => send(event)
-        };
+    const process: Process = {
+      id: 0,
+      events: processEvents,
+      sendEvent: (event: any) => send(event)
+    };
 
-        service.start();
+    service.start();
 
-        this._current = process;
+    this._current = process;
 
-        return process;
-    }
+    return process;
+  }
 };

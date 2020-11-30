@@ -1,6 +1,5 @@
 import {TransferCirclesContext} from "../transferCircles";
 import {config} from "../../../../../libs/o-circles-protocol/config";
-import {BN} from "ethereumjs-util";
 
 function sendMessage(message)
 {
@@ -32,28 +31,7 @@ function sendMessage(message)
   });
 }
 
-const flow = {
-  "flow": "205241203703692309155",
-  "transfers": [{
-    "from": "0xDE374ece6fA50e781E81Aac78e811b33D16912c7",
-    "to": "0x42cEDde51198D1773590311E2A340DC06B24cB37",
-    "token": "0x6b35C6Da733836BE97ceD8627C3747824450926b",
-    "tokenOwner": "0xDE374ece6fA50e781E81Aac78e811b33D16912c7",
-    "value": "12612499999994609166"
-  }, {
-    "from": "0xDE374ece6fA50e781E81Aac78e811b33D16912c7",
-    "to": "0x9a0bbbbd3789f184CA88f2F6A40F42406cb842AC",
-    "token": "0x6b35C6Da733836BE97ceD8627C3747824450926b",
-    "tokenOwner": "0xDE374ece6fA50e781E81Aac78e811b33D16912c7",
-    "value": "192628703703697699989"
-  }, {
-    "from": "0x42cEDde51198D1773590311E2A340DC06B24cB37",
-    "to": "0x9a0bbbbd3789f184CA88f2F6A40F42406cb842AC",
-    "token": "0x6293268785399bed001CB68A8Ee04d50DA9C854D",
-    "tokenOwner": "0x42cEDde51198D1773590311E2A340DC06B24cB37",
-    "value": "12612499999994609166"
-  }]
-}
+
 export const transferCirclesService = async (context: TransferCirclesContext) =>
 {
   try

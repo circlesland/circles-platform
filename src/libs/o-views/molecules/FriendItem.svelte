@@ -95,7 +95,6 @@
     window.o.publishEvent(new RunProcess(unTrust, contextInitializer));
   }
 
-
   const sendMoney = {
     design: {
       icon: faMoneyBill,
@@ -127,8 +126,8 @@
 </style>
 
 <div>
-  <div class="w-full bg-white border rounded-xl card border-light-200">
-    <div on:click={() => toggleExpand()} class="flex items-center justify-center p-2">
+  <div on:click={() => toggleExpand()} class="w-full bg-white border rounded-xl card border-light-200">
+    <div  class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>
     <div class="flex items-center">
@@ -152,15 +151,27 @@
     <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
       {#each data.actions as a}
         {#if a == 'send'}
-          <div on:click={() => runTransferCircles(data.detail.address)}>
+          <div on:click={(e) => {
+            runTransferCircles(data.detail.address);
+            e.preventDefault();
+            e.stopPropagation();
+          }}>
             <ButtonIcon mapping={sendMoney} />
           </div>
         {:else if a == 'trust'}
-          <div on:click={() => runTrust(data.detail.address)}>
+          <div on:click={(e) => {
+            runTrust(data.detail.address);
+            e.preventDefault();
+            e.stopPropagation();
+          }}>
             <ButtonIcon mapping={addTrust} />
           </div>
         {:else if a == 'untrust'}
-          <div on:click={() => runUntrust(data.detail.address)}>
+          <div on:click={(e) => {
+            runUntrust(data.detail.address);
+            e.preventDefault();
+            e.stopPropagation();
+          }}>
             <ButtonIcon mapping={removeTrust} />
           </div>
         {/if}
