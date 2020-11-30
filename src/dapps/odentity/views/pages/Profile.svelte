@@ -57,10 +57,11 @@
       <div class="">
         <div
           class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200 font-title">
-          <div
-            class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300">
+          <div>
             <!--<Avataaar mapping={avataaar}/>-->
-            <img src={profile.avatar} />
+            <img
+              src={profile.avatar}
+              class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300" />
           </div>
           Welcome,
           {profile.firstName}
@@ -69,9 +70,9 @@
       </div>
       <div class="pt-2 space-y-2">
         <ProfileItem
-          mapping={{ data: { title: profile.firstName, subtitle: 'my first name' } }} />
+          mapping={{ data: { title: profile.firstName, subtitle: 'first name' } }} />
         <ProfileItem
-          mapping={{ data: { title: profile.lastName, subtitle: 'my last name' } }} />
+          mapping={{ data: { title: profile.lastName, subtitle: 'last name' } }} />
         <ProfileItem mapping={city} />
       </div>
     </div>
