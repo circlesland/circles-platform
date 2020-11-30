@@ -6,9 +6,9 @@
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import {Subscription} from "rxjs";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy, onMount} from "svelte";
+  import { Subscription } from "rxjs";
+  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+  import { onDestroy, onMount } from "svelte";
 
   let accountAddress: string;
   let safeAddress: string;
@@ -39,7 +39,7 @@
 
   async function reload() {
     const web3 = config.getCurrent().web3();
-    const safe = await window.o.safe()
+    const safe = await window.o.safe();
 
     balance = await person.getTokenBalance();
     const balanceStr = web3.utils.fromWei(balance, "ether");
@@ -81,19 +81,16 @@
     tokensITrust.sort((a, b) => -a.balanceBN.cmp(b.balanceBN));
   }
 
-
-  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
-    {
-      if (event.type === "shell.refreshView")
-      {
+  let subscription: Subscription = window.o.events.subscribe(
+    (event: OmoEvent) => {
+      if (event.type === "shell.refreshView") {
         init();
       }
-    });
+    }
+  );
 
-  onDestroy(() =>
-  {
-    if (!subscription)
-      return;
+  onDestroy(() => {
+    if (!subscription) return;
 
     subscription.unsubscribe();
     subscription = null;
@@ -104,28 +101,29 @@
   $: circlesSafe = {
     data: {
       image: "images/logo/circles.svg",
-      title: "Safe Circles",
-      description: safeAddress,
-      balance: parseFloat(circlesBalance),
-      subtitle: "Account: Safe",
+      title: "Circles",
+      description: "Address: " + safeAddress,
+      balance: parseFloat(circlesBalance).toFixed(2),
+      subtitle: "circles in your safe account",
     },
   };
   $: xDaiSafe = {
     data: {
-      image: "images/logo/xdai.png",
-      title: "Safe xDai",
-      description: safeAddress,
-      balance: parseFloat(safeEtherBalance),
-      subtitle: "Account: Safe",
+      image: "logos/omo.svg",
+      title: "Omo Sapien invites",
+      balance: Math.floor(parseFloat(safeEtherBalance) * 10) - 1,
+      subtitle: "invites you have left",
+      description: "xDai balance: " + parseFloat(safeEtherBalance),
     },
   };
+
   $: xDaiOwner = {
     data: {
       image: "images/logo/xdai.png",
-      title: "SafeOwner xDai",
-      description: accountAddress,
-      balance: parseFloat(personalEtherBalance),
-      subtitle: "Account: SafeOwner",
+      title: "Transaction Credits",
+      subtitle: "Estimated transactions you have left",
+      balance: "~" + Math.floor(parseFloat(personalEtherBalance) * 20000),
+      description: "xDai balance: " + parseFloat(personalEtherBalance),
     },
   };
 
@@ -134,6 +132,7 @@
       label: "currency balances",
     },
   };
+
   const labelDistribution = {
     data: {
       label: "detailed circles distribution",
