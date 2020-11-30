@@ -59,6 +59,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
   try
   {
     const wei = config.getCurrent().web3().utils.toWei(context.data.value.value.toString(), "ether");
+    /*
     const pathResult = await sendMessage({
       call: "findPath",
       args: {
@@ -69,11 +70,11 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
     });
 
     console.log(pathResult);
-
+*/
     const tokenOwners = [context.environment.safe.address];
     const sources = [context.environment.safe.address];
     const destinations = [context.data.recipient.value];
-    const values = [new BN(config.getCurrent().web3().utils.toWei(context.data.value.value.toString(), "ether"))];
+    const values = [wei];
 /*
     (<any>pathResult).data.transfers.forEach(transfer =>
     {
