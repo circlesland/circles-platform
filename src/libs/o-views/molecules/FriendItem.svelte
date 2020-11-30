@@ -26,6 +26,9 @@
     unTrust,
     UnTrustContext,
   } from "../../../dapps/safe/processes/unTrust/unTrust";
+  import {cat} from "webnative/ipfs";
+  import {transferCircles, TransferCirclesContext} from "../../../dapps/safe/processes/transferCircles/transferCircles";
+  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
 
   export let data = {
     image: "",
@@ -45,20 +48,15 @@
   }
 
   function runTransferCircles(recipientAddress: Address) {
-    /*
     const contextInitializer = (context: TransferCirclesContext) => {
-      context.transfer = {
-        recipient: {
-          type: "ethereumAddress",
-          data: recipientAddress,
-        },
+      context.data.recipient = <ProcessArtifact>{
+        key: "recipient",
+        type: "ethereumAddress",
+        value: recipientAddress
       };
       return context;
     };
-    window.stateMachines.run(transferCircles, contextInitializer);
-    window.eventBroker.getTopic("omo", "shell").publish("openMenu");
-
-   */
+    window.o.publishEvent(new RunProcess(transferCircles, contextInitializer));
   }
 
   function runTrust(recipientAddress: Address) {
@@ -71,7 +69,7 @@
       };
       return context;
     };
-    window.o.dispatchShellEvent(new RunProcess(setTrust, contextInitializer));
+    window.o.publishEvent(new RunProcess(setTrust, contextInitializer));
   }
 
   function runUntrust(recipientAddress: Address) {
@@ -84,8 +82,9 @@
       };
       return context;
     };
-    window.o.dispatchShellEvent(new RunProcess(unTrust, contextInitializer));
+    window.o.publishEvent(new RunProcess(unTrust, contextInitializer));
   }
+
 
   const sendMoney = {
     design: {
@@ -119,11 +118,11 @@
 
 <div>
   <div class="w-full bg-white border rounded-xl card border-light-200">
-    <div on:click={toggleExpand} class="flex items-center justify-center p-2">
+    <div on:click={() => getPath(data.detail.address)} class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>
     <div class="flex items-center">
-      <div class="p-2" on:click={toggleExpand}>
+      <div class="p-2">
         <div class="text-xs md:text-base text-primary">{data.title}</div>
         <p class="text-gray-500 text-xxs md:text-xs ">
           {#if data.connection == 'trustedMutual'}
@@ -155,6 +154,7 @@
             <ButtonIcon mapping={removeTrust} />
           </div>
         {/if}
+
       {/each}
     </div>
   </div>

@@ -116,21 +116,30 @@ export class CirclesHub extends Web3Contract
       });
   }
 
-  async transferTrough(account: Account, safeProxy: GnosisSafeProxy, to: Address, amount: BN)
+  async transferTrough(
+    account: Account,
+    safeProxy: GnosisSafeProxy,
+    tokenOwners:Address[],
+    sources:Address[],
+    destinations:Address[],
+    values: BN[])
   {
     const transfer = {
-      tokenOwners: [safeProxy.address],
-      sources: [safeProxy.address],
-      destinations: [to],
-      values: [amount.toString()],
+      tokenOwners: tokenOwners,
+      sources: sources,
+      destinations: destinations,
+      values: values,
     };
 
+    // TODO: Check the send limit for each edge with the hub contract
+    /*
     const sendLimit = await this.contract.methods
       .checkSendLimit(safeProxy.address, safeProxy.address, to)
       .call();
 
     if (new BN(sendLimit).lt(amount))
       throw new Error("You cannot transfer " + amount.toString() + "units to " + to + " because the recipient doesn't trust your tokens.");
+    */
 
     const txData = await this.contract.methods.transferThrough(
       transfer.tokenOwners,
@@ -138,7 +147,9 @@ export class CirclesHub extends Web3Contract
       transfer.destinations,
       transfer.values,
     )
-      .encodeABI();
+    .encodeABI();
+
+    console.log("transferTroughAbi:", txData);
 
     return await safeProxy.execTransaction(
       account,

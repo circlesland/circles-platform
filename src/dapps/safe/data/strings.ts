@@ -62,6 +62,41 @@ export const strings = {
            "errorMessage": (context: TransferCirclesContext) => `Circles transfer failed`
        },
        */
+      transferCircles: {
+
+        titleRecipient()
+        {
+          return "";
+        },
+        bannerRecipient()
+        {
+
+        },
+        titleValue()
+        {
+          return "";
+        },
+        bannerValue()
+        {
+
+        },
+        titleSummary()
+        {
+          return "";
+        },
+        bannerSummary()
+        {
+
+        },
+        titleProgress()
+        {
+          return "";
+        },
+        successMessage()
+        {
+          return "";
+        }
+      }
     }
   }
 }
