@@ -26,6 +26,7 @@
     unTrust,
     UnTrustContext,
   } from "../../../dapps/safe/processes/unTrust/unTrust";
+  import {cat} from "webnative/ipfs";
 
   export let data = {
     image: "",
@@ -87,6 +88,18 @@
     window.o.dispatchShellEvent(new RunProcess(unTrust, contextInitializer));
   }
 
+  async function getPath (to) {
+    try
+    {
+      const from = "0xDE374ece6fA50e781E81Aac78e811b33D16912c7";
+      console.log("getPath(from, to)", from, to)
+      const result = window.o.getPath(from, to, 0);
+      console.log("Getpath result:", result);
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
   const sendMoney = {
     design: {
       icon: faMoneyBill,
@@ -119,11 +132,11 @@
 
 <div>
   <div class="w-full bg-white border rounded-xl card border-light-200">
-    <div on:click={toggleExpand} class="flex items-center justify-center p-2">
+    <div on:click={() => getPath(data.detail.address)} class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>
     <div class="flex items-center">
-      <div class="p-2" on:click={toggleExpand}>
+      <div class="p-2">
         <div class="text-xs md:text-base text-primary">{data.title}</div>
         <p class="text-gray-500 text-xxs md:text-xs ">
           {#if data.connection == 'trustedMutual'}
@@ -155,6 +168,7 @@
             <ButtonIcon mapping={removeTrust} />
           </div>
         {/if}
+
       {/each}
     </div>
   </div>
