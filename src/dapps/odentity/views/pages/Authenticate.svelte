@@ -57,7 +57,7 @@
   }
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
+<Compose rows="1fr" columns="1fr" tw="m-4 lg:m-0" gap="10px" overflowY>
   <div class="flex items-center justify-center">
     <div>
       <Jumper size="150" color="#071D69" unit="px" /><br />

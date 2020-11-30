@@ -124,8 +124,8 @@
     </div>
     <div class="flex items-center">
       <div class="p-2" on:click={toggleExpand}>
-        <div class="text-xs md:text-base text-primary">{data.title}</div>
-        <p class="text-gray-500 text-xxs md:text-xs ">
+        <div class="text-xs lg:text-base text-primary">{data.title}</div>
+        <p class="text-gray-500 text-xxs lg:text-xs ">
           {#if data.connection == 'trustedMutual'}
             <Icon icon={faExchangeAlt} /><span class="ml-2"> mutual trust</span>
           {:else if data.connection == 'trustingMe'}
@@ -162,7 +162,7 @@
   {#if data.detail && openDetail}
     <div class="px-3">
       <div
-        class="w-full p-2 overflow-hidden text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200 ">
+        class="w-full p-2 overflow-hidden text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs lg:text-xs border-light-200 ">
         <div>
           Address:<br /><span class=" text-primary">{data.detail.address}</span>
         </div>

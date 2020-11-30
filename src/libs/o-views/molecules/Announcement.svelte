@@ -6,9 +6,9 @@
 
 <a
   href={mapping.action.link}
-  class="w-full text-center whitespace-no-wrap md:rounded-b-xl ">
+  class="w-full text-center whitespace-no-wrap lg:rounded-b-xl ">
   <div
-    class="inline-flex w-full overflow-hidden bg-white md:rounded-xl md:shadow-sm">
+    class="inline-flex w-full overflow-hidden bg-white lg:rounded-xl lg:shadow-sm">
     <div class="flex items-center justify-center w-16 p-2 bg-info ">
       <svg
         class="w-6 h-6 text-white fill-current"
@@ -19,11 +19,11 @@
       </svg>
     </div>
     <div
-      class="flex items-center w-full px-3 text-left md:py-1 md:border-t md:border-r md:border-b md:border-gray-200">
+      class="flex items-center w-full px-3 text-left lg:py-1 lg:border-t lg:border-r lg:border-b lg:border-gray-200">
       <div>
         <span
-          class="hidden text-sm font-semibold text-info-darker md:block">Attention</span>
-        <p class="leading-none text-xxs text-info-darker md:text-xs">
+          class="hidden text-sm font-semibold text-info-darker lg:block">Attention</span>
+        <p class="leading-none text-xxs text-info-darker lg:text-xs">
           {mapping.data.text}
           ->
           {mapping.data.button}

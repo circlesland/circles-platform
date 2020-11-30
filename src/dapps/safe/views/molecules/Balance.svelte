@@ -6,10 +6,10 @@
 
   import { Jumper } from "svelte-loading-spinners";
   import Account from "./Account.svelte";
-  import {Subscription} from "rxjs";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy, onMount} from "svelte";
-  import {asyncWaterfall} from "webnative/common";
+  import { Subscription } from "rxjs";
+  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+  import { onDestroy, onMount } from "svelte";
+  import { asyncWaterfall } from "webnative/common";
 
   export let address: string;
 
@@ -34,7 +34,7 @@
 
   async function reload() {
     const web3 = config.getCurrent().web3();
-    const safe = await window.o.safe()
+    const safe = await window.o.safe();
 
     balance = await person.getTokenBalance();
     const balanceStr = web3.utils.fromWei(balance, "ether");
@@ -55,18 +55,16 @@
     personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
   }
 
-  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
-    {
-      if (event.type === "shell.refreshView")
-      {
+  let subscription: Subscription = window.o.events.subscribe(
+    (event: OmoEvent) => {
+      if (event.type === "shell.refreshView") {
         init();
       }
-    });
+    }
+  );
 
-  onDestroy(() =>
-  {
-    if (!subscription)
-      return;
+  onDestroy(() => {
+    if (!subscription) return;
 
     subscription.unsubscribe();
     subscription = null;
@@ -76,7 +74,7 @@
 </script>
 
 <div
-  class="flex items-center justify-center h-full font-bold text-center text-white bg-primary md:rounded-xl">
+  class="flex items-center justify-center h-full font-bold text-center text-white bg-primary lg:rounded-xl">
   {#if circlesBalance != undefined}
     <div
       class="flex items-center justify-center pl-6 mx-auto text-6xl uppercase">
