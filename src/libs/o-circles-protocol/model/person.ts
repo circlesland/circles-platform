@@ -7,6 +7,7 @@ import {Erc20Token} from "../token/erc20Token";
 import type {Event} from "../interfaces/event";
 import type {Account} from "../interfaces/account";
 import type {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
+import {ByteString} from "../interfaces/byteString";
 
 export type TokenAndOwner = {
     token: CirclesToken,
@@ -83,10 +84,10 @@ export class Person implements Safe
         return tokenBalances;
     }
 
-    async getUBI(account: Account, safe: GnosisSafeProxy): Promise<any>
+    async getUBI(privateKey: ByteString, safe: GnosisSafeProxy): Promise<any>
     {
         const owntoken = await this.getOwnToken();
-        return await owntoken.getUBI(account, safe);
+        return await owntoken.getUBI(privateKey, safe);
     }
 
     async getTokenBalance(reload?: boolean): Promise<BN>

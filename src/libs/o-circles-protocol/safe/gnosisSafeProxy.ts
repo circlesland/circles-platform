@@ -55,7 +55,7 @@ export class GnosisSafeProxy extends Web3Contract
     return parseInt(await this.contract.methods.nonce().call());
   }
 
-  async transferEth(account: Account, value: BN, to: Address)
+  async transferEth(privateKey: ByteString, value: BN, to: Address)
   {
     const safeTransaction = <GnosisSafeTransaction>{
       value: value,
@@ -66,10 +66,10 @@ export class GnosisSafeProxy extends Web3Contract
       refundReceiver: ZERO_ADDRESS,
       gasPrice: config.getCurrent().getGasPrice(this.web3)
     };
-    return await this.execTransaction(account, safeTransaction);
+    return await this.execTransaction(privateKey, safeTransaction);
   }
 
-  async execTransaction(account: Account, safeTransaction: GnosisSafeTransaction, dontEstimate?:boolean) : Promise<TransactionReceipt>
+  async execTransaction(privateKey: string, safeTransaction: GnosisSafeTransaction, dontEstimate?:boolean) : Promise<TransactionReceipt>
   {
     this.validateSafeTransaction(safeTransaction);
 
@@ -98,7 +98,7 @@ export class GnosisSafeProxy extends Web3Contract
     };
 
     const transactionHash = await this.getTransactionHash(executableTransaction);
-    const signatures = GnosisSafeProxy.signTransactionHash(this.web3, account.privateKey, transactionHash);
+    const signatures = GnosisSafeProxy.signTransactionHash(this.web3, privateKey, transactionHash);
 
     const gasEstimationResult = await this.contract.methods.execTransaction(
       executableTransaction.to,
@@ -116,7 +116,8 @@ export class GnosisSafeProxy extends Web3Contract
 
     const execTransactionData = this.toAbiMessage(executableTransaction, signatures.signature);
     const signedTransactionData = await this.signRawTransaction(
-      account,
+      (await this.getOwners())[0],
+      privateKey,
       this.address,
       execTransactionData,
       gasEstimate,

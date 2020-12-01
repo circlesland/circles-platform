@@ -2,12 +2,12 @@ import {ConnectSafeContext} from "../connectSafe";
 import {mnemonicToEntropy} from "bip39";
 import {config} from "../../../../../libs/o-circles-protocol/config";
 import {GotSafe} from "../../../events/gotSafe";
-import {FissionPaths} from "../../../../../libs/o-os/fissionPaths";
 
 export const connectSafeService = async (context: ConnectSafeContext) =>
 {
-  if(!context.environment.fissionAuth) {
-    throw new Error("You're not authenticated.");
+  if (!window.o.fission)
+  {
+    throw new Error("You're not authenticated");
   }
 
   const privateKey = mnemonicToEntropy(context.data.privateKey.value);
@@ -17,27 +17,24 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
     .privateKeyToAccount("0x" + privateKey)
     .address;
 
-  if(!context.environment.fissionAuth) {
-    throw new Error("You're not authenticated.");
-  }
-  const fs = context.environment.fissionAuth.fs;
-
-  const appPath = fs.appPath();
-  if (!await fs.exists(appPath)) {
-    throw new Error("No fission app path for " + appPath);
-  }
-  if (!(await fs.exists(FissionPaths.keysDir())))
+  if (!context.environment.eth.web3.utils.isAddress(ownerAddress))
   {
-    await fs.mkdir(FissionPaths.keysDir());
-    await fs.publish();
+    throw new Error("The private key seems to be invalid because no address could be derived from it.");
   }
 
-  await fs.add(FissionPaths.safe(), JSON.stringify({
-    owner: ownerAddress,
+  const existingProfile = context.environment.me.myProfile;
+  if (!existingProfile) {
+    throw new Error("The 'me' profile doesn't exist yet. The safe cannot be linked without a profile.");
+  }
+
+  await window.o.fission.keys.addMyKey({
+    name: "me",
     privateKey: "0x" + privateKey,
-    address: context.data.safeAddress.value
-  }));
-  await fs.publish();
+    publicKey: null
+  });
+
+  existingProfile.circlesAddress = context.data.safeAddress.value;
+  await window.o.fission.profiles.addOrUpdateMyProfile(existingProfile);
 
   window.o.publishEvent(new GotSafe());
 }

@@ -6,6 +6,7 @@ import {ZERO_ADDRESS} from "../consts";
 import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
 import type {Account} from "../interfaces/account";
 import type {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
+import {ByteString} from "../interfaces/byteString";
 
 export class CirclesToken extends Erc20Token {
   constructor(web3:Web3, address: Address)
@@ -13,12 +14,12 @@ export class CirclesToken extends Erc20Token {
     super(web3, address);
   }
 
-  async getUBI(account: Account, safeProxy: GnosisSafeProxy)
+  async getUBI(privateKey: ByteString, safeProxy: GnosisSafeProxy)
   {
     const txData = this.contract.methods.update().encodeABI();
 
     return await safeProxy.execTransaction(
-      account,
+      privateKey,
       {
         to: this.address,
         data: txData,

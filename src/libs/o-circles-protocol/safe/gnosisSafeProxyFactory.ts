@@ -6,17 +6,16 @@ import {GnosisSafeProxy} from "./gnosisSafeProxy";
 import {Web3Contract} from "../web3Contract";
 import type {Address} from "../interfaces/address";
 import type {Account} from "../interfaces/account";
+import {ByteString} from "../interfaces/byteString";
 
 export class GnosisSafeProxyFactory extends Web3Contract
 {
   readonly masterSafeAddress: Address;
-  readonly creatorAddress: Address;
 
-  constructor(web3: Web3, proxyFactoryAddress:Address, masterSafeAddress: Address, creatorAddress:Address)
+  constructor(web3: Web3, proxyFactoryAddress:Address, masterSafeAddress: Address)
   {
     super(web3, proxyFactoryAddress, new web3.eth.Contract(<AbiItem[]>PROXY_FACTORY_ABI, proxyFactoryAddress));
     this.masterSafeAddress = masterSafeAddress;
-    this.creatorAddress = creatorAddress;
   }
 
   /**
@@ -28,13 +27,14 @@ export class GnosisSafeProxyFactory extends Web3Contract
    * @param creator The account that creates the instance (The creator must also be an owner!)
    * @param gasPrice The gas price in wei
    */
-  async deployNewSafeProxy(account:Account)
+  async deployNewSafeProxy(privateKey:ByteString)
     : Promise<GnosisSafeProxy>
   {
+    const ownerAddress = this.web3.eth.accounts.privateKeyToAccount(privateKey).address;
     const gnosisSafe = new this.web3.eth.Contract(<AbiItem[]>GNOSIS_SAFE_ABI, this.masterSafeAddress);
 
     const proxySetupData = gnosisSafe.methods.setup(
-      [this.creatorAddress],
+      [ownerAddress],
       1,               // threshold (how many owners are required to sign a transaction -> 1)
       ZERO_ADDRESS,    // delegatecall for modules (none)
       "0x",            // init data for modules (none)
@@ -55,7 +55,8 @@ export class GnosisSafeProxyFactory extends Web3Contract
       .encodeABI();
 
     const signedRawTransaction = await this.signRawTransaction(
-      account,
+      ownerAddress,
+      privateKey,
       <any>this.address,
       createProxyData,
       estimatedGas,
@@ -83,6 +84,6 @@ export class GnosisSafeProxyFactory extends Web3Contract
     if (!proxyAddress)
       throw new Error("The deployment of the safe failed. Couldn't determine the proxy address from the receipt's log.")
 
-    return new GnosisSafeProxy(this.web3, this.creatorAddress, proxyAddress);
+    return new GnosisSafeProxy(this.web3, ownerAddress, proxyAddress);
   }
 }

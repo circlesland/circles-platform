@@ -9,6 +9,8 @@
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
+  import {getEnvironment} from "../../../../libs/o-os/o";
+  import {address} from "./Transactions.svelte";
 
   let accountAddress: string;
   let safeAddress: string;
@@ -26,9 +28,9 @@
   let tokensITrust: any[] = [];
 
   async function init() {
-    const safe = await window.o.safe();
-    safeAddress = safe.address;
-    accountAddress = safe.owner;
+    const environment = await getEnvironment();
+    safeAddress = environment.me.mySafe.address;
+    accountAddress = environment.me.mySafe.getOwners()[0];
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
@@ -39,7 +41,6 @@
 
   async function reload() {
     const web3 = config.getCurrent().web3();
-    const safe = await window.o.safe()
 
     balance = await person.getTokenBalance();
     const balanceStr = web3.utils.fromWei(balance, "ether");
@@ -51,7 +52,7 @@
     const ethDot = ethBalanceStr.indexOf(".");
     safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
 
-    personalEthBalance = await web3.eth.getBalance(safe.owner);
+    personalEthBalance = await web3.eth.getBalance(accountAddress);
     const personalEthBalanceStr = web3.utils.fromWei(
       personalEthBalance,
       "ether"

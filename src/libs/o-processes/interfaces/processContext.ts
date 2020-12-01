@@ -1,6 +1,7 @@
 import {ProcessEnvironment} from "./processEnvironment";
 import {ProcessResult} from "./processResult";
 import {ProcessArtifact} from "./processArtifact";
+import {Profile} from "../../o-fission/entities/profile";
 
 /**
  * Every running process has a context that stores the state

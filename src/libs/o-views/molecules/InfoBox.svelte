@@ -7,8 +7,8 @@
   $: safeAddress = "";
 
   onMount(async () => {
-    accountAddress = (await window.o.safe()).owner;
-    safeAddress = (await window.o.safe()).address;
+    accountAddress = "";
+    safeAddress = "";
   });
 </script>
 

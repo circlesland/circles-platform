@@ -10,6 +10,8 @@
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
   import {asyncWaterfall} from "webnative/common";
+  import {getEnvironment} from "../../../../libs/o-os/o";
+  import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   export let address: string;
 
@@ -21,9 +23,14 @@
   let circlesBalance: string;
   let safeEtherBalance: string;
   let personalEtherBalance: string;
+  let accountAddress:string;
+
+  let environment:ProcessEnvironment;
 
   async function init() {
-    address = (await window.o.safe()).address;
+    environment = await getEnvironment();
+    address = environment.me.mySafe.address;
+    accountAddress = environment.me.mySafe.getOwners()[0];
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
@@ -34,19 +41,18 @@
 
   async function reload() {
     const web3 = config.getCurrent().web3();
-    const safe = await window.o.safe()
 
     balance = await person.getTokenBalance();
     const balanceStr = web3.utils.fromWei(balance, "ether");
     const dot = balanceStr.indexOf(".");
     circlesBalance = balanceStr.slice(0, dot + 3);
 
-    safeEthBalance = await person.getEthBalance();
+    safeEthBalance = environment.me.mySafeXDaiBalance;
     const ethBalanceStr = web3.utils.fromWei(safeEthBalance, "ether");
     const ethDot = ethBalanceStr.indexOf(".");
     safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
 
-    personalEthBalance = await web3.eth.getBalance(safe.owner);
+    personalEthBalance = environment.me.myAddressXDaiBalance;
     const personalEthBalanceStr = web3.utils.fromWei(
       personalEthBalance,
       "ether"

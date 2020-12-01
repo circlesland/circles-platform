@@ -8,6 +8,7 @@ import type {Address} from "../interfaces/address";
 import type {Account} from "../interfaces/account";
 import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
 import {config} from "../config";
+import {ByteString} from "../interfaces/byteString";
 
 export class Erc20Token extends Web3Contract
 {
@@ -38,12 +39,12 @@ export class Erc20Token extends Web3Contract
     };
   }
 
-  async transfer(account: Account, safeProxy: GnosisSafeProxy, to: Address, amount: BN)
+  async transfer(privateKey: ByteString, safeProxy: GnosisSafeProxy, to: Address, amount: BN)
   {
     const txData = this.contract.methods.transfer(to, amount).encodeABI();
 
     return await safeProxy.execTransaction(
-      account,
+      privateKey,
       {
         to: this.address,
         data: txData,

@@ -40,10 +40,10 @@ const processDefinition = () => createMachine<CreateSafeContext, OmoEvent>({
       on: {
         "process.continue": [{
           target: "createAccount",
-          cond: (contexts) => !contexts.environment.account.address
+          cond: (contexts) => !contexts.environment.me.myAddress
         }, {
           target: "checkFunding",
-          cond: (contexts) => !!contexts.environment.account.address
+          cond: (contexts) => !!contexts.environment.me.myAddress
         }]
       }
     },
@@ -68,10 +68,10 @@ const processDefinition = () => createMachine<CreateSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": [{
-          cond: (context) => context.environment.accountxDaiBalance.gte(new BN("1234")),
+          cond: (context) => context.environment.me.myAddressXDaiBalance.gte(new BN("1234")),
           target: "checkSafe"
         },{
-          cond: (context) => context.environment.accountxDaiBalance.lt(new BN("1234")),
+          cond: (context) => context.environment.me.myAddressXDaiBalance.lt(new BN("1234")),
           target: "generateFundLink"
         }]
       }
@@ -82,10 +82,10 @@ const processDefinition = () => createMachine<CreateSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": [{
-          cond: (context) => !context.environment.safe,
+          cond: (context) => !context.environment.me.mySafe,
           target: "deploySafe"
         },{
-          cond: (context) => !!context.environment.safe,
+          cond: (context) => !!context.environment.me.mySafe,
           target: "success"
         }]
       }

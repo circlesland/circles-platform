@@ -12,11 +12,10 @@ import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendP
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {strings} from "../../data/strings";
 import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
-import {createOdentityService} from "./services/createOdentityService";
+import {addOrUpdateMyProfileService} from "./services/addOrUpdateMyProfileService";
 import {file} from "../../../../libs/o-processes/artifacts/file";
 import {choice} from "../../../../libs/o-processes/artifacts/choice";
 import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
-import {getServiceContext} from "../../../../libs/o-os/stateMachine";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {createSafe} from "../../../safe/processes/createSafe/createSafe";
 
@@ -108,7 +107,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
       entry: sendInProgressPrompt(str.bannerProgress),
       invoke: {
         id: 'createOdentity',
-        src: createOdentityService,
+        src: addOrUpdateMyProfileService,
         onError: {
           actions: setError,
           target: "error"

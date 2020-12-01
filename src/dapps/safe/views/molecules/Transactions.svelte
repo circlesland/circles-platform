@@ -16,6 +16,7 @@
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
+  import {getEnvironment} from "../../../../libs/o-os/o";
 
   export let address: string;
 
@@ -23,7 +24,8 @@
   let transactions = [];
 
   async function init() {
-    address = (await window.o.safe()).address;
+    const environment = await getEnvironment();
+    address = environment.me.mySafe.address;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 

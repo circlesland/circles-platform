@@ -1,11 +1,9 @@
-import {config} from "../../../../../libs/o-circles-protocol/config";
 import {GotSafe} from "../../../events/gotSafe";
-import {FissionPaths} from "../../../../../libs/o-os/fissionPaths";
 import {CreateSafeContext} from "../createSafe";
 
 export const createSafeService = async (context: CreateSafeContext) =>
 {
-  if(!context.environment.fissionAuth) {
+  if(!context.environment.fission) {
     throw new Error("You're not authenticated.");
   }
 

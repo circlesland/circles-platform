@@ -114,11 +114,11 @@ export abstract class Web3Contract implements Addressable
     return subject;
   }
 
-  async signRawTransaction(account:Account, to: Address, data: ByteString, gasLimit: BN, value: BN)
+  async signRawTransaction(ownerAddress:Address, privateKey:ByteString, to: Address, data: ByteString, gasLimit: BN, value: BN)
     : Promise<ByteString>
   {
     const ethJsCommon: Common = await config.getCurrent().ethjs.getCommon(this.web3);
-    const nonce = "0x" + new BN(await this.web3.eth.getTransactionCount(account.address)).toString("hex");
+    const nonce = "0x" + new BN(await this.web3.eth.getTransactionCount(ownerAddress)).toString("hex");
 
     const rawTx: TxData = {
       gasPrice: "0x" + config.getCurrent().getGasPrice(this.web3).toString("hex"),
@@ -134,7 +134,7 @@ export abstract class Web3Contract implements Addressable
       : {};
 
     const tx = new Transaction(rawTx, txOptions);
-    tx.sign(Buffer.from(account.privateKey.slice(2), "hex"));
+    tx.sign(Buffer.from(privateKey.slice(2), "hex"));
 
     return '0x' + tx.serialize().toString('hex');
   }

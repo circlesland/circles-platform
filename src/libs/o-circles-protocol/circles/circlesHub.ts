@@ -9,6 +9,7 @@ import type {Account} from "../interfaces/account";
 import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
 import {config} from "../config";
 import {from} from "rxjs";
+import {ByteString} from "../interfaces/byteString";
 
 export class CirclesHub extends Web3Contract
 {
@@ -84,12 +85,12 @@ export class CirclesHub extends Web3Contract
   static readonly OrganizationSignupEvent = "OrganizationSignup";
   static readonly TrustEvent = "Trust";
 
-  async signup(account: Account, safeProxy: GnosisSafeProxy)
+  async signup(privateKey: ByteString, safeProxy: GnosisSafeProxy)
   {
     const txData = this.contract.methods.signup().encodeABI();
 
     return await safeProxy.execTransaction(
-      account,
+      privateKey,
       {
         to: this.address,
         data: txData,
@@ -100,12 +101,12 @@ export class CirclesHub extends Web3Contract
       });
   }
 
-  async setTrust(account: Account, safeProxy: GnosisSafeProxy, to: Address, trustPercentage: BN)
+  async setTrust(privateKey: ByteString, safeProxy: GnosisSafeProxy, to: Address, trustPercentage: BN)
   {
     const txData = this.contract.methods.trust(to, trustPercentage).encodeABI();
 
     return await safeProxy.execTransaction(
-      account,
+      privateKey,
       {
         to: this.address,
         data: txData,
@@ -117,7 +118,7 @@ export class CirclesHub extends Web3Contract
   }
 
   async transferTrough(
-    account: Account,
+    privateKey: ByteString,
     safeProxy: GnosisSafeProxy,
     tokenOwners:Address[],
     sources:Address[],
@@ -152,7 +153,7 @@ export class CirclesHub extends Web3Contract
     console.log("transferTroughAbi:", txData);
 
     return await safeProxy.execTransaction(
-      account,
+      privateKey,
       {
         to: this.address,
         data: txData,

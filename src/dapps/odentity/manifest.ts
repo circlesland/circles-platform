@@ -10,7 +10,7 @@ export const profile: PageManifest = {
   conditions: [
     (detail) => {
       console.log("routeGuard.detail:", detail);
-      return window.o.fissionAuth !== undefined
+      return window.o.fission !== undefined
     }
   ],
   userData: {
@@ -39,7 +39,7 @@ export const access: PageManifest = {
   conditions: [
     (detail) => {
       console.log("routeGuard.detail:", detail);
-      return window.o.fissionAuth !== undefined
+      return window.o.fission !== undefined
     }
   ],
   userData: {
@@ -57,7 +57,7 @@ export const keys: PageManifest = {
   conditions: [
     (detail) => {
       console.log("routeGuard.detail:", detail);
-      return window.o.fissionAuth !== undefined
+      return window.o.fission !== undefined
     }
   ],
   userData: {

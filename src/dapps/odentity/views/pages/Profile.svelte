@@ -3,15 +3,13 @@
   import { onMount } from "svelte";
   import Avataaar from "src/libs/o-views/atoms/Avataaar.svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
-  import { firstname, lastname, city } from "./../../data/profile";
-  import { Profile } from "../../interfaces/profile";
   import { GotProfile } from "../../events/gotProfile";
   import { RunProcess } from "../../../../libs/o-events/runProcess";
   import { createOdentity } from "../../processes/createOdentity/createOdentity";
   import { push } from "svelte-spa-router";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import {FissionPaths} from "../../../../libs/o-os/fissionPaths";
   import {createSafe} from "../../../safe/processes/createSafe/createSafe";
+  import {Profile} from "../../../../libs/o-fission/entities/profile";
 
   const wn = window.o.wn;
 
@@ -24,27 +22,25 @@
   });
 
   onMount(async () => {
-    if (!window.o.fissionAuth) {
+    if (!window.o.fission) {
       push("#/odentity/authenticate");
       return;
     }
 
-    const session = window.o.fissionAuth;
+    const session = window.o.fission;
+    const myProfile = await session.profiles.tryGetMyProfile();
+    profile = myProfile;
 
-    if (await session.fs.exists(FissionPaths.profile())) {
+    console.log("profile", profile);
 
-      if (!(await session.fs.exists(FissionPaths.safe()))) {
+    if (myProfile)
+    {
+      if (!myProfile.circlesAddress) {
         window.o.publishEvent(new RunProcess(createSafe));
         return;
       }
 
-      const profileJson = <string>(
-        await session.fs.cat(FissionPaths.profile())
-      );
-      const profileObj = JSON.parse(profileJson);
-      const profile: Profile = profileObj;
-
-      window.o.publishEvent(new GotProfile(profile));
+      window.o.publishEvent(new GotProfile(myProfile));
     } else {
       window.o.publishEvent(new RunProcess(createOdentity));
     }
@@ -78,7 +74,7 @@
           mapping={{ data: { title: profile.firstName, subtitle: 'my first name' } }} />
         <ProfileItem
           mapping={{ data: { title: profile.lastName, subtitle: 'my last name' } }} />
-        <ProfileItem mapping={city} />
+        <!--<ProfileItem mapping={city} />-->
       </div>
     </div>
   {/if}

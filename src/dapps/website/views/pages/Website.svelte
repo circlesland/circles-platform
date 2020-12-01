@@ -4,11 +4,8 @@
   import { onMount } from "svelte";
   import { push } from "svelte-spa-router";
 
-  $: safeAddress = "";
-
   onMount(async () => {
-    safeAddress = (await window.o.safe())?.address;
-    if (safeAddress) {
+    if (window.o.fission) {
       push("/omo/dapps");
     }
   });

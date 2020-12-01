@@ -49,8 +49,8 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 
     console.log(pathResult);
 */
-    const tokenOwners = [context.environment.safe.address];
-    const sources = [context.environment.safe.address];
+    const tokenOwners = [context.environment.me.myAddress];
+    const sources = [context.environment.me.mySafe.address];
     const destinations = [context.data.recipient.value];
     const values = [wei];
 /*
@@ -62,9 +62,9 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
       values.push(transfer.value);
     });
 */
-    const transferTroughResult = await context.environment.person.circlesHub.transferTrough(
-      context.environment.account,
-      context.environment.safe,
+    const transferTroughResult = await context.environment.eth.contracts.hub.transferTrough(
+      context.environment.me.myKey.privateKey,
+      context.environment.me.mySafe,
       tokenOwners,
       sources,
       destinations,

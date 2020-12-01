@@ -1,44 +1,11 @@
 import {BehaviorSubject} from "rxjs";
 import {useMachine} from "xstate-svelte";
 import {ProcessDefinition} from "../o-processes/processManifest";
-
-import type {Account} from "src/libs/o-circles-protocol/interfaces/account";
-import {config} from "src/libs/o-circles-protocol/config";
-import {CirclesHub} from "src/libs/o-circles-protocol/circles/circlesHub";
-import {GnosisSafeProxy} from "src/libs/o-circles-protocol/safe/gnosisSafeProxy";
-import {Person} from "src/libs/o-circles-protocol/model/person";
 import {ProcessContext} from "../o-processes/interfaces/processContext";
-import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Nop} from "../o-processes/events/nop";
 import {Process} from "../o-processes/interfaces/process";
-import {StateMachine} from "xstate";
-import {BN} from "ethereumjs-util";
-
-export async function getServiceContext(): Promise<ProcessContext>
-{
-  const safe = await window.o.safe();
-  const safeAddress = safe?.address;
-  const account: Account = {
-    privateKey: safe?.privateKey,
-    address: safe?.owner,
-  };
-  const accountxDaiBalance = account.address ? new BN(await config.getCurrent().web3().eth.getBalance(account.address)) : new BN("0");
-  const web3 = config.getCurrent().web3();
-  const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
-  const environment: ProcessEnvironment = {
-    safe: (!account.address || !safeAddress) ? null : new GnosisSafeProxy(web3, account.address, safeAddress),
-    account: account,
-    person: !safeAddress ? null : new Person(circlesHub, safeAddress),
-    fissionAuth: window.o.fissionAuth,
-    accountxDaiBalance: accountxDaiBalance
-  };
-
-  return <ProcessContext>{
-    environment,
-    data: {}
-  };
-}
+import {getProcessContext} from "./o";
 
 export const stateMachine = {
   _current: null,
@@ -56,8 +23,8 @@ export const stateMachine = {
       (<any>definition).stateMachine(),
       {
         context: contextModifier
-          ? await contextModifier(await getServiceContext())
-          : await getServiceContext()
+          ? await contextModifier(await getProcessContext())
+          : await getProcessContext()
       });
 
     const processEvents = new BehaviorSubject<ProcessEvent>({

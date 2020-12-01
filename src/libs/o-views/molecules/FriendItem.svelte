@@ -28,7 +28,6 @@
   } from "../../../dapps/safe/processes/unTrust/unTrust";
   import {transferCircles, TransferCirclesContext} from "../../../dapps/safe/processes/transferCircles/transferCircles";
   import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
-  import {stateMachine} from "../../o-os/stateMachine";
   import {config} from "../../o-circles-protocol/config";
 
   export let data = {
