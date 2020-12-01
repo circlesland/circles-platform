@@ -61,7 +61,8 @@
             <!--<Avataaar mapping={avataaar}/>-->
             <img
               src={profile.avatar}
-              class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300" />
+              class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300"
+              alt="img" />
           </div>
           Welcome,
           {profile.firstName}

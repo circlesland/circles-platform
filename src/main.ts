@@ -15,7 +15,7 @@ declare global {
 
 window.o = o;
 
-initPathFinder();
+// initPathFinder();
 
 const app = new App({
   target: document.body,
