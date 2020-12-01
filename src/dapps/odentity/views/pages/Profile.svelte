@@ -76,7 +76,7 @@
           mapping={{ data: { title: profile.firstName, subtitle: 'first name' } }} />
         <ProfileItem
           mapping={{ data: { title: profile.lastName, subtitle: 'last name' } }} />
-        <ProfileItem mapping={city} />
+        <!--<ProfileItem mapping={city} />-->
       </div>
     </div>
   {/if}
