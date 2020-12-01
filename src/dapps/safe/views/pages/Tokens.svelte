@@ -9,6 +9,6 @@
   };
 </script>
 
-<Compose rows="1fr" columns="1fr" overflowY tw="m-4 md:m-0">
+<Compose rows="1fr" columns="1fr" overflowY tw="mx-4 mt-4 md:mx-0 md:mt-2">
   <Tokens />
 </Compose>

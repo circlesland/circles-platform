@@ -11,7 +11,6 @@
   const dispatch = createEventDispatcher();
   export let quickActions: QuickAction[] = [];
 
-
   function onActionButtonClick() {
     dispatch("actionButtonClick");
   }
@@ -21,7 +20,6 @@
 
     return action.route.indexOf($location) > -1;
   }
-
 </script>
 
 <style global>

@@ -24,7 +24,7 @@
   let alpha = {
     data: {
       type: "Attention",
-      text: "We are in early alpha testing. For feedback join our",
+      text: "Early alpha testing, use at own risk! For feedback join our",
       button: "Chat",
     },
     action: {
@@ -122,8 +122,9 @@
     );
   }
 </script>
+
 <ComposeApp tw="font-primary bg-light-100">
-  <Compose tw="mx-auto bg-light-100 w-full max-w-4xl">
+  <Compose tw="mx-auto bg-light-100 w-full max-w-3xl">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
       <Compose tw="md:my-1">
         <Announcement mapping={alpha} />

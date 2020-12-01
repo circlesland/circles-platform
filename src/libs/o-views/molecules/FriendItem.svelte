@@ -59,13 +59,18 @@
       };
       return context;
     };
-    window.o.publishEvent(new RunProcess({
-      id: transferCircles.id,
-      name: transferCircles.name,
-      stateMachine: () => {
-        return transferCircles.stateMachine(myBalance);
-      }
-    }, contextInitializer));
+    window.o.publishEvent(
+      new RunProcess(
+        {
+          id: transferCircles.id,
+          name: transferCircles.name,
+          stateMachine: () => {
+            return transferCircles.stateMachine(myBalance);
+          },
+        },
+        contextInitializer
+      )
+    );
   }
 
   function runTrust(recipientAddress: Address) {
@@ -125,8 +130,10 @@
 </style>
 
 <div>
-  <div on:click={() => toggleExpand()} class="w-full bg-white border rounded-xl card border-light-200">
-    <div  class="flex items-center justify-center p-2">
+  <div
+    on:click={() => toggleExpand()}
+    class="w-full bg-white border rounded-xl card border-light-200">
+    <div class="flex items-center justify-center p-2">
       <img src={data.image} alt="CRC" />
     </div>
     <div class="flex items-center">
@@ -150,27 +157,30 @@
     <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
       {#each data.actions as a}
         {#if a == 'send'}
-          <div on:click={(e) => {
-            runTransferCircles(data.detail.address);
-            e.preventDefault();
-            e.stopPropagation();
-          }}>
+          <div
+            on:click={(e) => {
+              runTransferCircles(data.detail.address);
+              e.preventDefault();
+              e.stopPropagation();
+            }}>
             <ButtonIcon mapping={sendMoney} />
           </div>
         {:else if a == 'trust'}
-          <div on:click={(e) => {
-            runTrust(data.detail.address);
-            e.preventDefault();
-            e.stopPropagation();
-          }}>
+          <div
+            on:click={(e) => {
+              runTrust(data.detail.address);
+              e.preventDefault();
+              e.stopPropagation();
+            }}>
             <ButtonIcon mapping={addTrust} />
           </div>
         {:else if a == 'untrust'}
-          <div on:click={(e) => {
-            runUntrust(data.detail.address);
-            e.preventDefault();
-            e.stopPropagation();
-          }}>
+          <div
+            on:click={(e) => {
+              runUntrust(data.detail.address);
+              e.preventDefault();
+              e.stopPropagation();
+            }}>
             <ButtonIcon mapping={removeTrust} />
           </div>
         {/if}

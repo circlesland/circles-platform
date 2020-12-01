@@ -105,28 +105,29 @@
   $: circlesSafe = {
     data: {
       image: "images/logo/circles.svg",
-      title: "Safe Circles",
-      description: safeAddress,
-      balance: parseFloat(circlesBalance),
-      subtitle: "Account: Safe",
+      title: "Circles",
+      description: "Address: " + safeAddress,
+      balance: parseFloat(circlesBalance).toFixed(2),
+      subtitle: "Circles in your safe account",
     },
   };
   $: xDaiSafe = {
     data: {
-      image: "images/logo/xdai.png",
-      title: "Safe xDai",
-      description: safeAddress,
-      balance: parseFloat(safeEtherBalance),
-      subtitle: "Account: Safe",
+      image: "logos/omo.svg",
+      title: "Invite Credits",
+      balance: Math.floor(parseFloat(safeEtherBalance) * 10) - 1,
+      subtitle: "Invites you have left",
+      description: "xDai balance: " + parseFloat(safeEtherBalance),
     },
   };
+
   $: xDaiOwner = {
     data: {
       image: "images/logo/xdai.png",
-      title: "SafeOwner xDai",
-      description: accountAddress,
-      balance: parseFloat(personalEtherBalance),
-      subtitle: "Account: SafeOwner",
+      title: "Transaction Credits",
+      subtitle: "Estimated transactions you have left",
+      balance: "~" + Math.floor(parseFloat(personalEtherBalance) * 20000),
+      description: "xDai balance: " + parseFloat(personalEtherBalance),
     },
   };
 
@@ -135,6 +136,7 @@
       label: "currency balances",
     },
   };
+
   const labelDistribution = {
     data: {
       label: "detailed circles distribution",

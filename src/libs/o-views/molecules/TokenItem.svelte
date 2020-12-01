@@ -37,18 +37,13 @@
       </div>
     </div>
     <div class="flex items-center pt-0.5 justify-end px-4 text-right">
-      <div class="text-3xl font-light text-action">
-        {#if mapping.data.balance < 1}
-          {mapping.data.balance.toFixed(4)}
-        {:else}{mapping.data.balance.toFixed(2)}{/if}
-      </div>
+      <div class="text-3xl font-light text-action">{mapping.data.balance}</div>
     </div>
   </div>
   {#if mapping.data.description && openDetail}
     <div class="px-3">
       <div
         class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200">
-        Address:
         <span class="text-primary">{mapping.data.description}</span>
       </div>
     </div>

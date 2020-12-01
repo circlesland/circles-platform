@@ -19,7 +19,7 @@
       empowering your abundance
     </div>
     <div on:click={() => push('#/odentity/authenticate')}>
-      <div class="mx-4 mx-auto my-12 md:w-1/2">
+      <div class="px-4 mx-auto my-12 md:w-1/2">
         <Button
           mapping={{ data: { label: 'Login' }, design: { type: 'primary' } }} />
       </div>
