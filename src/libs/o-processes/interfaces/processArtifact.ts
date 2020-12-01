@@ -46,6 +46,8 @@ export interface ProcessArtifact {
    * object was changed between Prompt and Continue.
    */
   changed?:boolean,
+
+  max?:any;
   /**
    * Either the initial, edited or no value.
    */

@@ -62,7 +62,7 @@
             limit: "0",
             address: mutualTrust.owner.address,
           },
-          actions: ["trust", "send"],
+          actions: ["trust"],
         };
       });
 
@@ -141,7 +141,7 @@
             address: personsITrust.owner.address,
             limit: personsITrust.limit,
           },
-          actions: ["untrust", "send"],
+          actions: ["untrust"],
         };
       });
 

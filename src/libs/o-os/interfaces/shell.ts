@@ -6,6 +6,7 @@ import {ProcessDefinition} from "../../o-processes/processManifest";
 import {ProcessContext} from "../../o-processes/interfaces/processContext";
 import {SafeReference} from "../../../dapps/safe/interfaces/SafeReference";
 import {Profile} from "../../../dapps/odentity/interfaces/profile";
+import {ProcessEnvironment} from "../../o-processes/interfaces/processEnvironment";
 
 export interface Shell {
   fissionAuth: AuthSucceeded|Continuation,
@@ -16,6 +17,7 @@ export interface Shell {
     cancel(),
     run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => ProcessContext) => Process
   },
+  getEnvironment: () => Promise<ProcessEnvironment>,
   safe: () => Promise<SafeReference>
   profile: () => Promise<Profile>,
   wn: any

@@ -96,7 +96,7 @@ export const safeOverflowActions: QuickAction[] = [
       }
     },
     event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
-      return context;
+      return Promise.resolve(context);
     })
   },
   // {

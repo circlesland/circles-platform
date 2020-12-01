@@ -73,7 +73,9 @@
   </div>
 {/if}
 {#each processArtifacts as artifact}
-  <div class="w-full">
+  <div class="w-full" on:keydown={(e) => {
+    if (e.key === "Enter" && isValid) sendAnswer()
+  }}>
     {#if artifact.type === 'ether'}
       <EtherEditor
         on:validated={() => setIsValid()}

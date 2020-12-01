@@ -63,7 +63,6 @@ export const strings = {
        },
        */
       transferCircles: {
-
         titleRecipient()
         {
           return "";
@@ -96,6 +95,14 @@ export const strings = {
         {
           return "";
         }
+      },
+      createSafe: {
+        titleInitializing: () => "Generating a new key ..",
+        titleGenerateFundLink: () => "Get initial funding",
+        buttonGenerateFundLink: () => "Close",
+        bannerGenerateFundLink: () => "Send this link to a friend to get started",
+        progressCreateSafe: () => "Creating your safe",
+        successCreateSafe: () => "Your new safe was successfully created"
       }
     }
   }
