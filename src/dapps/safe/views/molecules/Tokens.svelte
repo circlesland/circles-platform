@@ -82,7 +82,7 @@
           },
         };
       });
-    tokensITrust.sort((a, b) => -a.balanceBN.cmp(b.balanceBN));
+    tokensITrust.sort((a, b) => -a.data.balanceBN.cmp(b.data.balanceBN));
   }
 
 
