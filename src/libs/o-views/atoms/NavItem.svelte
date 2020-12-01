@@ -11,7 +11,7 @@
     {#if mapping.design.icon}
       <Icon icon={mapping.design.icon} class="text-2xl" />
     {/if}
-    <p class="lowercase text-xxs lg:text-xs font-title">
+    <p class="lowercase text-xxs md:text-xs font-title">
       {mapping.data.label}
     </p></span>
 </div>

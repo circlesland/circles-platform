@@ -10,8 +10,8 @@
   import { createOdentity } from "../../processes/createOdentity/createOdentity";
   import { push } from "svelte-spa-router";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import {FissionPaths} from "../../../../libs/o-os/fissionPaths";
-  import {createSafe} from "../../../safe/processes/createSafe/createSafe";
+  import { FissionPaths } from "../../../../libs/o-os/fissionPaths";
+  import { createSafe } from "../../../safe/processes/createSafe/createSafe";
 
   const wn = window.o.wn;
 
@@ -32,15 +32,12 @@
     const session = window.o.fissionAuth;
 
     if (await session.fs.exists(FissionPaths.profile())) {
-
       if (!(await session.fs.exists(FissionPaths.safe()))) {
         window.o.publishEvent(new RunProcess(createSafe));
         return;
       }
 
-      const profileJson = <string>(
-        await session.fs.cat(FissionPaths.profile())
-      );
+      const profileJson = <string>await session.fs.cat(FissionPaths.profile());
       const profileObj = JSON.parse(profileJson);
       const profile: Profile = profileObj;
 
@@ -57,7 +54,7 @@
   }
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="m-4 lg:m-0" gap="10px" overflowY>
+<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
   {#if profile}
     <div>
       <div class="">

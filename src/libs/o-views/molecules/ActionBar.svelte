@@ -31,7 +31,7 @@
 <Compose
   rows="1fr"
   columns="1fr 1fr 80px 1fr 1fr"
-  tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 mt-0.5 lg:px-0 lg:border lg:border-light-200 lg:rounded-t-xl">
+  tw="bg-white border-t border-light-200 text-light-400 h-20 justify-center items-center px-2 mt-0.5 md:px-0 md:border md:border-light-200 md:rounded-t-xl">
   <Compose rows="1fr" columns="1fr">
     <a
       href={quickActions[0].route}

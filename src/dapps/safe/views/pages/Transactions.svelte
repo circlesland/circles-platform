@@ -6,7 +6,7 @@
 
 <Compose rows="200px 1fr" columns="1fr">
   <Balance />
-  <Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 lg:mx-0 lg:mt-2" overflowY>
+  <Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 md:mx-0 md:mt-2" overflowY>
     <Transactions />
   </Compose>
 </Compose>

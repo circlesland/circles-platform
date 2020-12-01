@@ -13,7 +13,7 @@
     area="main"
     columns="repeat(auto-fit, minmax(160px, 1fr))"
     rows="repeat({dapps.length / 2}, 160px)"
-    tw="mx-4 mt-4 lg:mx-0"
+    tw="mx-4 mt-4 md:mx-0"
     gap="1rem"
     overflowY>
     {#each dapps as item}

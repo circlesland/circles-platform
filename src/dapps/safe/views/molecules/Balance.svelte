@@ -74,7 +74,7 @@
 </script>
 
 <div
-  class="flex items-center justify-center h-full font-bold text-center text-white bg-primary lg:rounded-xl">
+  class="flex items-center justify-center h-full font-bold text-center text-white bg-primary md:rounded-xl">
   {#if circlesBalance != undefined}
     <div
       class="flex items-center justify-center pl-6 mx-auto text-6xl uppercase">

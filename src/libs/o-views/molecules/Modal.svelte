@@ -50,9 +50,9 @@
     out:fade
     on:click|self={handleClose}
     class="z-40 overlay ">
-    <div class="w-full max-w-3xl bg-white rounded-t-xl lg:rounded-xl">
+    <div class="w-full max-w-3xl bg-white rounded-t-xl md:rounded-xl">
       <InfoBox />
-      <div class="p-4 space-y-2 lg:p-8">
+      <div class="p-4 space-y-2 md:p-8">
         <slot />
       </div>
     </div>

@@ -37,10 +37,10 @@
     </div>
     <div class="flex items-center">
       <div class="px-1 py-2">
-        <div class="text-xs lg:text-base text-primary">
+        <div class="text-xs md:text-base text-primary">
           {mapping.data.title}
         </div>
-        <p class="text-gray-500 text-xxs lg:text-xs">
+        <p class="text-gray-500 text-xxs md:text-xs">
           <span class="text-gray-500">{mapping.data.subtitle}</span>
         </p>
       </div>
@@ -55,7 +55,7 @@
   {#if mapping.data.description && openDetail}
     <div class="px-3">
       <div
-        class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs lg:text-xxs border-light-200">
+        class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xxs border-light-200">
         <span class="text-primary">{mapping.data.description}</span>
       </div>
     </div>

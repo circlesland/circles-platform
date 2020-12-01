@@ -192,7 +192,7 @@
   {#if data.detail && openDetail}
     <div class="px-3">
       <div
-        class="w-full p-2 overflow-hidden text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs lg:text-xs border-light-200 ">
+        class="w-full p-2 overflow-hidden text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200 ">
         <div>
           Address:<br /><span class=" text-primary">{data.detail.address}</span>
         </div>

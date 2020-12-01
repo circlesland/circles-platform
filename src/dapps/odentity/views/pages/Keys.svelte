@@ -5,7 +5,7 @@
   import { labelKeys, keys } from "./../../data/keys";
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="m-4 lg:m-0">
+<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0">
   <div>
     <div class="mb-2">
       <CategoryTitle mapping={labelKeys} />

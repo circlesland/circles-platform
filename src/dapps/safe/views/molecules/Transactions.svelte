@@ -122,15 +122,15 @@
               {/if}
             </div>
             <div
-              class="flex items-center flex-1 w-2/3 pb-1 pr-2 lg:pb-2 lg:pt-1">
+              class="flex items-center flex-1 w-2/3 pb-1 pr-2 md:pb-2 md:pt-1">
               <div>
-                <b class="text-xs lg:text-sm text-primary">
+                <b class="text-xs md:text-sm text-primary">
                   {#if t.from !== '0x0000000000000000000000000000000000000000'}
                     {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
                     {t.subject}
                   {:else}Universal basic income{/if}
                 </b>
-                <p class="text-gray-500 text-xxs lg:text-xs">
+                <p class="text-gray-500 text-xxs md:text-xs">
                   {dayjs(t.timestamp).fromNow()}
                   {#if t.direction === 'in'}
                     {#if t.from !== '0x0000000000000000000000000000000000000000'}
@@ -153,12 +153,12 @@
             <div class="flex items-center pt-1">
               {#if t.direction === 'out'}
                 <div
-                  class="w-1/3 px-3 text-2xl font-light text-right lg:text-3xl text-primary">
+                  class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-primary">
                   <span>-{t.amount}</span>
                 </div>
               {:else}
                 <div
-                  class="w-1/3 px-3 text-2xl font-light text-right lg:text-3xl text-action">
+                  class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-action">
                   {t.amount}
                 </div>
               {/if}
@@ -166,7 +166,7 @@
           </div>
           {#if t.openDetail}
             <div
-              class="flex max-w-full p-4 mx-4 text-gray-500 bg-white text-xxs lg:text-sm">
+              class="flex max-w-full p-4 mx-4 text-gray-500 bg-white text-xxs md:text-sm">
               <div class="max-w-full text-gray-500 ">
                 <div class="flex ">
                   {#if t.from === '0x0000000000000000000000000000000000000000'}

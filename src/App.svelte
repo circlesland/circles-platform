@@ -122,10 +122,11 @@
     );
   }
 </script>
+
 <ComposeApp tw="font-primary bg-light-100">
   <Compose tw="mx-auto bg-light-100 w-full max-w-3xl">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
-      <Compose tw="lg:my-1">
+      <Compose tw="md:my-1">
         <Announcement mapping={alpha} />
       </Compose>
       <Compose rows="1fr" columns="1fr">
