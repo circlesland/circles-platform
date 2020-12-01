@@ -16,15 +16,23 @@
 
 <Compose rows="1fr" columns="1fr" tw="items-center justify-center">
   <Compose rows="1fr" columns="1fr">
-    <img src="images/logo/logo.svg" alt="omo" class="w-1/3 mx-auto" />
-    <div
-      class="mx-auto text-xl text-center text-secondary font-title max-w-4/5">
-      empowering your abundance
-    </div>
-    <div on:click={() => push('#/odentity/authenticate')}>
-      <div class="px-4 mx-auto my-12 md:w-1/2">
-        <Button
-          mapping={{ data: { label: 'Login' }, design: { type: 'primary' } }} />
+    <div>
+      <iframe
+        width="560"
+        height="380"
+        src="https://auth.fission.codes/"
+        frameborder="0"
+        allowfullscreen />
+      <!-- <img src="images/logo/logo.svg" alt="omo" class="w-1/3 mx-auto" />
+      <div
+        class="mx-auto text-xl text-center text-secondary font-title max-w-4/5">
+        empowering your abundance
+      </div> -->
+      <div on:click={() => push('#/odentity/authenticate')}>
+        <div class="px-4 mx-auto my-12 md:w-1/2">
+          <Button
+            mapping={{ data: { label: 'Login' }, design: { type: 'primary' } }} />
+        </div>
       </div>
     </div>
   </Compose>

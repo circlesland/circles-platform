@@ -5,6 +5,8 @@ import { o } from "./libs/o-os/o";
 import { Shell } from "./libs/o-os/interfaces/shell";
 import { initPathFinder } from "./pathfinderClient";
 
+
+
 dayjs.extend(relativeTime)
 
 declare global {
@@ -22,3 +24,4 @@ const app = new App({
 });
 
 export default app;
+
