@@ -1,20 +1,20 @@
-import {createMachine, send} from "xstate";
+import { createMachine, send } from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import { strings } from "../../data/strings";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {unTrustService} from "./services/unTrustService";
-import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
+import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
+import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
+import { unTrustService } from "./services/unTrustService";
+import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {RefreshView} from "../../../../libs/o-events/refreshView";
+import { setError } from "../../../../libs/o-processes/actions/setError";
+import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import { RefreshView } from "../../../../libs/o-events/refreshView";
 
 export interface UnTrustContext extends ProcessContext {
   data: {
@@ -32,7 +32,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
     promptTrustReceiver: {
       entry: sendPrompt({
         title: str.titleTrustReceiver(),
-        nextButtonTitle: "Trust",
+        nextButtonTitle: "Revoke trust",
         banner: {
           component: Banner,
           data: {
