@@ -1,9 +1,8 @@
-import {BehaviorSubject} from "rxjs";
+import {Subject} from "rxjs";
 import {useMachine} from "xstate-svelte";
 import {ProcessDefinition} from "../o-processes/processManifest";
 import {ProcessContext} from "../o-processes/interfaces/processContext";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
-import {Nop} from "../o-processes/events/nop";
 import {Process} from "../o-processes/interfaces/process";
 import {getProcessContext} from "./o";
 
@@ -27,12 +26,7 @@ export const stateMachine = {
           : await getProcessContext()
       });
 
-    const processEvents = new BehaviorSubject<ProcessEvent>({
-      stopped: false,
-      currentState: null,
-      previousState: null,
-      event: new Nop()
-    });
+    const processEvents = new Subject<ProcessEvent>();
 
     service.onTransition((state1, event) =>
     {

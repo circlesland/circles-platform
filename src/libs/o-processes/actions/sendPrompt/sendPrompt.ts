@@ -4,6 +4,8 @@ import type {SendAction} from "xstate/lib/types";
 import {ProcessArtifact} from "../../interfaces/processArtifact";
 import {ProcessContext} from "../../interfaces/processContext";
 import {Prompt} from "../../events/prompt";
+import {OmoEvent} from "../../../o-events/omoEvent";
+import {ShellEvent} from "../../events/shellEvent";
 
 export type PromptSpec = {
   title?:string,
@@ -24,6 +26,8 @@ export const sendPrompt = (spec:PromptSpec) =>
       .filter(key => context.data[key] !== undefined)
       .forEach(key => spec.artifacts[key].value = context.data[key].value);
 
+    console.log("Send prompt")
+
     return <Prompt>{
       title: spec.title ? spec.title : "",
       nextButtonTitle: spec.nextButtonTitle,
@@ -32,6 +36,20 @@ export const sendPrompt = (spec:PromptSpec) =>
       type: "process.prompt",
       banner: spec.banner,
       data: spec.artifacts
+    }
+  });
+
+  return action;
+}
+
+export const sendShellEvent = (shellEvent:OmoEvent) =>
+{
+  const action: SendAction<ProcessContext, EventObject, OmoEvent> = send((context) => {
+    console.log("Send shell event")
+
+    return <ShellEvent>{
+      type: "process.shellEvent",
+      payload: shellEvent
     }
   });
 

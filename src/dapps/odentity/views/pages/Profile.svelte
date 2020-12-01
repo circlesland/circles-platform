@@ -10,6 +10,7 @@
   import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
   import {Profile} from "../../../../libs/o-fission/entities/profile";
   import {getEnvironment} from "../../../../libs/o-os/o";
+  import {BN} from "ethereumjs-util";
 
   const wn = window.o.wn;
 
@@ -34,7 +35,7 @@
 
     if (profile)
     {
-      if (!profile.circlesAddress || !environment.me.myKey) {
+      if (!profile.circlesAddress || !environment.me.myKey || environment.me.myAddressXDaiBalance.lte(new BN("100"))) {
         window.o.publishEvent(new RunProcess(connectSafe));
         return;
       }

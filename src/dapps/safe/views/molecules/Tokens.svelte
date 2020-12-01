@@ -118,7 +118,7 @@
     data: {
       image: "logos/omo.svg",
       title: "Invite Credits",
-      balance: Math.floor(parseFloat(safeEtherBalance) * 10) - 1,
+      balance: Math.floor(parseFloat(safeEtherBalance) * 10),
       subtitle: "Invites you have left",
       description: "xDai balance: " + parseFloat(safeEtherBalance),
     },

@@ -90,6 +90,10 @@
           dispatch("stopped");
         }
       });
+
+      process.sendEvent({
+        type: "process.continue"
+      });
     });
   }
 

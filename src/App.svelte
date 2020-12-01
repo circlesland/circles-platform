@@ -18,10 +18,11 @@
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
+  import {ShowNotification} from "./libs/o-events/showNotification";
 
   let actions = [];
 
-  let alpha = {
+  let notifications = [{
     data: {
       type: "Attention",
       text: "Early alpha testing, use at own risk! For feedback join our",
@@ -30,7 +31,7 @@
     action: {
       link: "https://discord.gg/Rbhy4j9",
     },
-  };
+  }];
 
   let isOpen = false;
   let showActionBar = false;
@@ -49,6 +50,10 @@
         (<RunProcess>event).contextModifier
       );
       isOpen = true;
+    }
+    if (event.type == "shell.showNotification") {
+      notifications.push((<ShowNotification>event).mapping);
+      notifications = notifications;
     }
   });
 
@@ -127,7 +132,9 @@
   <Compose tw="mx-auto bg-light-100 w-full max-w-3xl">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
       <Compose tw="md:my-1">
-        <Announcement mapping={alpha} />
+        {#each notifications as notification}
+          <Announcement mapping={notification} />
+        {/each}
       </Compose>
       <Compose rows="1fr" columns="1fr">
         <Router

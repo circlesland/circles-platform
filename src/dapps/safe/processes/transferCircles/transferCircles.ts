@@ -30,8 +30,13 @@ export interface TransferCirclesContext extends ProcessContext
  */
 const str = strings.safe.processes.transferCircles;
 const processDefinition = (maxBalance:number) => createMachine<TransferCirclesContext, OmoEvent>({
-  initial: "promptRecipient",
+  initial: "idle",
   states: {
+    idle: {
+      on:{
+        "process.continue": "promptRecipient"
+      }
+    },
     promptRecipient: {
       entry: sendPrompt({
           title: str.titleRecipient(),

@@ -27,8 +27,13 @@ export interface UnTrustContext extends ProcessContext {
  */
 const str = strings.safe.processes.unTrust;
 const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
-  initial: "promptTrustReceiver",
+  initial: "idle",
   states: {
+    idle: {
+      on:{
+        "process.continue": "promptTrustReceiver"
+      }
+    },
     promptTrustReceiver: {
       entry: sendPrompt({
         title: str.titleTrustReceiver(),

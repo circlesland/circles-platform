@@ -8,7 +8,7 @@ import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/process
 import { setError } from "../../../../libs/o-processes/actions/setError";
 import { setResult } from "../../../../libs/o-processes/actions/setResult";
 import { strings } from "../../data/strings";
-import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
@@ -19,6 +19,9 @@ import {createPrivateKeyService} from "./services/createPrivateKeyService";
 import {choice} from "../../../../libs/o-processes/artifacts/choice";
 import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
 import {connectSafeService} from "./services/connectSafeService";
+import {ShowNotification} from "../../../../libs/o-events/showNotification";
+import Announcement from "../../../../libs/o-views/molecules/Announcement.svelte";
+import {ShellEvent} from "../../../../libs/o-processes/events/shellEvent";
 
 export interface ConnectSafeContext extends ProcessContext {
   data: {
@@ -34,8 +37,34 @@ export interface ConnectSafeContext extends ProcessContext {
  */
 const str = strings.safe.processes.createSafe;
 const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
-  initial: "newOrExistingSafe",
+  initial: "idle",
   states: {
+
+    idle: {
+      on:{
+        "process.continue": "hasAccount"
+      }
+    },
+
+
+    hasAccount: {
+      entry: send({
+          type: "process.triggerSelf"
+        }),
+      on: {
+        "process.triggerSelf": [{
+          target: 'newOrExistingSafe',
+          cond: (context:ConnectSafeContext) => {
+            return !context.environment.me.myAddress
+          }
+        },{
+          target: 'checkAccount',
+          cond: (context:ConnectSafeContext) => {
+            return !!context.environment.me.myAddress
+          }
+        }]
+      }
+    },
 
     newOrExistingSafe: {
       entry: sendPrompt({
@@ -229,6 +258,16 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
     generateFundLink: {
       entry: [
         generateFundLink,
+        sendShellEvent(new ShowNotification(Announcement, {
+            data: {
+              text: "Please fund your account with xDai to fully use the app",
+              button: "Get xDai"
+            },
+            action: {
+              link: "http://deine.mudda.com"
+            }
+          }
+        )),
         sendPrompt({
           title: str.titleGenerateFundLink(),
           nextButtonTitle: str.buttonGenerateFundLink(),

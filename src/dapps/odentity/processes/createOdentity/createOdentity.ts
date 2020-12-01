@@ -32,8 +32,14 @@ export interface CreateOdentityContext extends ProcessContext {
  */
 const str = strings.odentity.processes.createOdentity;
 const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{type:"evaluateChoice"}>({
-  initial: "promptFirstName",
+  initial: "idle",
   states: {
+
+    idle: {
+      on:{
+        "process.continue": "promptFirstName"
+      }
+    },
     promptFirstName: {
       entry: sendPrompt({
         title: str.titleFirstName(),

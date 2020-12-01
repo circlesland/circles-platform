@@ -27,8 +27,14 @@ export interface SetTrustContext extends ProcessContext {
  */
 const str = strings.safe.processes.setTrust;
 const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
-  initial: "promptTrustReceiver",
+  initial: "idle",
   states: {
+
+    idle: {
+      on:{
+        "process.continue": "promptTrustReceiver"
+      }
+    },
     promptTrustReceiver: {
       entry: sendPrompt({
         title: str.titleTrustReceiver(),
