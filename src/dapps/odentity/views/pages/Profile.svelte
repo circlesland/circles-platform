@@ -1,15 +1,15 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import { onMount } from "svelte";
-  import Avataaar from "src/libs/o-views/atoms/Avataaar.svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
   import { GotProfile } from "../../events/gotProfile";
   import { RunProcess } from "../../../../libs/o-events/runProcess";
   import { createOdentity } from "../../processes/createOdentity/createOdentity";
   import { push } from "svelte-spa-router";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import {createSafe} from "../../../safe/processes/createSafe/createSafe";
+  import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
   import {Profile} from "../../../../libs/o-fission/entities/profile";
+  import {getEnvironment} from "../../../../libs/o-os/o";
 
   const wn = window.o.wn;
 
@@ -27,20 +27,19 @@
       return;
     }
 
-    const session = window.o.fission;
-    const myProfile = await session.profiles.tryGetMyProfile();
-    profile = myProfile;
+    const environment = await getEnvironment();
+    profile = environment.me.myProfile;
 
     console.log("profile", profile);
 
-    if (myProfile)
+    if (profile)
     {
-      if (!myProfile.circlesAddress) {
-        window.o.publishEvent(new RunProcess(createSafe));
+      if (!profile.circlesAddress || !environment.me.myKey) {
+        window.o.publishEvent(new RunProcess(connectSafe));
         return;
       }
 
-      window.o.publishEvent(new GotProfile(myProfile));
+      window.o.publishEvent(new GotProfile(profile));
     } else {
       window.o.publishEvent(new RunProcess(createOdentity));
     }

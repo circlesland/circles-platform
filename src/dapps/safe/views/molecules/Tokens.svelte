@@ -67,15 +67,15 @@
     tokensITrust = Object.keys(t2)
       .map((k) => t2[k])
       .filter((o) => o.balanceString && o.balanceString !== "0")
-      .map((token) => {
+      .map((token) =>
+      {
         return {
           data: {
-            image:
-              "https://avatars.dicebear.com/api/avataaars/" +
+            image: (token.owner.address == safeAddress ? environment.me.myProfile?.avatar : null) ?? "https://avatars.dicebear.com/api/avataaars/" +
               token.owner.address +
               ".svg ",
             balanceBN: token.balance,
-            title: token.owner.address.slice(0, 8),
+            title: (token.owner.address == safeAddress ? (environment.me.myProfile?.firstName + " " + environment.me.myProfile?.lastName) : null) ?? token.owner.address.slice(0, 8),
             description: token.owner.address,
             balance: parseFloat(token.balanceString),
             subtitle: "CRC",

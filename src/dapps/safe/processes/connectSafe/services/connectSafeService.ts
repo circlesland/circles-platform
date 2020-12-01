@@ -2,6 +2,7 @@ import {ConnectSafeContext} from "../connectSafe";
 import {mnemonicToEntropy} from "bip39";
 import {config} from "../../../../../libs/o-circles-protocol/config";
 import {GotSafe} from "../../../events/gotSafe";
+import {BN} from "ethereumjs-util";
 
 export const connectSafeService = async (context: ConnectSafeContext) =>
 {
@@ -35,6 +36,16 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
 
   existingProfile.circlesAddress = context.data.safeAddress.value;
   await window.o.fission.profiles.addOrUpdateMyProfile(existingProfile);
+
+  // TODO: Find a central place to update the context
+  context.environment.me.myAddress = ownerAddress;
+  context.environment.me.myKey = {
+    name: "me",
+    privateKey: "0x" + privateKey
+  };
+
+  context.environment.me.myAddressXDaiBalance = new BN(await context.environment.eth.web3.eth.getBalance(ownerAddress));
+  context.environment.me.mySafeXDaiBalance = new BN(await context.environment.eth.web3.eth.getBalance(existingProfile.circlesAddress));
 
   window.o.publishEvent(new GotSafe());
 }

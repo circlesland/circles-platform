@@ -27,16 +27,6 @@ export const strings = {
         "errorMessage": (context: SetTrustContext) => `An error occurred while trusting ${context.data.trustReceiver.value.slice(0, 8)}.`,
         "alreadyTrustedError": (context: SetTrustContext) => `You are already trusting ${context.data.trustReceiver.value.slice(0, 8)}.`
       },
-      connectSafe: {
-        "titleSafeAddress": () => "Safe",
-        "bannerSafeAddress": () => "Please enter your safe address",
-        "buttonSafeAddress": () => "Save",
-        "titleSeedPhrase": () => "Seedphrase",
-        "titleProgress": () => "connecting ...",
-        "bannerSeedPhrase": () => "Please enter your seed phrase",
-        "successMessage": (context: ConnectSafeContext) => `The safe is now connected.`,
-        "errorMessage": (context: ConnectSafeContext) => `Couldn't connect the safe.`,
-      },
       transferXDai: {
         "successMessage": (context: TransferXDaiContext) => `xDai successfully transferred`,
         "errorMessage": (context: TransferXDaiContext) => `xDai transfer failed`,
@@ -97,12 +87,36 @@ export const strings = {
         }
       },
       createSafe: {
+        titleSafeAddress: () => "Safe",
+        bannerSafeAddress: () => "Please enter your safe address",
+        buttonSafeAddress: () => "Save",
+        titleSeedPhrase: () => "Seedphrase",
+        titleProgress: () => "connecting ...",
+        bannerSeedPhrase: () => "Please enter your seed phrase",
+        successMessage: (context: ConnectSafeContext) => `The safe is now connected.`,
+        errorMessage: (context: ConnectSafeContext) => `Couldn't connect the safe.`,
         titleInitializing: () => "Generating a new key ..",
         titleGenerateFundLink: () => "Get initial funding",
         buttonGenerateFundLink: () => "Close",
         bannerGenerateFundLink: () => "Send this link to a friend to get started",
         progressCreateSafe: () => "Creating your safe",
-        successCreateSafe: () => "Your new safe was successfully created"
+        successCreateSafe: () => "Your new safe was successfully created",
+        choiceConnectSafe()
+        {
+          return "Connect circles";
+        },
+        choiceCreateSafe()
+        {
+          return "Create new";
+        },
+        bannerConnectOrCreateSafe()
+        {
+          return "Do you want to connect an existing circles account?";
+        },
+        titleConnectOrCreateSafe()
+        {
+          return "Existing account?";
+        }
       }
     }
   }

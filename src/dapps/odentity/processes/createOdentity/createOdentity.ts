@@ -14,10 +14,9 @@ import {strings} from "../../data/strings";
 import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
 import {addOrUpdateMyProfileService} from "./services/addOrUpdateMyProfileService";
 import {file} from "../../../../libs/o-processes/artifacts/file";
-import {choice} from "../../../../libs/o-processes/artifacts/choice";
-import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
+import {push} from "svelte-spa-router";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
-import {createSafe} from "../../../safe/processes/createSafe/createSafe";
+import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
 
 export interface CreateOdentityContext extends ProcessContext {
   data: {
@@ -113,78 +112,12 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successMessage),
-          target: "connectSafe"
-        }
-      }
-    },
-    connectSafe: {
-      entry: sendPrompt({
-        title: str.titleConnectSafe(),
-        hideNextButton: true,
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerConnectSafe()
-          }
-        },
-        artifacts: {
-          ...choice("safeChoice", undefined, [
-              str.choiceExistingSafe(),
-              str.choiceNewSafe()])
-        }
-      }),
-      on: {
-        "process.continue": {
           actions: [
-            storePromptResponse,
-            send({
-              type: "evaluateChoice"
-            })
-          ]
-        },
-        "evaluateChoice": [{
-            target: 'existingSafe',
-            cond: (context) => {
-              console.log(context.data.safeChoice)
-              return context.data.safeChoice.value === str.choiceExistingSafe()
-            }
-          },{
-            target: 'newSafe',
-            cond: (context) => {
-              console.log(context.data.safeChoice)
-              return context.data.safeChoice.value === str.choiceNewSafe()
-            }
-          }],
-        "process.cancel": "stop"
-      }
-    },
-    existingSafe: {
-      invoke: {
-        id: 'existingSafe',
-        src: async () => {
-          // TODO: Very 'rotzig'!
-          setTimeout(() => window.o.publishEvent(new RunProcess(connectSafe)), 100);
-        },
-        onError: {
-          target: "error"
-        },
-        onDone: {
-          target: "stop"
-        }
-      }
-    },
-    newSafe: {
-      invoke: {
-        id: 'newSafe',
-        src: async () => {
-          // TODO: Very 'rotzig'!
-          setTimeout(() => window.o.publishEvent(new RunProcess(createSafe)), 100);
-        },
-        onError: {
-          target: "error"
-        },
-        onDone: {
+            setResult(str.successMessage),
+            () => setTimeout(() => {
+              window.o.publishEvent(new RunProcess(connectSafe));
+            }, 100)
+          ],
           target: "stop"
         }
       }
