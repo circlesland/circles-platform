@@ -18,6 +18,8 @@
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
+  import {getEnvironment} from "../../../../libs/o-os/o";
+  import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   let mySafeAddress: string;
 
@@ -30,10 +32,9 @@
   let untrusted_: { [address: string]: any } = {};
 
   async function init() {
-    const hubAddress = config.getCurrent().HUB_ADDRESS;
-    const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-    mySafeAddress = (await window.o.safe()).address;
-    person = new Person(circlesHub, mySafeAddress);
+    const environment:ProcessEnvironment = await getEnvironment();
+    mySafeAddress = environment.me.mySafe.address;
+    person = new Person(environment.eth.contracts.hub, mySafeAddress);
 
     reload();
   }

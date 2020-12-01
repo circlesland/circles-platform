@@ -11,6 +11,7 @@
   import {onDestroy, onMount} from "svelte";
   import {getEnvironment} from "../../../../libs/o-os/o";
   import {address} from "./Transactions.svelte";
+  import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   let accountAddress: string;
   let safeAddress: string;
@@ -27,8 +28,10 @@
   let person: Person;
   let tokensITrust: any[] = [];
 
+  let environment:ProcessEnvironment;
+
   async function init() {
-    const environment = await getEnvironment();
+    environment = await getEnvironment();
     safeAddress = environment.me.mySafe.address;
     accountAddress = environment.me.mySafe.getOwners()[0];
     const hubAddress = config.getCurrent().HUB_ADDRESS;
@@ -47,12 +50,12 @@
     const dot = balanceStr.indexOf(".");
     circlesBalance = balanceStr.slice(0, dot + 3);
 
-    safeEthBalance = await person.getEthBalance();
+    safeEthBalance = environment.me.mySafeXDaiBalance;
     const ethBalanceStr = web3.utils.fromWei(safeEthBalance, "ether");
     const ethDot = ethBalanceStr.indexOf(".");
     safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
 
-    personalEthBalance = await web3.eth.getBalance(accountAddress);
+    personalEthBalance = environment.me.myAddressXDaiBalance;
     const personalEthBalanceStr = web3.utils.fromWei(
       personalEthBalance,
       "ether"

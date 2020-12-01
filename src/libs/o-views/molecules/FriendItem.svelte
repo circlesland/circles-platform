@@ -29,6 +29,7 @@
   import {transferCircles, TransferCirclesContext} from "../../../dapps/safe/processes/transferCircles/transferCircles";
   import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
   import {config} from "../../o-circles-protocol/config";
+  import {getEnvironment} from "../../o-os/o";
 
   export let data = {
     image: "",
@@ -48,9 +49,9 @@
   }
 
   async function runTransferCircles(recipientAddress: Address) {
-    const env = await window.o.getEnvironment();
-    const myToken = await env.person.getOwnToken();
-    const myBalance = config.getCurrent().web3().utils.fromWei(await myToken.getBalanceOf(env.safe.address), "ether");
+    const env = await getEnvironment();
+    const myToken = await env.me.myToken;
+    const myBalance = config.getCurrent().web3().utils.fromWei(await myToken.getBalanceOf(env.me.mySafe.address), "ether");
     const contextInitializer = async (context: TransferCirclesContext) => {
       context.data.recipient = <ProcessArtifact>{
         key: "recipient",

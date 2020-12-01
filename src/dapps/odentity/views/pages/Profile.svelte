@@ -3,8 +3,6 @@
   import { onMount } from "svelte";
   import Avataaar from "src/libs/o-views/atoms/Avataaar.svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
-  import { firstname, lastname, city } from "./../../data/profile";
-  import { Profile } from "../../interfaces/profile";
   import { GotProfile } from "../../events/gotProfile";
   import { RunProcess } from "../../../../libs/o-events/runProcess";
   import { createOdentity } from "../../processes/createOdentity/createOdentity";

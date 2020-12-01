@@ -49,7 +49,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 
     console.log(pathResult);
 */
-    const tokenOwners = [context.environment.me.myAddress];
+    const tokenOwners = [context.environment.me.mySafe.address];
     const sources = [context.environment.me.mySafe.address];
     const destinations = [context.data.recipient.value];
     const values = [wei];
