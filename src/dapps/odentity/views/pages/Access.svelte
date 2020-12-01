@@ -12,14 +12,14 @@
 
 <Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 lg:m-0" overflowY>
   <div>
-    <div class="mb-2">
+    <!-- <div class="mb-2">
       <CategoryTitle mapping={labelDevices} />
     </div>
     <div class="space-y-2">
       {#each accessDevices as item}
         <AccessItem mapping={item} />
       {/each}
-    </div>
+    </div> -->
     <div class="my-2">
       <CategoryTitle mapping={labelDapps} />
     </div>
