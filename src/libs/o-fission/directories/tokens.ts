@@ -6,7 +6,7 @@ import { Token } from "../entities/token";
 export class Tokens extends Directory<Token>
 {
   constructor(fs: FileSystem) {
-    super(fs, ["omosapien", "tokens"]);
+    super(fs, ["tokens"]);
   }
 
   async tryGetMyToken(): Promise<Token | null> {

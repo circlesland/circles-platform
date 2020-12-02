@@ -81,6 +81,9 @@
           canSkip = artifactsArr.length > 0
             && artifactsArr.filter((artifact) => artifact.isOptional).length === artifactsArr.length;
 
+          console.log("canSkip:", canSkip);
+          console.log("artifactsArr:", artifactsArr);
+
           canGoBack = prompt.canGoBack;
         }
         else if (next.stopped)
