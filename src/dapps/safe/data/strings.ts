@@ -2,7 +2,7 @@ import { InitializeAppContext } from "../processes/initializeApp/initializeApp";
 import { SetTrustContext } from "../processes/setTrust/setTrust";
 import { SendInviteCreditsContext } from "../processes/transferXDai/sendInviteCredits";
 import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
-malimport { JumpstartContext } from "../processes/jumpstart/jumpstart";
+import { JumpstartContext } from "../processes/jumpstart/jumpstart";
 import { getEnvironment } from "../../../libs/o-os/o";
 
 export const strings = {
