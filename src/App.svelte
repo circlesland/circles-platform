@@ -2,7 +2,7 @@
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, {pop, push} from "svelte-spa-router";
+  import Router, { pop, push } from "svelte-spa-router";
   import routes from "./libs/o-os/routes";
 
   import "./libs/o-views/css/base.css";
@@ -18,25 +18,27 @@
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
-  import {ShowNotification} from "./libs/o-events/showNotification";
-  import {getEnvironment} from "./libs/o-os/o";
-  import {BN} from "ethereumjs-util";
-  import {initializeApp} from "./dapps/safe/processes/initializeApp/initializeApp";
-  import {GotProfile} from "./dapps/odentity/events/gotProfile";
-  import {createOdentity} from "./dapps/odentity/processes/createOdentity/createOdentity";
+  import { ShowNotification } from "./libs/o-events/showNotification";
+  import { getEnvironment } from "./libs/o-os/o";
+  import { BN } from "ethereumjs-util";
+  import { initializeApp } from "./dapps/safe/processes/initializeApp/initializeApp";
+  import { GotProfile } from "./dapps/omosapien/events/gotProfile";
+  import { createOmoSapien } from "./dapps/omosapien/processes/createOmoSapien/createOmoSapien";
 
   let actions = [];
 
-  let notifications = [{
-    data: {
-      type: "Attention",
-      text: "Early alpha testing, use at own risk! For feedback join our",
-      button: "Chat",
+  let notifications = [
+    {
+      data: {
+        type: "Attention",
+        text: "Early alpha testing, use at own risk! For feedback join our",
+        button: "Chat",
+      },
+      action: {
+        link: "https://discord.gg/Rbhy4j9",
+      },
     },
-    action: {
-      link: "https://discord.gg/Rbhy4j9",
-    },
-  }];
+  ];
 
   let isOpen = false;
   let showActionBar = false;
@@ -79,7 +81,7 @@
 
   const initialize = async () => {
     if (!window.o.fission) {
-      push("#/odentity/authenticate");
+      push("#/omosapien/authenticate");
       return;
     }
 
@@ -87,19 +89,20 @@
     const profile = environment.me.myProfile;
 
     console.log(profile);
-    if (profile)
-    {
-      if (!profile.circlesAddress
-        || !environment.me.myKey
-        || !environment.me.mySafe
-        || !environment.me.myToken
-        || environment.me.myAddressXDaiBalance.lte(new BN("100"))) {
+    if (profile) {
+      if (
+        !profile.circlesAddress ||
+        !environment.me.myKey ||
+        !environment.me.mySafe ||
+        !environment.me.myToken ||
+        environment.me.myAddressXDaiBalance.lte(new BN("100"))
+      ) {
         window.o.publishEvent(new RunProcess(initializeApp));
         return;
       }
       window.o.publishEvent(new GotProfile(profile));
     } else {
-      window.o.publishEvent(new RunProcess(createOdentity));
+      window.o.publishEvent(new RunProcess(createOmoSapien));
     }
   };
 
@@ -156,22 +159,18 @@
     runningProcess.sendEvent(new Cancel());
   }
 
-  function conditionsFailed(event)
-  {
+  function conditionsFailed(event) {
     console.log(
       "Escaped redirect url:",
       encodeURIComponent(event.detail.location)
     );
-    if (event.detail.userData && event.detail.userData.shellEvent)
-    {
+    if (event.detail.userData && event.detail.userData.shellEvent) {
       // There are some cases where we don't want to route to a different page
       // but instead only use the route params to initiate a process
       //window.o.publishEvent(event.detail.userData.shellEvent);
-    }
-    else
-    {
+    } else {
       push(
-        `#/odentity/authenticate/${encodeURIComponent(event.detail.location)}`
+        `#/omosapien/authenticate/${encodeURIComponent(event.detail.location)}`
       );
     }
   }

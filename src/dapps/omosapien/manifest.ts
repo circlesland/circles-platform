@@ -1,9 +1,9 @@
-import Profile from 'src/dapps/odentity/views/pages/Profile.svelte'
-import Access from 'src/dapps/odentity/views/pages/Access.svelte'
-import Authenticate from 'src/dapps/odentity/views/pages/Authenticate.svelte'
-import Keys from 'src/dapps/odentity/views/pages/Keys.svelte'
-import {odentityDefaultActions, odentityOverflowActions} from "./data/actions"
-import {PageManifest} from "../../libs/o-os/interfaces/pageManifest";
+import Profile from 'src/dapps/omosapien/views/pages/Profile.svelte'
+import Access from 'src/dapps/omosapien/views/pages/Access.svelte'
+import Authenticate from 'src/dapps/omosapien/views/pages/Authenticate.svelte'
+import Keys from 'src/dapps/omosapien/views/pages/Keys.svelte'
+import { omoSapienDefaultActions, omoSapienOverflowActions } from "./data/actions"
+import { PageManifest } from "../../libs/o-os/interfaces/pageManifest";
 
 export const profile: PageManifest = {
   component: Profile,
@@ -14,11 +14,11 @@ export const profile: PageManifest = {
     }
   ],
   userData: {
-    dapp: "odentity",
+    dapp: "omosapien",
     showActionBar: true,
     actions: [
-      ...odentityDefaultActions,
-      ...odentityOverflowActions
+      ...omoSapienDefaultActions,
+      ...omoSapienOverflowActions
     ]
   }
 }
@@ -26,10 +26,10 @@ export const profile: PageManifest = {
 export const authenticate: PageManifest = {
   component: Authenticate,
   userData: {
-    dapp: "odentity",
+    dapp: "omosapien",
     actions: [
-      ...odentityDefaultActions,
-      ...odentityOverflowActions
+      ...omoSapienDefaultActions,
+      ...omoSapienOverflowActions
     ]
   }
 }
@@ -43,11 +43,11 @@ export const access: PageManifest = {
     }
   ],
   userData: {
-    dapp: "odentity",
+    dapp: "omosapien",
     showActionBar: true,
     actions: [
-      ...odentityDefaultActions,
-      ...odentityOverflowActions
+      ...omoSapienDefaultActions,
+      ...omoSapienOverflowActions
     ]
   }
 }
@@ -61,11 +61,11 @@ export const keys: PageManifest = {
     }
   ],
   userData: {
-    dapp: "odentity",
+    dapp: "omosapien",
     showActionBar: true,
     actions: [
-      ...odentityDefaultActions,
-      ...odentityOverflowActions
+      ...omoSapienDefaultActions,
+      ...omoSapienOverflowActions
     ]
   }
 }

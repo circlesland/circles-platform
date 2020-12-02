@@ -1,9 +1,7 @@
-import {CreateOdentityContext} from "../createOdentity";
+import { CreateOmoSapienContext } from "../createOmoSapien";
 
-export const addOrUpdateMyProfileService = async (context: CreateOdentityContext) =>
-{
-  if (!window.o.fission)
-  {
+export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) => {
+  if (!window.o.fission) {
     throw new Error("You're not authenticated");
   }
 

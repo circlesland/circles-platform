@@ -1,11 +1,11 @@
-import {CreateOdentityContext} from "../processes/createOdentity/createOdentity";
+import { CreateOmoSapienContext } from "../processes/createOmoSapien/createOmoSapien"
 
 export const strings = {
-  odentity: {
+  omosapien: {
     processes: {
-      createOdentity: {
-        successMessage: (context: CreateOdentityContext) => `Your odentity was successfully created`,
-        errorMessage: (context: CreateOdentityContext) => `An error occured during the creation of your odentity`,
+      createOmoSapien: {
+        successMessage: (context: CreateOmoSapienContext) => `Your OmoSapien was successfully created`,
+        errorMessage: (context: CreateOmoSapienContext) => `An error occured during the creation of your OmoSapien`,
         titleFirstName: () => `First name`,
         buttonFirstName: () => `Save`,
         bannerFirstName: () => `Please enter your first name`,
@@ -15,7 +15,7 @@ export const strings = {
         titleAvatar: () => `Avatar`,
         buttonAvatar: () => `Save`,
         bannerAvatar: () => `Please upload an avatar`,
-        bannerProgress: () => `Creating your odentity ...`,
+        bannerProgress: () => `Creating your OmoSapien ...`,
         titleConnectSafe: () => `Create or connect safe`,
         bannerConnectSafe: () => `Connect an existing safe or create a new one`,
         choiceExistingSafe: () => `Existing safe`,

@@ -1,9 +1,9 @@
 import { faUserCircle, faUserAstronaut, faLock, faKey, faCoins } from "@fortawesome/free-solid-svg-icons";
-import {RunProcess} from "../../../libs/o-events/runProcess";
-import {createOdentity} from "../processes/createOdentity/createOdentity";
-import {QuickAction} from "../../../libs/o-os/types/quickAction";
+import { RunProcess } from "../../../libs/o-events/runProcess";
+import { createOmoSapien } from "../processes/createOmoSapien/createOmoSapien";
+import { QuickAction } from "../../../libs/o-os/types/quickAction";
 
-export const odentityDefaultActions: QuickAction[] = [
+export const omoSapienDefaultActions: QuickAction[] = [
     {
         type: "route",
         pos: "1",
@@ -15,7 +15,7 @@ export const odentityDefaultActions: QuickAction[] = [
                 label: "Profile"
             }
         },
-        route: "#/odentity/profile"
+        route: "#/omosapien/profile"
     }, {
         type: "route",
         pos: "2",
@@ -27,7 +27,7 @@ export const odentityDefaultActions: QuickAction[] = [
                 label: "Access"
             }
         },
-        route: "#/odentity/access"
+        route: "#/omosapien/access"
     }, {
         type: "route",
         pos: "3",
@@ -39,7 +39,7 @@ export const odentityDefaultActions: QuickAction[] = [
                 label: "Keys",
             }
         },
-        route: "#/odentity/keys"
+        route: "#/omosapien/keys"
     }, {
         type: "route",
         pos: "4",
@@ -55,19 +55,8 @@ export const odentityDefaultActions: QuickAction[] = [
     }
 ];
 
-export const odentityOverflowActions: QuickAction[] = [
-    {
-        type: "trigger",
-        pos: "overflow",
-        mapping: {
-            design: {
-                icon: faCoins
-            },
-            data: {
-                label: "Add new access device"
-            }
-        },
-    },
+export const omoSapienOverflowActions: QuickAction[] = [
+
     {
         type: "trigger",
         pos: "overflow",
@@ -76,21 +65,9 @@ export const odentityOverflowActions: QuickAction[] = [
                 icon: faCoins,
             },
             data: {
-                label: "Remove access device",
+                label: "Update Profile",
             }
         },
-    },
-    {
-        type: "trigger",
-        pos: "overflow",
-        mapping: {
-            design: {
-                icon: faCoins,
-            },
-            data: {
-                label: "Create odentity",
-            }
-        },
-        event: () => new RunProcess(createOdentity)
+        event: () => new RunProcess(createOmoSapien)
     },
 ];

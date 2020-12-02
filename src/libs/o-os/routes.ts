@@ -4,9 +4,9 @@ import wrap from "svelte-spa-router/wrap";
 import { location } from 'svelte-spa-router'
 import { OmoEvent } from "../o-events/omoEvent";
 
-import {transactions, tokens, friends, answerInviteRequest} from "../../dapps/safe/manifest";
+import { transactions, tokens, friends, answerInviteRequest } from "../../dapps/safe/manifest";
 import { omo } from "../../dapps/omo/manifest";
-import {profile, access, keys, authenticate} from "../../dapps/odentity/manifest";
+import { profile, access, keys, authenticate } from "../../dapps/omosapien/manifest";
 import { website } from "../../dapps/website/manifest";
 
 // Export the route definition object
@@ -17,11 +17,11 @@ export default {
     // Omo
     '/omo/*': wrap(omo),
 
-    // Odentity
-    '/odentity/profile': wrap(profile),
-    '/odentity/authenticate/:redirectTo?': wrap(authenticate),
-    '/odentity/access': wrap(access),
-    '/odentity/keys': wrap(keys),
+    // OmoSapien
+    '/omosapien/profile': wrap(profile),
+    '/omosapien/authenticate/:redirectTo?': wrap(authenticate),
+    '/omosapien/access': wrap(access),
+    '/omosapien/keys': wrap(keys),
 
     // Safe
     '/safe/answerInviteRequest/:from': wrap(answerInviteRequest),

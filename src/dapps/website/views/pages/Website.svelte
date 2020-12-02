@@ -18,7 +18,7 @@
       class="mx-auto text-xl text-center text-secondary font-title max-w-4/5">
       empowering your abundance
     </div>
-    <div on:click={() => push('#/odentity/authenticate')}>
+    <div on:click={() => push('#/omosapien/authenticate')}>
       <div class="px-4 mx-auto my-12 md:w-1/2">
         <Button
           mapping={{ data: { label: 'Login' }, design: { type: 'primary' } }} />

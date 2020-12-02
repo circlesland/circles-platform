@@ -58,7 +58,7 @@ export const accessDapps: AccessItem[] = [
 
 export const labelDevices: CategoryTitle = {
     data: {
-        label: "Devices with Access to your Odentity",
+        label: "Devices with Access to your Omo Sapien",
     },
 };
 

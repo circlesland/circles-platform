@@ -5,8 +5,8 @@
   import { GotProfile } from "../../events/gotProfile";
   import { push } from "svelte-spa-router";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import {Profile} from "../../../../libs/o-fission/entities/profile";
-  import {getEnvironment} from "../../../../libs/o-os/o";
+  import { Profile } from "../../../../libs/o-fission/entities/profile";
+  import { getEnvironment } from "../../../../libs/o-os/o";
 
   const wn = window.o.wn;
 
@@ -20,7 +20,7 @@
 
   onMount(async () => {
     if (!window.o.fission) {
-      push("#/odentity/authenticate");
+      push("#/omosapien/authenticate");
       return;
     }
 

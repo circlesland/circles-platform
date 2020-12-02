@@ -1,4 +1,4 @@
-import {createMachine, send} from "xstate";
+import { createMachine, send } from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import { OmoEvent } from "../../../../libs/o-events/omoEvent";
@@ -10,14 +10,14 @@ import { setResult } from "../../../../libs/o-processes/actions/setResult";
 import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {strings} from "../../data/strings";
-import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
-import {addOrUpdateMyProfileService} from "./services/addOrUpdateMyProfileService";
-import {file} from "../../../../libs/o-processes/artifacts/file";
-import {RunProcess} from "../../../../libs/o-events/runProcess";
-import {initializeApp} from "../../../safe/processes/initializeApp/initializeApp";
+import { strings } from "../../data/strings";
+import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
+import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
+import { file } from "../../../../libs/o-processes/artifacts/file";
+import { RunProcess } from "../../../../libs/o-events/runProcess";
+import { initializeApp } from "../../../safe/processes/initializeApp/initializeApp";
 
-export interface CreateOdentityContext extends ProcessContext {
+export interface CreateOmoSapienContext extends ProcessContext {
   data: {
     firstName?: ProcessArtifact,
     lastName?: ProcessArtifact,
@@ -29,13 +29,13 @@ export interface CreateOdentityContext extends ProcessContext {
 /**
  * Connect safe
  */
-const str = strings.odentity.processes.createOdentity;
-const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{type:"evaluateChoice"}>({
+const str = strings.omosapien.processes.createOmoSapien;
+const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent | { type: "evaluateChoice" }>({
   initial: "idle",
   states: {
 
     idle: {
-      on:{
+      on: {
         "process.continue": "promptFirstName"
       }
     },
@@ -102,15 +102,15 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
       on: {
         "process.continue": {
           actions: storePromptResponse,
-          target: "createOdentity"
+          target: "createOmoSapien"
         },
         "process.cancel": "stop"
       }
     },
-    createOdentity: {
+    createOmoSapien: {
       entry: sendInProgressPrompt(str.bannerProgress),
       invoke: {
-        id: 'createOdentity',
+        id: 'createOmoSapien',
         src: addOrUpdateMyProfileService,
         onError: {
           actions: setError,
@@ -140,7 +140,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
   }
 });
 
-export const createOdentity: ProcessDefinition = {
-  name: "createOdentity",
+export const createOmoSapien: ProcessDefinition = {
+  name: "createOmoSapien",
   stateMachine: processDefinition
 };

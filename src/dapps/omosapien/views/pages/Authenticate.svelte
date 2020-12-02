@@ -19,11 +19,11 @@
         // Will ask the user permission to store
         // your apps data in `private/Apps/{creator}}/{name}`
         app: {
-          name: "OmoTest",
+          name: "OmoSapien",
           creator: "MamaOmo",
         },
         fs: {
-          publicPaths: ["omo.odentity"],
+          publicPaths: ["omo.sapien"],
         },
       },
     });
@@ -45,7 +45,7 @@
         if (params && params.redirectTo) {
           push(params.redirectTo);
         } else {
-          push("#/odentity/profile");
+          push("#/omosapien/profile");
         }
 
         break;

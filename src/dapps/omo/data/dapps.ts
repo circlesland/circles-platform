@@ -13,11 +13,11 @@ export const profile: ProfileHeader = {
 export const dapps: DappIcon[] = [
   {
     data: {
-      title: "Odentity",
+      title: "OmoSapien",
       tag: "soon",
     },
     action: {
-      route: "odentity/profile",
+      route: "omosapien/profile",
     },
     design: {
       icon: faUserAstronaut,
