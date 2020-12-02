@@ -39,6 +39,19 @@ export const dapps: DappIcon[] = [
   },
   {
     data: {
+      title: "OmoMarket",
+      tag: "",
+    },
+    action: {
+      route: "omomarket/offers",
+    },
+    design: {
+      type: "",
+      icon: faStore,
+    },
+  },
+  {
+    data: {
       title: "Talk",
       tag: "soon",
     },
@@ -48,19 +61,6 @@ export const dapps: DappIcon[] = [
     design: {
       type: "disabled",
       icon: faComments,
-    },
-  },
-  {
-    data: {
-      title: "Market",
-      tag: "soon",
-    },
-    action: {
-      route: "omoli/dapps",
-    },
-    design: {
-      type: "disabled",
-      icon: faStore,
     },
   },
   {

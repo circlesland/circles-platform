@@ -1,14 +1,10 @@
 <script lang="ts">
   import DappIcon from "../../../../libs/o-views/molecules/DappIcon.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import { dapps, profile, address } from "src/dapps/omoli/data/dapps";
-  import ProfileHeader from "src/libs/o-views/molecules/ProfileHeader.svelte";
+  import { dapps } from "src/dapps/omoli/data/dapps";
 </script>
 
 <Compose areas="'main'" rows="1fr">
-  <!-- <Compose area="header" tw="">
-    <ProfileHeader mapping={profile} />
-  </Compose> -->
   <Compose
     area="main"
     columns="repeat(auto-fit, minmax(160px, 1fr))"

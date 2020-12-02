@@ -1,13 +1,12 @@
 // Components
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import wrap from "svelte-spa-router/wrap";
-import { location } from 'svelte-spa-router'
-import { OmoEvent } from "../o-events/omoEvent";
 
 import { transactions, tokens, friends, answerInviteRequest } from "../../dapps/safe/manifest";
 import { omoli } from "../../dapps/omoli/manifest";
 import { profile, access, keys, authenticate } from "../../dapps/omosapien/manifest";
 import { website } from "../../dapps/website/manifest";
+import { offers, requests, favorites } from "../../dapps/omomarket/manifest";
 
 // Export the route definition object
 export default {
@@ -28,6 +27,11 @@ export default {
     '/safe/transactions': wrap(transactions),
     '/safe/friends': wrap(friends),
     '/safe/tokens': wrap(tokens),
+
+    // Omo Market
+    '/omomarket/offers': wrap(offers),
+    '/omomarket/requests': wrap(requests),
+    '/omomarket/favorites': wrap(favorites),
 
     // Catch-all, must be last
     '*': NotFound,
