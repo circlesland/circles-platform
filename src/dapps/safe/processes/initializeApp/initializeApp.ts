@@ -294,7 +294,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
   },
   actions: {
     storePromptResponse: storePromptResponse,
-    choiceCreateOrImportSafe: (context) => {return{
+    choiceCreateOrImportSafe: sendPrompt((context) => {return{
       title: str.titleConnectOrCreateSafe(),
       hideNextButton: true,
       banner: {
@@ -308,8 +308,8 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
           str.choiceConnectSafe(),
           str.choiceCreateSafe()])
       }
-    }},
-    askForSafeAddress: (context) => {return{
+    }}),
+    askForSafeAddress: sendPrompt((context) => {return{
       title: str.titleSafeAddress(),
       nextButtonTitle: str.buttonSafeAddress(),
       banner: {
@@ -321,8 +321,8 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
       artifacts: {
         ...ethereumAddress("safeAddress")
       }
-    }},
-    askForPrivateKey: (context) => {return{
+    }}),
+    askForPrivateKey: sendPrompt((context) => {return{
       title: str.titleSeedPhrase(),
       nextButtonTitle: "Connect safe",
       canGoBack: true,
@@ -338,7 +338,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
           type: "keyphrase",
         }
       }
-    }},
+    }}),
     showConnectSafeInProgress:sendInProgressPrompt(str.titleProgress),
     setError: setError,
     sendErrorPrompt: sendErrorPrompt,
@@ -361,7 +361,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
         }
       }
     )),
-    showFundLink: (context) => {return{
+    showFundLink: sendPrompt((context) => {return{
       title: str.titleGenerateFundLink(),
       nextButtonTitle: str.buttonGenerateFundLink(),
       banner: {
@@ -373,7 +373,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
       artifacts: {
         ...ethereumAddress("fundLink", undefined, true)
       }
-    }},
+    }}),
     navigateToSafe: () => push('#/safe/transactions')
   },
   services:{

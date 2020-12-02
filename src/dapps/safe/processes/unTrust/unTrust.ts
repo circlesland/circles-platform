@@ -35,7 +35,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
       }
     },
     promptTrustReceiver: {
-      entry: (context) => {return{
+      entry: sendPrompt((context) => {return{
         title: str.titleTrustReceiver(),
         nextButtonTitle: "Revoke trust",
         banner: {
@@ -47,7 +47,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
         artifacts: {
           ...ethereumAddress("trustReceiver")
         }
-      }},
+      }}),
       on: {
         "process.continue": {
           actions: storePromptResponse,

@@ -6,6 +6,7 @@ import {ProcessContext} from "../../interfaces/processContext";
 import {Prompt} from "../../events/prompt";
 import {OmoEvent} from "../../../o-events/omoEvent";
 import {ShellEvent} from "../../events/shellEvent";
+import context from "svelte/types/compiler/parse/read/context";
 
 export type PromptSpec = {
   title?:string,
@@ -20,28 +21,28 @@ export type PromptSpec = {
 };
 
 export const sendPrompt = (generateSpec?:(context:ProcessContext) => PromptSpec) =>
-  send((context:ProcessContext) => {
+{
+  console.log("Send prompt");
+  const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) =>
+  {
     const spec = generateSpec(context);
-    const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
-      Object.keys(spec.artifacts)
-        .filter(key => context.data[key] !== undefined)
-        .forEach(key => spec.artifacts[key].value = context.data[key].value);
+    Object.keys(spec.artifacts)
+      .filter(key => context.data[key] !== undefined)
+      .forEach(key => spec.artifacts[key].value = context.data[key].value);
 
-      console.log("Send prompt")
-
-      return <Prompt>{
-        title: spec.title ? spec.title : "",
-        nextButtonTitle: spec.nextButtonTitle,
-        hideNextButton: spec.hideNextButton,
-        canGoBack: spec.canGoBack,
-        type: "process.prompt",
-        banner: spec.banner,
-        data: spec.artifacts
-      }
-    });
-
-    return action;
+    return <Prompt>{
+      title: spec.title ? spec.title : "",
+      nextButtonTitle: spec.nextButtonTitle,
+      hideNextButton: spec.hideNextButton,
+      canGoBack: spec.canGoBack,
+      type: "process.prompt",
+      banner: spec.banner,
+      data: spec.artifacts
+    }
   });
+
+  return action;
+}
 
 export const sendShellEvent = (shellEvent:OmoEvent) =>
 {

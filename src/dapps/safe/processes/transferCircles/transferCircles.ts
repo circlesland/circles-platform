@@ -38,7 +38,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
       }
     },
     promptRecipient: {
-      entry: (context) => {return{
+      entry: sendPrompt((context) => {return{
           title: str.titleRecipient(),
           nextButtonTitle: "Next",
           banner: {
@@ -50,7 +50,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
           artifacts: {
             ...ethereumAddress("recipient")
           }
-        }},
+        }}),
       on: {
         "process.continue": {
           actions: storePromptResponse,
@@ -60,7 +60,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
       }
     },
     promptValue: {
-      entry: (context) => {return{
+      entry: sendPrompt((context) => {return{
           title: str.titleValue(),
           nextButtonTitle: "Next",
           canGoBack: true,
@@ -73,7 +73,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
           artifacts: {
             ...ether("value", undefined, undefined, maxBalance)
           }
-        }},
+        }}),
       on: {
         "process.back": {
           target: "promptRecipient"
@@ -86,7 +86,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
       }
     },
     summarize: {
-      entry: (context) => {return{
+      entry: sendPrompt((context) => {return{
           title: str.titleSummary(),
           nextButtonTitle: "Transfer xDai",
           canGoBack: true,
@@ -100,7 +100,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
             ...ethereumAddress("recipient", str.titleRecipient(), true),
             ...ether("value", str.titleValue(), true)
           }
-        }},
+        }}),
       on: {
         "process.back": {
           target: "promptValue"
