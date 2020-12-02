@@ -14,6 +14,6 @@ export const keys: KeyItem[] = [
 
 export const labelKeys: CategoryTitle = {
     data: {
-        label: "Keys secretly stored in your private filesystem",
+        label: "Keys secretly stored in your private encrypted filesystem",
     },
 };

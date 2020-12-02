@@ -26,10 +26,13 @@
     unTrust,
     UnTrustContext,
   } from "../../../dapps/safe/processes/unTrust/unTrust";
-  import {transferCircles, TransferCirclesContext} from "../../../dapps/safe/processes/transferCircles/transferCircles";
-  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
-  import {config} from "../../o-circles-protocol/config";
-  import {getEnvironment} from "../../o-os/o";
+  import {
+    transferCircles,
+    TransferCirclesContext,
+  } from "../../../dapps/safe/processes/transferCircles/transferCircles";
+  import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
+  import { config } from "../../o-circles-protocol/config";
+  import { getEnvironment } from "../../o-os/o";
 
   export let data = {
     image: "",
@@ -51,12 +54,18 @@
   async function runTransferCircles(recipientAddress: Address) {
     const env = await getEnvironment();
     const myToken = await env.me.myToken;
-    const myBalance = config.getCurrent().web3().utils.fromWei(await myToken.getBalanceOf(env.me.mySafe.address), "ether");
+    const myBalance = config
+      .getCurrent()
+      .web3()
+      .utils.fromWei(
+        await myToken.getBalanceOf(env.me.mySafe.address),
+        "ether"
+      );
     const contextInitializer = async (context: TransferCirclesContext) => {
       context.data.recipient = <ProcessArtifact>{
         key: "recipient",
         type: "ethereumAddress",
-        value: recipientAddress
+        value: recipientAddress,
       };
       return context;
     };
@@ -135,7 +144,7 @@
     on:click={() => toggleExpand()}
     class="w-full bg-white border rounded-xl card border-light-200">
     <div class="flex items-center justify-center p-2">
-      <img src={data.image} alt="CRC" />
+      <img src={data.image} alt="CRC" class="rounded-xl" />
     </div>
     <div class="flex items-center">
       <div class="p-2">
@@ -185,7 +194,6 @@
             <ButtonIcon mapping={removeTrust} />
           </div>
         {/if}
-
       {/each}
     </div>
   </div>
