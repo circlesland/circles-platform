@@ -30,8 +30,9 @@
   let notifications = [
     {
       data: {
-        type: "Attention",
-        text: "Early alpha testing, use at own risk! For feedback join our",
+        type: "Attention!",
+        text:
+          "Early alpha testing, data losses can occur, use at own risk! For feedback join our",
         button: "Chat",
       },
       action: {

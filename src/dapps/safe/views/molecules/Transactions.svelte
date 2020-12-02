@@ -12,10 +12,10 @@
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import {Subscription} from "rxjs";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy, onMount} from "svelte";
-  import {getEnvironment} from "../../../../libs/o-os/o";
+  import { Subscription } from "rxjs";
+  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+  import { onDestroy, onMount } from "svelte";
+  import { getEnvironment } from "../../../../libs/o-os/o";
 
   export let address: string;
 
@@ -79,18 +79,16 @@
     });
   }
 
-  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
-    {
-      if (event.type === "shell.refreshView")
-      {
+  let subscription: Subscription = window.o.events.subscribe(
+    (event: OmoEvent) => {
+      if (event.type === "shell.refreshView") {
         init();
       }
-    });
+    }
+  );
 
-  onDestroy(() =>
-  {
-    if (!subscription)
-      return;
+  onDestroy(() => {
+    if (!subscription) return;
 
     subscription.unsubscribe();
     subscription = null;
