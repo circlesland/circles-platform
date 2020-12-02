@@ -47,8 +47,6 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
         "process.continue": "hasAccount"
       }
     },
-
-
     hasAccount: {
       entry: send({
           type: "process.triggerSelf"
@@ -56,43 +54,22 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       on: {
         "process.triggerSelf": [{
           target: 'newOrExistingSafe',
-          cond: (context:ConnectSafeContext) => {
-            return !context.environment.me.myAddress
-          }
+          cond: "noAccount"
         },{
           target: 'checkSafeXDaiBalance',
-          cond: (context:ConnectSafeContext) => {
-            return !!context.environment.me.mySafe
-          }
+          cond: "hasSafe"
         },{
           target: 'checkAccount',
-          cond: (context:ConnectSafeContext) => {
-            return !!context.environment.me.myAddress
-          }
+          cond: "hasAccount"
         }]
       }
     },
-
     newOrExistingSafe: {
-      entry: sendPrompt({
-        title: str.titleConnectOrCreateSafe(),
-        hideNextButton: true,
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerConnectOrCreateSafe()
-          }
-        },
-        artifacts: {
-          ...choice("safeChoice", undefined, [
-            str.choiceConnectSafe(),
-            str.choiceCreateSafe()])
-        }
-      }),
+      entry: "choiceNewOrExistingSafe",
       on: {
         "process.continue": {
           actions: [
-            storePromptResponse,
+            "storePromptResponse",
             send({
               type: "process.triggerSelf"
             })
@@ -100,82 +77,44 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
         },
         "process.triggerSelf": [{
           target: 'promptSafeAddress',
-          cond: (context:ConnectSafeContext) => {
-            return context.data.safeChoice.value === str.choiceConnectSafe()
-          }
+          cond: "choiceConnectSafe"
         },{
           target: 'checkAccount',
-          cond: (context:ConnectSafeContext) => {
-            return context.data.safeChoice.value === str.choiceCreateSafe()
-          }
+          cond: "choiceCreateSafe"
         }],
         "process.cancel": "stop"
       }
     },
-
     promptSafeAddress: {
-      entry: [
-        () => {
-          console.log("promptSafeAddress")
-        },
-        sendPrompt({
-          title: str.titleSafeAddress(),
-          nextButtonTitle: str.buttonSafeAddress(),
-          banner: {
-            component: Banner,
-            data: {
-              text: str.bannerSafeAddress()
-            }
-          },
-          artifacts: {
-            ...ethereumAddress("safeAddress")
-          }
-        })
-      ],
+      entry: "askForSafeAddress",
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: "storePromptResponse",
           target: "promptPrivateKey"
         },
         "process.cancel": "stop"
       }
     },
     promptPrivateKey: {
-      entry: sendPrompt({
-        title: str.titleSeedPhrase(),
-        nextButtonTitle: "Connect safe",
-        canGoBack: true,
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerSeedPhrase()
-          }
-        },
-        artifacts: {
-          privateKey: {
-            key: "privateKey",
-            type: "keyphrase",
-          }
-        }
-      }),
+      entry: "askForPrivateKey",
       on: {
         "process.back": {
           target: "promptSafeAddress"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: "storePromptResponse",
           target: "connectSafe"
         },
         "process.cancel": "stop"
       }
     },
     connectSafe: {
-      entry: sendInProgressPrompt(str.titleProgress),
+      entry: "showConnectSafeInProgress",
       invoke: {
         id: 'connectSafe',
-        src: connectSafeService,
+        src: "connectSafeService",
         onError: {
-          actions: setError,
+          actions: "setError",
           target: "error"
         },
         onDone: {
@@ -183,13 +122,6 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
         }
       }
     },
-
-
-
-
-
-
-
     checkAccount: {
       entry: send({
         type: "process.continue"
@@ -197,24 +129,24 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       on: {
         "process.continue": [{
           target: "createPrivateKey",
-          cond: (context) => !context.environment.me.myAddress
+          cond: "noAccount"
         }, {
           target: "checkFunding",
-          cond: (context) => !!context.environment.me.myAddress
+          cond: "hasAccount"
         }]
       }
     },
     createPrivateKey: {
-      entry: sendInProgressPrompt(str.titleInitializing),
+      entry: "showCreatePrivateKeyInProgress",
       invoke: {
         id: 'createPrivateKey',
-        src: createPrivateKeyService,
+        src: "createPrivateKeyService",
         onError: {
-          actions: setError,
+          actions: "setError",
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successCreateSafe),
+          actions: "setCreatePrivateKeyResult",
           target: "generateFundLink"
         }
       }
@@ -225,10 +157,10 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": [{
-          cond: (context) => context.environment.me.myAddressXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
+          cond: "accountHasEnoughBalance",
           target: "checkSafe"
         },{
-          cond: (context) => context.environment.me.myAddressXDaiBalance.lt(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
+          cond: "accountHasNotEnoughBalance",
           target: "generateFundLink"
         }]
       }
@@ -239,25 +171,25 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": [{
-          cond: (context) => !context.environment.me.mySafe,
+          cond: "noSafe",
           target: "deploySafe"
         },{
-          cond: (context) => !!context.environment.me.mySafe,
+          cond: "hasSafe",
           target: "checkSafeXDaiBalance"
         }]
       }
     },
     deploySafe: {
-      entry: sendInProgressPrompt(str.progressCreateSafe),
+      entry: "showDeploySafeInProgress",
       invoke: {
         id: 'deploySafe',
-        src: deploySafeService,
+        src: "deploySafeService",
         onError: {
-          actions: setError,
+          actions: "setError",
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successCreateSafe),
+          actions: "setDeploySafeResult",
           target: "checkSafeXDaiBalance"
         }
       }
@@ -268,25 +200,25 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": [{
-          cond: (context) => !context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+          cond: "safeHasNotEnoughBalance",
           target: "fundSafe"
         },{
-          cond: (context) => !context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+          cond: "safeHasEnoughBalance",
           target: "checkToken"
         }]
       }
     },
     fundSafe: {
-      entry: sendInProgressPrompt(str.progressFundSafe),
+      entry: "showFundSafeInProgress",
       invoke: {
         id: 'fundSafe',
-        src: fundSafeService,
+        src: "fundSafeService",
         onError: {
-          actions: setError,
+          actions: "setError",
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successFundSafe),
+          actions: "setFundSafeResult",
           target: "checkToken"
         }
       }
@@ -297,55 +229,34 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": [{
-          cond: (context) => !context.environment.me.myToken,
+          cond: "noToken",
           target: "hubSignup"
         },{
-          cond: (context) => !!context.environment.me.myToken,
+          cond: "hasToken",
           target: "success"
         }]
       }
     },
     hubSignup: {
-      entry: sendInProgressPrompt(str.progressHubSignup),
+      entry: "showHubSignupInProgress",
       invoke: {
         id: 'hubSignup',
-        src: hubSignupService,
+        src: "hubSignupService",
         onError: {
-          actions: setError,
+          actions: "setError",
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successHubSignup),
+          actions: "setHubSignupResult",
           target: "success"
         }
       }
     },
     generateFundLink: {
       entry: [
-        generateFundLink,
-        sendShellEvent(new ShowNotification(Announcement, {
-            data: {
-              text: "Please fund your account with xDai to fully use the app",
-              button: "Get xDai"
-            },
-            action: {
-              link: "http://deine.mudda.com"
-            }
-          }
-        )),
-        sendPrompt({
-          title: str.titleGenerateFundLink(),
-          nextButtonTitle: str.buttonGenerateFundLink(),
-          banner: {
-            component: Banner,
-            data: {
-              text: str.bannerGenerateFundLink()
-            }
-          },
-          artifacts: {
-            ...ethereumAddress("fundLink", undefined, true)
-          }
-        })
+        "generateFundLink",
+        "sendFundLinkNotification",
+        "showFundLink"
     ],
       on: {
         "process.continue": "stop",
@@ -354,10 +265,10 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
     },
     success: {
       type: "final",
-      entry: () => push('#/safe/transactions')
+      entry: "navigateToSafe"
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: "sendErrorPrompt",
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -366,6 +277,112 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
     stop: {
       type: "final"
     }
+  }
+}, {
+  guards: {
+    noAccount: (context) => !context.environment.me.myAddress,
+    hasAccount: (context) => !!context.environment.me.myAddress,
+    noSafe: (context) => !context.environment.me.mySafe,
+    hasSafe: (context) => !!context.environment.me.mySafe,
+    noToken: (context) => !context.environment.me.myToken,
+    hasToken: (context) => !!context.environment.me.myToken,
+    choiceCreateSafe:(context) => context.data.safeChoice.value === str.choiceCreateSafe(),
+    choiceConnectSafe:(context) => context.data.safeChoice.value === str.choiceConnectSafe(),
+    accountHasEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
+    accountHasNotEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.lt(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
+    safeHasEnoughBalance:(context) => context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+    safeHasNotEnoughBalance:(context) => !context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+  },
+  actions: {
+    storePromptResponse: storePromptResponse,
+    choiceNewOrExistingSafe: sendPrompt({
+      title: str.titleConnectOrCreateSafe(),
+      hideNextButton: true,
+      banner: {
+        component: Banner,
+        data: {
+          text: str.bannerConnectOrCreateSafe()
+        }
+      },
+      artifacts: {
+        ...choice("safeChoice", undefined, [
+          str.choiceConnectSafe(),
+          str.choiceCreateSafe()])
+      }
+    }),
+    askForSafeAddress: sendPrompt({
+      title: str.titleSafeAddress(),
+      nextButtonTitle: str.buttonSafeAddress(),
+      banner: {
+        component: Banner,
+        data: {
+          text: str.bannerSafeAddress()
+        }
+      },
+      artifacts: {
+        ...ethereumAddress("safeAddress")
+      }
+    }),
+    askForPrivateKey: sendPrompt({
+      title: str.titleSeedPhrase(),
+      nextButtonTitle: "Connect safe",
+      canGoBack: true,
+      banner: {
+        component: Banner,
+        data: {
+          text: str.bannerSeedPhrase()
+        }
+      },
+      artifacts: {
+        privateKey: {
+          key: "privateKey",
+          type: "keyphrase",
+        }
+      }
+    }),
+    showConnectSafeInProgress:sendInProgressPrompt(str.titleProgress),
+    setError: setError,
+    sendErrorPrompt: sendErrorPrompt,
+    showCreatePrivateKeyInProgress:sendInProgressPrompt(str.progressCreatePrivateKey),
+    setCreatePrivateKeyResult:setResult(str.successCreatePrivateKey),
+    showDeploySafeInProgress:sendInProgressPrompt(str.progressDeploySafe),
+    setDeploySafeResult:setResult(str.successDeploySafe),
+    showFundSafeInProgress: sendInProgressPrompt(str.progressFundSafe),
+    setFundSafeResult:setResult(str.successFundSafe),
+    showHubSignupInProgress: sendInProgressPrompt(str.progressHubSignup),
+    setHubSignupResult: setResult(str.successHubSignup),
+    generateFundLink: generateFundLink,
+    sendFundLinkNotification: sendShellEvent(new ShowNotification(Announcement, {
+        data: {
+          text: "Please fund your account with xDai to fully use the app",
+          button: "Get xDai"
+        },
+        action: {
+          link: "http://deine.mudda.com"
+        }
+      }
+    )),
+    showFundLink: sendPrompt({
+      title: str.titleGenerateFundLink(),
+      nextButtonTitle: str.buttonGenerateFundLink(),
+      banner: {
+        component: Banner,
+        data: {
+          text: str.bannerGenerateFundLink()
+        }
+      },
+      artifacts: {
+        ...ethereumAddress("fundLink", undefined, true)
+      }
+    }),
+    navigateToSafe: () => push('#/safe/transactions')
+  },
+  services:{
+    connectSafeService: connectSafeService,
+    createPrivateKeyService: createPrivateKeyService,
+    deploySafeService: deploySafeService,
+    fundSafeService: fundSafeService,
+    hubSignupService: hubSignupService
   }
 });
 

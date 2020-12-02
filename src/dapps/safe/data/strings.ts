@@ -108,8 +108,8 @@ export const strings = {
         titleGenerateFundLink: () => "Get initial funding",
         buttonGenerateFundLink: () => "Close",
         bannerGenerateFundLink: () => "Send this link to a friend to get started",
-        progressCreateSafe: () => "Creating your safe",
-        successCreateSafe: () => "Your new safe was successfully created",
+        progressDeploySafe: () => "Creating your safe",
+        successDeploySafe: () => "Your new safe was successfully created",
         choiceConnectSafe()
         {
           return "Connect circles";
@@ -141,6 +141,14 @@ export const strings = {
         successFundSafe()
         {
           return "Sent some xDai to the safe."
+        },
+        successCreatePrivateKey()
+        {
+          return "Private key created.";
+        },
+        progressCreatePrivateKey()
+        {
+          return "Creating private key ..";
         }
       }
     }
