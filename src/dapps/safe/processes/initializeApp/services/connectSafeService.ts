@@ -90,7 +90,7 @@ export const connectSafeService = async (context: InitializeAppContext) =>
     const ownerAddress = config.getCurrent().web3()
       .eth
       .accounts
-      .privateKeyToAccount("0x" + privateKey)
+      .privateKeyToAccount(privateKey)
       .address;
 
     if (!context.environment.eth.web3.utils.isAddress(ownerAddress))
@@ -106,7 +106,7 @@ export const connectSafeService = async (context: InitializeAppContext) =>
 
     await window.o.fission.keys.addMyKey({
       name: "me",
-      privateKey: "0x" + privateKey,
+      privateKey: privateKey,
       publicKey: null
     });
 
@@ -121,7 +121,7 @@ export const connectSafeService = async (context: InitializeAppContext) =>
     context.environment.me.myAddress = ownerAddress;
     context.environment.me.myKey = {
       name: "me",
-      privateKey: "0x" + privateKey
+      privateKey: privateKey
     };
 
     context.environment.me.myAddressXDaiBalance = new BN(await context.environment.eth.web3.eth.getBalance(ownerAddress));
