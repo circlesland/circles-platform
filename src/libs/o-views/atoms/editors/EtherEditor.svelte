@@ -12,10 +12,12 @@
     if (
       (!processArtifact.value ||
         processArtifact.value.toString().trim() === "") &&
-      processArtifact.isOptional
-    ) {
+        processArtifact.isOptional)
+    {
       processArtifact.isValid = true;
-    } else {
+    }
+    else
+      {
       try {
         const weiStr = web3.utils.toWei(
           processArtifact.value.toString(),

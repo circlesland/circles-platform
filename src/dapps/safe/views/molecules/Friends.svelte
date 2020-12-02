@@ -28,8 +28,10 @@
   let untrusted: any[] = [];
   let untrusted_: { [address: string]: any } = {};
 
+  let environment:ProcessEnvironment;
+
   async function init() {
-    const environment:ProcessEnvironment = await getEnvironment();
+    environment = await getEnvironment();
     mySafeAddress = environment.me.mySafe.address;
     person = new HubAccount(environment.eth.contracts.hub, mySafeAddress);
 
@@ -85,10 +87,9 @@
       })
       .map((mutualTrust) => {
         return {
-          image:
-            "https://avatars.dicebear.com/api/avataaars/" +
-            mutualTrust.owner.address +
-            ".svg ",
+          image: environment.me.mySafe.address == mutualTrust.owner.address
+            ? environment.me.myProfile.avatar
+            : "https://avatars.dicebear.com/api/avataaars/" + mutualTrust.owner.address + ".svg ",
           title: mutualTrust.owner.address.slice(0, 8),
           connection: "trustedMutual",
           detail: {
@@ -174,7 +175,7 @@
       <Jumper size="150" color="#071D69" unit="px" />
     </div>
   {:else}
-    {#if personsThatTrustMe}
+    {#if personsThatTrustMe && personsThatTrustMe.length}
       <div class="mb-4">
         <CategoryTitle mapping={labelTrusted} />
       </div>
@@ -185,7 +186,7 @@
       </div>
     {/if}
 
-    {#if mutualFriends}
+    {#if mutualFriends && mutualFriends.length}
       <div class="mb-4">
         <CategoryTitle mapping={labelMutual} />
       </div>
@@ -196,7 +197,7 @@
       </div>
     {/if}
 
-    {#if personsITrust}
+    {#if personsITrust && personsITrust.length}
       <div class="mb-4">
         <CategoryTitle mapping={labelTrusting} />
       </div>
@@ -207,7 +208,7 @@
       </div>
     {/if}
 
-    {#if untrusted}
+    {#if untrusted && untrusted.length}
       <div class="mb-4">
         <CategoryTitle mapping={labelRevoked} />
       </div>

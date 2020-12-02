@@ -12,12 +12,10 @@ import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendP
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import { strings } from "../../data/strings";
 import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
-import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
 import { file } from "../../../../libs/o-processes/artifacts/file";
-import { RunProcess } from "../../../../libs/o-events/runProcess";
-import { initializeApp } from "../../../safe/processes/initializeApp/initializeApp";
+import {addOrUpdateMyProfileService} from "../createOmoSapien/services/addOrUpdateMyProfileService";
 
-export interface CreateOmoSapienContext extends ProcessContext {
+export interface UpdateOmoSapienContext extends ProcessContext {
   data: {
     firstName?: ProcessArtifact,
     lastName?: ProcessArtifact,
@@ -30,7 +28,7 @@ export interface CreateOmoSapienContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.omosapien.processes.createOmoSapien;
-const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent | { type: "evaluateChoice" }>({
+const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent | { type: "evaluateChoice" }>({
   initial: "idle",
   states: {
 
@@ -108,27 +106,22 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
         },
         "process.continue": {
           actions: storePromptResponse,
-          target: "createOmoSapien"
+          target: "updateOmoSapien"
         },
         "process.cancel": "stop"
       }
     },
-    createOmoSapien: {
+    updateOmoSapien: {
       entry: sendInProgressPrompt(str.bannerProgress),
       invoke: {
-        id: 'createOmoSapien',
+        id: 'updateOmoSapien',
         src: addOrUpdateMyProfileService,
         onError: {
           actions: setError,
           target: "error"
         },
         onDone: {
-          actions: [
-            setResult(str.successMessage),
-            () => setTimeout(() => {
-              window.o.publishEvent(new RunProcess(initializeApp));
-            }, 100)
-          ],
+          actions: setResult(str.successMessage),
           target: "stop"
         }
       }
@@ -146,7 +139,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
   }
 });
 
-export const createOmoSapien: ProcessDefinition = {
-  name: "createOmoSapien",
+export const updateOmoSapien: ProcessDefinition = {
+  name: "updateOmoSapien",
   stateMachine: processDefinition
 };
