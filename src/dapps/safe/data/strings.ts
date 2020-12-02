@@ -1,14 +1,9 @@
-/*import { SetTrustContext } from "../processes/setTrust/setTrust";
-import { JumpstartContext } from "../processes/jumpstart/jumpstart";
-import { ProcessContext } from "../../../libs/o-processes/processContext";
-import { TransferCirclesContext } from "../processes/transferCircles/transferCircles";
-import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
-*/
 import { InitializeAppContext } from "../processes/initializeApp/initializeApp";
 import { SetTrustContext } from "../processes/setTrust/setTrust";
-import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
+import { SendInviteCreditsContext } from "../processes/transferXDai/sendInviteCredits";
 import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
 import {JumpstartContext} from "../processes/jumpstart/jumpstart";
+import {getEnvironment} from "../../../libs/o-os/o";
 
 export const strings = {
   safe: {
@@ -28,9 +23,9 @@ export const strings = {
         "errorMessage": (context: SetTrustContext) => `An error occurred while trusting ${context.data.trustReceiver.value.slice(0, 8)}.`,
         "alreadyTrustedError": (context: SetTrustContext) => `You are already trusting ${context.data.trustReceiver.value.slice(0, 8)}.`
       },
-      transferXDai: {
-        "successMessage": (context: TransferXDaiContext) => `xDai successfully transferred`,
-        "errorMessage": (context: TransferXDaiContext) => `xDai transfer failed`,
+      sendInviteCredits: {
+        "successMessage": (context: SendInviteCreditsContext) => `xDai successfully transferred`,
+        "errorMessage": (context: SendInviteCreditsContext) => `xDai transfer failed`,
         titleRecipient: () => "Recipient",
         bannerRecipient: () => "Please enter the recipients address",
         titleValue: () => "Amount",
@@ -48,54 +43,36 @@ export const strings = {
         titleRecipient: () => "Invite",
         titleValue: () => "invite credits",
         bannerIntro: () => "0x123.. sent you a jumpstart request. Every transaction on the distributed computer costs a little fee. Send 1 invite credit to allow 0x123 to pay for all transaction fees that are required to join circles.",
-        titleIntro: () => "Jumpstart someone"
+        titleIntro: () => "Jumpstart",
+        introHeader:(context: JumpstartContext) => `<span class="text-3xl">${context.data.recipient.value.substring(0,8)}</span>`,
+        introSubHeader:(context: JumpstartContext) => `is asking you to empower his/her life`,
+        introBody:(context: JumpstartContext) => `You can use your invite credits to invite and unlock the universal basic income account of ${context.data.recipient.value}. You still have
+      ${Math.floor(parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')) * 10)}
+      invite credits (${parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')).toFixed(2)}
+      xDai) left.<br />
+      To refill your invite credits please send xDai to your safe
+      ${context.environment.me.mySafe?.address ?? ""} or ask in the
+      <a href="https://discord.gg/KgbBdAck8X" class="text-secondary-lighter">omo
+        community</a>
+      for help. (One invite credit = 0.10 xDai)`
       },
       requestUbi: {
         titleProgress: () => "harvesting ..",
         "successMessage": (context: ProcessContext) => `UBI successfully received`,
         "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
       },
-      /*
-       transferCircles: {
-           "successMessage": (context: TransferCirclesContext) => `Circles successfully transferred`,
-           "errorMessage": (context: TransferCirclesContext) => `Circles transfer failed`
-       },
-       */
       transferCircles: {
-        titleRecipient()
-        {
-          return "";
-        },
-        bannerRecipient()
-        {
-
-        },
-        titleValue()
-        {
-          return "";
-        },
-        bannerValue()
-        {
-
-        },
-        titleSummary()
-        {
-          return "";
-        },
-        bannerSummary()
-        {
-
-        },
-        titleProgress()
-        {
-          return "";
-        },
-        successMessage()
-        {
-          return "";
-        }
+        "successMessage": (context: SendInviteCreditsContext) => `Circles successfully transferred`,
+        "errorMessage": (context: SendInviteCreditsContext) => `Circles transfer failed (check trust)`,
+        titleRecipient: () => "Recipient",
+        bannerRecipient: () => "Please enter the recipients address",
+        titleValue: () => "Amount",
+        bannerValue: () => "Please enter the amount (in Circles)",
+        titleProgress: () => "Sending ..",
+        titleSummary: () => "Confirm",
+        bannerSummary: () => "Please check the transaction details and click 'Transfer Circles' to confirm the transaction"
       },
-      createSafe: {
+      initializeApp: {
         titleSafeAddress: () => "Safe",
         bannerSafeAddress: () => "Please enter your safe address",
         buttonSafeAddress: () => "Save",
@@ -107,48 +84,30 @@ export const strings = {
         titleInitializing: () => "Generating a new key ..",
         titleGenerateFundLink: () => "Get initial funding",
         buttonGenerateFundLink: () => "Close",
-        bannerGenerateFundLink: () => "Send this link to a friend to get started",
+        bannerGenerateFundLink: async () => {
+          const env = await getEnvironment();
+          return "Send this link to a friend to get started or send 0.1 xDai to '" + env.me.myAddress + "'"
+        },
         progressDeploySafe: () => "Creating your safe",
         successDeploySafe: () => "Your new safe was successfully created",
-        choiceConnectSafe()
+        choiceConnectSafe: () =>"Connect circles",
+        choiceCreateSafe: () =>"Create new",
+        bannerConnectOrCreateSafe: () =>  "Do you want to connect an existing circles account?",
+        titleConnectOrCreateSafe: () => "Existing account?",
+        progressHubSignup: () => "Registering your account at the circles hub",
+        successHubSignup: () => "Successfully registered at the circles hub",
+        progressFundSafe: () => "Sending some xDai to the safe ..",
+        successFundSafe: () => "Sent some xDai to the safe.",
+        successCreatePrivateKey: () => "Private key created.",
+        progressCreatePrivateKey: () =>  "Creating private key ..",
+        fundLinkHeader: (context: InitializeAppContext) => `Welcome ${context.environment.me.myDisplayName()}`,
+        fundLinkSubHeader: () => `to unlock your account send this invite link to a friend with invite credits`,
+        fundLinkBody(context: InitializeAppContext)
         {
-          return "Connect circles";
-        },
-        choiceCreateSafe()
-        {
-          return "Create new";
-        },
-        bannerConnectOrCreateSafe()
-        {
-          return "Do you want to connect an existing circles account?";
-        },
-        titleConnectOrCreateSafe()
-        {
-          return "Existing account?";
-        },
-        progressHubSignup()
-        {
-          return "Registering your account at the circles hub";
-        },
-        successHubSignup()
-        {
-          return "Successfully registered at the circles hub"
-        },
-        progressFundSafe()
-        {
-          return "Sending some xDai to the safe .."
-        },
-        successFundSafe()
-        {
-          return "Sent some xDai to the safe."
-        },
-        successCreatePrivateKey()
-        {
-          return "Private key created.";
-        },
-        progressCreatePrivateKey()
-        {
-          return "Creating private key ..";
+          return `To unlock yourself send 0.10 xDai to your account address (${context.environment.me.myAddress}) or ask in the
+      <a href="https://discord.gg/KgbBdAck8X" class="text-secondary-lighter">omo
+        community</a>
+      for help. (One invite credit = 0.10 xDai)`
         }
       }
     }

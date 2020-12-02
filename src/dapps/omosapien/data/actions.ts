@@ -2,6 +2,7 @@ import { faUserCircle, faUserAstronaut, faLock, faKey, faCoins } from "@fortawes
 import { RunProcess } from "../../../libs/o-events/runProcess";
 import { createOmoSapien } from "../processes/createOmoSapien/createOmoSapien";
 import { QuickAction } from "../../../libs/o-os/types/quickAction";
+import {updateOmoSapien} from "../processes/updateOmoSapien/updateOmoSapien";
 
 export const omoSapienDefaultActions: QuickAction[] = [
     {
@@ -55,9 +56,7 @@ export const omoSapienDefaultActions: QuickAction[] = [
     }
 ];
 
-export const omoSapienOverflowActions: QuickAction[] = [
-
-    {
+export const omoSapienOverflowActions: QuickAction[] = [{
         type: "trigger",
         pos: "overflow",
         mapping: {
@@ -68,6 +67,6 @@ export const omoSapienOverflowActions: QuickAction[] = [
                 label: "Update Profile",
             }
         },
-        event: () => new RunProcess(createOmoSapien)
+        event: () => new RunProcess(updateOmoSapien)
     },
 ];

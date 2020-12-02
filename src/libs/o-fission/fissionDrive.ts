@@ -9,6 +9,10 @@ export class FissionDrive
   private readonly _fissionAuth: AuthSucceeded|Continuation;
   private readonly _fs: FileSystem;
 
+  get username() :string {
+    return this._fissionAuth.username;
+  }
+
   get profiles():Profiles {
     return this._profiles;
   }

@@ -1,6 +1,6 @@
 import {createMachine, send} from "xstate";
 import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {transferXDaiService} from "./services/transferXDaiService";
+import {transferInviteCredits} from "./services/transferInviteCredits";
 import {strings} from "../../data/strings";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
@@ -16,8 +16,9 @@ import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/s
 import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
 import {ether} from "../../../../libs/o-processes/artifacts/ether";
 import {RefreshView} from "../../../../libs/o-events/refreshView";
+import {inviteCredits} from "../../../../libs/o-processes/artifacts/inviteCredits";
 
-export interface TransferXDaiContext extends ProcessContext
+export interface SendInviteCreditsContext extends ProcessContext
 {
   data: {
     recipient?: ProcessArtifact,
@@ -28,8 +29,8 @@ export interface TransferXDaiContext extends ProcessContext
 /**
  * Transfer xDai
  */
-const str = strings.safe.processes.transferXDai;
-const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
+const str = strings.safe.processes.sendInviteCredits;
+const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -38,7 +39,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       }
     },
     promptRecipient: {
-      entry: sendPrompt({
+      entry: sendPrompt((context) => {return{
         title: str.titleRecipient(),
         nextButtonTitle: "Next",
         banner: {
@@ -50,7 +51,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
         artifacts: {
           ...ethereumAddress("recipient")
         }
-      }),
+      }}),
       on: {
         "process.continue": {
           actions: storePromptResponse,
@@ -60,7 +61,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       }
     },
     promptValue: {
-      entry: sendPrompt({
+      entry: sendPrompt((context) => {return{
         title: str.titleValue(),
         nextButtonTitle: "Next",
         canGoBack: true,
@@ -71,9 +72,9 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
           }
         },
         artifacts: {
-          ...ether("value")
+          ...inviteCredits("value")
         }
-      }),
+      }}),
       on: {
         "process.back": {
           target: "promptRecipient"
@@ -86,7 +87,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       }
     },
     summarize: {
-      entry: sendPrompt({
+      entry: sendPrompt((context) => {return{
         title: str.titleSummary(),
         nextButtonTitle: "Transfer xDai",
         canGoBack: true,
@@ -98,9 +99,9 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
         },
         artifacts: {
           ...ethereumAddress("recipient", str.titleRecipient(), true),
-          ...ether("value", str.titleValue(), true)
+          ...inviteCredits("value", str.titleValue(), true)
         }
-      }),
+      }}),
       on: {
         "process.back": {
           target: "promptValue"
@@ -113,7 +114,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
       entry: sendInProgressPrompt(str.titleProgress),
       invoke: {
         id: 'transferXDai',
-        src: transferXDaiService,
+        src: transferInviteCredits,
         onError: {
           actions: setError,
           target: "error"
@@ -153,7 +154,7 @@ const processDefinition = () => createMachine<TransferXDaiContext, OmoEvent>({
   }
 });
 
-export const transferXDai: ProcessDefinition = {
-  name: "transferXDai",
+export const sendInviteCredits: ProcessDefinition = {
+  name: "sendInviteCredits",
   stateMachine: processDefinition
 };

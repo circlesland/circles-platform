@@ -23,7 +23,7 @@ export default {
     '/omosapien/keys': wrap(keys),
 
     // Safe
-    '/safe/answerInviteRequest/:from': wrap(answerInviteRequest),
+    '/empowerMe/:from': wrap(answerInviteRequest),
     '/safe/transactions': wrap(transactions),
     '/safe/friends': wrap(friends),
     '/safe/tokens': wrap(tokens),

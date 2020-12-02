@@ -4,11 +4,13 @@
   export let data: { text: string };
 </script>
 
-<div class="flex justify-center">
+<div class="flex items-center justify-center">
   <div>
-    <Jumper size="150" color="#071D69" unit="px" />
+    <Jumper size="150" color="#071D69" unit="px" /><br />
     {#if data.text}
-      <div class="p-10 text-center text-primary">{data.text}</div>
+      <div class="text-sm text-center text-primary font-primary">
+        {data.text}
+      </div>
     {/if}
   </div>
 </div>

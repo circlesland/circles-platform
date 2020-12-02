@@ -5,7 +5,7 @@ import FileSystem from "webnative/fs/filesystem";
 export class Profiles extends Directory<Profile>
 {
   constructor(fs: FileSystem) {
-    super(fs, ["omosapien", "profiles"]);
+    super(fs, ["profiles"]);
   }
 
   async tryGetMyProfile(): Promise<Profile | null> {

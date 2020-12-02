@@ -36,28 +36,35 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
   states: {
     idle: {
       on:{
-        "process.continue": "intro"
+        "process.continue": {
+          target: "intro"
+        }
       }
     },
     intro: {
-      entry: sendPrompt({
+      entry:sendPrompt((context:JumpstartContext) => {return{
         title: str.titleIntro(),
-        nextButtonTitle: "Next",
+        nextButtonTitle: "Empower " + context.data.recipient.value.substring(0,8),
         banner: {
           component: JumpstartIntro,
-          data: {}
+          data: {
+            header: str.introHeader(context),
+            subHeader: str.introSubHeader(context),
+            body: str.introBody(context)
+          }
         },
         artifacts: {}
-      }),
+      }}),
       on: {
         "process.cancel": "stop",
         "process.continue": "summarize"
       }
     },
     summarize: {
-      entry: sendPrompt({
+      entry: sendPrompt((context:JumpstartContext) => {return{
         title: str.titleSummary(),
         nextButtonTitle: "Use 1 invite credit",
+        canGoBack: true,
         banner: {
           component: Banner,
           data: {
@@ -68,8 +75,9 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
           ...ethereumAddress("recipient", str.titleRecipient(), true),
           ...inviteCredits("value", str.titleValue())
         }
-      }),
+      }}),
       on: {
+        "process.back": "intro",
         "process.cancel": "stop",
         "process.continue": "transferJumpstartXDai"
       }

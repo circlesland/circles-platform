@@ -15,23 +15,25 @@ export const storePromptResponse = assign((context:ProcessContext, event) =>
 
   // Cast to Continue event and filter all changed ProcessArtifacts
   const continueEvent = <Continue>event;
-  const changes = Object.keys(continueEvent.data)
-    .map(key => continueEvent.data[key])
-    .filter(artifact => artifact.changed);
+  if (continueEvent.data)
+  {
+    const changes = Object.keys(continueEvent.data)
+      .map(key => continueEvent.data[key])
+      .filter(artifact => artifact.changed);
 
-  // Delete all values that already exist on the context's data property
-  const existingData = context.data;
-  changes.forEach(artifact => delete existingData[artifact.key]);
+    // Delete all values that already exist on the context's data property
+    const existingData = context.data;
+    changes.forEach(artifact => delete existingData[artifact.key]);
 
-  // Write a new 'data' object with only the changed artifacts.
-  const changedData = {};
-  changes.forEach(artifact => changedData[artifact.key] = artifact);
+    // Write a new 'data' object with only the changed artifacts.
+    const changedData = {};
+    changes.forEach(artifact => changedData[artifact.key] = artifact);
 
-  // Merge the new and unchanged artifacts and set the 'data' property
-  context.data = {
-    ... existingData,
-    ... changedData
-  };
-
+    // Merge the new and unchanged artifacts and set the 'data' property
+    context.data = {
+      ...existingData,
+      ...changedData
+    };
+  }
   return context;
 });

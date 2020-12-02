@@ -37,6 +37,7 @@ export type Me = {
   myToken?: Erc20Token,
   myAddressXDaiBalance?: BN,
   mySafeXDaiBalance?: BN
+  myDisplayName():string;
 };
 
 export type Ethereum = {
@@ -54,7 +55,11 @@ export async function getEnvironment(): Promise<ProcessEnvironment> {
   const myData = window.o.fission;
 
   const me: Me = {
-    myData: myData
+    myData: myData,
+    myDisplayName(): string
+    {
+      return me.myProfile.firstName + (me.myProfile.lastName ? " " + me.myProfile.lastName : "")
+    }
   };
 
   me.myKey = await myData?.keys.tryGetMyKey();

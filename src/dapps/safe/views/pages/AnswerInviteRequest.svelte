@@ -1,9 +1,9 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import {onMount} from "svelte";
-  import {pop} from "svelte-spa-router";
+  import {pop, push} from "svelte-spa-router";
   import {RunProcess} from "../../../../libs/o-events/runProcess";
-  import {transferXDai, TransferXDaiContext} from "../../processes/transferXDai/transferXDai";
+  import {sendInviteCredits, SendInviteCreditsContext} from "../../processes/transferXDai/sendInviteCredits";
   import {CloseModal} from "../../../../libs/o-events/closeModal";
   import { Jumper } from "svelte-loading-spinners";
   import {jumpstart, JumpstartContext} from "../../processes/jumpstart/jumpstart";
@@ -13,7 +13,16 @@
   } = {};
 
   onMount(() => {
-    pop();
+    console.log("document.referrer", document.referrer)
+    if (document.referrer.indexOf(window.location.origin) > -1)
+    {
+      pop();
+    }
+    else
+    {
+      push("#/omosapien/profile");
+    }
+
     window.o.publishEvent(new CloseModal());
     setTimeout(() => {
       window.o.publishEvent(new RunProcess(jumpstart, async (context:JumpstartContext) => {

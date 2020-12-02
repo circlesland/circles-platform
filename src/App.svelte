@@ -2,7 +2,7 @@
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, { pop, push } from "svelte-spa-router";
+  import Router, { pop, location, push } from "svelte-spa-router";
   import routes from "./libs/o-os/routes";
 
   import "./libs/o-views/css/base.css";
@@ -66,8 +66,8 @@
       isOpen = true;
     }
     if (event.type == "shell.showNotification") {
-      notifications.push((<ShowNotification>event).mapping);
-      notifications = notifications;
+      //notifications.push((<ShowNotification>event).mapping);
+      //notifications = notifications;
     }
   });
 
@@ -81,15 +81,13 @@
   }
 
   const initialize = async () => {
-    if (!window.o.fission) {
-      push("#/omosapien/authenticate");
+    if (!window.o.fission || location === "/") {
       return;
     }
 
     const environment = await getEnvironment();
     const profile = environment.me.myProfile;
 
-    console.log(profile);
     if (profile) {
       if (
         !profile.circlesAddress ||

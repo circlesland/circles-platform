@@ -50,8 +50,8 @@ export const accessDapps: AccessItem[] = [
     {
         data: {
             image: "/icons/dappOmoTest.svg",
-            title: "Omo Test",
-            subtitle: "/private/apps/mamaomo/omotest",
+            title: "Omo Sapien",
+            subtitle: "/private/apps/mamaomo/omosapien",
         },
     },
 ];

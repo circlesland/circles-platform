@@ -1,6 +1,7 @@
 import {createMachine, send} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
+import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte"
 import { push } from "svelte-spa-router";
 import { OmoEvent } from "../../../../libs/o-events/omoEvent";
 import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
@@ -23,6 +24,7 @@ import {ShowNotification} from "../../../../libs/o-events/showNotification";
 import Announcement from "../../../../libs/o-views/molecules/Announcement.svelte";
 import {hubSignupService} from "./services/hubSignupService";
 import {fundSafeService} from "./services/fundSafeService";
+import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
 
 export interface InitializeAppContext extends ProcessContext {
   data: {
@@ -37,11 +39,10 @@ export interface InitializeAppContext extends ProcessContext {
 /**
  * Connect safe
  */
-const str = strings.safe.processes.createSafe;
+const str = strings.safe.processes.initializeApp;
 const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
   initial: "idle",
   states: {
-
     idle: {
       on:{
         "process.continue": "hasAccount"
@@ -53,19 +54,19 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
         }),
       on: {
         "process.triggerSelf": [{
-          target: 'newOrExistingSafe',
-          cond: "noAccount"
+          cond: "noAccount",
+          target: 'createOrImportSafe'
         },{
-          target: 'checkSafeXDaiBalance',
-          cond: "hasSafe"
+          cond: "hasSafe",
+          target: 'checkSafeXDaiBalance'
         },{
-          target: 'checkAccount',
-          cond: "hasAccount"
+          cond: "hasAccount",
+          target: 'checkAccount'
         }]
       }
     },
-    newOrExistingSafe: {
-      entry: "choiceNewOrExistingSafe",
+    createOrImportSafe: {
+      entry: "choiceCreateOrImportSafe",
       on: {
         "process.continue": {
           actions: [
@@ -288,14 +289,14 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
     hasToken: (context) => !!context.environment.me.myToken,
     choiceCreateSafe:(context) => context.data.safeChoice.value === str.choiceCreateSafe(),
     choiceConnectSafe:(context) => context.data.safeChoice.value === str.choiceConnectSafe(),
-    accountHasEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
-    accountHasNotEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.lt(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
-    safeHasEnoughBalance:(context) => context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
-    safeHasNotEnoughBalance:(context) => !context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+    accountHasEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.02", "ether"))),
+    accountHasNotEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.lt(new BN(context.environment.eth.web3.utils.toWei("0.02", "ether"))),
+    safeHasEnoughBalance:(context) => context.environment.me.mySafeXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.0045", "ether"))),
+    safeHasNotEnoughBalance:(context) => !context.environment.me.mySafeXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.0045", "ether"))),
   },
   actions: {
     storePromptResponse: storePromptResponse,
-    choiceNewOrExistingSafe: sendPrompt({
+    choiceCreateOrImportSafe: sendPrompt((context) => {return{
       title: str.titleConnectOrCreateSafe(),
       hideNextButton: true,
       banner: {
@@ -309,8 +310,8 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
           str.choiceConnectSafe(),
           str.choiceCreateSafe()])
       }
-    }),
-    askForSafeAddress: sendPrompt({
+    }}),
+    askForSafeAddress: sendPrompt((context) => {return{
       title: str.titleSafeAddress(),
       nextButtonTitle: str.buttonSafeAddress(),
       banner: {
@@ -322,8 +323,8 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
       artifacts: {
         ...ethereumAddress("safeAddress")
       }
-    }),
-    askForPrivateKey: sendPrompt({
+    }}),
+    askForPrivateKey: sendPrompt((context) => {return{
       title: str.titleSeedPhrase(),
       nextButtonTitle: "Connect safe",
       canGoBack: true,
@@ -339,7 +340,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
           type: "keyphrase",
         }
       }
-    }),
+    }}),
     showConnectSafeInProgress:sendInProgressPrompt(str.titleProgress),
     setError: setError,
     sendErrorPrompt: sendErrorPrompt,
@@ -362,19 +363,22 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
         }
       }
     )),
-    showFundLink: sendPrompt({
+    showFundLink: sendPrompt((context:InitializeAppContext) => {return{
       title: str.titleGenerateFundLink(),
       nextButtonTitle: str.buttonGenerateFundLink(),
+      hideNextButton: true,
       banner: {
-        component: Banner,
+        component: JumpstartIntro,
         data: {
-          text: str.bannerGenerateFundLink()
+          header: str.fundLinkHeader(context),
+          subHeader: str.fundLinkSubHeader(),
+          body: str.fundLinkBody(context)
         }
       },
       artifacts: {
-        ...ethereumAddress("fundLink", undefined, true)
+        ...textLine("fundLink", undefined, true)
       }
-    }),
+    }}),
     navigateToSafe: () => push('#/safe/transactions')
   },
   services:{
@@ -387,6 +391,6 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
 });
 
 export const initializeApp: ProcessDefinition = {
-  name: "connectSafe",
+  name: "initializeApp",
   stateMachine: processDefinition
 };
