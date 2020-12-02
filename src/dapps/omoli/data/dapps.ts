@@ -1,5 +1,7 @@
 import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
 import { DappIcon, ProfileHeader } from "src/libs/o-views/interfaces/molecules";
+import {getEnvironment} from "../../../libs/o-os/o";
+import {asyncWaterfall} from "webnative/common";
 
 export const address: string = "TODO";
 
@@ -10,109 +12,113 @@ export const profile: ProfileHeader = {
   }
 };
 
-export const dapps: DappIcon[] = [
-  {
-    data: {
-      title: "OmoSapien",
-      tag: "soon",
+export const dapps: () => Promise<DappIcon[]> = async () =>
+{
+  const environment = await getEnvironment();
+  return [
+    {
+      data: {
+        title: "OmoSapien",
+        tag: "soon",
+      },
+      action: {
+        route: "omosapien/profile",
+      },
+      design: {
+        icon: faUserAstronaut,
+        type: "",
+      },
     },
-    action: {
-      route: "omosapien/profile",
+    {
+      data: {
+        title: "Safe",
+        tag: "",
+      },
+      action: {
+        route: "safe/transactions",
+      },
+      design: {
+        type: environment.me.mySafe ? "" : "disabled",
+        icon: faPiggyBank,
+      },
     },
-    design: {
-      icon: faUserAstronaut,
-      type: "",
+    {
+      data: {
+        title: "Talk",
+        tag: "soon",
+      },
+      action: {
+        route: "omoli/dapps",
+      },
+      design: {
+        type: "disabled",
+        icon: faComments,
+      },
     },
-  },
-  {
-    data: {
-      title: "Safe",
-      tag: "",
+    {
+      data: {
+        title: "Market",
+        tag: "soon",
+      },
+      action: {
+        route: "omoli/dapps",
+      },
+      design: {
+        type: "disabled",
+        icon: faStore,
+      },
     },
-    action: {
-      route: "safe/transactions",
+    {
+      data: {
+        title: "Crowdfunding",
+        tag: "soon",
+      },
+      action: {
+        route: "omoli/dapps",
+      },
+      design: {
+        type: "disabled",
+        icon: faPeopleCarry,
+      },
     },
-    design: {
-      type: "",
-      icon: faPiggyBank,
+    {
+      data: {
+        title: "Movies",
+        tag: "soon",
+      },
+      action: {
+        route: "omoli/dapps",
+      },
+      design: {
+        type: "disabled",
+        icon: faFilm,
+      },
     },
-  },
-  {
-    data: {
-      title: "Talk",
-      tag: "soon",
+    {
+      data: {
+        title: "Musik",
+        tag: "soon",
+      },
+      action: {
+        route: "omoli/dapps",
+      },
+      design: {
+        type: "disabled",
+        icon: faHeadphones,
+      },
     },
-    action: {
-      route: "omoli/dapps",
+    {
+      data: {
+        title: "Books",
+        tag: "soon",
+      },
+      action: {
+        route: "omoli/dapps",
+      },
+      design: {
+        type: "disabled",
+        icon: faBook,
+      },
     },
-    design: {
-      type: "disabled",
-      icon: faComments,
-    },
-  },
-  {
-    data: {
-      title: "Market",
-      tag: "soon",
-    },
-    action: {
-      route: "omoli/dapps",
-    },
-    design: {
-      type: "disabled",
-      icon: faStore,
-    },
-  },
-  {
-    data: {
-      title: "Crowdfunding",
-      tag: "soon",
-    },
-    action: {
-      route: "omoli/dapps",
-    },
-    design: {
-      type: "disabled",
-      icon: faPeopleCarry,
-    },
-  },
-  {
-    data: {
-      title: "Movies",
-      tag: "soon",
-    },
-    action: {
-      route: "omoli/dapps",
-    },
-    design: {
-      type: "disabled",
-      icon: faFilm,
-    },
-  },
-  {
-    data: {
-      title: "Musik",
-      tag: "soon",
-    },
-    action: {
-      route: "omoli/dapps",
-    },
-    design: {
-      type: "disabled",
-      icon: faHeadphones,
-    },
-  },
-  {
-    data: {
-      title: "Books",
-      tag: "soon",
-    },
-    action: {
-      route: "omoli/dapps",
-    },
-    design: {
-      type: "disabled",
-      icon: faBook,
-    },
-  },
-];
+  ];
+}
