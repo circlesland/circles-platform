@@ -20,9 +20,6 @@ export const strings = {
         bannerConnectSafe: () => `Connect an existing safe or create a new one`,
         choiceExistingSafe: () => `Existing safe`,
         choiceNewSafe: () => `New safe`,
-      },
-      authenticate: {
-
       }
     }
   }

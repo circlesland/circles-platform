@@ -66,8 +66,8 @@
       isOpen = true;
     }
     if (event.type == "shell.showNotification") {
-      notifications.push((<ShowNotification>event).mapping);
-      notifications = notifications;
+      //notifications.push((<ShowNotification>event).mapping);
+      //notifications = notifications;
     }
   });
 
@@ -82,7 +82,6 @@
 
   const initialize = async () => {
     if (!window.o.fission) {
-      push("#/omosapien/authenticate");
       return;
     }
 

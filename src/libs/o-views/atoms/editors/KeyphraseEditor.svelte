@@ -39,6 +39,10 @@
       // non prefixed hex string
       hexString = processArtifact.value;
     }
+    else
+    {
+      return false;
+    }
 
     const address = config.getCurrent().web3().eth.accounts.privateKeyToAccount("0x" + hexString).address;
     return config

@@ -1,9 +1,3 @@
-/*import { SetTrustContext } from "../processes/setTrust/setTrust";
-import { JumpstartContext } from "../processes/jumpstart/jumpstart";
-import { ProcessContext } from "../../../libs/o-processes/processContext";
-import { TransferCirclesContext } from "../processes/transferCircles/transferCircles";
-import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
-*/
 import { InitializeAppContext } from "../processes/initializeApp/initializeApp";
 import { SetTrustContext } from "../processes/setTrust/setTrust";
 import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
@@ -56,45 +50,15 @@ export const strings = {
         "successMessage": (context: ProcessContext) => `UBI successfully received`,
         "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
       },
-      /*
-       transferCircles: {
-           "successMessage": (context: TransferCirclesContext) => `Circles successfully transferred`,
-           "errorMessage": (context: TransferCirclesContext) => `Circles transfer failed`
-       },
-       */
       transferCircles: {
-        titleRecipient()
-        {
-          return "";
-        },
-        bannerRecipient()
-        {
-
-        },
-        titleValue()
-        {
-          return "";
-        },
-        bannerValue()
-        {
-
-        },
-        titleSummary()
-        {
-          return "";
-        },
-        bannerSummary()
-        {
-
-        },
-        titleProgress()
-        {
-          return "";
-        },
-        successMessage()
-        {
-          return "";
-        }
+        titleRecipient: () => "",
+        bannerRecipient: () => "",
+        titleValue: () => "",
+        bannerValue: () => "",
+        titleSummary: () => "",
+        bannerSummary: () => "",
+        titleProgress: () => "",
+        successMessage: () => ""
       },
       initializeApp: {
         titleSafeAddress: () => "Safe",
@@ -114,45 +78,24 @@ export const strings = {
         },
         progressDeploySafe: () => "Creating your safe",
         successDeploySafe: () => "Your new safe was successfully created",
-        choiceConnectSafe()
+        choiceConnectSafe: () =>"Connect circles",
+        choiceCreateSafe: () =>"Create new",
+        bannerConnectOrCreateSafe: () =>  "Do you want to connect an existing circles account?",
+        titleConnectOrCreateSafe: () => "Existing account?",
+        progressHubSignup: () => "Registering your account at the circles hub",
+        successHubSignup: () => "Successfully registered at the circles hub",
+        progressFundSafe: () => "Sending some xDai to the safe ..",
+        successFundSafe: () => "Sent some xDai to the safe.",
+        successCreatePrivateKey: () => "Private key created.",
+        progressCreatePrivateKey: () =>  "Creating private key ..",
+        fundLinkHeader: (context: InitializeAppContext) => `Welcome ${context.environment.me.myDisplayName()}`,
+        fundLinkSubHeader: () => `to unlock your account send this invite link to a friend with invite credits`,
+        fundLinkBody(context: InitializeAppContext)
         {
-          return "Connect circles";
-        },
-        choiceCreateSafe()
-        {
-          return "Create new";
-        },
-        bannerConnectOrCreateSafe()
-        {
-          return "Do you want to connect an existing circles account?";
-        },
-        titleConnectOrCreateSafe()
-        {
-          return "Existing account?";
-        },
-        progressHubSignup()
-        {
-          return "Registering your account at the circles hub";
-        },
-        successHubSignup()
-        {
-          return "Successfully registered at the circles hub"
-        },
-        progressFundSafe()
-        {
-          return "Sending some xDai to the safe .."
-        },
-        successFundSafe()
-        {
-          return "Sent some xDai to the safe."
-        },
-        successCreatePrivateKey()
-        {
-          return "Private key created.";
-        },
-        progressCreatePrivateKey()
-        {
-          return "Creating private key ..";
+          return `To unlock yourself send 0.10 xDai to your account address (${context.environment.me.myAddress}) or ask in the
+      <a href="https://discord.gg/KgbBdAck8X" class="text-secondary-lighter">omo
+        community</a>
+      for help. (One invite credit = 0.10 xDai)`
         }
       }
     }

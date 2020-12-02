@@ -1,6 +1,7 @@
 import {createMachine, send} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
+import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte"
 import { push } from "svelte-spa-router";
 import { OmoEvent } from "../../../../libs/o-events/omoEvent";
 import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
@@ -23,6 +24,7 @@ import {ShowNotification} from "../../../../libs/o-events/showNotification";
 import Announcement from "../../../../libs/o-views/molecules/Announcement.svelte";
 import {hubSignupService} from "./services/hubSignupService";
 import {fundSafeService} from "./services/fundSafeService";
+import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
 
 export interface InitializeAppContext extends ProcessContext {
   data: {
@@ -361,17 +363,20 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
         }
       }
     )),
-    showFundLink: sendPrompt((context) => {return{
+    showFundLink: sendPrompt((context:InitializeAppContext) => {return{
       title: str.titleGenerateFundLink(),
       nextButtonTitle: str.buttonGenerateFundLink(),
+      hideNextButton: true,
       banner: {
-        component: Banner,
+        component: JumpstartIntro,
         data: {
-          text: str.bannerGenerateFundLink()
+          header: str.fundLinkHeader(context),
+          subHeader: str.fundLinkSubHeader(),
+          body: str.fundLinkBody(context)
         }
       },
       artifacts: {
-        ...ethereumAddress("fundLink", undefined, true)
+        ...textLine("fundLink", undefined, true)
       }
     }}),
     navigateToSafe: () => push('#/safe/transactions')

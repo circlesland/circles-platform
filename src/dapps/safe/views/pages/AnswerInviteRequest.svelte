@@ -14,6 +14,8 @@
 
   onMount(() => {
     pop();
+
+
     window.o.publishEvent(new CloseModal());
     setTimeout(() => {
       window.o.publishEvent(new RunProcess(jumpstart, async (context:JumpstartContext) => {
