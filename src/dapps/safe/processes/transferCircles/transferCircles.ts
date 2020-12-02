@@ -88,7 +88,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
     summarize: {
       entry: sendPrompt((context) => {return{
           title: str.titleSummary(),
-          nextButtonTitle: "Transfer xDai",
+          nextButtonTitle: "Transfer Circles",
           canGoBack: true,
           banner: {
             component: Banner,

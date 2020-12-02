@@ -75,6 +75,10 @@
       const estimatedBlockTime = new Date(thenTime * 1000);
 
       o.timestamp = estimatedBlockTime;
+      const amountNo = parseFloat(o.amount);
+      o.amount = amountNo < 0.01
+      ? "< 0.01"
+      : amountNo.toFixed(2);
       return o;
     });
   }

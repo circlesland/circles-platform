@@ -121,8 +121,6 @@ export class HubAccount implements Safe
         return incomingTransactions.reduce((p, c) => p.concat(c)).map(o =>
         {
             let amount = this.circlesHub.web3.utils.fromWei(o.returnValues.value, "ether");
-            const dot = amount.indexOf(".");
-            amount = amount.slice(0, dot + 3);
             return {
                 direction: "in",
                 blockNo: o.blockNumber,
@@ -155,8 +153,6 @@ export class HubAccount implements Safe
       return outgoingTransactions.reduce((p, c) => p.concat(c)).map(o =>
         {
             let amount = this.circlesHub.web3.utils.fromWei(o.returnValues.value, "ether");
-            const dot = amount.indexOf(".");
-            amount = amount.slice(0, dot + 3);
             return {
                 direction: "out",
                 blockNo: o.blockNumber,

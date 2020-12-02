@@ -62,14 +62,15 @@ export const strings = {
         "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
       },
       transferCircles: {
-        titleRecipient: () => "",
-        bannerRecipient: () => "",
-        titleValue: () => "",
-        bannerValue: () => "",
-        titleSummary: () => "",
-        bannerSummary: () => "",
-        titleProgress: () => "",
-        successMessage: () => ""
+        "successMessage": (context: SendInviteCreditsContext) => `Circles successfully transferred`,
+        "errorMessage": (context: SendInviteCreditsContext) => `Circles transfer failed (check trust)`,
+        titleRecipient: () => "Recipient",
+        bannerRecipient: () => "Please enter the recipients address",
+        titleValue: () => "Amount",
+        bannerValue: () => "Please enter the amount (in Circles)",
+        titleProgress: () => "Sending ..",
+        titleSummary: () => "Confirm",
+        bannerSummary: () => "Please check the transaction details and click 'Transfer Circles' to confirm the transaction"
       },
       initializeApp: {
         titleSafeAddress: () => "Safe",

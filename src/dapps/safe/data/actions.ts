@@ -4,6 +4,7 @@ import { setTrust, SetTrustContext } from "../processes/setTrust/setTrust";
 import {sendInviteCredits, SendInviteCreditsContext} from "../processes/transferXDai/sendInviteCredits";
 import { requestUbi } from "../processes/requestUbi/requestUbi";
 import { QuickAction } from "../../../libs/o-os/types/quickAction";
+import {transferCircles} from "../processes/transferCircles/transferCircles";
 
 export const safeDefaultActions: QuickAction[] = [
   {
@@ -95,7 +96,7 @@ export const safeOverflowActions = [
         label: "Send Circles"
       }
     },
-    // event: () => new RunProcess(transferCircles)
+    event: () => new RunProcess(transferCircles)
   },
   {
     type: "trigger",
