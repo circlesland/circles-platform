@@ -46,9 +46,9 @@
       </div>
     </div>
     <div>
-      <div class="flex items-center justify-end p-2">
+      <!-- <div class="flex items-center justify-end p-2">
         <ButtonIcon mapping={removeAccess} />
-      </div>
+      </div> -->
     </div>
   </div>
 
