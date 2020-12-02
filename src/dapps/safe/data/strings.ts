@@ -107,7 +107,11 @@ export const strings = {
       <a href="https://discord.gg/KgbBdAck8X" style="color: #0D49A3">omo
         community</a>
       for help. (One invite credit = 0.10 xDai)`
-        }
+        },
+        buttonBackupKey: () => `I've made a backup`,
+        titleBackupKey: () => `Backup your key`,
+        bannerBackupKey: () => `This is your private key. It's like an unchangeable password. You should store a copy of it in a safe place to prevent you from loosing access to your funds.`,
+
       }
     }
   }

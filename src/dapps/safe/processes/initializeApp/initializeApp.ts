@@ -148,8 +148,26 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
         },
         onDone: {
           actions: "setCreatePrivateKeyResult",
-          target: "generateFundLink"
+          target: "exportPassphrase"
         }
+      }
+    },
+    exportPassphrase: {
+      entry: sendPrompt((context) => {return{
+        title: str.titleBackupKey(),
+        nextButtonTitle: str.buttonBackupKey(),
+        banner: {
+          component: Banner,
+          data: {
+            text: str.bannerBackupKey()
+          }
+        },
+        artifacts: {
+          ...textLine("privateKey", undefined, true)
+        }
+      }}),
+      on: {
+        "process.continue": "generateFundLink"
       }
     },
     checkFunding: {
