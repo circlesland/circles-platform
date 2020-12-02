@@ -23,8 +23,8 @@
   <div
     on:click={toggleExpand}
     class="w-full bg-white border rounded-xl card border-light-200">
-    <div class="flex items-center justify-center p-2">
-      <img src={mapping.data.image} alt="CRC" />
+    <div class="flex items-center justify-center p-2 rounded-lg">
+      <img src={mapping.data.image} alt="CRC" class="rounded-lg" />
     </div>
     <div class="flex items-center">
       <div class="px-1 py-2">

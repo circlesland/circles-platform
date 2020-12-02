@@ -45,12 +45,11 @@
             <!--<Avataaar mapping={avataaar}/>-->
             <img
               src={profile.avatar}
-              class="w-32 h-32 mx-auto my-4 bg-white border-4 rounded-full border-light-300"
+              class="w-40 h-40 mx-auto my-4 bg-white border-4 rounded-3xl border-light-300"
               alt="img" />
           </div>
           Welcome,
           {profile.firstName}
-          {profile.lastName}
         </div>
       </div>
       <div class="pt-2 space-y-2">

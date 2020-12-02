@@ -79,10 +79,23 @@ export const safeOverflowActions: QuickAction[] = [
         icon: faCoins
       },
       data: {
-        label: "Invite Omo Sapien"
+        label: "Send Invite Credits"
       }
     },
     event: () => new RunProcess(transferXDai)
+  },
+  {
+    type: "trigger",
+    pos: "overflow",
+    mapping: {
+      design: {
+        icon: faCoins
+      },
+      data: {
+        label: "Send Circles"
+      }
+    },
+    // event: () => new RunProcess(transferCircles)
   },
   {
     type: "trigger",
@@ -99,28 +112,5 @@ export const safeOverflowActions: QuickAction[] = [
       return Promise.resolve(context);
     })
   },
-  // {
-  //     type: "trigger",
-  //     pos: "overflow",
-  //     mapping: {
-  //         design: {
-  //             icon: faCoins
-  //         },
-  //         data: {
-  //             label: "Send Money"
-  //         }
-  //     },
-  //     event: () => new RunProcess(transferCircles)
-  // }, {
-  //     type: "trigger",
-  //     pos: "overflow",
-  //     mapping: {
-  //         design: {
-  //             icon: faCoins
-  //         },
-  //         data: {
-  //             label: "Receive Money"
-  //         }
-  //     },
-  // }
+
 ];
