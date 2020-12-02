@@ -14,6 +14,7 @@ import { strings } from "../../data/strings";
 import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
 import { file } from "../../../../libs/o-processes/artifacts/file";
 import {addOrUpdateMyProfileService} from "../createOmoSapien/services/addOrUpdateMyProfileService";
+import {RefreshView} from "../../../../libs/o-events/refreshView";
 
 export interface UpdateOmoSapienContext extends ProcessContext {
   data: {
@@ -121,7 +122,9 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent |
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successMessage),
+          actions: [
+            setResult(str.successMessage)
+          ],
           target: "stop"
         }
       }

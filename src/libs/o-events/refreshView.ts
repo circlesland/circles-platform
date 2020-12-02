@@ -7,7 +7,8 @@ export type RefreshableViews =
   |'safe.balance'
   |'safe.friends'
   |'safe.tokens'
-  |'safe.transactions';
+  |'safe.transactions'
+  |'omosapien.profile';
 
 export class RefreshView implements OmoEvent {
   type: OmoEventTypes = "shell.refreshView";

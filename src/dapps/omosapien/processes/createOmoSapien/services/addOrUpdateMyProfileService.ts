@@ -2,6 +2,7 @@ import { CreateOmoSapienContext } from "../createOmoSapien";
 import {Profile} from "../../../../../libs/o-fission/entities/profile";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
+import {RefreshView} from "../../../../../libs/o-events/refreshView";
 
 export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) => {
   if (!window.o.fission) {
@@ -26,4 +27,6 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
   }
 
   await context.environment.fission.profiles.addOrUpdateMyProfile(profile);
+
+  window.o.publishEvent(new RefreshView("omosapien.profile"));
 }

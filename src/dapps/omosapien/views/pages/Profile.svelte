@@ -7,18 +7,24 @@
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
   import { Profile } from "../../../../libs/o-fission/entities/profile";
   import { getEnvironment } from "../../../../libs/o-os/o";
+  import {Subscription} from "rxjs";
+  import {RefreshView} from "../../../../libs/o-events/refreshView";
 
   const wn = window.o.wn;
 
   let profile: Profile;
 
   window.o.events.subscribe((event: OmoEvent) => {
+    console.log("PRofile received event:", event);
     if (event.type === "shell.gotProfile") {
       profile = (<GotProfile>event).profile;
     }
+    if (event.type === "shell.refreshView" && (<RefreshView>event).view == "omosapien.profile") {
+      init();
+    }
   });
 
-  onMount(async () => {
+  async function init() {
     if (!window.o.fission) {
       push("#/omosapien/authenticate");
       return;
@@ -26,6 +32,10 @@
 
     const environment = await getEnvironment();
     profile = environment.me.myProfile;
+  }
+
+  onMount(async () => {
+    await init();
   });
 
   let openDetail: boolean = false;
