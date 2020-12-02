@@ -46,7 +46,9 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
         banner: {
           component: JumpstartIntro,
           data: {
-            requester: context.data.recipient.value
+            header: str.introHeader(context),
+            subHeader: str.introSubHeader(context),
+            body: str.introBody(context)
           }
         },
         artifacts: {}

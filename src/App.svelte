@@ -2,7 +2,7 @@
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, { pop, push } from "svelte-spa-router";
+  import Router, { pop, location, push } from "svelte-spa-router";
   import routes from "./libs/o-os/routes";
 
   import "./libs/o-views/css/base.css";
@@ -81,7 +81,7 @@
   }
 
   const initialize = async () => {
-    if (!window.o.fission) {
+    if (!window.o.fission || location === "/") {
       return;
     }
 
