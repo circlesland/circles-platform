@@ -53,7 +53,7 @@ export const safeDefaultActions: QuickAction[] = [
         label: "Home",
       }
     },
-    route: "#/omo/dapps"
+    route: "#/omoli/dapps"
   }
 ];
 

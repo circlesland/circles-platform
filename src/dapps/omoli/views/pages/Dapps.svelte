@@ -1,7 +1,7 @@
 <script lang="ts">
   import DappIcon from "../../../../libs/o-views/molecules/DappIcon.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import { dapps, profile, address } from "src/dapps/omo/data/dapps";
+  import { dapps, profile, address } from "src/dapps/omoli/data/dapps";
   import ProfileHeader from "src/libs/o-views/molecules/ProfileHeader.svelte";
 </script>
 

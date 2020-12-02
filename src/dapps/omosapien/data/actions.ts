@@ -51,7 +51,7 @@ export const omoSapienDefaultActions: QuickAction[] = [
                 label: "Home",
             }
         },
-        route: "#/omo/dapps"
+        route: "#/omoli/dapps"
     }
 ];
 

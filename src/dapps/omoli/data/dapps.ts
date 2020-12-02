@@ -43,7 +43,7 @@ export const dapps: DappIcon[] = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "omoli/dapps",
     },
     design: {
       type: "disabled",
@@ -56,7 +56,7 @@ export const dapps: DappIcon[] = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "omoli/dapps",
     },
     design: {
       type: "disabled",
@@ -69,7 +69,7 @@ export const dapps: DappIcon[] = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "omoli/dapps",
     },
     design: {
       type: "disabled",
@@ -82,7 +82,7 @@ export const dapps: DappIcon[] = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "omoli/dapps",
     },
     design: {
       type: "disabled",
@@ -95,7 +95,7 @@ export const dapps: DappIcon[] = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "omoli/dapps",
     },
     design: {
       type: "disabled",
@@ -108,7 +108,7 @@ export const dapps: DappIcon[] = [
       tag: "soon",
     },
     action: {
-      route: "omo/dapps",
+      route: "omoli/dapps",
     },
     design: {
       type: "disabled",

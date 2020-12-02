@@ -5,7 +5,7 @@ import { location } from 'svelte-spa-router'
 import { OmoEvent } from "../o-events/omoEvent";
 
 import { transactions, tokens, friends, answerInviteRequest } from "../../dapps/safe/manifest";
-import { omo } from "../../dapps/omo/manifest";
+import { omoli } from "../../dapps/omoli/manifest";
 import { profile, access, keys, authenticate } from "../../dapps/omosapien/manifest";
 import { website } from "../../dapps/website/manifest";
 
@@ -15,7 +15,7 @@ export default {
     '/': wrap(website),
 
     // Omo
-    '/omo/*': wrap(omo),
+    '/omoli/*': wrap(omoli),
 
     // OmoSapien
     '/omosapien/profile': wrap(profile),

@@ -6,7 +6,7 @@
     </div>
     <div class="flex justify-center ">
       <a
-        href="#/omo/dapps"
+        href="#/omoli/dapps"
         class="px-4 py-2 text-center text-white uppercase border-2 border-white rounded-xl">go
         back to home</a>
     </div>

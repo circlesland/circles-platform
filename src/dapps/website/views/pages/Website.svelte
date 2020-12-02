@@ -6,7 +6,7 @@
 
   onMount(async () => {
     if (window.o.fission) {
-      push("/omo/dapps");
+      push("/omoli/dapps");
     }
   });
 </script>
