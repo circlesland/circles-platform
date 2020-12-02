@@ -24,7 +24,7 @@ import Announcement from "../../../../libs/o-views/molecules/Announcement.svelte
 import {hubSignupService} from "./services/hubSignupService";
 import {fundSafeService} from "./services/fundSafeService";
 
-export interface ConnectSafeContext extends ProcessContext {
+export interface InitializeAppContext extends ProcessContext {
   data: {
     privateKey?: ProcessArtifact
     safeAddress?: ProcessArtifact,
@@ -38,7 +38,7 @@ export interface ConnectSafeContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.safe.processes.createSafe;
-const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
+const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
   initial: "idle",
   states: {
 
@@ -386,7 +386,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
   }
 });
 
-export const connectSafe: ProcessDefinition = {
+export const initializeApp: ProcessDefinition = {
   name: "connectSafe",
   stateMachine: processDefinition
 };

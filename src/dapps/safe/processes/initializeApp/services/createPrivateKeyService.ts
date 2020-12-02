@@ -1,6 +1,6 @@
-import {ConnectSafeContext} from "../connectSafe";
+import {InitializeAppContext} from "../initializeApp";
 
-export const createPrivateKeyService = async (context: ConnectSafeContext) =>
+export const createPrivateKeyService = async (context: InitializeAppContext) =>
 {
   console.log("Creating a new account");
 

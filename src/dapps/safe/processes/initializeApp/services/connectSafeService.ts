@@ -1,4 +1,4 @@
-import {ConnectSafeContext} from "../connectSafe";
+import {InitializeAppContext} from "../initializeApp";
 import {mnemonicToEntropy} from "bip39";
 import {config} from "../../../../../libs/o-circles-protocol/config";
 import {GotSafe} from "../../../events/gotSafe";
@@ -6,7 +6,7 @@ import {BN} from "ethereumjs-util";
 import {GnosisSafeProxy} from "../../../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
 import {HubAccount} from "../../../../../libs/o-circles-protocol/model/hubAccount";
 
-export const connectSafeService = async (context: ConnectSafeContext) =>
+export const connectSafeService = async (context: InitializeAppContext) =>
 {
   if (!window.o.fission)
   {

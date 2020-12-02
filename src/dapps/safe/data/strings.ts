@@ -4,7 +4,7 @@ import { ProcessContext } from "../../../libs/o-processes/processContext";
 import { TransferCirclesContext } from "../processes/transferCircles/transferCircles";
 import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
 */
-import { ConnectSafeContext } from "../processes/connectSafe/connectSafe";
+import { InitializeAppContext } from "../processes/initializeApp/initializeApp";
 import { SetTrustContext } from "../processes/setTrust/setTrust";
 import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
 import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
@@ -102,8 +102,8 @@ export const strings = {
         titleSeedPhrase: () => "Seedphrase",
         titleProgress: () => "connecting ...",
         bannerSeedPhrase: () => "Please enter your seed phrase",
-        successMessage: (context: ConnectSafeContext) => `The safe is now connected.`,
-        errorMessage: (context: ConnectSafeContext) => `Couldn't connect the safe.`,
+        successMessage: (context: InitializeAppContext) => `The safe is now connected.`,
+        errorMessage: (context: InitializeAppContext) => `Couldn't connect the safe.`,
         titleInitializing: () => "Generating a new key ..",
         titleGenerateFundLink: () => "Get initial funding",
         buttonGenerateFundLink: () => "Close",

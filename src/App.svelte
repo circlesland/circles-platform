@@ -13,12 +13,17 @@
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
   import type { OmoEvent } from "./libs/o-events/omoEvent";
-  import type { RunProcess } from "./libs/o-events/runProcess";
+  import { RunProcess } from "./libs/o-events/runProcess";
   import Announcement from "./libs/o-views/molecules/Announcement.svelte";
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
   import {ShowNotification} from "./libs/o-events/showNotification";
+  import {getEnvironment} from "./libs/o-os/o";
+  import {BN} from "ethereumjs-util";
+  import {initializeApp} from "./dapps/safe/processes/initializeApp/initializeApp";
+  import {GotProfile} from "./dapps/odentity/events/gotProfile";
+  import {createOdentity} from "./dapps/odentity/processes/createOdentity/createOdentity";
 
   let actions = [];
 
@@ -68,7 +73,35 @@
 
     showActionBar = e.detail.userData.showActionBar;
     actions = e.detail.userData.actions;
+
+    initialize();
   }
+
+  const initialize = async () => {
+    if (!window.o.fission) {
+      push("#/odentity/authenticate");
+      return;
+    }
+
+    const environment = await getEnvironment();
+    const profile = environment.me.myProfile;
+
+    console.log(profile);
+    if (profile)
+    {
+      if (!profile.circlesAddress
+        || !environment.me.myKey
+        || !environment.me.mySafe
+        || !environment.me.myToken
+        || environment.me.myAddressXDaiBalance.lte(new BN("100"))) {
+        window.o.publishEvent(new RunProcess(initializeApp));
+        return;
+      }
+      window.o.publishEvent(new GotProfile(profile));
+    } else {
+      window.o.publishEvent(new RunProcess(createOdentity));
+    }
+  };
 
   let quickActions: any[] = [];
   let overflowActions: any[] = [];

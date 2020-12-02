@@ -1,7 +1,7 @@
 import Dapps from 'src/dapps/omo/views/pages/Dapps.svelte'
 import {faCoins} from "@fortawesome/free-solid-svg-icons";
 import {RunProcess} from 'src/libs/o-events/runProcess';
-import {connectSafe} from '../safe/processes/connectSafe/connectSafe';
+import {initializeApp} from '../safe/processes/initializeApp/initializeApp';
 import {PageManifest} from "../../libs/o-os/interfaces/pageManifest";
 
 export const omo: PageManifest = {
@@ -25,7 +25,7 @@ export const omo: PageManifest = {
           label: "Connect Circles Safe"
         }
       },
-      event: () => new RunProcess(connectSafe)
+      event: () => new RunProcess(initializeApp)
     }]
   }
 }

@@ -15,7 +15,7 @@ import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
 import {addOrUpdateMyProfileService} from "./services/addOrUpdateMyProfileService";
 import {file} from "../../../../libs/o-processes/artifacts/file";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
-import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
+import {initializeApp} from "../../../safe/processes/initializeApp/initializeApp";
 
 export interface CreateOdentityContext extends ProcessContext {
   data: {
@@ -120,7 +120,7 @@ const processDefinition = () => createMachine<CreateOdentityContext, OmoEvent|{t
           actions: [
             setResult(str.successMessage),
             () => setTimeout(() => {
-              window.o.publishEvent(new RunProcess(connectSafe));
+              window.o.publishEvent(new RunProcess(initializeApp));
             }, 100)
           ],
           target: "stop"

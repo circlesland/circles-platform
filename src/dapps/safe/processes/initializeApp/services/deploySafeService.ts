@@ -1,7 +1,7 @@
-import {ConnectSafeContext} from "../connectSafe";
+import {InitializeAppContext} from "../initializeApp";
 import {BN} from "ethereumjs-util";
 
-export const deploySafeService = async (context: ConnectSafeContext) =>
+export const deploySafeService = async (context: InitializeAppContext) =>
 {
   if(!context.environment.fission) {
     throw new Error("You're not authenticated.");

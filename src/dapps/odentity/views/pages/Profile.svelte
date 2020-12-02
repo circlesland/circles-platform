@@ -3,14 +3,10 @@
   import { onMount } from "svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
   import { GotProfile } from "../../events/gotProfile";
-  import { RunProcess } from "../../../../libs/o-events/runProcess";
-  import { createOdentity } from "../../processes/createOdentity/createOdentity";
   import { push } from "svelte-spa-router";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
   import {Profile} from "../../../../libs/o-fission/entities/profile";
   import {getEnvironment} from "../../../../libs/o-os/o";
-  import {BN} from "ethereumjs-util";
 
   const wn = window.o.wn;
 
@@ -30,24 +26,6 @@
 
     const environment = await getEnvironment();
     profile = environment.me.myProfile;
-
-    console.log("profile", profile);
-
-    if (profile)
-    {
-      if (!profile.circlesAddress
-        || !environment.me.myKey
-        || !environment.me.mySafe
-        || !environment.me.myToken
-        || environment.me.myAddressXDaiBalance.lte(new BN("100"))) {
-        window.o.publishEvent(new RunProcess(connectSafe));
-        return;
-      }
-
-      window.o.publishEvent(new GotProfile(profile));
-    } else {
-      window.o.publishEvent(new RunProcess(createOdentity));
-    }
   });
 
   let openDetail: boolean = false;

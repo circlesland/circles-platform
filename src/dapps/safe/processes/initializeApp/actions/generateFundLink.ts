@@ -1,7 +1,7 @@
 import {assign} from "xstate";
-import {ConnectSafeContext} from "../connectSafe";
+import {InitializeAppContext} from "../initializeApp";
 
-export const generateFundLink = assign((context: ConnectSafeContext, event) => {
+export const generateFundLink = assign((context: InitializeAppContext, event) => {
   context.data.fundLink = {
     type: "string",
     key: "fundLink",
