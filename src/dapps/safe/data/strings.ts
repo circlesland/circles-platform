@@ -2,8 +2,8 @@ import { InitializeAppContext } from "../processes/initializeApp/initializeApp";
 import { SetTrustContext } from "../processes/setTrust/setTrust";
 import { SendInviteCreditsContext } from "../processes/transferXDai/sendInviteCredits";
 import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
-import {JumpstartContext} from "../processes/jumpstart/jumpstart";
-import {getEnvironment} from "../../../libs/o-os/o";
+malimport { JumpstartContext } from "../processes/jumpstart/jumpstart";
+import { getEnvironment } from "../../../libs/o-os/o";
 
 export const strings = {
   safe: {
@@ -44,15 +44,15 @@ export const strings = {
         titleValue: () => "invite credits",
         bannerIntro: () => "0x123.. sent you a jumpstart request. Every transaction on the distributed computer costs a little fee. Send 1 invite credit to allow 0x123 to pay for all transaction fees that are required to join circles.",
         titleIntro: () => "Jumpstart",
-        introHeader:(context: JumpstartContext) => `<span class="text-3xl">${context.data.recipient.value.substring(0,8)}</span>`,
-        introSubHeader:(context: JumpstartContext) => `is asking you to empower his/her life`,
-        introBody:(context: JumpstartContext) => `You can use your invite credits to invite and unlock the universal basic income account of ${context.data.recipient.value}. You still have
+        introHeader: (context: JumpstartContext) => `<span class="text-3xl">${context.data.recipient.value.substring(0, 8)}</span>`,
+        introSubHeader: (context: JumpstartContext) => `is asking you to empower his/her life`,
+        introBody: (context: JumpstartContext) => `You can use your invite credits to invite and unlock the universal basic income account of ${context.data.recipient.value}. You still have
       ${Math.floor(parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')) * 10)}
       invite credits (${parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')).toFixed(2)}
       xDai) left.<br />
       To refill your invite credits please send xDai to your safe
       ${context.environment.me.mySafe?.address ?? ""} or ask in the
-      <a href="https://discord.gg/KgbBdAck8X" class="text-secondary-lighter">omo
+      <a href="https://discord.gg/KgbBdAck8X" style="color: #0D49A3">omo
         community</a>
       for help. (One invite credit = 0.10 xDai)`
       },
@@ -90,22 +90,21 @@ export const strings = {
         },
         progressDeploySafe: () => "Creating your safe",
         successDeploySafe: () => "Your new safe was successfully created",
-        choiceConnectSafe: () =>"Connect circles",
-        choiceCreateSafe: () =>"Create new",
-        bannerConnectOrCreateSafe: () =>  "Do you want to connect an existing circles account?",
+        choiceConnectSafe: () => "Connect circles",
+        choiceCreateSafe: () => "Create new",
+        bannerConnectOrCreateSafe: () => "Do you want to connect an existing circles account?",
         titleConnectOrCreateSafe: () => "Existing account?",
         progressHubSignup: () => "Registering your account at the circles hub",
         successHubSignup: () => "Successfully registered at the circles hub",
         progressFundSafe: () => "Sending some xDai to the safe ..",
         successFundSafe: () => "Sent some xDai to the safe.",
         successCreatePrivateKey: () => "Private key created.",
-        progressCreatePrivateKey: () =>  "Creating private key ..",
+        progressCreatePrivateKey: () => "Creating private key ..",
         fundLinkHeader: (context: InitializeAppContext) => `Welcome ${context.environment.me.myDisplayName()}`,
         fundLinkSubHeader: () => `to unlock your account send this invite link to a friend with invite credits`,
-        fundLinkBody(context: InitializeAppContext)
-        {
+        fundLinkBody(context: InitializeAppContext) {
           return `To unlock yourself send 0.10 xDai to your account address (${context.environment.me.myAddress}) or ask in the
-      <a href="https://discord.gg/KgbBdAck8X" class="text-secondary-lighter">omo
+      <a href="https://discord.gg/KgbBdAck8X" style="color: #0D49A3">omo
         community</a>
       for help. (One invite credit = 0.10 xDai)`
         }

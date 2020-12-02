@@ -45,5 +45,12 @@
 </script>
 
 <Compose rows="1fr" columns="1fr" overflowY tw="mx-4 mt-4 md:mx-0 md:mt-2">
-  <Jumper></Jumper>
+  <div class="flex items-center justify-center">
+    <div>
+      <Jumper size="150" color="#071D69" unit="px" /><br />
+      <div class="text-sm text-center text-primary foont-primary">
+        empowering ...
+      </div>
+    </div>
+  </div>
 </Compose>
