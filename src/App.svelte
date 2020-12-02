@@ -88,7 +88,6 @@
     const environment = await getEnvironment();
     const profile = environment.me.myProfile;
 
-    console.log(profile);
     if (profile) {
       if (
         !profile.circlesAddress ||
