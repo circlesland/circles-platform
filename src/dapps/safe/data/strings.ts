@@ -111,7 +111,8 @@ export const strings = {
         },
         buttonBackupKey: () => `I've made a backup`,
         titleBackupKey: () => `Backup your key`,
-        bannerBackupKey: () => `This is your private key. You should store a copy of it in a safe place to prevent loosing access to your funds.`,
+        bannerBackupKey: () => `This is your private key. It's like an unchangeable password. You should store a copy of it in a safe place to prevent you from loosing access to your funds.`,
+
       }
     }
   }
