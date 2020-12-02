@@ -62,5 +62,11 @@ export const connectSafeService = async (context: InitializeAppContext) =>
 
   context.environment.me.myToken = await hubAccount.getOwnToken();
 
+  await context.environment.me.myData.tokens.addMyToken({
+    name: "me",
+    tokenAddress: context.environment.me.myToken.address,
+    circlesAddress: hubAccount.address
+  });
+
   window.o.publishEvent(new GotSafe());
 }

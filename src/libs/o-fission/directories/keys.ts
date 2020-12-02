@@ -6,7 +6,7 @@ import { Profile } from "../entities/profile";
 export class Keys extends Directory<KeyPair>
 {
   constructor(fs: FileSystem) {
-    super(fs, ["omosapien", "keys"]);
+    super(fs, ["keys"]);
   }
 
   async tryGetMyKey(): Promise<KeyPair | null> {
