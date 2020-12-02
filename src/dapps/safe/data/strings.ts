@@ -8,6 +8,7 @@ import { ConnectSafeContext } from "../processes/connectSafe/connectSafe";
 import { SetTrustContext } from "../processes/setTrust/setTrust";
 import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
 import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
+import {JumpstartContext} from "../processes/jumpstart/jumpstart";
 
 export const strings = {
   safe: {
@@ -38,15 +39,23 @@ export const strings = {
         titleSummary: () => "Confirm",
         bannerSummary: () => "Please check the transaction details and click 'Transfer xDai' to confirm the transaction"
       },
+      jumpstart: {
+        successMessage: (context: JumpstartContext) => `You successfully transferred 1 invite credit to ${context.data.recipient.value}. Please tell the recipient to reload the page.`,
+        errorMessage: (context: JumpstartContext) => `The jumpstart process failed: ${context.result.error}`,
+        titleProgress: () => "sending ..",
+        titleSummary: () => "Confirm",
+        bannerSummary: () => "Please check the recipient address and click 'Use 1 invite credit' to get this person up and running.",
+        titleRecipient: () => "Invite",
+        titleValue: () => "invite credits",
+        bannerIntro: () => "0x123.. sent you a jumpstart request. Every transaction on the distributed computer costs a little fee. Send 1 invite credit to allow 0x123 to pay for all transaction fees that are required to join circles.",
+        titleIntro: () => "Jumpstart someone"
+      },
       requestUbi: {
         titleProgress: () => "harvesting ..",
         "successMessage": (context: ProcessContext) => `UBI successfully received`,
         "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
       },
-      /* jumpstart: {
-           "successMessage": (context: JumpstartContext) => `Successfully jumpstarted ${context.jumpstart.recipient.data.slice(0, 8)}.`,
-           "errorMessage": (context: JumpstartContext) => `Couldn't jumpstart ${context.jumpstart.recipient.data.slice(0, 8)}`
-       },
+      /*
        transferCircles: {
            "successMessage": (context: TransferCirclesContext) => `Circles successfully transferred`,
            "errorMessage": (context: TransferCirclesContext) => `Circles transfer failed`
@@ -116,6 +125,22 @@ export const strings = {
         titleConnectOrCreateSafe()
         {
           return "Existing account?";
+        },
+        progressHubSignup()
+        {
+          return "Registering your account at the circles hub";
+        },
+        successHubSignup()
+        {
+          return "Successfully registered at the circles hub"
+        },
+        progressFundSafe()
+        {
+          return "Sending some xDai to the safe .."
+        },
+        successFundSafe()
+        {
+          return "Sent some xDai to the safe."
         }
       }
     }

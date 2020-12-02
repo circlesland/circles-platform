@@ -21,14 +21,16 @@ import {storePromptResponse} from "../../../../libs/o-processes/actions/storePro
 import {connectSafeService} from "./services/connectSafeService";
 import {ShowNotification} from "../../../../libs/o-events/showNotification";
 import Announcement from "../../../../libs/o-views/molecules/Announcement.svelte";
-import {ShellEvent} from "../../../../libs/o-processes/events/shellEvent";
+import {hubSignupService} from "./services/hubSignupService";
+import {fundSafeService} from "./services/fundSafeService";
 
 export interface ConnectSafeContext extends ProcessContext {
   data: {
     privateKey?: ProcessArtifact
     safeAddress?: ProcessArtifact,
     fundLink?:ProcessArtifact,
-    safeChoice?: ProcessArtifact
+    safeChoice?: ProcessArtifact,
+    tokenAddress?: ProcessArtifact
   }
 }
 
@@ -56,6 +58,11 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           target: 'newOrExistingSafe',
           cond: (context:ConnectSafeContext) => {
             return !context.environment.me.myAddress
+          }
+        },{
+          target: 'checkSafeXDaiBalance',
+          cond: (context:ConnectSafeContext) => {
+            return !!context.environment.me.mySafe
           }
         },{
           target: 'checkAccount',
@@ -218,10 +225,10 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": [{
-          cond: (context) => context.environment.me.myAddressXDaiBalance.gte(new BN("1234")),
+          cond: (context) => context.environment.me.myAddressXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
           target: "checkSafe"
         },{
-          cond: (context) => context.environment.me.myAddressXDaiBalance.lt(new BN("1234")),
+          cond: (context) => context.environment.me.myAddressXDaiBalance.lt(new BN(context.environment.eth.web3.utils.toWei("0.009", "ether"))),
           target: "generateFundLink"
         }]
       }
@@ -236,7 +243,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           target: "deploySafe"
         },{
           cond: (context) => !!context.environment.me.mySafe,
-          target: "success"
+          target: "checkSafeXDaiBalance"
         }]
       }
     },
@@ -251,6 +258,64 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
         },
         onDone: {
           actions: setResult(str.successCreateSafe),
+          target: "checkSafeXDaiBalance"
+        }
+      }
+    },
+    checkSafeXDaiBalance: {
+      entry: send({
+        type: "process.continue"
+      }),
+      on: {
+        "process.continue": [{
+          cond: (context) => !context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+          target: "fundSafe"
+        },{
+          cond: (context) => !context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+          target: "checkToken"
+        }]
+      }
+    },
+    fundSafe: {
+      entry: sendInProgressPrompt(str.progressFundSafe),
+      invoke: {
+        id: 'fundSafe',
+        src: fundSafeService,
+        onError: {
+          actions: setError,
+          target: "error"
+        },
+        onDone: {
+          actions: setResult(str.successFundSafe),
+          target: "checkToken"
+        }
+      }
+    },
+    checkToken: {
+      entry: send({
+        type: "process.continue"
+      }),
+      on: {
+        "process.continue": [{
+          cond: (context) => !context.environment.me.myToken,
+          target: "hubSignup"
+        },{
+          cond: (context) => !!context.environment.me.myToken,
+          target: "success"
+        }]
+      }
+    },
+    hubSignup: {
+      entry: sendInProgressPrompt(str.progressHubSignup),
+      invoke: {
+        id: 'hubSignup',
+        src: hubSignupService,
+        onError: {
+          actions: setError,
+          target: "error"
+        },
+        onDone: {
+          actions: setResult(str.successHubSignup),
           target: "success"
         }
       }

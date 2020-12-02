@@ -1,11 +1,13 @@
 export type OmoEventTypes =
     "shell.runProcess"
   | "shell.showModal"
+  | "shell.openModal"
   | "shell.refreshView"
   | "shell.authenticated"
   | "shell.gotProfile"
   | "shell.gotSafe"
   | "shell.showNotification"
+  | "shell.closeModal"
   | "process.ready"
   | "process.nop"
   | "process.back"

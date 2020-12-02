@@ -114,14 +114,16 @@ export abstract class Web3Contract implements Addressable
     return subject;
   }
 
-  async signRawTransaction(ownerAddress:Address, privateKey:ByteString, to: Address, data: ByteString, gasLimit: BN, value: BN)
+  static async signRawTransaction(ownerAddress:Address, privateKey:ByteString, to: Address, data: ByteString, gasLimit: BN, value: BN)
     : Promise<ByteString>
   {
-    const ethJsCommon: Common = await config.getCurrent().ethjs.getCommon(this.web3);
-    const nonce = "0x" + new BN(await this.web3.eth.getTransactionCount(ownerAddress)).toString("hex");
+    const cfg = config.getCurrent();
+    const web3 = cfg.web3();
+    const ethJsCommon: Common = await config.getCurrent().ethjs.getCommon(web3);
+    const nonce = "0x" + new BN(await web3.eth.getTransactionCount(ownerAddress)).toString("hex");
 
     const rawTx: TxData = {
-      gasPrice: "0x" + config.getCurrent().getGasPrice(this.web3).toString("hex"),
+      gasPrice: "0x" + config.getCurrent().getGasPrice(web3).toString("hex"),
       gasLimit: "0x" + gasLimit.toString("hex"),
       to: to,
       value: "0x" + value.toString("hex"),
@@ -139,9 +141,11 @@ export abstract class Web3Contract implements Addressable
     return '0x' + tx.serialize().toString('hex');
   }
 
-  async sendSignedRawTransaction(serializedTx: ByteString)
+  static async sendSignedRawTransaction(serializedTx: ByteString)
   {
-    return new Promise<TransactionReceipt>((resolve, reject) => {this.web3.eth.sendSignedTransaction(serializedTx)
+    const web3 = config.getCurrent().web3();
+    return new Promise<TransactionReceipt>((resolve, reject) => {
+      web3.eth.sendSignedTransaction(serializedTx)
         .once('transactionHash', (hash) =>
         {
           console.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);

@@ -2,6 +2,7 @@ export type ProcessArtifactType =
   "string"
   | "text"
   | "ethereumAccount"
+  | "inviteCredits"
   | "secretString"
   | "keyphrase"
   | "choice"

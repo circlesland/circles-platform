@@ -2,6 +2,7 @@ import FileSystem from "webnative/fs/filesystem";
 import {Profiles} from "./directories/profiles";
 import {Keys} from "./directories/keys";
 import {AuthSucceeded, Continuation} from "webnative";
+import {Tokens} from "./directories/tokens";
 
 export class FissionDrive
 {
@@ -18,6 +19,11 @@ export class FissionDrive
   }
   private readonly _keys:Keys;
 
+  get tokens():Tokens {
+    return this._tokens;
+  }
+  private readonly _tokens:Tokens;
+
   constructor(fissionAuth: AuthSucceeded|Continuation)
   {
     this._fissionAuth = fissionAuth;
@@ -25,5 +31,6 @@ export class FissionDrive
 
     this._profiles = new Profiles(this._fs);
     this._keys = new Keys(this._fs);
+    this._tokens = new Tokens(this._fs);
   }
 }

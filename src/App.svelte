@@ -2,7 +2,7 @@
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, { push } from "svelte-spa-router";
+  import Router, {pop, push} from "svelte-spa-router";
   import routes from "./libs/o-os/routes";
 
   import "./libs/o-views/css/base.css";
@@ -42,6 +42,12 @@
   window.o.events.subscribe(async (event: OmoEvent) => {
     // runningProcess = window.o.stateMachines.current();
     if (event.type === "shell.openMenu") {
+      isOpen = true;
+    }
+    if (event.type === "shell.closeModal") {
+      isOpen = false;
+    }
+    if (event.type === "shell.openModal") {
       isOpen = true;
     }
     if (event.type == "shell.runProcess") {
@@ -117,14 +123,24 @@
     runningProcess.sendEvent(new Cancel());
   }
 
-  function conditionsFailed(event) {
+  function conditionsFailed(event)
+  {
     console.log(
       "Escaped redirect url:",
       encodeURIComponent(event.detail.location)
     );
-    push(
-      `#/odentity/authenticate/${encodeURIComponent(event.detail.location)}`
-    );
+    if (event.detail.userData && event.detail.userData.shellEvent)
+    {
+      // There are some cases where we don't want to route to a different page
+      // but instead only use the route params to initiate a process
+      //window.o.publishEvent(event.detail.userData.shellEvent);
+    }
+    else
+    {
+      push(
+        `#/odentity/authenticate/${encodeURIComponent(event.detail.location)}`
+      );
+    }
   }
 </script>
 

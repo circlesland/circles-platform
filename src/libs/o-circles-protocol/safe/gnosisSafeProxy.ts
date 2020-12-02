@@ -115,7 +115,7 @@ export class GnosisSafeProxy extends Web3Contract
     const gasEstimate = new BN(gasEstimationResult).add(estimatedBaseGas).add(estimatedSafeTxGas);
 
     const execTransactionData = this.toAbiMessage(executableTransaction, signatures.signature);
-    const signedTransactionData = await this.signRawTransaction(
+    const signedTransactionData = await Web3Contract.signRawTransaction(
       (await this.getOwners())[0],
       privateKey,
       this.address,
@@ -123,7 +123,7 @@ export class GnosisSafeProxy extends Web3Contract
       gasEstimate,
       new BN("0"));
 
-    return await this.sendSignedRawTransaction(signedTransactionData);
+    return await Web3Contract.sendSignedRawTransaction(signedTransactionData);
   }
 
   private validateSafeTransaction(safeTransaction: GnosisSafeTransaction)

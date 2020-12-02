@@ -1,21 +1,19 @@
 <script lang="ts">
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "src/libs/o-circles-protocol/model/person";
+  import { HubAccount } from "src/libs/o-circles-protocol/model/hubAccount";
   import { config } from "src/libs/o-circles-protocol/config";
   import type { BN } from "ethereumjs-util";
 
   import { Jumper } from "svelte-loading-spinners";
-  import Account from "./Account.svelte";
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
-  import {asyncWaterfall} from "webnative/common";
   import {getEnvironment} from "../../../../libs/o-os/o";
   import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   export let address: string;
 
-  let person: Person;
+  let person: HubAccount;
   let balance: BN;
   let safeEthBalance: BN;
   let personalEthBalance: BN;
@@ -34,7 +32,7 @@
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
-    person = new Person(circlesHub, address);
+    person = new HubAccount(circlesHub, address);
 
     reload();
   }

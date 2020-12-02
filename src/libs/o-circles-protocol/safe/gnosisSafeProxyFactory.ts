@@ -54,7 +54,7 @@ export class GnosisSafeProxyFactory extends Web3Contract
       proxySetupData)
       .encodeABI();
 
-    const signedRawTransaction = await this.signRawTransaction(
+    const signedRawTransaction = await Web3Contract.signRawTransaction(
       ownerAddress,
       privateKey,
       <any>this.address,
@@ -62,7 +62,7 @@ export class GnosisSafeProxyFactory extends Web3Contract
       estimatedGas,
       new BN("0"));
 
-    const minedReceipt = await this.sendSignedRawTransaction(signedRawTransaction);
+    const minedReceipt = await Web3Contract.sendSignedRawTransaction(signedRawTransaction);
 
     let proxyAddress = undefined;
     for (let logEntry of minedReceipt.logs)

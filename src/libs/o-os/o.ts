@@ -16,7 +16,7 @@ import {Address} from "../o-circles-protocol/interfaces/address";
 import Web3 from "web3";
 import {GnosisSafeProxyFactory} from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 import {ProcessContext} from "../o-processes/interfaces/processContext";
-import {Person} from "../o-circles-protocol/model/person";
+import {HubAccount} from "../o-circles-protocol/model/hubAccount";
 import {Erc20Token} from "../o-circles-protocol/token/erc20Token";
 
 const eventBroker = new EventBroker();
@@ -95,7 +95,7 @@ export async function getEnvironment(): Promise<ProcessEnvironment>
   {
     me.mySafeXDaiBalance = new BN(await web3.eth.getBalance(me.mySafe.address));
 
-    const p = new Person(eth.contracts.hub, me.mySafe.address);
+    const p = new HubAccount(eth.contracts.hub, me.mySafe.address);
     me.myToken = await p.getOwnToken();
   }
 

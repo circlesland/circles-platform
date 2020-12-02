@@ -11,7 +11,7 @@ import {ByteString} from "../interfaces/byteString";
 
 export type TokenAndOwner = {
     token: CirclesToken,
-    owner: Person,
+    owner: HubAccount,
     limit?: number
 }
 
@@ -26,7 +26,7 @@ export type TokenTransfer = {
     to: Address
 }
 
-export class Person implements Safe
+export class HubAccount implements Safe
 {
     /**
      * The address of the safe that represents this participant.
@@ -58,8 +58,10 @@ export class Person implements Safe
     {
         const myToken = await this.getOwnToken();
         if (!myToken)
-            throw new Error("The person has no token");
-
+        {
+          console.warn("The person has no token");
+          return [];
+        }
         const receivableTokens = await this.getTokensITrust(reload);
 
         const tokenBalances = await Promise.all(
@@ -113,6 +115,9 @@ export class Person implements Safe
                     .queryEvents(Erc20Token.queryPastTransfers(undefined, this.address))
                     .toArray()));
 
+        if (!incomingTransactions || incomingTransactions.length == 0)
+          return [];
+
         return incomingTransactions.reduce((p, c) => p.concat(c)).map(o =>
         {
             let amount = this.circlesHub.web3.utils.fromWei(o.returnValues.value, "ether");
@@ -144,7 +149,10 @@ export class Person implements Safe
                         .toArray()
                 ));
 
-        return outgoingTransactions.reduce((p, c) => p.concat(c)).map(o =>
+      if (!outgoingTransactions || outgoingTransactions.length == 0)
+        return [];
+
+      return outgoingTransactions.reduce((p, c) => p.concat(c)).map(o =>
         {
             let amount = this.circlesHub.web3.utils.fromWei(o.returnValues.value, "ether");
             const dot = amount.indexOf(".");
@@ -203,7 +211,7 @@ export class Person implements Safe
             {
                 return {
                     token: new CirclesToken(this.circlesHub.web3, o.token),
-                    owner: new Person(this.circlesHub, o.ofUser, o.token),
+                    owner: new HubAccount(this.circlesHub, o.ofUser, o.token),
                     limit: o.limit
                 };
             })
@@ -260,7 +268,7 @@ export class Person implements Safe
             {
                 return {
                     token: new CirclesToken(this.circlesHub.web3, o.token),
-                    owner: new Person(this.circlesHub, o.ofUser, o.token),
+                    owner: new HubAccount(this.circlesHub, o.ofUser, o.token),
                     limit: o.limit
                 };
             })

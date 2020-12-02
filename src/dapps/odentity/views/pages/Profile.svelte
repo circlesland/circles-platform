@@ -35,7 +35,11 @@
 
     if (profile)
     {
-      if (!profile.circlesAddress || !environment.me.myKey || environment.me.myAddressXDaiBalance.lte(new BN("100"))) {
+      if (!profile.circlesAddress
+        || !environment.me.myKey
+        || !environment.me.mySafe
+        || !environment.me.myToken
+        || environment.me.myAddressXDaiBalance.lte(new BN("100"))) {
         window.o.publishEvent(new RunProcess(connectSafe));
         return;
       }

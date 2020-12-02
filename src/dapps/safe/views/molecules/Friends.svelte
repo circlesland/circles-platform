@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
   import {
-    AddressLookup,
-    Person,
+    AddressLookup, HubAccount,
     TokenAndOwner,
-  } from "src/libs/o-circles-protocol/model/person";
-  import { config } from "src/libs/o-circles-protocol/config";
+  } from "src/libs/o-circles-protocol/model/hubAccount";
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import { Jumper } from "svelte-loading-spinners";
@@ -14,7 +11,7 @@
     labelMutual,
     labelTrusting,
     labelRevoked,
-  } from "./../../data/friends";
+  } from "../../data/friends";
   import {Subscription} from "rxjs";
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
@@ -23,10 +20,10 @@
 
   let mySafeAddress: string;
 
-  let person: Person;
-  let personsThatTrustMe: any[] = [];
-  let personsITrust: any[] = [];
-  let mutualFriends: any[] = [];
+  let person: HubAccount;
+  let personsThatTrustMe: any[];
+  let personsITrust: any[];
+  let mutualFriends: any[];
   let mutual: { [address: string]: any } = {};
   let untrusted: any[] = [];
   let untrusted_: { [address: string]: any } = {};
@@ -34,7 +31,7 @@
   async function init() {
     const environment:ProcessEnvironment = await getEnvironment();
     mySafeAddress = environment.me.mySafe.address;
-    person = new Person(environment.eth.contracts.hub, mySafeAddress);
+    person = new HubAccount(environment.eth.contracts.hub, mySafeAddress);
 
     reload();
   }
@@ -172,12 +169,12 @@
 </script>
 
 <div class="h-full">
-  {#if personsThatTrustMe.length <= 1 && mutualFriends.length == 0 && mutualFriends.length == 0 && mutualFriends.length == 0}
+  {#if !personsThatTrustMe || !mutualFriends || !personsITrust || !untrusted}
     <div class="flex items-center justify-center h-full">
       <Jumper size="150" color="#071D69" unit="px" />
     </div>
   {:else}
-    {#if personsThatTrustMe.length > 0}
+    {#if personsThatTrustMe}
       <div class="mb-4">
         <CategoryTitle mapping={labelTrusted} />
       </div>
@@ -188,7 +185,7 @@
       </div>
     {/if}
 
-    {#if mutualFriends.length > 0}
+    {#if mutualFriends}
       <div class="mb-4">
         <CategoryTitle mapping={labelMutual} />
       </div>
@@ -199,7 +196,7 @@
       </div>
     {/if}
 
-    {#if personsITrust.length > 0}
+    {#if personsITrust}
       <div class="mb-4">
         <CategoryTitle mapping={labelTrusting} />
       </div>
@@ -210,7 +207,7 @@
       </div>
     {/if}
 
-    {#if untrusted.length > 0}
+    {#if untrusted}
       <div class="mb-4">
         <CategoryTitle mapping={labelRevoked} />
       </div>

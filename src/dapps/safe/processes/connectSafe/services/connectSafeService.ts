@@ -45,7 +45,7 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
   };
 
   context.environment.me.myAddressXDaiBalance = new BN(await context.environment.eth.web3.eth.getBalance(ownerAddress));
-  context.environment.me.mySafeXDaiBalance = new BN(await context.environment.eth.web3.eth.getBalance(existingProfile.circlesAddress));
+  context.environment.me.mySafeXDaiBalance = new BN(existingProfile.circlesAddress ? (await context.environment.eth.web3.eth.getBalance(existingProfile.circlesAddress)) : "0");
 
   window.o.publishEvent(new GotSafe());
 }

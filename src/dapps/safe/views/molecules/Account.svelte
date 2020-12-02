@@ -1,20 +1,20 @@
 <script lang="ts">
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "src/libs/o-circles-protocol/model/person";
+  import { HubAccount } from "src/libs/o-circles-protocol/model/hubAccount";
   import { config } from "src/libs/o-circles-protocol/config";
   import type { Address } from "src/libs/o-circles-protocol/interfaces/address";
   import { onDestroy } from "svelte";
   import { Subscription } from "rxjs";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
 
-  let person: Person;
+  let person: HubAccount;
   let mySafeAddress: Address;
 
   async function init() {
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
     mySafeAddress = (await window.o.safe()).address;
-    person = new Person(circlesHub, mySafeAddress);
+    person = new HubAccount(circlesHub, mySafeAddress);
   }
 
   let subscription: Subscription = window.o.events.subscribe(

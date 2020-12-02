@@ -12,6 +12,7 @@
   import KeyphraseEditor from "../atoms/editors/KeyphraseEditor.svelte";
   import FileEditor from "../atoms/editors/FileEditor.svelte";
   import ChoiceEditor from "../atoms/editors/ChoiceEditor.svelte";
+  import InviteCreditEditor from "../atoms/editors/InviteCreditEditor.svelte";
 
   export let process: Process;
   export let prompt: Prompt;
@@ -99,6 +100,10 @@
         processArtifact={artifact} />
     {:else if artifact.type === 'ethereumAddress'}
       <AddressEditor
+        on:validated={() => setIsValid()}
+        processArtifact={artifact} />
+    {:else if artifact.type === 'inviteCredits'}
+      <InviteCreditEditor
         on:validated={() => setIsValid()}
         processArtifact={artifact} />
     {:else if artifact.type === 'file'}

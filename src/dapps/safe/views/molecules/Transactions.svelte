@@ -1,8 +1,7 @@
 <script lang="ts">
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "src/libs/o-circles-protocol/model/person";
+  import { HubAccount } from "src/libs/o-circles-protocol/model/hubAccount";
   import { config } from "src/libs/o-circles-protocol/config";
-  import type { Address } from "src/libs/o-circles-protocol/interfaces/address";
   import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";
@@ -20,8 +19,8 @@
 
   export let address: string;
 
-  let person: Person;
-  let transactions = [];
+  let person: HubAccount;
+  let transactions;
 
   async function init() {
     const environment = await getEnvironment();
@@ -29,7 +28,7 @@
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
-    person = new Person(circlesHub, address);
+    person = new HubAccount(circlesHub, address);
 
     reload();
   }
@@ -110,7 +109,7 @@
   <div class="mb-2">
     <CategoryTitle mapping={labelTransactions} />
   </div>
-  {#if transactions.length > 0}
+  {#if transactions}
     <div class="space-y-2">
       {#each transactions as t}
         <div>

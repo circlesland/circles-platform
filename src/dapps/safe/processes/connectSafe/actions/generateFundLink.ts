@@ -5,7 +5,7 @@ export const generateFundLink = assign((context: ConnectSafeContext, event) => {
   context.data.fundLink = {
     type: "string",
     key: "fundLink",
-    value: "http://go-fund-yourself/" + context.environment.me.myAddress
+    value: "http://localhost:5000/#/safe/answerInviteRequest/" + context.environment.me.myAddress
   };
   return context;
 });

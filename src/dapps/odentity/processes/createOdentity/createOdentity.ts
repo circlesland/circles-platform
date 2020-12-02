@@ -14,7 +14,6 @@ import {strings} from "../../data/strings";
 import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
 import {addOrUpdateMyProfileService} from "./services/addOrUpdateMyProfileService";
 import {file} from "../../../../libs/o-processes/artifacts/file";
-import {push} from "svelte-spa-router";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {connectSafe} from "../../../safe/processes/connectSafe/connectSafe";
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { Person } from "src/libs/o-circles-protocol/model/person";
+  import { HubAccount } from "src/libs/o-circles-protocol/model/hubAccount";
   import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
@@ -10,7 +10,6 @@
   import {OmoEvent} from "../../../../libs/o-events/omoEvent";
   import {onDestroy, onMount} from "svelte";
   import {getEnvironment} from "../../../../libs/o-os/o";
-  import {address} from "./Transactions.svelte";
   import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   let accountAddress: string;
@@ -25,66 +24,69 @@
   let personalEthBalance: BN;
   let personalEtherBalance: string;
 
-  let person: Person;
+  let person: HubAccount;
   let tokensITrust: any[] = [];
 
   let environment:ProcessEnvironment;
 
   async function init() {
     environment = await getEnvironment();
-    safeAddress = environment.me.mySafe.address;
-    accountAddress = environment.me.mySafe.getOwners()[0];
+    safeAddress = environment.me.mySafe?.address;
+    accountAddress = environment.me.myAddress;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
-    person = new Person(circlesHub, safeAddress);
+    if (safeAddress)
+    {
+      person = new HubAccount(circlesHub, safeAddress);
+    }
 
     reload();
   }
 
-  async function reload() {
-    const web3 = config.getCurrent().web3();
-
-    balance = await person.getTokenBalance();
-    const balanceStr = web3.utils.fromWei(balance, "ether");
+  function formatBn(value:BN, decimalPlaces:number = 3) {
+    const balanceStr = environment.eth.web3.utils.fromWei(value, "ether");
     const dot = balanceStr.indexOf(".");
-    circlesBalance = balanceStr.slice(0, dot + 3);
-
-    safeEthBalance = environment.me.mySafeXDaiBalance;
-    const ethBalanceStr = web3.utils.fromWei(safeEthBalance, "ether");
-    const ethDot = ethBalanceStr.indexOf(".");
-    safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
-
-    personalEthBalance = environment.me.myAddressXDaiBalance;
-    const personalEthBalanceStr = web3.utils.fromWei(
-      personalEthBalance,
-      "ether"
-    );
-    const personalEthDot = personalEthBalanceStr.indexOf(".");
-    personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
-
-    let t2 = await person.getTokenBalances();
-    tokensITrust = Object.keys(t2)
-      .map((k) => t2[k])
-      .filter((o) => o.balanceString && o.balanceString !== "0")
-      .map((token) =>
-      {
-        return {
-          data: {
-            image: (token.owner.address == safeAddress ? environment.me.myProfile?.avatar : null) ?? "https://avatars.dicebear.com/api/avataaars/" +
-              token.owner.address +
-              ".svg ",
-            balanceBN: token.balance,
-            title: (token.owner.address == safeAddress ? (environment.me.myProfile?.firstName + " " + environment.me.myProfile?.lastName) : null) ?? token.owner.address.slice(0, 8),
-            description: token.owner.address,
-            balance: parseFloat(token.balanceString),
-            subtitle: "CRC",
-          },
-        };
-      });
-    tokensITrust.sort((a, b) => -a.data.balanceBN.cmp(b.data.balanceBN));
+    return balanceStr.slice(0, dot + decimalPlaces);
   }
 
+  async function reload() {
+    if (safeAddress)
+    {
+      balance = await person.getTokenBalance();
+      circlesBalance = formatBn(balance);
+
+      safeEthBalance = environment.me.mySafeXDaiBalance;
+      safeEtherBalance = formatBn(safeEthBalance, 7);
+    }
+
+    personalEthBalance = environment.me.myAddressXDaiBalance;
+    personalEtherBalance = formatBn(personalEthBalance, 7);
+
+    if (safeAddress)
+    {
+      let t2 = await person.getTokenBalances();
+      tokensITrust = Object.keys(t2)
+        .map((k) => t2[k])
+        .filter((o) => o.balanceString && o.balanceString !== "0")
+        .map((token) =>
+        {
+          return {
+            data: {
+              image: (token.owner.address == safeAddress ? environment.me.myProfile?.avatar : null) ?? "https://avatars.dicebear.com/api/avataaars/" +
+                token.owner.address +
+                ".svg ",
+              balanceBN: token.balance,
+              title: (token.owner.address == safeAddress ? (environment.me.myProfile?.firstName + " " + environment.me.myProfile?.lastName) : null) ?? token.owner.address.slice(0, 8),
+              description: token.owner.address,
+              balance: parseFloat(token.balanceString),
+              subtitle: "CRC",
+            },
+          };
+        });
+      tokensITrust.sort((a, b) => -a.data.balanceBN.cmp(b.data.balanceBN));
+    }
+  }
 
   let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
     {
