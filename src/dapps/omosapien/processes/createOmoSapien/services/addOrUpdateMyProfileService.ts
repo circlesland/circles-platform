@@ -5,10 +5,12 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
     throw new Error("You're not authenticated");
   }
 
+  const existingProfile = context.environment.me.myProfile;
   await context.environment.fission.profiles.addOrUpdateMyProfile({
     name: "me",
     firstName: context.data.firstName.value,
     lastName: context.data.lastName.value,
-    avatar: context.data.avatar.value
+    avatar: context.data.avatar.value,
+    ... existingProfile
   });
 }

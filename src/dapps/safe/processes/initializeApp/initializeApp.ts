@@ -41,7 +41,6 @@ const str = strings.safe.processes.createSafe;
 const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
   initial: "idle",
   states: {
-
     idle: {
       on:{
         "process.continue": "hasAccount"
@@ -53,19 +52,19 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
         }),
       on: {
         "process.triggerSelf": [{
-          target: 'newOrExistingSafe',
-          cond: "noAccount"
+          cond: "noAccount",
+          target: 'createOrImportSafe'
         },{
-          target: 'checkSafeXDaiBalance',
-          cond: "hasSafe"
+          cond: "hasSafe",
+          target: 'checkSafeXDaiBalance'
         },{
-          target: 'checkAccount',
-          cond: "hasAccount"
+          cond: "hasAccount",
+          target: 'checkAccount'
         }]
       }
     },
-    newOrExistingSafe: {
-      entry: "choiceNewOrExistingSafe",
+    createOrImportSafe: {
+      entry: "choiceCreateOrImportSafe",
       on: {
         "process.continue": {
           actions: [
@@ -295,7 +294,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
   },
   actions: {
     storePromptResponse: storePromptResponse,
-    choiceNewOrExistingSafe: sendPrompt({
+    choiceCreateOrImportSafe: sendPrompt({
       title: str.titleConnectOrCreateSafe(),
       hideNextButton: true,
       banner: {
@@ -387,6 +386,6 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
 });
 
 export const initializeApp: ProcessDefinition = {
-  name: "connectSafe",
+  name: "initializeApp",
   stateMachine: processDefinition
 };
