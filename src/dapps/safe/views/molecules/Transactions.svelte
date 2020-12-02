@@ -108,6 +108,14 @@
 </script>
 
 <div class="h-full">
+
+  <div class="flex items-center justify-center h-full mx-auto">
+    <div class="mx-auto w-full">
+      <Jumper size="150" color="#071D69" unit="px" />
+      <div class="flex p-10 text-center text-primary">Hier ist text</div>
+    </div>
+  </div>
+
   <div class="mb-2">
     <CategoryTitle mapping={labelTransactions} />
   </div>
