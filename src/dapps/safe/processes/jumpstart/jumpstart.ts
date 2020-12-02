@@ -36,7 +36,9 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
   states: {
     idle: {
       on:{
-        "process.continue": "intro"
+        "process.continue": {
+          target: "intro"
+        }
       }
     },
     intro: {

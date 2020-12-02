@@ -7,7 +7,7 @@ import {PageManifest} from "../../libs/o-os/interfaces/pageManifest";
 import {QuickAction} from "../../libs/o-os/types/quickAction";
 import {RunProcess} from "../../libs/o-events/runProcess";
 import {faCheck, faTimes} from "@fortawesome/free-solid-svg-icons";
-import {transferXDai, TransferXDaiContext} from "./processes/transferXDai/transferXDai";
+import {sendInviteCredits, SendInviteCreditsContext} from "./processes/transferXDai/sendInviteCredits";
 import {ProcessArtifact} from "../../libs/o-processes/interfaces/processArtifact";
 import {CloseModal} from "../../libs/o-events/closeModal";
 import {push} from "svelte-spa-router";
@@ -36,7 +36,7 @@ export const answerInviteRequest: PageManifest = {
               label: "Jumpstart " + "0x1234..."
             }
           },
-          event: () => new RunProcess(transferXDai, async (context:TransferXDaiContext) => {
+          event: () => new RunProcess(sendInviteCredits, async (context:SendInviteCreditsContext) => {
             context.data.recipient = <ProcessArtifact>{
               key: "recipient",
               value: "", // TODO: pre-populate all fields

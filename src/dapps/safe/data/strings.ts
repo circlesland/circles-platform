@@ -1,6 +1,6 @@
 import { InitializeAppContext } from "../processes/initializeApp/initializeApp";
 import { SetTrustContext } from "../processes/setTrust/setTrust";
-import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
+import { SendInviteCreditsContext } from "../processes/transferXDai/sendInviteCredits";
 import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
 import {JumpstartContext} from "../processes/jumpstart/jumpstart";
 import {getEnvironment} from "../../../libs/o-os/o";
@@ -23,9 +23,9 @@ export const strings = {
         "errorMessage": (context: SetTrustContext) => `An error occurred while trusting ${context.data.trustReceiver.value.slice(0, 8)}.`,
         "alreadyTrustedError": (context: SetTrustContext) => `You are already trusting ${context.data.trustReceiver.value.slice(0, 8)}.`
       },
-      transferXDai: {
-        "successMessage": (context: TransferXDaiContext) => `xDai successfully transferred`,
-        "errorMessage": (context: TransferXDaiContext) => `xDai transfer failed`,
+      sendInviteCredits: {
+        "successMessage": (context: SendInviteCreditsContext) => `xDai successfully transferred`,
+        "errorMessage": (context: SendInviteCreditsContext) => `xDai transfer failed`,
         titleRecipient: () => "Recipient",
         bannerRecipient: () => "Please enter the recipients address",
         titleValue: () => "Amount",
@@ -47,11 +47,11 @@ export const strings = {
         introHeader:(context: JumpstartContext) => `<span class="text-3xl">${context.data.recipient.value.substring(0,8)}</span>`,
         introSubHeader:(context: JumpstartContext) => `is asking you to empower his/her life`,
         introBody:(context: JumpstartContext) => `You can use your invite credits to invite and unlock the universal basic income account of ${context.data.recipient.value}. You still have
-      ${Math.floor(parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance, 'ether')) * 10)}
-      invite credits (${parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance, 'ether')).toFixed(2)}
+      ${Math.floor(parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')) * 10)}
+      invite credits (${parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')).toFixed(2)}
       xDai) left.<br />
       To refill your invite credits please send xDai to your safe
-      ${context.environment.me.mySafe.address} or ask in the
+      ${context.environment.me.mySafe?.address ?? ""} or ask in the
       <a href="https://discord.gg/KgbBdAck8X" class="text-secondary-lighter">omo
         community</a>
       for help. (One invite credit = 0.10 xDai)`

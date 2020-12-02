@@ -1,7 +1,7 @@
 import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "src/libs/o-events/runProcess";
 import { setTrust, SetTrustContext } from "../processes/setTrust/setTrust";
-import { transferXDai } from "../processes/transferXDai/transferXDai";
+import {sendInviteCredits, SendInviteCreditsContext} from "../processes/transferXDai/sendInviteCredits";
 import { requestUbi } from "../processes/requestUbi/requestUbi";
 import { QuickAction } from "../../../libs/o-os/types/quickAction";
 
@@ -57,7 +57,7 @@ export const safeDefaultActions: QuickAction[] = [
   }
 ];
 
-export const safeOverflowActions: QuickAction[] = [
+export const safeOverflowActions = [
   {
     type: "trigger",
     pos: "overflow",
@@ -82,7 +82,7 @@ export const safeOverflowActions: QuickAction[] = [
         label: "Send Invite Credits"
       }
     },
-    event: () => new RunProcess(transferXDai)
+    event: () => new RunProcess(sendInviteCredits)
   },
   {
     type: "trigger",
