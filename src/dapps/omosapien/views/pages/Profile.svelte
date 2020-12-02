@@ -65,8 +65,10 @@
       <div class="pt-2 space-y-2">
         <ProfileItem
           mapping={{ data: { title: profile.firstName, subtitle: 'first name' } }} />
-        <ProfileItem
-          mapping={{ data: { title: profile.lastName, subtitle: 'last name' } }} />
+        {#if profile.lastName}
+          <ProfileItem
+            mapping={{ data: { title: profile.lastName, subtitle: 'last name' } }} />
+        {/if}
         <!--<ProfileItem mapping={city} />-->
       </div>
     </div>

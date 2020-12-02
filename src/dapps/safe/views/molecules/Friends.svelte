@@ -90,7 +90,9 @@
           image: environment.me.mySafe.address == mutualTrust.owner.address
             ? environment.me.myProfile.avatar
             : "https://avatars.dicebear.com/api/avataaars/" + mutualTrust.owner.address + ".svg ",
-          title: mutualTrust.owner.address.slice(0, 8),
+          title: environment.me.mySafe.address == mutualTrust.owner.address
+            ? environment.me.myDisplayName()
+            : mutualTrust.owner.address.slice(0, 8),
           connection: "trustedMutual",
           detail: {
             address: mutualTrust.owner.address,
