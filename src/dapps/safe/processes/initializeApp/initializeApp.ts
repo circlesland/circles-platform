@@ -289,8 +289,8 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
     choiceConnectSafe:(context) => context.data.safeChoice.value === str.choiceConnectSafe(),
     accountHasEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.00025", "ether"))),
     accountHasNotEnoughBalance:(context) => context.environment.me.myAddressXDaiBalance.lt(new BN(context.environment.eth.web3.utils.toWei("0.00025", "ether"))),
-    safeHasEnoughBalance:(context) => context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
-    safeHasNotEnoughBalance:(context) => !context.environment.me.mySafeXDaiBalance.gte(new BN("1000000")),
+    safeHasEnoughBalance:(context) => context.environment.me.mySafeXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.00005", "ether"))),
+    safeHasNotEnoughBalance:(context) => !context.environment.me.mySafeXDaiBalance.gte(new BN(context.environment.eth.web3.utils.toWei("0.00005", "ether"))),
   },
   actions: {
     storePromptResponse: storePromptResponse,

@@ -13,7 +13,7 @@ export const fundSafeService = async (context: InitializeAppContext) =>
   );
 
   const nonce = await context.environment.eth.web3.eth.getTransactionCount(myAccount.address);
-  const value = new BN(context.environment.eth.web3.utils.toWei("0.01", "ether"));
+  const value = new BN(context.environment.eth.web3.utils.toWei("0.00020", "ether"));
 
   const gasPrice = new BN(await context.environment.eth.web3.eth.getGasPrice());
   const gasEstimate = new BN(await context.environment.eth.web3.eth.estimateGas({
