@@ -40,7 +40,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     intro: {
-      entry: sendPrompt({
+      entry:(context) => {return{
         title: str.titleIntro(),
         nextButtonTitle: "Next",
         banner: {
@@ -48,14 +48,14 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
           data: {}
         },
         artifacts: {}
-      }),
+      }},
       on: {
         "process.cancel": "stop",
         "process.continue": "summarize"
       }
     },
     summarize: {
-      entry: sendPrompt({
+      entry: (context) => {return{
         title: str.titleSummary(),
         nextButtonTitle: "Use 1 invite credit",
         banner: {
@@ -68,7 +68,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
           ...ethereumAddress("recipient", str.titleRecipient(), true),
           ...inviteCredits("value", str.titleValue())
         }
-      }),
+      }},
       on: {
         "process.cancel": "stop",
         "process.continue": "transferJumpstartXDai"

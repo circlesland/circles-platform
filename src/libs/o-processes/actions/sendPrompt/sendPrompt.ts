@@ -19,28 +19,29 @@ export type PromptSpec = {
   canGoBack?:boolean
 };
 
-export const sendPrompt = (spec:PromptSpec) =>
-{
-  const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
-    Object.keys(spec.artifacts)
-      .filter(key => context.data[key] !== undefined)
-      .forEach(key => spec.artifacts[key].value = context.data[key].value);
+export const sendPrompt = (generateSpec?:(context:ProcessContext) => PromptSpec) =>
+  send((context:ProcessContext) => {
+    const spec = generateSpec(context);
+    const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
+      Object.keys(spec.artifacts)
+        .filter(key => context.data[key] !== undefined)
+        .forEach(key => spec.artifacts[key].value = context.data[key].value);
 
-    console.log("Send prompt")
+      console.log("Send prompt")
 
-    return <Prompt>{
-      title: spec.title ? spec.title : "",
-      nextButtonTitle: spec.nextButtonTitle,
-      hideNextButton: spec.hideNextButton,
-      canGoBack: spec.canGoBack,
-      type: "process.prompt",
-      banner: spec.banner,
-      data: spec.artifacts
-    }
+      return <Prompt>{
+        title: spec.title ? spec.title : "",
+        nextButtonTitle: spec.nextButtonTitle,
+        hideNextButton: spec.hideNextButton,
+        canGoBack: spec.canGoBack,
+        type: "process.prompt",
+        banner: spec.banner,
+        data: spec.artifacts
+      }
+    });
+
+    return action;
   });
-
-  return action;
-}
 
 export const sendShellEvent = (shellEvent:OmoEvent) =>
 {

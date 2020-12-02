@@ -40,7 +40,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
       }
     },
     promptFirstName: {
-      entry: sendPrompt({
+      entry: (context) => {return{
         title: str.titleFirstName(),
         nextButtonTitle: str.buttonFirstName(),
         banner: {
@@ -52,7 +52,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
         artifacts: {
           ...textLine("firstName", undefined, undefined, false)
         }
-      }),
+      }},
       on: {
         "process.continue": {
           actions: storePromptResponse,
@@ -62,7 +62,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
       }
     },
     promptLastName: {
-      entry: sendPrompt({
+      entry: (context) => {return{
         canGoBack: true,
         title: str.titleLastName(),
         nextButtonTitle: str.buttonLastName(),
@@ -75,7 +75,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
         artifacts: {
           ...textLine("lastName", undefined, undefined, true)
         }
-      }),
+      }},
       on: {
         "process.back": {
           target: "promptFirstName"
@@ -88,7 +88,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
       }
     },
     promptAvatar: {
-      entry: sendPrompt({
+      entry: (context) => {return{
         canGoBack: true,
         title: str.titleAvatar(),
         nextButtonTitle: str.buttonAvatar(),
@@ -101,7 +101,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
         artifacts: {
           ...file("avatar", undefined, undefined, true)
         }
-      }),
+      }},
       on: {
         "process.back": {
           target: "promptLastName"

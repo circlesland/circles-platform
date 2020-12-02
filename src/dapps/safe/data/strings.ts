@@ -9,6 +9,7 @@ import { SetTrustContext } from "../processes/setTrust/setTrust";
 import { TransferXDaiContext } from "../processes/transferXDai/transferXDai";
 import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
 import {JumpstartContext} from "../processes/jumpstart/jumpstart";
+import {getEnvironment} from "../../../libs/o-os/o";
 
 export const strings = {
   safe: {
@@ -95,7 +96,7 @@ export const strings = {
           return "";
         }
       },
-      createSafe: {
+      initializeApp: {
         titleSafeAddress: () => "Safe",
         bannerSafeAddress: () => "Please enter your safe address",
         buttonSafeAddress: () => "Save",
@@ -107,7 +108,10 @@ export const strings = {
         titleInitializing: () => "Generating a new key ..",
         titleGenerateFundLink: () => "Get initial funding",
         buttonGenerateFundLink: () => "Close",
-        bannerGenerateFundLink: () => "Send this link to a friend to get started",
+        bannerGenerateFundLink: async () => {
+          const env = await getEnvironment();
+          return "Send this link to a friend to get started or send 0.1 xDai to '" + env.me.myAddress + "'"
+        },
         progressDeploySafe: () => "Creating your safe",
         successDeploySafe: () => "Your new safe was successfully created",
         choiceConnectSafe()

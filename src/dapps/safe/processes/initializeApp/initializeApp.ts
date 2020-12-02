@@ -37,7 +37,7 @@ export interface InitializeAppContext extends ProcessContext {
 /**
  * Connect safe
  */
-const str = strings.safe.processes.createSafe;
+const str = strings.safe.processes.initializeApp;
 const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
   initial: "idle",
   states: {
@@ -294,7 +294,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
   },
   actions: {
     storePromptResponse: storePromptResponse,
-    choiceCreateOrImportSafe: sendPrompt({
+    choiceCreateOrImportSafe: (context) => {return{
       title: str.titleConnectOrCreateSafe(),
       hideNextButton: true,
       banner: {
@@ -308,8 +308,8 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
           str.choiceConnectSafe(),
           str.choiceCreateSafe()])
       }
-    }),
-    askForSafeAddress: sendPrompt({
+    }},
+    askForSafeAddress: (context) => {return{
       title: str.titleSafeAddress(),
       nextButtonTitle: str.buttonSafeAddress(),
       banner: {
@@ -321,8 +321,8 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
       artifacts: {
         ...ethereumAddress("safeAddress")
       }
-    }),
-    askForPrivateKey: sendPrompt({
+    }},
+    askForPrivateKey: (context) => {return{
       title: str.titleSeedPhrase(),
       nextButtonTitle: "Connect safe",
       canGoBack: true,
@@ -338,7 +338,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
           type: "keyphrase",
         }
       }
-    }),
+    }},
     showConnectSafeInProgress:sendInProgressPrompt(str.titleProgress),
     setError: setError,
     sendErrorPrompt: sendErrorPrompt,
@@ -361,7 +361,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
         }
       }
     )),
-    showFundLink: sendPrompt({
+    showFundLink: (context) => {return{
       title: str.titleGenerateFundLink(),
       nextButtonTitle: str.buttonGenerateFundLink(),
       banner: {
@@ -373,7 +373,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
       artifacts: {
         ...ethereumAddress("fundLink", undefined, true)
       }
-    }),
+    }},
     navigateToSafe: () => push('#/safe/transactions')
   },
   services:{

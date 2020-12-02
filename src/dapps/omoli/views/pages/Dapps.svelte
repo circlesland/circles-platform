@@ -2,9 +2,13 @@
   import DappIcon from "../../../../libs/o-views/molecules/DappIcon.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import { dapps } from "src/dapps/omoli/data/dapps";
-  import {onMount} from "svelte";
 
-  let _dapps = dapps();
+
+  let _dapps = [];
+  async function loadDapps() {
+    _dapps = await dapps();
+  }
+  loadDapps();
 </script>
 
 <Compose areas="'main'" rows="1fr">
