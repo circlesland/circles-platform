@@ -5,24 +5,24 @@
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
 
   let offers = [
-    {
-      data: {
-        title: "UNU 2 Electro Scooter",
-        image: "./images/market/unu.jpg",
-        description:
-          "Brand new UNU electro scooter delivered straight from the factory to your home. I pre-ordered this unique beauty this summer and according to UNU will be ready for shipping around spring 2021. In the package is a 4000 watt black scooter with 2 batteries and 1 helmet. For more details see unu's website @https://unumotors.com/",
-        price: "50.000",
-        city: "Munich or Berlin",
-        country: "Germany",
-        delivery:
-          "pickup or delivery all over europe (pre-order now, delivered in spring / summer 2021)",
-        offeredBy: {
-          image: "images/users/samuel.jpg",
-          firstName: "Samuel",
-          lastName: "Andert",
-        },
-      },
-    },
+    // {
+    //   data: {
+    //     title: "UNU 2 Electro Scooter",
+    //     image: "./images/market/unu.jpg",
+    //     description:
+    //       "Brand new UNU electro scooter delivered straight from the factory to your home. I pre-ordered this unique beauty this summer and according to UNU will be ready for shipping around spring 2021. In the package is a 4000 watt black scooter with 2 batteries and 1 helmet. For more details see unu's website @https://unumotors.com/",
+    //     price: "50.000",
+    //     city: "Munich or Berlin",
+    //     country: "Germany",
+    //     delivery:
+    //       "pickup or delivery all over europe (pre-order now, delivered in spring / summer 2021)",
+    //     offeredBy: {
+    //       image: "images/users/samuel.jpg",
+    //       firstName: "Samuel",
+    //       lastName: "Andert",
+    //     },
+    //   },
+    // },
     {
       data: {
         title: "Bavarian Leathershoes (Size 44)",

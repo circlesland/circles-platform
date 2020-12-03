@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
-    AddressLookup, HubAccount,
+    AddressLookup,
+    HubAccount,
     TokenAndOwner,
   } from "src/libs/o-circles-protocol/model/hubAccount";
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
@@ -12,11 +13,11 @@
     labelTrusting,
     labelRevoked,
   } from "../../data/friends";
-  import {Subscription} from "rxjs";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy, onMount} from "svelte";
-  import {getEnvironment} from "../../../../libs/o-os/o";
-  import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
+  import { Subscription } from "rxjs";
+  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+  import { onDestroy, onMount } from "svelte";
+  import { getEnvironment } from "../../../../libs/o-os/o";
+  import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   let mySafeAddress: string;
 
@@ -28,7 +29,7 @@
   let untrusted: any[] = [];
   let untrusted_: { [address: string]: any } = {};
 
-  let environment:ProcessEnvironment;
+  let environment: ProcessEnvironment;
 
   async function init() {
     environment = await getEnvironment();
@@ -87,12 +88,16 @@
       })
       .map((mutualTrust) => {
         return {
-          image: environment.me.mySafe.address == mutualTrust.owner.address
-            ? environment.me.myProfile.avatar
-            : "https://avatars.dicebear.com/api/avataaars/" + mutualTrust.owner.address + ".svg ",
-          title: environment.me.mySafe.address == mutualTrust.owner.address
-            ? environment.me.myDisplayName()
-            : mutualTrust.owner.address.slice(0, 8),
+          image:
+            environment.me.mySafe.address == mutualTrust.owner.address
+              ? environment.me.myProfile.avatar
+              : "https://avatars.dicebear.com/api/avataaars/" +
+                mutualTrust.owner.address +
+                ".svg ",
+          title:
+            environment.me.mySafe.address == mutualTrust.owner.address
+              ? environment.me.myDisplayName()
+              : mutualTrust.owner.address.slice(0, 8),
           connection: "trustedMutual",
           detail: {
             address: mutualTrust.owner.address,
@@ -149,18 +154,16 @@
     console.log("personsITrust:", personsITrust);
   }
 
-  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
-    {
-      if (event.type === "shell.refreshView")
-      {
+  let subscription: Subscription = window.o.events.subscribe(
+    (event: OmoEvent) => {
+      if (event.type === "shell.refreshView") {
         init();
       }
-    });
+    }
+  );
 
-  onDestroy(() =>
-  {
-    if (!subscription)
-      return;
+  onDestroy(() => {
+    if (!subscription) return;
 
     subscription.unsubscribe();
     subscription = null;
@@ -168,7 +171,7 @@
 
   onMount(() => {
     init();
-  })
+  });
 </script>
 
 <div class="h-full">
