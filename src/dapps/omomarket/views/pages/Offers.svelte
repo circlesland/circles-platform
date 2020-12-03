@@ -142,7 +142,7 @@
               class="w-12 h-12 rounded-xl" />
           </div>
 
-          <div class="px-4">
+          <div class="flex-1 px-4">
             <a
               href="https://discord.gg/YedewwChD9"
               class="font-sans text-base font-bold text-primary font-primary">
