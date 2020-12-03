@@ -76,7 +76,7 @@
 
       o.timestamp = estimatedBlockTime;
       const amountNo = parseFloat(o.amount);
-      o.amount = amountNo < 0.01 ? "< 0.01" : amountNo.toFixed(2);
+      o.amount = amountNo < 0.01 ? "0.01" : amountNo.toFixed(2);
       return o;
     });
   }

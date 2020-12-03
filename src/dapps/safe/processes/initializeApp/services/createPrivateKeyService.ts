@@ -1,4 +1,5 @@
 import {InitializeAppContext} from "../initializeApp";
+import {ProcessArtifact} from "../../../../../libs/o-processes/interfaces/processArtifact";
 
 export const createPrivateKeyService = async (context: InitializeAppContext) =>
 {
@@ -17,4 +18,11 @@ export const createPrivateKeyService = async (context: InitializeAppContext) =>
 
   context.environment.me.myAddress = newKey.address;
   context.environment.me.myKey = myKey.entity;
+
+  context.data.privateKey = <ProcessArtifact>{
+    key: "privateKey",
+    type: "string",
+    value: context.environment.me.myKey?.privateKey,
+    isReadonly: true
+  };
 }

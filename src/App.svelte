@@ -21,9 +21,10 @@
   import { ShowNotification } from "./libs/o-events/showNotification";
   import { getEnvironment } from "./libs/o-os/o";
   import { BN } from "ethereumjs-util";
-  import { initializeApp } from "./dapps/safe/processes/initializeApp/initializeApp";
+  import {initializeApp, InitializeAppContext} from "./dapps/safe/processes/initializeApp/initializeApp";
   import { GotProfile } from "./dapps/omosapien/events/gotProfile";
   import { createOmoSapien } from "./dapps/omosapien/processes/createOmoSapien/createOmoSapien";
+  import {ProcessArtifact} from "./libs/o-processes/interfaces/processArtifact";
 
   let actions = [];
 
@@ -97,7 +98,6 @@
         environment.me.myAddressXDaiBalance.lte(new BN("100"))
       ) {
         window.o.publishEvent(new RunProcess(initializeApp));
-        return;
       }
       window.o.publishEvent(new GotProfile(profile));
     } else {
