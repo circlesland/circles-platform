@@ -44,7 +44,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
     {
       data: {
         title: "Market",
-        tag: "soon",
+        tag: "",
       },
       action: {
         route: "omomarket/offers",
