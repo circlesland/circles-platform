@@ -100,7 +100,7 @@ export const strings = {
         successFundSafe: () => "Sent some xDai to the safe.",
         successCreatePrivateKey: () => "Private key created.",
         progressCreatePrivateKey: () => "Creating private key ..",
-        fundLinkHeader: (context: InitializeAppContext) => `Welcome ${context.environment.me.profile.firstName}`,
+        fundLinkHeader: (context: InitializeAppContext) => `Welcome ${context.environment.me.myDisplayName()}`,
         fundLinkSubHeader: () => `to unlock your account send this invite link to a friend with invite credits`,
         fundLinkBody(context: InitializeAppContext) {
           return `To unlock yourself send 0.10 xDai to your account address (${context.environment.me.myAddress}) or ask in the
