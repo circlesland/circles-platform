@@ -21,10 +21,13 @@
   import { ShowNotification } from "./libs/o-events/showNotification";
   import { getEnvironment } from "./libs/o-os/o";
   import { BN } from "ethereumjs-util";
-  import {initializeApp, InitializeAppContext} from "./dapps/safe/processes/initializeApp/initializeApp";
+  import {
+    initializeApp,
+    InitializeAppContext,
+  } from "./dapps/safe/processes/initializeApp/initializeApp";
   import { GotProfile } from "./dapps/omosapien/events/gotProfile";
   import { createOmoSapien } from "./dapps/omosapien/processes/createOmoSapien/createOmoSapien";
-  import {ProcessArtifact} from "./libs/o-processes/interfaces/processArtifact";
+  import { ProcessArtifact } from "./libs/o-processes/interfaces/processArtifact";
 
   let actions = [];
 
@@ -176,7 +179,7 @@
 </script>
 
 <ComposeApp tw="font-primary bg-light-100">
-  <Compose tw="mx-auto bg-light-100 w-full max-w-3xl">
+  <Compose tw="mx-auto bg-light-100 w-full">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
       <Compose tw="md:my-1">
         {#each notifications as notification}

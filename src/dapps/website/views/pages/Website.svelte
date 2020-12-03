@@ -3,6 +3,12 @@
   import Button from "src/libs/o-views/atoms/Button.svelte";
   import { onMount } from "svelte";
   import { push } from "svelte-spa-router";
+  import Header from "../molecules/Header.svelte";
+  import Hero from "../molecules/Hero.svelte";
+  import Features from "../molecules/Features.svelte";
+  import Pricing from "../molecules/Pricing.svelte";
+  import Testimonials from "../molecules/Testimonials.svelte";
+  import Footer from "../molecules/Footer.svelte";
 
   onMount(async () => {
     if (window.o.fission) {
@@ -11,7 +17,7 @@
   });
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="items-center justify-center">
+<!-- <Compose rows="1fr" columns="1fr" tw="items-center justify-center">
   <Compose rows="1fr" columns="1fr">
     <img src="images/logo/logo.svg" alt="omo" class="w-1/3 mx-auto" />
     <div
@@ -25,4 +31,13 @@
       </div>
     </div>
   </Compose>
-</Compose>
+</Compose> -->
+
+<div class="overflow-x-hidden antialiased">
+  <Header />
+  <Hero />
+  <Features />
+  <Pricing />
+  <Testimonials />
+  <Footer />
+</div>
