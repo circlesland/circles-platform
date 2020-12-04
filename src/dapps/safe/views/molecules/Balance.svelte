@@ -5,30 +5,24 @@
   import type { BN } from "ethereumjs-util";
 
   import { Jumper } from "svelte-loading-spinners";
-  import {Subscription} from "rxjs";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy, onMount} from "svelte";
-  import {getEnvironment} from "../../../../libs/o-os/o";
-  import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
+  import { Subscription } from "rxjs";
+  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+  import { onDestroy, onMount } from "svelte";
+  import { getEnvironment } from "../../../../libs/o-os/o";
+  import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   export let address: string;
 
   let person: HubAccount;
   let balance: BN;
-  let safeEthBalance: BN;
-  let personalEthBalance: BN;
 
-  let circlesBalance: string;
-  let safeEtherBalance: string;
-  let personalEtherBalance: string;
-  let accountAddress:string;
+  let circlesBalance: Number;
 
-  let environment:ProcessEnvironment;
+  let environment: ProcessEnvironment;
 
   async function init() {
     environment = await getEnvironment();
     address = environment.me.mySafe.address;
-    accountAddress = environment.me.mySafe.getOwners()[0];
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
@@ -43,34 +37,19 @@
     balance = await person.getTokenBalance();
     const balanceStr = web3.utils.fromWei(balance, "ether");
     const dot = balanceStr.indexOf(".");
-    circlesBalance = balanceStr.slice(0, dot + 3);
-
-    safeEthBalance = environment.me.mySafeXDaiBalance;
-    const ethBalanceStr = web3.utils.fromWei(safeEthBalance, "ether");
-    const ethDot = ethBalanceStr.indexOf(".");
-    safeEtherBalance = ethBalanceStr.slice(0, ethDot + 7);
-
-    personalEthBalance = environment.me.myAddressXDaiBalance;
-    const personalEthBalanceStr = web3.utils.fromWei(
-      personalEthBalance,
-      "ether"
-    );
-    const personalEthDot = personalEthBalanceStr.indexOf(".");
-    personalEtherBalance = personalEthBalanceStr.slice(0, personalEthDot + 7);
+    circlesBalance = (parseFloat(balanceStr) * 3).toFixed(2);
   }
 
-  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
-    {
-      if (event.type === "shell.refreshView")
-      {
+  let subscription: Subscription = window.o.events.subscribe(
+    (event: OmoEvent) => {
+      if (event.type === "shell.refreshView") {
         init();
       }
-    });
+    }
+  );
 
-  onDestroy(() =>
-  {
-    if (!subscription)
-      return;
+  onDestroy(() => {
+    if (!subscription) return;
 
     subscription.unsubscribe();
     subscription = null;
@@ -86,8 +65,8 @@
       class="flex items-center justify-center pl-6 mx-auto text-6xl uppercase">
       {circlesBalance}
       <span><img
-          src="images/logo/crc.svg"
-          class="h-8 pt-1 pl-2"
+          src="images/symbols/o-white.svg"
+          class="h-8 pb-2 pl-2"
           alt="CRC" /></span>
     </div>
   {:else}

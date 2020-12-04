@@ -6,11 +6,11 @@
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import {Subscription} from "rxjs";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {onDestroy, onMount} from "svelte";
-  import {getEnvironment} from "../../../../libs/o-os/o";
-  import {ProcessEnvironment} from "../../../../libs/o-processes/interfaces/processEnvironment";
+  import { Subscription } from "rxjs";
+  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+  import { onDestroy, onMount } from "svelte";
+  import { getEnvironment } from "../../../../libs/o-os/o";
+  import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   let accountAddress: string;
   let safeAddress: string;
@@ -27,7 +27,7 @@
   let person: HubAccount;
   let tokensITrust: any[] = [];
 
-  let environment:ProcessEnvironment;
+  let environment: ProcessEnvironment;
 
   async function init() {
     environment = await getEnvironment();
@@ -36,23 +36,21 @@
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
-    if (safeAddress)
-    {
+    if (safeAddress) {
       person = new HubAccount(circlesHub, safeAddress);
     }
 
     reload();
   }
 
-  function formatBn(value:BN, decimalPlaces:number = 3) {
+  function formatBn(value: BN, decimalPlaces: number = 3) {
     const balanceStr = environment.eth.web3.utils.fromWei(value, "ether");
     const dot = balanceStr.indexOf(".");
     return balanceStr.slice(0, dot + decimalPlaces);
   }
 
   async function reload() {
-    if (safeAddress)
-    {
+    if (safeAddress) {
       balance = await person.getTokenBalance();
       circlesBalance = formatBn(balance);
 
@@ -63,28 +61,28 @@
     personalEthBalance = environment.me.myAddressXDaiBalance;
     personalEtherBalance = formatBn(personalEthBalance, 7);
 
-    if (safeAddress)
-    {
+    if (safeAddress) {
       let t2 = await person.getTokenBalances();
       tokensITrust = Object.keys(t2)
         .map((k) => t2[k])
         .filter((o) => o.balanceString && o.balanceString !== "0")
-        .map((token) =>
-        {
+        .map((token) => {
           return {
             data: {
               image:
                 (token.owner.address == safeAddress
                   ? environment.me.myProfile?.avatar
-                  : null) ?? "https://avatars.dicebear.com/api/avataaars/" +
-                token.owner.address +
-                ".svg ",
+                  : null) ??
+                "https://avatars.dicebear.com/api/avataaars/" +
+                  token.owner.address +
+                  ".svg ",
               balanceBN: token.balance,
-              title: (token.owner.address == safeAddress
-                ? environment.me.myDisplayName()
-                : null) ?? token.owner.address.slice(0, 8),
+              title:
+                (token.owner.address == safeAddress
+                  ? environment.me.myDisplayName()
+                  : null) ?? token.owner.address.slice(0, 8),
               description: token.owner.address,
-              balance: parseFloat(token.balanceString),
+              balance: (parseFloat(token.balanceString) * 3).toFixed(2),
               subtitle: "CRC",
             },
           };
@@ -93,18 +91,16 @@
     }
   }
 
-  let subscription: Subscription = window.o.events.subscribe((event: OmoEvent) =>
-    {
-      if (event.type === "shell.refreshView")
-      {
+  let subscription: Subscription = window.o.events.subscribe(
+    (event: OmoEvent) => {
+      if (event.type === "shell.refreshView") {
         init();
       }
-    });
+    }
+  );
 
-  onDestroy(() =>
-  {
-    if (!subscription)
-      return;
+  onDestroy(() => {
+    if (!subscription) return;
 
     subscription.unsubscribe();
     subscription = null;
@@ -117,7 +113,7 @@
       image: "images/logo/circles.svg",
       title: "Circles",
       description: "Address: " + safeAddress,
-      balance: parseFloat(circlesBalance).toFixed(2),
+      balance: (parseFloat(circlesBalance) * 3).toFixed(2),
       subtitle: "Circles in your safe account",
     },
   };

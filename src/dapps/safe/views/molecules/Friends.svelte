@@ -83,7 +83,6 @@
       .filter((o) => {
         const isMutual = tt2[o.owner.address] !== undefined;
         if (isMutual) mutual[o.owner.address] = true;
-
         return isMutual;
       })
       .map((mutualTrust) => {

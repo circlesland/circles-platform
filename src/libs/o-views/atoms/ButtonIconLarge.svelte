@@ -1,13 +1,13 @@
 <script lang="ts">
   import Icon from "fa-svelte";
-  import { ButtonIcon } from "./../interfaces/atoms";
+  import { ButtonIcon } from "../interfaces/atoms";
 
   export let mapping: ButtonIcon;
 </script>
 
 <style>
   .button {
-    @apply flex items-center content-end justify-center w-10 h-10 p-2 border-2 rounded-xl;
+    @apply flex items-center content-end justify-center w-12 h-12 p-1 border-2 rounded-xl;
   }
 </style>
 

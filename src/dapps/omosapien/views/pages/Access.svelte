@@ -2,6 +2,7 @@
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import AccessItem from "src/libs/o-views/molecules/AccessItem.svelte";
+  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
   import {
     labelDevices,
     labelDapps,
@@ -10,9 +11,10 @@
   } from "../../data/access";
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 md:m-0" overflowY>
-  <div>
-    <!-- <div class="mb-2">
+<Mobile>
+  <Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 md:m-0" overflowY>
+    <div>
+      <!-- <div class="mb-2">
       <CategoryTitle mapping={labelDevices} />
     </div>
     <div class="space-y-2">
@@ -20,13 +22,14 @@
         <AccessItem mapping={item} />
       {/each}
     </div> -->
-    <div class="my-2">
-      <CategoryTitle mapping={labelDapps} />
+      <div class="my-2">
+        <CategoryTitle mapping={labelDapps} />
+      </div>
+      <div class="space-y-2">
+        {#each accessDapps as item}
+          <AccessItem mapping={item} />
+        {/each}
+      </div>
     </div>
-    <div class="space-y-2">
-      {#each accessDapps as item}
-        <AccessItem mapping={item} />
-      {/each}
-    </div>
-  </div>
-</Compose>
+  </Compose>
+</Mobile>

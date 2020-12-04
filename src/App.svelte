@@ -1,6 +1,8 @@
 <script lang="ts">
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
+  import Mobile from "./libs/o-views/templates/Mobile.svelte";
+
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
   import Router, { pop, location, push } from "svelte-spa-router";
   import routes from "./libs/o-os/routes";
@@ -182,9 +184,11 @@
   <Compose tw="mx-auto bg-light-100 w-full">
     <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
       <Compose tw="md:my-1">
-        {#each notifications as notification}
-          <Announcement mapping={notification} />
-        {/each}
+        <Mobile>
+          {#each notifications as notification}
+            <Announcement mapping={notification} />
+          {/each}
+        </Mobile>
       </Compose>
       <Compose rows="1fr" columns="1fr">
         <Router

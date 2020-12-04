@@ -7,8 +7,8 @@
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
   import { Profile } from "../../../../libs/o-fission/entities/profile";
   import { getEnvironment } from "../../../../libs/o-os/o";
-  import {Subscription} from "rxjs";
-  import {RefreshView} from "../../../../libs/o-events/refreshView";
+  import { RefreshView } from "../../../../libs/o-events/refreshView";
+  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
 
   const wn = window.o.wn;
 
@@ -19,7 +19,10 @@
     if (event.type === "shell.gotProfile") {
       profile = (<GotProfile>event).profile;
     }
-    if (event.type === "shell.refreshView" && (<RefreshView>event).view == "omosapien.profile") {
+    if (
+      event.type === "shell.refreshView" &&
+      (<RefreshView>event).view == "omosapien.profile"
+    ) {
       init();
     }
   });
@@ -45,32 +48,34 @@
   }
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
-  {#if profile}
-    <div>
-      <div class="">
-        <div
-          class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200 font-title">
-          <div>
-            <!--<Avataaar mapping={avataaar}/>-->
-            <img
-              src={profile.avatar}
-              class="w-40 h-40 mx-auto my-4 bg-white border-4 rounded-3xl border-light-300"
-              alt="img" />
+<Mobile>
+  <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
+    {#if profile}
+      <div>
+        <div class="">
+          <div
+            class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200 font-title">
+            <div>
+              <!--<Avataaar mapping={avataaar}/>-->
+              <img
+                src={profile.avatar}
+                class="w-40 h-40 mx-auto my-4 bg-white border-4 rounded-3xl border-light-300"
+                alt="img" />
+            </div>
+            Welcome,
+            {profile.firstName}
           </div>
-          Welcome,
-          {profile.firstName}
+        </div>
+        <div class="pt-2 space-y-2">
+          <ProfileItem
+            mapping={{ data: { title: profile.firstName, subtitle: 'first name' } }} />
+          {#if profile.lastName}
+            <ProfileItem
+              mapping={{ data: { title: profile.lastName, subtitle: 'last name' } }} />
+          {/if}
+          <!--<ProfileItem mapping={city} />-->
         </div>
       </div>
-      <div class="pt-2 space-y-2">
-        <ProfileItem
-          mapping={{ data: { title: profile.firstName, subtitle: 'first name' } }} />
-        {#if profile.lastName}
-          <ProfileItem
-            mapping={{ data: { title: profile.lastName, subtitle: 'last name' } }} />
-        {/if}
-        <!--<ProfileItem mapping={city} />-->
-      </div>
-    </div>
-  {/if}
-</Compose>
+    {/if}
+  </Compose>
+</Mobile>

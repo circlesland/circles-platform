@@ -4,6 +4,7 @@
   import { push } from "svelte-spa-router";
   import { Authenticated } from "../../events/authenticated";
   import { Jumper } from "svelte-loading-spinners";
+  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
 
   const wn = window.o.wn;
 
@@ -57,13 +58,15 @@
   }
 </script>
 
-<Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
-  <div class="flex items-center justify-center">
-    <div>
-      <Jumper size="150" color="#071D69" unit="px" /><br />
-      <div class="text-sm text-center text-primary foont-primary">
-        authenticating ...
+<Mobile>
+  <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
+    <div class="flex items-center justify-center">
+      <div>
+        <Jumper size="150" color="#071D69" unit="px" /><br />
+        <div class="text-sm text-center text-primary foont-primary">
+          authenticating ...
+        </div>
       </div>
     </div>
-  </div>
-</Compose>
+  </Compose>
+</Mobile>
