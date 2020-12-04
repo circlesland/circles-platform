@@ -21,6 +21,7 @@ module.exports = {
         'primary-darker': "#0A1A52",
         secondary: '#0D49A3',
         'secondary-lighter': "#1058C5",
+        tertiary: "#310F93",
         action: '#2AD78B',
         'info-lighter': '#FFF9C2',
         info: '#FCDB85',

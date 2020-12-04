@@ -83,7 +83,7 @@
                   : null) ?? token.owner.address.slice(0, 8),
               description: token.owner.address,
               balance: (parseFloat(token.balanceString) * 3).toFixed(2),
-              subtitle: "CRC",
+              subtitle: "time in ⦿",
             },
           };
         });
@@ -110,11 +110,11 @@
 
   $: circlesSafe = {
     data: {
-      image: "images/logo/circles.svg",
-      title: "Circles",
+      image: "images/symbols/o.svg",
+      title: "time in ⦿",
       description: "Address: " + safeAddress,
       balance: (parseFloat(circlesBalance) * 3).toFixed(2),
-      subtitle: "Circles in your safe account",
+      subtitle: "hours in your safe account",
     },
   };
   $: xDaiSafe = {

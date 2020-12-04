@@ -182,14 +182,14 @@
 
 <ComposeApp tw="font-primary bg-light-100">
   <Compose tw="mx-auto bg-light-100 w-full">
-    <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
-      <Compose tw="md:my-1">
+    <Compose columns="1fr" rows="1fr auto" tw="w-full">
+      <!-- <Compose tw="md:my-1">
         <Mobile>
           {#each notifications as notification}
             <Announcement mapping={notification} />
           {/each}
         </Mobile>
-      </Compose>
+      </Compose> -->
       <Compose rows="1fr" columns="1fr">
         <Router
           {routes}

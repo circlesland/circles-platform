@@ -6,7 +6,7 @@
 </script>
 
 <Mobile>
-  <Compose rows="200px 1fr" columns="1fr">
+  <Compose rows="200px 1fr" columns="1fr" tw="pt-2">
     <Balance />
     <Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 md:mx-0 md:mt-2" overflowY>
       <Transactions />

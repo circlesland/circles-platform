@@ -1,6 +1,4 @@
 <script lang="ts">
-  import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import Button from "src/libs/o-views/atoms/Button.svelte";
   import { onMount } from "svelte";
   import { push } from "svelte-spa-router";
   import Header from "../molecules/Header.svelte";
@@ -9,6 +7,8 @@
   import Pricing from "../molecules/Pricing.svelte";
   import Testimonials from "../molecules/Testimonials.svelte";
   import Footer from "../molecules/Footer.svelte";
+  import Compose from "src/libs/o-views/atoms/Compose.svelte";
+  import Offers from "src/dapps/omomarket/views/pages/Offers.svelte";
 
   onMount(async () => {
     if (window.o.fission) {
@@ -33,11 +33,27 @@
   </Compose>
 </Compose> -->
 
-<div class="overflow-x-hidden antialiased">
-  <Header />
-  <Hero />
-  <Features />
-  <Pricing />
-  <Testimonials />
-  <Footer />
-</div>
+<Compose rows="1fr" columns="1fr">
+  <div class="overflow-x-hidden antialiased">
+    <Header />
+    <Hero />
+    <Features />
+    <div class="pb-12 bg-light-100">
+      <div
+        class="container flex flex-col items-center justify-between h-full max-w-6xl py-12 mx-auto">
+        <h2
+          class="my-5 text-base font-bold tracking-tight uppercase text-tertiary font-title">
+          Marketplace
+        </h2>
+        <h3
+          class="max-w-4xl px-5 mt-2 text-4xl font-black leading-tight text-center text-primary sm:mt-0 sm:px-0 md:text-5xl">
+          a new world of opportunities
+        </h3>
+      </div>
+      <Offers />
+    </div>
+    <Pricing />
+    <Testimonials />
+    <Footer />
+  </div>
+</Compose>

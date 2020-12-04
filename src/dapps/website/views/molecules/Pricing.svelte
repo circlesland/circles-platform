@@ -1,5 +1,5 @@
 <div
-  class="relative px-8 py-10 bg-white border-t border-gray-200 md:py-16 lg:py-24 xl:py-40 xl:px-0">
+  class="relative px-8 py-10 border-t border-gray-200 bg-light-100 md:py-16 lg:py-24 xl:py-40 xl:px-0">
   <div
     id="pricing"
     class="container flex flex-col items-center h-full max-w-6xl mx-auto">

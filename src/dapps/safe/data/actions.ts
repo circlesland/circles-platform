@@ -93,7 +93,7 @@ export const safeOverflowActions = [
         icon: faCoins
       },
       data: {
-        label: "Send Circles"
+        label: "Send ⦿"
       }
     },
     event: () => new RunProcess(transferCircles)
@@ -106,7 +106,7 @@ export const safeOverflowActions = [
         icon: faCoins,
       },
       data: {
-        label: "Trust friend",
+        label: "Add friend",
       }
     },
     event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
