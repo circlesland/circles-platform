@@ -3,15 +3,17 @@
   <div
     class="container flex flex-col items-center justify-between h-full max-w-6xl px-8 mx-auto -mt-32 lg:flex-row xl:px-0">
     <div
-      class="z-30 flex flex-col items-center w-full max-w-xl pt-48 text-center lg:items-start lg:w-1/2 lg:pt-20 xl:pt-40 lg:text-left">
+      class="z-30 flex flex-col items-center w-full max-w-xl pt-24 text-center lg:items-start lg:w-1/2 lg:pt-16 xl:pt-24 lg:text-left">
       <h1
-        class="relative mb-4 text-3xl font-black leading-tight text-gray-900 sm:text-6xl xl:mb-8">
-        Build the Next Great Thing
+        class="relative mb-4 text-3xl font-black leading-tight font-primary text-primary sm:text-6xl xl:mb-8">
+        Own your money
+        <br />own your life!
       </h1>
       <p
-        class="pr-0 mb-8 text-base text-gray-600 sm:text-lg xl:text-xl lg:pr-20">
-        Are you ready to start your adventure and start building the next
-        greatest SAAS app on the market?
+        class="pr-0 mb-8 text-base text-light-500 sm:text-lg xl:text-xl lg:pr-20 ">
+        Are you ready to become an Omo Sapien and own your life adventure? Grow
+        your own personal money, based on your time alive. Every Omo Sapien is
+        harvesting every hour 1⦿.
       </p>
       <a
         href="#_"
@@ -144,7 +146,7 @@
       <div
         class="container relative left-0 w-full max-w-4xl lg:absolute xl:max-w-6xl lg:w-screen">
         <img
-          src="https://cdn.devdojo.com/images/september2020/macbook-mockup.png"
+          src="./images/laptop.png"
           class="w-full h-auto mt-20 mb-20 ml-0 lg:mt-24 xl:mt-40 lg:mb-0 lg:h-full lg:-ml-12" />
       </div>
     </div>

@@ -131,7 +131,7 @@
                   {#if t.from !== '0x0000000000000000000000000000000000000000'}
                     {t.direction === 'in' ? 'Incoming' : 'Outgoing'}
                     {t.subject}
-                  {:else}Universal basic income{/if}
+                  {:else}Harvested Time{/if}
                 </b>
                 <p class="text-gray-500 text-xxs md:text-xs">
                   {dayjs(t.timestamp).fromNow()}
@@ -174,9 +174,9 @@
                 <div class="flex ">
                   {#if t.from === '0x0000000000000000000000000000000000000000'}
                     <img
-                      src="https://avatars.dicebear.com/api/avataaars/mama.svg"
+                      src="./images/symbols/o.svg"
                       alt="profile"
-                      class="h-12" />
+                      class="w-10 h-10 mt-2 mr-1" />
                   {:else}
                     <img
                       src="https://avatars.dicebear.com/api/avataaars/{t.from}.svg"
@@ -202,9 +202,16 @@
                   <span class=" text-primary">{t.to}</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
-                  Amount:
+                  Amount in circles:
                   <span
-                    class=" text-primary">{t.o.returnValues.value / 1000000000000000000}</span>
+                    class=" text-primary">{t.o.returnValues.value / 1000000000000000000}
+                    CRC</span>
+                </div>
+                <div class="max-w-full text-gray-500 ">
+                  Amount in ⦿:
+                  <span
+                    class=" text-primary">{(t.o.returnValues.value / 1000000000000000000) * 3}
+                    ⦿</span>
                 </div>
                 <!-- <div
                   class="justify-center my-2 text-xs uppercase text-secondary "
