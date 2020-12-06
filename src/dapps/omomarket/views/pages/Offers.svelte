@@ -16,8 +16,8 @@
         country: "Germany",
         delivery: "delivery",
         offeredBy: {
-          image: "images/users/ondria.jpg",
-          firstName: "Pflanzenstoff",
+          image: "images/market/ondria.jpg",
+          firstName: "Ondria",
           lastName: "GmbH",
         },
       },
