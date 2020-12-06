@@ -75,7 +75,7 @@ export abstract class Directory<TEntity extends Entity>
     return <TSpecificEntity>JSON.parse(<string>contents);
   }
 
-  async addOrUpdate(entity:TEntity, indexHint?:string) : Promise<{
+  async addOrUpdate(entity:TEntity, publish = true, indexHint?:string) : Promise<{
     cid:CID,
     added:boolean,
     entity:TEntity
@@ -98,12 +98,14 @@ export abstract class Directory<TEntity extends Entity>
       entity,
       indexHint);
 
-    result.cid = await this.fs.publish();
+    result.cid = publish
+      ? await this.fs.publish()
+      : null;
 
     return result;
   }
 
-  async tryRemove(entityName:string, indexHint?:string) : Promise<{
+  async tryRemove(entityName:string, publish = true, indexHint?:string) : Promise<{
     cid:CID,
     entity:TEntity
   }|null>
@@ -117,8 +119,15 @@ export abstract class Directory<TEntity extends Entity>
     await this.maintainIndexes("remove", entity, indexHint);
 
     return {
-      cid: await this.fs.publish(),
+      cid: publish
+           ? await this.fs.publish()
+           : null,
       entity: entity
     };
+  }
+
+  protected async publish() : Promise<string>
+  {
+    return await this.fs.publish();
   }
 }

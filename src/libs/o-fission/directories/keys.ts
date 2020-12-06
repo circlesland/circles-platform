@@ -1,7 +1,6 @@
 import { Directory, DirectoryChangeType } from "./directory";
 import { KeyPair } from "../entities/keyPair";
 import FileSystem from "webnative/fs/filesystem";
-import { Profile } from "../entities/profile";
 
 export class Keys extends Directory<KeyPair>
 {
@@ -20,10 +19,10 @@ export class Keys extends Directory<KeyPair>
     if (await this.exists(["me"])) {
       throw new Error("The circles safe owner keypair cannot be modified.")
     }
-    return await this.addOrUpdate(myKey, "addMyKey");
+    return await this.addOrUpdate(myKey, true, "addMyKey");
   }
 
-  async maintainIndexes(change: DirectoryChangeType, entity: Profile, hint?: string): Promise<void> {
+  async maintainIndexes(change: DirectoryChangeType, entity: KeyPair, hint?: string): Promise<void> {
     if (entity.name === "me" && hint !== "addMyKey") {
       throw new Error(`The 'me' entity is a system entity in '${this.getPath()}' and should not be used directly.`);
     }
