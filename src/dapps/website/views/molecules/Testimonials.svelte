@@ -14,8 +14,8 @@
           Testimonials
         </h2>
         <p class="my-6 text-xl font-medium text-gray-500">
-          Don't just take our word for it, read from our extensive list of case
-          studies and customer testimonials.
+          Don't just take our word for it, read from our list of customer and
+          provider testimonials.
         </p>
       </div>
       <div
@@ -33,15 +33,16 @@
                     d="M30.7 42c0 6.1 12.6 7 12.6 22 0 11-7.9 19.2-18.9 19.2C12.7 83.1 5 72.6 5 61.5c0-19.2 18-44.6 29.2-44.6 2.8 0 7.9 2 7.9 5.4S30.7 31.6 30.7 42zM82.4 42c0 6.1 12.6 7 12.6 22 0 11-7.9 19.2-18.9 19.2-11.8 0-19.5-10.5-19.5-21.6 0-19.2 18-44.6 29.2-44.6 2.8 0 7.9 2 7.9 5.4S82.4 31.6 82.4 42z" />
                 </svg>
                 <p class="mt-2 text-base text-gray-600">
-                  I'm loving these templates! Very nice features and layouts.
+                  We have recently launched our new Energiedrink Pflanzenstoff
+                  and it was amazing to see the impact we had.
                 </p>
               </div>
 
               <h3
                 class="pl-12 mt-3 text-base font-medium leading-5 text-gray-800 truncate">
-                Sandra Walton
+                Ela Rose
                 <span class="mt-1 text-sm leading-5 text-gray-500 truncate">-
-                  CEO SomeCompany</span>
+                  CEO Pflanzenstoff GmbH</span>
               </h3>
               <p class="mt-1 text-sm leading-5 text-gray-500 truncate" />
             </div>
@@ -62,15 +63,15 @@
                     d="M30.7 42c0 6.1 12.6 7 12.6 22 0 11-7.9 19.2-18.9 19.2C12.7 83.1 5 72.6 5 61.5c0-19.2 18-44.6 29.2-44.6 2.8 0 7.9 2 7.9 5.4S30.7 31.6 30.7 42zM82.4 42c0 6.1 12.6 7 12.6 22 0 11-7.9 19.2-18.9 19.2-11.8 0-19.5-10.5-19.5-21.6 0-19.2 18-44.6 29.2-44.6 2.8 0 7.9 2 7.9 5.4S82.4 31.6 82.4 42z" />
                 </svg>
                 <p class="mt-2 text-base text-gray-600">
-                  Really digging this service. Now I can quickly bootstrap any
-                  project.
+                  The fact that I can use my time as currency to consume Jack's
+                  foods is genius
                 </p>
               </div>
               <h3
                 class="pl-12 mt-3 text-base font-medium leading-5 text-gray-800 truncate">
                 Kenny Jones
                 <span class="mt-1 text-sm leading-5 text-gray-500 truncate">-
-                  CEO SomeCompany</span>
+                  Customer from Jack's Food</span>
               </h3>
               <p class="mt-1 text-sm leading-5 text-gray-500 truncate" />
             </div>
@@ -93,7 +94,8 @@
                     d="M30.7 42c0 6.1 12.6 7 12.6 22 0 11-7.9 19.2-18.9 19.2C12.7 83.1 5 72.6 5 61.5c0-19.2 18-44.6 29.2-44.6 2.8 0 7.9 2 7.9 5.4S30.7 31.6 30.7 42zM82.4 42c0 6.1 12.6 7 12.6 22 0 11-7.9 19.2-18.9 19.2-11.8 0-19.5-10.5-19.5-21.6 0-19.2 18-44.6 29.2-44.6 2.8 0 7.9 2 7.9 5.4S82.4 31.6 82.4 42z" />
                 </svg>
                 <p class="mt-2 text-base text-gray-600">
-                  Extremely helpful in every single project we have released.
+                  Extremely helpful in every single product we have released to
+                  the omo market
                 </p>
               </div>
 
@@ -101,7 +103,7 @@
                 class="pl-12 mt-3 text-base font-medium leading-5 text-gray-800 truncate">
                 Mike Smith
                 <span class="mt-1 text-sm leading-5 text-gray-500 truncate">-
-                  CEO SomeCompany</span>
+                  CEO Special Dandelion</span>
               </h3>
               <p class="mt-1 text-sm leading-5 text-gray-500 truncate" />
             </div>
@@ -123,7 +125,7 @@
                 </svg>
                 <p class="mt-2 text-base text-gray-600">
                   Finally a quick and easy system I can use for any type of
-                  project.
+                  product
                 </p>
               </div>
 
@@ -131,7 +133,7 @@
                 class="pl-12 mt-3 text-base font-medium leading-5 text-gray-800 truncate">
                 Molly Sanchez
                 <span class="mt-1 text-sm leading-5 text-gray-500 truncate">-
-                  CEO SomeCompany</span>
+                  CEO VisionReach</span>
               </h3>
               <p class="mt-1 text-sm leading-5 text-gray-500 truncate" />
             </div>

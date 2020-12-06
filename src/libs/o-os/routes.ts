@@ -5,13 +5,16 @@ import wrap from "svelte-spa-router/wrap";
 import { transactions, tokens, friends, answerInviteRequest } from "../../dapps/safe/manifest";
 import { omoli } from "../../dapps/omoli/manifest";
 import { profile, access, keys, authenticate } from "../../dapps/omosapien/manifest";
-import { website } from "../../dapps/website/manifest";
+import { website, privacy, tos } from "../../dapps/website/manifest";
 import { offers, requests, favorites } from "../../dapps/omomarket/manifest";
+
 
 // Export the route definition object
 export default {
     // Website
     '/': wrap(website),
+    '/privacy': wrap(privacy),
+    '/tos': wrap(tos),
 
     // Omo
     '/omoli/*': wrap(omoli),

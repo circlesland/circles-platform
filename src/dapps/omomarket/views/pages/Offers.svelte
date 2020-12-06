@@ -7,11 +7,28 @@
   let offers = [
     {
       data: {
+        title: "Ondria Energydrink (6 Pack)",
+        image: "./images/market/ondria.jpg",
+        description:
+          "ondria is a new healthy and vegan energy drink, with many superfruits incl. Guarana, Aronia and Acai",
+        price: "150",
+        city: "Munich",
+        country: "Germany",
+        delivery: "delivery",
+        offeredBy: {
+          image: "images/users/ondria.jpg",
+          firstName: "Pflanzenstoff",
+          lastName: "GmbH",
+        },
+      },
+    },
+    {
+      data: {
         title: "Bavarian Leathershoes (Size 44)",
         image: "./images/market/shoes.jpg",
         description:
           "almost new, only worn 2 times, slightly used marks at the tips of the shoes",
-        price: "800",
+        price: "500",
         city: "Bad Endorf",
         country: "Germany",
         delivery: "pickup or delivery",
@@ -27,7 +44,7 @@
         image: "./images/market/lederhose.jpg",
         title: "Bavarian Lederhosn (Size 48)",
         description: "almost new, only worn 2 times, slightly used marks",
-        price: "1500",
+        price: "1000",
         city: "Bad Endorf",
         country: "Germany",
         delivery: "pickup or delivery",
@@ -43,7 +60,7 @@
         image: "./images/market/hemdblau.jpg",
         title: "Blue plaid shirt (Size S/M 37/38)",
         description: "almost new, only worn 2 times",
-        price: "300",
+        price: "150",
         city: "Bad Endorf",
         country: "Germany",
         delivery: "pickup or delivery",
@@ -59,7 +76,7 @@
         image: "./images/market/hemdrot.jpg",
         title: "Red plaid shirt (Size S/M 39/40)",
         description: "almost new, only worn 2 times",
-        price: "300",
+        price: "150",
         city: "Bad Endorf",
         country: "Germany",
         delivery: "pickup or delivery",
@@ -70,23 +87,23 @@
         },
       },
     },
-    {
-      data: {
-        title: "UNU 2 Electro Scooter",
-        image: "./images/market/unu.jpg",
-        description:
-          "Brand new UNU electro scooter delivered straight from the factory to your home. I pre-ordered this unique beauty this summer and according to UNU will be ready for shipping around spring 2021. In the package is a 4000 watt black scooter with 2 batteries and 1 helmet. For more details see: https://unumotors.com/",
-        price: "100.000",
-        city: "Munich or Berlin",
-        country: "Germany",
-        delivery: "pickup or delivery",
-        offeredBy: {
-          image: "images/users/samuel.jpg",
-          firstName: "Samuel",
-          lastName: "Andert",
-        },
-      },
-    },
+    // {
+    //   data: {
+    //     title: "UNU 2 Electro Scooter",
+    //     image: "./images/market/unu.jpg",
+    //     description:
+    //       "Brand new UNU electro scooter delivered straight from the factory to your home. I pre-ordered this unique beauty this summer and according to UNU will be ready for shipping around spring 2021. In the package is a 4000 watt black scooter with 2 batteries and 1 helmet. For more details see: https://unumotors.com/",
+    //     price: "100.000",
+    //     city: "Munich or Berlin",
+    //     country: "Germany",
+    //     delivery: "pickup or delivery",
+    //     offeredBy: {
+    //       image: "images/users/samuel.jpg",
+    //       firstName: "Samuel",
+    //       lastName: "Andert",
+    //     },
+    //   },
+    // },
   ];
 </script>
 

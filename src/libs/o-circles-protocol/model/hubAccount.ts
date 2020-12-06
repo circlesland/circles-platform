@@ -147,7 +147,7 @@ export class HubAccount implements Safe {
                 timestamp: null,
                 amount: amount,
                 from: o.returnValues.from,
-                subject: "⦿transfer",
+                subject: "⦿ transfer",
                 to: o.returnValues.to,
                 o
             };

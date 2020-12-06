@@ -9,6 +9,7 @@
   import Footer from "../molecules/Footer.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import Offers from "src/dapps/omomarket/views/pages/Offers.svelte";
+  import Video from "../molecules/Video.svelte";
 
   onMount(async () => {
     if (window.o.fission) {
@@ -37,6 +38,9 @@
   <div class="overflow-x-hidden antialiased">
     <Header />
     <Hero />
+    <div class="pb-12 bg-white">
+      <Video />
+    </div>
     <Features />
     <div class="pb-12 bg-light-100">
       <div
