@@ -106,7 +106,7 @@
             </div>
             <div class="flex items-center block p-8 lowercase">
               <a
-                href="#_"
+                href="https://discord.gg/Ac4dy9Army"
                 class="block w-full px-6 py-3 mt-3 text-lg font-bold text-center shadow-sm text-secondary hover:bg-secondary-lighter hover:text-white rounded-xl bg-light-200">Get
                 started now</a>
             </div>
@@ -205,7 +205,7 @@
 
           <div class="flex items-center block p-8 lowercase">
             <a
-              href="#_"
+              href="https://discord.gg/Ac4dy9Army"
               class="block w-full px-6 py-4 mt-3 text-lg font-semibold text-center text-white shadow-sm bg-secondary hover:bg-secondary-lighter rounded-xl">I
               am Omo</a>
           </div>
@@ -301,7 +301,7 @@
 
             <div class="flex items-center block p-8 lowercase">
               <a
-                href="#_"
+                href="https://discord.gg/Ac4dy9Army"
                 class="block w-full px-6 py-3 mt-3 text-lg font-semibold text-center text-gray-300 bg-gray-200 shadow-sm cursor-not-allowed rounded-xl">coming
                 soon</a>
             </div>
