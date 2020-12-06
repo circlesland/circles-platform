@@ -13,7 +13,7 @@ import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPro
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {ether} from "../../../../libs/o-processes/artifacts/ether";
+import {o} from "../../../../libs/o-processes/artifacts/o";
 import {RefreshView} from "../../../../libs/o-events/refreshView";
 import {transferCirclesService} from "./services/transferCirclesService";
 
@@ -71,7 +71,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
             }
           },
           artifacts: {
-            ...ether("value", undefined, undefined, maxBalance)
+            ...o("value", undefined, undefined, maxBalance)
           }
         }}),
       on: {
@@ -98,7 +98,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
           },
           artifacts: {
             ...ethereumAddress("recipient", str.titleRecipient(), true),
-            ...ether("value", str.titleValue(), true)
+            ...o("value", str.titleValue(), true)
           }
         }}),
       on: {

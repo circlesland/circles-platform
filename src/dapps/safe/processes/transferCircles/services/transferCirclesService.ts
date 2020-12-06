@@ -1,5 +1,6 @@
 import {TransferCirclesContext} from "../transferCircles";
 import {config} from "../../../../../libs/o-circles-protocol/config";
+import {BN} from "ethereumjs-util";
 
 function sendMessage(message)
 {
@@ -36,7 +37,9 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 {
   try
   {
-    const wei = config.getCurrent().web3().utils.toWei(context.data.value.value.toString(), "ether");
+    const circlesValueInWei = context.environment.eth.web3.utils
+                              .toWei(context.data.value.value.toString(), "ether");
+    const oValueInWei = new BN(circlesValueInWei).div(new BN("3"));
     /*
     const pathResult = await sendMessage({
       call: "findPath",
@@ -52,7 +55,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
     const tokenOwners = [context.environment.me.mySafe.address];
     const sources = [context.environment.me.mySafe.address];
     const destinations = [context.data.recipient.value];
-    const values = [wei];
+    const values = [oValueInWei];
 /*
     (<any>pathResult).data.transfers.forEach(transfer =>
     {

@@ -13,6 +13,7 @@
   import FileEditor from "../atoms/editors/FileEditor.svelte";
   import ChoiceEditor from "../atoms/editors/ChoiceEditor.svelte";
   import InviteCreditEditor from "../atoms/editors/InviteCreditEditor.svelte";
+  import OEditor from "../atoms/editors/OEditor.svelte";
 
   export let process: Process;
   export let prompt: Prompt;
@@ -83,6 +84,10 @@
         processArtifact={artifact} />
     {:else if artifact.type === 'string'}
       <StringEditor
+        on:validated={() => setIsValid()}
+        processArtifact={artifact} />
+    {:else if artifact.type === 'o'}
+      <OEditor
         on:validated={() => setIsValid()}
         processArtifact={artifact} />
     {:else if artifact.type === 'text'}

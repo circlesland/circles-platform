@@ -7,6 +7,7 @@ export type ProcessArtifactType =
   | "keyphrase"
   | "choice"
   | "number"
+  | "o"
   | "boolean"
   | "ethereumAddress"
   | "ether"
