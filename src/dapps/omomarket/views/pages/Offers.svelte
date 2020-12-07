@@ -87,6 +87,23 @@
         },
       },
     },
+    {
+      data: {
+        image: "./images/market/roomsamuel.jpg",
+        title: "1-room in shared apartment",
+        description:
+          "stay 1 night in the center of Munich in a 16qm room in my shared apartment",
+        price: "300",
+        city: "Munich",
+        country: "Germany",
+        delivery: "ask for the address",
+        offeredBy: {
+          image: "images/users/samuel.jpg",
+          firstName: "Samuel",
+          lastName: "Andert",
+        },
+      },
+    },
     // {
     //   data: {
     //     title: "UNU 2 Electro Scooter",
