@@ -5,7 +5,7 @@ export const keys: KeyItem[] = [
     {
         data: {
             image: "/icons/paperWallet.svg",
-            title: "Circles SafeOwner",
+            title: "Omo SafeOwner",
             subtitle: "PrivateKey",
             privatekey: "TODO",
         },

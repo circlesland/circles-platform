@@ -42,7 +42,7 @@ export const strings = {
         bannerSummary: () => "Please check the recipient address and click 'Use 1 invite credit' to get this person up and running.",
         titleRecipient: () => "Invite",
         titleValue: () => "invite credits",
-        bannerIntro: () => "0x123.. sent you a jumpstart request. Every transaction on the distributed computer costs a little fee. Send 1 invite credit to allow 0x123 to pay for all transaction fees that are required to join circles.",
+        bannerIntro: () => "0x123.. sent you a jumpstart request. Every transaction on the distributed computer costs a little fee. Send 1 invite credit to allow 0x123 to pay for all transaction fees that are required to join omo.",
         titleIntro: () => "Jumpstart",
         introHeader: (context: JumpstartContext) => `<span class="text-3xl">${context.data.recipient.value.substring(0, 8)}</span>`,
         introSubHeader: (context: JumpstartContext) => `is asking you to empower his/her life`,
@@ -62,15 +62,15 @@ export const strings = {
         "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
       },
       transferCircles: {
-        "successMessage": (context: SendInviteCreditsContext) => `Circles successfully transferred`,
-        "errorMessage": (context: SendInviteCreditsContext) => `Circles transfer failed (check trust)`,
+        "successMessage": (context: SendInviteCreditsContext) => `⦿ successfully transferred`,
+        "errorMessage": (context: SendInviteCreditsContext) => `⦿ transfer failed (check trust)`,
         titleRecipient: () => "Recipient",
         bannerRecipient: () => "Please enter the recipients address",
         titleValue: () => "Amount",
-        bannerValue: () => "Please enter the amount (in Circles)",
+        bannerValue: () => "Please enter the amount (in ⦿)",
         titleProgress: () => "Sending ..",
         titleSummary: () => "Confirm",
-        bannerSummary: () => "Please check the transaction details and click 'Transfer Circles' to confirm the transaction"
+        bannerSummary: () => "Please check the transaction details and click 'Transfer ⦿' to confirm the transaction"
       },
       initializeApp: {
         titleSafeAddress: () => "Safe",
@@ -92,10 +92,10 @@ export const strings = {
         successDeploySafe: () => "Your new safe was successfully created",
         choiceConnectSafe: () => "Connect circles",
         choiceCreateSafe: () => "Create new",
-        bannerConnectOrCreateSafe: () => "Do you want to connect an existing circles account?",
+        bannerConnectOrCreateSafe: () => "Do you want to create a new account or connect an existing circles safe?",
         titleConnectOrCreateSafe: () => "Existing account?",
-        progressHubSignup: () => "Registering your account at the circles hub",
-        successHubSignup: () => "Successfully registered at the circles hub",
+        progressHubSignup: () => "Registering your account",
+        successHubSignup: () => "Successfully registered",
         progressFundSafe: () => "Sending some xDai to the safe ..",
         successFundSafe: () => "Sent some xDai to the safe.",
         successCreatePrivateKey: () => "Private key created.",

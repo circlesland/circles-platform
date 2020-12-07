@@ -145,7 +145,7 @@
 
   const labelDistribution = {
     data: {
-      label: "detailed circles distribution",
+      label: "detailed ⦿ distribution",
     },
   };
 </script>

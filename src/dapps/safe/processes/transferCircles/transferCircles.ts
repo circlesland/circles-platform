@@ -1,24 +1,23 @@
-import {createMachine, send} from "xstate";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {strings} from "../../data/strings";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
+import { createMachine, send } from "xstate";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { strings } from "../../data/strings";
+import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
+import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {o} from "../../../../libs/o-processes/artifacts/o";
-import {RefreshView} from "../../../../libs/o-events/refreshView";
-import {transferCirclesService} from "./services/transferCirclesService";
+import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
+import { setError } from "../../../../libs/o-processes/actions/setError";
+import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import { o } from "../../../../libs/o-processes/artifacts/o";
+import { RefreshView } from "../../../../libs/o-events/refreshView";
+import { transferCirclesService } from "./services/transferCirclesService";
 
-export interface TransferCirclesContext extends ProcessContext
-{
+export interface TransferCirclesContext extends ProcessContext {
   data: {
     recipient?: ProcessArtifact,
     value?: ProcessArtifact
@@ -29,16 +28,17 @@ export interface TransferCirclesContext extends ProcessContext
  * Transfer xDai
  */
 const str = strings.safe.processes.transferCircles;
-const processDefinition = (maxBalance:number) => createMachine<TransferCirclesContext, OmoEvent>({
+const processDefinition = (maxBalance: number) => createMachine<TransferCirclesContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
-      on:{
+      on: {
         "process.continue": "promptRecipient"
       }
     },
     promptRecipient: {
-      entry: sendPrompt((context) => {return{
+      entry: sendPrompt((context) => {
+        return {
           title: str.titleRecipient(),
           nextButtonTitle: "Next",
           banner: {
@@ -50,7 +50,8 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
           artifacts: {
             ...ethereumAddress("recipient")
           }
-        }}),
+        }
+      }),
       on: {
         "process.continue": {
           actions: storePromptResponse,
@@ -60,7 +61,8 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
       }
     },
     promptValue: {
-      entry: sendPrompt((context) => {return{
+      entry: sendPrompt((context) => {
+        return {
           title: str.titleValue(),
           nextButtonTitle: "Next",
           canGoBack: true,
@@ -73,7 +75,8 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
           artifacts: {
             ...o("value", undefined, undefined, maxBalance)
           }
-        }}),
+        }
+      }),
       on: {
         "process.back": {
           target: "promptRecipient"
@@ -86,9 +89,10 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
       }
     },
     summarize: {
-      entry: sendPrompt((context) => {return{
+      entry: sendPrompt((context) => {
+        return {
           title: str.titleSummary(),
-          nextButtonTitle: "Transfer Circles",
+          nextButtonTitle: "Transfer ⦿",
           canGoBack: true,
           banner: {
             component: Banner,
@@ -100,7 +104,8 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
             ...ethereumAddress("recipient", str.titleRecipient(), true),
             ...o("value", str.titleValue(), true)
           }
-        }}),
+        }
+      }),
       on: {
         "process.back": {
           target: "promptValue"
@@ -145,7 +150,7 @@ const processDefinition = (maxBalance:number) => createMachine<TransferCirclesCo
         "process.cancel": "stop"
       },
       after: {
-        2000: {target: 'stop'}
+        2000: { target: 'stop' }
       }
     },
     error: {
