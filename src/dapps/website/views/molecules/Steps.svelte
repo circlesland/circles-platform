@@ -32,12 +32,12 @@
         </div>
       </div>
 
-      <div class="w-full max-w-md p-4 mx-auto mb-0 sm:mb-16 lg:mb-0 lg:w-1/3">
+      <div class="w-full max-w-md p-4 mx-auto mb-0 sm:mb-8 lg:mb-0 lg:w-1/3">
         <div
-          class="relative flex flex-col items-center justify-center w-full h-full p-20 mr-5 rounded-lg">
+          class="relative flex flex-col items-center justify-center w-full h-full px-12 py-4 mr-5 rounded-lg">
           <img src="illustrations/fund.svg" alt="gift" />
 
-          <h4 class="relative mt-16 text-lg font-bold text-center">
+          <h4 class="relative mt-6 text-lg font-bold text-center">
             2. Fund a project
           </h4>
           <p class="relative mt-2 text-base text-center text-light-500">
