@@ -9,7 +9,7 @@
         <img src="./images/logo.png" alt="omo" class="w-12 h-auto" />
       </a>
       <p class="mt-6 mr-4 text-base text-gray-500">
-        Crafting the next human era of abundance
+        Crafting the a new human era of joyfull abundance
       </p>
     </div>
     <div class="block w-full pl-10 mt-6 text-sm lg:w-3/4 sm:flex lg:mt-0">

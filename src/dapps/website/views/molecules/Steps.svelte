@@ -17,48 +17,54 @@
       <div class="w-full max-w-md p-4 mx-auto mb-0 sm:mb-16 lg:mb-0 lg:w-1/3">
         <div
           class="relative flex flex-col items-center justify-center w-full h-full p-20 mr-5 rounded-lg">
-          <div class="text-6xl">1.</div>
+          <img src="illustrations/gift.svg" alt="gift" />
 
-          <h4 class="relative mt-6 text-lg font-bold">Signup Bonus</h4>
+          <h4 class="relative mt-6 text-lg font-bold text-center">
+            1. Signup Bonus
+          </h4>
           <p class="relative mt-2 text-base text-center text-light-500">
-            150⦿ (~10€) Welcome bonus, when you first sign-up 
+            Receive 150 ⦿ welcome bonus, when you first sign-up 
           </p>
-          <a
+          <!-- <a
             href="#_"
             class="relative flex mt-2 text-sm font-medium text-indigo-500 underline">Learn
-            More</a>
+            More</a> -->
         </div>
       </div>
 
       <div class="w-full max-w-md p-4 mx-auto mb-0 sm:mb-16 lg:mb-0 lg:w-1/3">
         <div
           class="relative flex flex-col items-center justify-center w-full h-full p-20 mr-5 rounded-lg">
-          <div class="text-6xl">2.</div>
+          <img src="illustrations/fund.svg" alt="gift" />
 
-          <h4 class="relative mt-6 text-lg font-bold">First Purchase</h4>
+          <h4 class="relative mt-16 text-lg font-bold text-center">
+            2. Fund a project
+          </h4>
           <p class="relative mt-2 text-base text-center text-light-500">
-            Make your first purchase and order something for min 100⦿
+            Grow your economy by choosing a crowdfunding project to support and
+            make a pre-order.
           </p>
-          <a
+          <!-- <a
             href="#_"
             class="relative flex mt-2 text-sm font-medium text-indigo-500 underline">Learn
-            More</a>
+            More</a> -->
         </div>
       </div>
 
       <div class="w-full max-w-md p-4 mx-auto mb-16 lg:mb-0 lg:w-1/3">
         <div
           class="relative flex flex-col items-center justify-center w-full h-full p-20 mr-5 rounded-lg">
-          <div class="text-6xl">3.</div>
-          <h4 class="relative mt-6 text-lg font-bold">Unlock your ⦿'s</h4>
+          <img src="illustrations/identity.svg" alt="gift" />
+          <h4 class="relative mt-6 text-lg font-bold text-center">
+            3. Unlock your money
+          </h4>
           <p class="relative mt-2 text-base text-center text-light-500">
-            Make your first offer for 100+ ⦿ to unlock your time currency at 1⦿
-            / hour
+            Unlock your time currency at 1 ⦿ per hour by verifying your identity
           </p>
-          <a
+          <!-- <a
             href="#_"
             class="relative flex mt-2 text-sm font-medium text-indigo-500 underline">Learn
-            More</a>
+            More</a> -->
         </div>
       </div>
     </div>

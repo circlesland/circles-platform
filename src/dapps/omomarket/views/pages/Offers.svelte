@@ -5,23 +5,23 @@
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
 
   let offers = [
-    {
-      data: {
-        title: "Ondria Energydrink (6 Pack)",
-        image: "./images/market/ondria.jpg",
-        description:
-          "ondria is a new healthy and vegan energy drink, with many superfruits incl. Guarana, Aronia and Acai",
-        price: "150",
-        city: "Munich",
-        country: "Germany",
-        delivery: "delivery",
-        offeredBy: {
-          image: "images/market/ondria.jpg",
-          firstName: "Ondria",
-          lastName: "GmbH",
-        },
-      },
-    },
+    // {
+    //   data: {
+    //     title: "Ondria Energydrink (6 Pack)",
+    //     image: "./images/market/ondria.jpg",
+    //     description:
+    //       "ondria is a new healthy and vegan energy drink, with many superfruits incl. Guarana, Aronia and Acai",
+    //     price: "150",
+    //     city: "Munich",
+    //     country: "Germany",
+    //     delivery: "delivery",
+    //     offeredBy: {
+    //       image: "images/market/ondria.jpg",
+    //       firstName: "Ondria",
+    //       lastName: "GmbH",
+    //     },
+    //   },
+    // },
     {
       data: {
         title: "Bavarian Leathershoes (Size 44)",

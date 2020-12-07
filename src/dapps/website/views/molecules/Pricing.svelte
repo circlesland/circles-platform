@@ -27,7 +27,7 @@
               </h3>
               <h4
                 class="flex items-center justify-center pb-6 text-4xl font-bold text-center text-primary">
-                0<span class="ml-1 text-lg text-gray-700">⦿</span>
+                0<span class="ml-1 text-xl text-primary">⦿</span>
               </h4>
               <p class="text-sm text-center text-gray-600">
                 to buy or offer anything on the marketplace will always be free
@@ -106,7 +106,7 @@
             </div>
             <div class="flex items-center block p-8 lowercase">
               <a
-                href="https://discord.gg/Ac4dy9Army"
+                href="#/omoli/dapps"
                 class="block w-full px-6 py-3 mt-3 text-lg font-bold text-center shadow-sm text-secondary hover:bg-secondary-lighter hover:text-white rounded-xl bg-light-200">Get
                 started now</a>
             </div>
@@ -127,7 +127,10 @@
             </h3>
             <h4
               class="flex items-center justify-center pb-6 text-5xl font-bold text-center text-primary">
-              7<span class="ml-1 text-lg text-gray-700"> ⦿ / week</span>
+              7
+              <span class="text-xl">⦿</span><span
+                class="ml-1 text-lg text-gray-700">
+                / week</span>
             </h4>
             <p class="text-sm text-center text-gray-600">
               Give back to the passionate entrepreneurs and developers
@@ -166,7 +169,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Pay open source teams</span>
+                <span class="ml-3 text-lg text-gray-700">Empower open source</span>
               </li>
               <li class="flex items-center">
                 <div class="p-2 text-green-500 rounded-full fill-current ">
@@ -198,7 +201,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Create proposals</span>
+                <span class="ml-3 text-lg text-gray-700">Verified by Omo tag</span>
               </li>
             </ul>
           </div>

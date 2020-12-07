@@ -16,8 +16,9 @@
       </h1>
       <p
         class="pr-0 mb-8 text-base text-light-500 sm:text-lg xl:text-xl lg:pr-20 ">
-        Are you ready to own your lifes adventures? Grow now your own personal
-        money, based on your time alive.
+        Are you ready to own your lifes adventures? Enter now into a new human
+        era of joyfull abundance, self-sovereignity and grow your own personal
+        money tightly interconnected to your time alive.
       </p>
       <div
         on:click={() => push('#/omoli/dapps')}

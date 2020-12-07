@@ -14,8 +14,8 @@
           Testimonials
         </h2>
         <p class="my-6 text-xl font-medium text-gray-500">
-          Don't just take our word for it, read from our list of customer and
-          entrepreneuers experiences.
+          Don't just take our word for it, read from the experiences of our
+          omopreneuers.
         </p>
       </div>
       <div
