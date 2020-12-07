@@ -6,14 +6,14 @@
       <a
         href="/"
         class="flex justify-start block text-left sm:text-center lg:text-left sm:justify-center lg:justify-start">
-        <img src="./images/logo.png" alt="omo" class="w-12 h-auto" />
+        <img src="./logos/omo.svg" alt="omo" class="w-12 h-auto" />
       </a>
       <p class="mt-6 mr-4 text-base text-gray-500">
         Crafting a new human era of joyfull abundance
       </p>
     </div>
     <div class="block w-full pl-10 mt-6 text-sm lg:w-3/4 sm:flex lg:mt-0">
-      <ul
+      <!-- <ul
         class="flex flex-col w-full p-0 font-medium text-left text-gray-700 list-none">
         <li
           class="inline-block px-3 py-2 mt-5 font-bold tracking-wide text-gray-800 uppercase md:mt-0">
@@ -39,7 +39,7 @@
             href="#_"
             class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">FAQ</a>
         </li>
-      </ul>
+      </ul> -->
       <ul
         class="flex flex-col w-full p-0 font-medium text-left text-gray-700 list-none">
         <li

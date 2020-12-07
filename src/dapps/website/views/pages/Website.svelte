@@ -51,7 +51,7 @@
     </div>
     <Details />
     <Pricing />
-    <Testimonials />
+    <!-- <Testimonials /> -->
     <Footer />
   </div>
 </Compose>
