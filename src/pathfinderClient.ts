@@ -26,9 +26,9 @@ function sendMessage(message) {
   // contain an error, and reject with the error if it does. If you'd prefer, it's possible to call
   // controller.postMessage() and set up the onmessage handler independently of a promise, but this is
   // a convenient wrapper.
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     var messageChannel = new MessageChannel();
-    messageChannel.port1.onmessage = function(event) {
+    messageChannel.port1.onmessage = function (event) {
       if (event.data.error) {
         reject(event.data.error);
       } else {

@@ -1,5 +1,5 @@
-import {assign} from "xstate";
-import {InitializeAppContext} from "../initializeApp";
+import { assign } from "xstate";
+import { InitializeAppContext } from "../initializeApp";
 
 export const generateFundLink = assign((context: InitializeAppContext, event) => {
   context.data.fundLink = {

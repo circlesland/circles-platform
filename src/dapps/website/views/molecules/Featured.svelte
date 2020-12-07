@@ -40,7 +40,7 @@
         <div class="pt-2 pb-1 text-4xl font-bold text-primary font-primary">
           <div class="flex items-center">
             450
-            <img src="images/symbols/o.svg" alt="o" class="w-4 h-4 pl-1" />
+            <img src="symbols/o.svg" alt="o" class="w-4 h-4 pl-1" />
           </div>
           <div class="py-1 text-base font-bold uppercase text-light-500">
             of 300.000 ⦿ GOAL

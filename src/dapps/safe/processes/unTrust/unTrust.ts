@@ -30,24 +30,26 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
-      on:{
+      on: {
         "process.continue": "promptTrustReceiver"
       }
     },
     promptTrustReceiver: {
-      entry: sendPrompt((context) => {return{
-        title: str.titleTrustReceiver(),
-        nextButtonTitle: "Revoke trust",
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerTrustRecipient()
+      entry: sendPrompt((context) => {
+        return {
+          title: str.titleTrustReceiver(),
+          nextButtonTitle: "Revoke trust",
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerTrustRecipient()
+            }
+          },
+          artifacts: {
+            ...ethereumAddress("trustReceiver")
           }
-        },
-        artifacts: {
-          ...ethereumAddress("trustReceiver")
         }
-      }}),
+      }),
       on: {
         "process.continue": {
           actions: storePromptResponse,

@@ -110,7 +110,7 @@
 
   $: circlesSafe = {
     data: {
-      image: "images/symbols/o.svg",
+      image: "symbols/o.svg",
       title: "time in ⦿",
       description: "Address: " + safeAddress,
       balance: (parseFloat(circlesBalance) * 3).toFixed(2),
@@ -129,7 +129,7 @@
 
   $: xDaiOwner = {
     data: {
-      image: "images/logo/xdai.png",
+      image: "logos/xdai.png",
       title: "Transaction Credits",
       subtitle: "Estimated transactions you have left",
       balance: "~" + Math.floor(parseFloat(personalEtherBalance) * 20000),

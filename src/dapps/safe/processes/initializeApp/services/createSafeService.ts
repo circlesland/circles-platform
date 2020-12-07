@@ -1,9 +1,8 @@
-import {GotSafe} from "../../../events/gotSafe";
-import {InitializeAppContext} from "../initializeApp";
+import { GotSafe } from "../../../events/gotSafe";
+import { InitializeAppContext } from "../initializeApp";
 
-export const createSafeService = async (context: InitializeAppContext) =>
-{
-  if(!context.environment.fission) {
+export const createSafeService = async (context: InitializeAppContext) => {
+  if (!context.environment.fission) {
     throw new Error("You're not authenticated.");
   }
 

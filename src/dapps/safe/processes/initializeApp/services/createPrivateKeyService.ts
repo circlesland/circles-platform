@@ -1,11 +1,10 @@
-import {InitializeAppContext} from "../initializeApp";
-import {ProcessArtifact} from "../../../../../libs/o-processes/interfaces/processArtifact";
+import { InitializeAppContext } from "../initializeApp";
+import { ProcessArtifact } from "../../../../../libs/o-processes/interfaces/processArtifact";
 
-export const createPrivateKeyService = async (context: InitializeAppContext) =>
-{
+export const createPrivateKeyService = async (context: InitializeAppContext) => {
   console.log("Creating a new account");
 
-  if(!context.environment.fission) {
+  if (!context.environment.fission) {
     throw new Error("You're not authenticated.");
   }
 

@@ -1,50 +1,43 @@
 import FileSystem from "webnative/fs/filesystem";
-import {Entity} from "../entities/entity";
-import {CID} from "webnative/ipfs";
+import { Entity } from "../entities/entity";
+import { CID } from "webnative/ipfs";
 
-export type DirectoryChangeType = "add"|"update"|"remove";
+export type DirectoryChangeType = "add" | "update" | "remove";
 
 export abstract class Directory<TEntity extends Entity>
 {
-  private readonly _fs:FileSystem;
-  private readonly _pathParts:string[];
+  private readonly _fs: FileSystem;
+  private readonly _pathParts: string[];
 
-  protected get fs() : FileSystem
-  {
+  protected get fs(): FileSystem {
     return this._fs;
   }
 
-  constructor(fs:FileSystem, pathParts:string[])
-  {
+  constructor(fs: FileSystem, pathParts: string[]) {
     this._pathParts = pathParts;
     this._fs = fs;
   }
 
-  abstract maintainIndexes(change:DirectoryChangeType, entity:TEntity, indexHint?:string) : Promise<void>;
+  abstract maintainIndexes(change: DirectoryChangeType, entity: TEntity, indexHint?: string): Promise<void>;
 
-  getPath(pathParts?:string[]) : string
-  {
+  getPath(pathParts?: string[]): string {
     return this.fs.appPath(pathParts
       ? this._pathParts.concat(pathParts)
       : this._pathParts);
   }
 
-  async exists(pathParts?:string[]) : Promise<boolean>
-  {
+  async exists(pathParts?: string[]): Promise<boolean> {
     return this.fs.exists(this.getPath(pathParts));
   }
 
-  async ensureDirectoryExists(pathParts?:string[]) : Promise<void>
-  {
-    if (!await this.exists(pathParts))
-    {
+  async ensureDirectoryExists(pathParts?: string[]): Promise<void> {
+    if (!await this.exists(pathParts)) {
       await this.fs.mkdir(this.getPath(pathParts));
       await this.fs.publish();
     }
   }
 
-  async listNames() : Promise<string[]>
-  {
+  async listNames(): Promise<string[]> {
     if (!await this.exists()) {
       return [];
     }
@@ -54,8 +47,7 @@ export abstract class Directory<TEntity extends Entity>
     return list.map(([name, _]) => name);
   }
 
-  async listItems() : Promise<TEntity[]>
-  {
+  async listItems(): Promise<TEntity[]> {
     const names = await this.listNames();
     const items = await Promise.all(names.map(name => {
       return this.fs.cat(this.getPath([name]));
@@ -64,10 +56,8 @@ export abstract class Directory<TEntity extends Entity>
     return items.map(item => <TEntity>JSON.parse(<string>item));
   }
 
-  async tryGetByName<TSpecificEntity extends TEntity>(entityName:string) : Promise<TSpecificEntity>
-  {
-    if (!await this.exists([entityName]))
-    {
+  async tryGetByName<TSpecificEntity extends TEntity>(entityName: string): Promise<TSpecificEntity> {
+    if (!await this.exists([entityName])) {
       return null;
     }
 
@@ -75,12 +65,11 @@ export abstract class Directory<TEntity extends Entity>
     return <TSpecificEntity>JSON.parse(<string>contents);
   }
 
-  async addOrUpdate(entity:TEntity, publish = true, indexHint?:string) : Promise<{
-    cid:CID,
-    added:boolean,
-    entity:TEntity
-  }>
-  {
+  async addOrUpdate(entity: TEntity, publish = true, indexHint?: string): Promise<{
+    cid: CID,
+    added: boolean,
+    entity: TEntity
+  }> {
     await this.ensureDirectoryExists();
 
     const result = {
@@ -105,11 +94,10 @@ export abstract class Directory<TEntity extends Entity>
     return result;
   }
 
-  async tryRemove(entityName:string, publish = true, indexHint?:string) : Promise<{
-    cid:CID,
-    entity:TEntity
-  }|null>
-  {
+  async tryRemove(entityName: string, publish = true, indexHint?: string): Promise<{
+    cid: CID,
+    entity: TEntity
+  } | null> {
     const entity = await this.tryGetByName(entityName);
     if (!entity) {
       return null;
@@ -120,14 +108,13 @@ export abstract class Directory<TEntity extends Entity>
 
     return {
       cid: publish
-           ? await this.fs.publish()
-           : null,
+        ? await this.fs.publish()
+        : null,
       entity: entity
     };
   }
 
-  protected async publish() : Promise<string>
-  {
+  protected async publish(): Promise<string> {
     return await this.fs.publish();
   }
 }

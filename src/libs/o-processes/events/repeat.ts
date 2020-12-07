@@ -1,5 +1,5 @@
-import {OmoEvent} from "../../o-events/omoEvent";
-import {OmoEventTypes} from "../../o-events/eventTypes";
+import { OmoEvent } from "../../o-events/omoEvent";
+import { OmoEventTypes } from "../../o-events/eventTypes";
 
 /**
  * Can be used to ask a process to repeat its last sent event.

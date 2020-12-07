@@ -1,6 +1,6 @@
-import {ProcessArtifact} from "../interfaces/processArtifact";
+import { ProcessArtifact } from "../interfaces/processArtifact";
 
-export const choice = (key:string, label:string|undefined, choices:any[]) => {
+export const choice = (key: string, label: string | undefined, choices: any[]) => {
   const artifact = <ProcessArtifact>{
     key: key,
     type: "choice",

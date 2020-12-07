@@ -135,14 +135,14 @@
       <div>
         <img
           src={item.data.image}
-          alt="image"
+          alt="img"
           class="object-cover object-center w-full rounded-lg shadow-md h-72 md:h-96" />
         <div class="relative px-4 -mt-16">
           <div
             class="flex px-4 pt-2 pb-1 text-3xl font-bold text-primary rounded-t-xl font-primary bg-light-200">
             {item.data.price}
             <span class="flex items-center px-1 pb-1"><img
-                src="images/symbols/o.svg"
+                src="symbols/o.svg"
                 alt="o"
                 class="w-4 h-4" />
             </span>

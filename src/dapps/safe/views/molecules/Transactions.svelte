@@ -174,7 +174,7 @@
                 <div class="flex ">
                   {#if t.from === '0x0000000000000000000000000000000000000000'}
                     <img
-                      src="./images/symbols/o.svg"
+                      src="symbols/o.svg"
                       alt="profile"
                       class="w-10 h-10 mt-2 mr-1" />
                   {:else}

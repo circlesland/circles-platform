@@ -1,6 +1,5 @@
-import type {Address} from "./address";
+import type { Address } from "./address";
 
-export interface Addressable
-{
-  readonly address:Address;
+export interface Addressable {
+  readonly address: Address;
 }

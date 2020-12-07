@@ -1,3 +1,3 @@
 export interface Entity {
-  name:string;
+  name: string;
 }

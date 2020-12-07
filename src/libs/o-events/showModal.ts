@@ -1,13 +1,12 @@
-import {OmoEvent} from "./omoEvent";
-import {OmoEventTypes} from "./eventTypes";
+import { OmoEvent } from "./omoEvent";
+import { OmoEventTypes } from "./eventTypes";
 
 export class ShowModal implements OmoEvent {
-    type: OmoEventTypes = "shell.showModal";
+  type: OmoEventTypes = "shell.showModal";
 
-    readonly component:any;
+  readonly component: any;
 
-    constructor(component:any)
-    {
-        this.component = component;
-    }
+  constructor(component: any) {
+    this.component = component;
+  }
 }

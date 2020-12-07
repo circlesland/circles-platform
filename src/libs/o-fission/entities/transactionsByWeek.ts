@@ -1,5 +1,5 @@
-import {Entity} from "./entity";
-import {Transaction} from "./transaction";
+import { Entity } from "./entity";
+import { Transaction } from "./transaction";
 
 /**
  * Groups all transactions of a week.

@@ -1,5 +1,5 @@
 export type OmoEventTypes =
-    "shell.runProcess"
+  "shell.runProcess"
   | "shell.showModal"
   | "shell.openModal"
   | "shell.refreshView"

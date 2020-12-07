@@ -1,16 +1,14 @@
-import {InitializeAppContext} from "../initializeApp";
-import {mnemonicToEntropy} from "bip39";
-import {config} from "../../../../../libs/o-circles-protocol/config";
-import {GotSafe} from "../../../events/gotSafe";
-import {BN} from "ethereumjs-util";
-import {GnosisSafeProxy} from "../../../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
-import {HubAccount} from "../../../../../libs/o-circles-protocol/model/hubAccount";
-import {ByteString} from "../../../../../libs/o-circles-protocol/interfaces/byteString";
-import {cat} from "webnative/ipfs";
+import { InitializeAppContext } from "../initializeApp";
+import { mnemonicToEntropy } from "bip39";
+import { config } from "../../../../../libs/o-circles-protocol/config";
+import { GotSafe } from "../../../events/gotSafe";
+import { BN } from "ethereumjs-util";
+import { GnosisSafeProxy } from "../../../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
+import { HubAccount } from "../../../../../libs/o-circles-protocol/model/hubAccount";
+import { ByteString } from "../../../../../libs/o-circles-protocol/interfaces/byteString";
 
-function isValidKeyPhrase(value:string) : string|null {
-  try
-  {
+function isValidKeyPhrase(value: string): string | null {
+  try {
     const privateKey = mnemonicToEntropy(value);
     const ownerAddress = config
       .getCurrent()
@@ -22,37 +20,31 @@ function isValidKeyPhrase(value:string) : string|null {
       .web3()
       .utils.isAddress(ownerAddress);
 
-    if (valid)
-    {
+    if (valid) {
       return "0x" + privateKey;
     }
-    else
-    {
+    else {
       return null;
     }
 
-  } catch(e) {
+  } catch (e) {
     console.log("connect safe with private key phrase failed.")
     return null;
   }
 }
 
-function isValidHexKey(value:string) : string|null
-{
+function isValidHexKey(value: string): string | null {
   if (!value)
     return null;
 
-  try
-  {
+  try {
     let hexString: ByteString;
 
-    if (value.startsWith("0x") && value.length == 66)
-    {
+    if (value.startsWith("0x") && value.length == 66) {
       // prefixed hex string
       hexString = value.slice(2);
     }
-    else if (value.length == 64)
-    {
+    else if (value.length == 64) {
       // non prefixed hex string
       hexString = value;
     }
@@ -68,22 +60,18 @@ function isValidHexKey(value:string) : string|null
     else
       return null;
   }
-  catch (e)
-  {
+  catch (e) {
     console.log("connect safe with hex private key failed.")
     return null;
   }
 }
 
-export const connectSafeService = async (context: InitializeAppContext) =>
-{
-  if (!window.o.fission)
-  {
+export const connectSafeService = async (context: InitializeAppContext) => {
+  if (!window.o.fission) {
     throw new Error("You're not authenticated");
   }
 
-  try
-  {
+  try {
     const privateKey = isValidHexKey(context.data.privateKey.value)
       ?? isValidKeyPhrase(context.data.privateKey.value);
 
@@ -93,14 +81,12 @@ export const connectSafeService = async (context: InitializeAppContext) =>
       .privateKeyToAccount(privateKey)
       .address;
 
-    if (!context.environment.eth.web3.utils.isAddress(ownerAddress))
-    {
+    if (!context.environment.eth.web3.utils.isAddress(ownerAddress)) {
       throw new Error("The private key seems to be invalid because no address could be derived from it.");
     }
 
     const existingProfile = context.environment.me.myProfile;
-    if (!existingProfile)
-    {
+    if (!existingProfile) {
       throw new Error("The 'me' profile doesn't exist yet. The safe cannot be linked without a profile.");
     }
 
@@ -144,8 +130,7 @@ export const connectSafeService = async (context: InitializeAppContext) =>
 
     window.o.publishEvent(new GotSafe());
   }
-  catch (e)
-  {
+  catch (e) {
     console.error(e);
   }
 }

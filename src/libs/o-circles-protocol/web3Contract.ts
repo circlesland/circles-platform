@@ -1,30 +1,27 @@
-import type {Contract, PastEventOptions} from "web3-eth-contract";
-import {Subject} from "rxjs";
+import type { Contract, PastEventOptions } from "web3-eth-contract";
+import { Subject } from "rxjs";
 import type Web3 from "web3";
 import BN from "bn.js";
 import type Common from "ethereumjs-common";
-import {config} from "./config";
-import {Transaction, TxData} from "ethereumjs-tx";
-import type {Address} from "./interfaces/address";
-import type {ByteString} from "./interfaces/byteString";
-import type {Addressable} from "./interfaces/addressable";
-import {filter, map} from "rxjs/operators";
-import type {Event} from "./interfaces/event";
-import {isArray} from "rxjs/internal-compatibility";
-import {EventQuery} from "./eventQuery";
-import type {Account} from "./interfaces/account";
-import type {TransactionReceipt} from "web3-core";
+import { config } from "./config";
+import { Transaction, TxData } from "ethereumjs-tx";
+import type { Address } from "./interfaces/address";
+import type { ByteString } from "./interfaces/byteString";
+import type { Addressable } from "./interfaces/addressable";
+import { filter, map } from "rxjs/operators";
+import type { Event } from "./interfaces/event";
+import { isArray } from "rxjs/internal-compatibility";
+import { EventQuery } from "./eventQuery";
+import type { TransactionReceipt } from "web3-core";
 
-export abstract class Web3Contract implements Addressable
-{
+export abstract class Web3Contract implements Addressable {
   readonly web3: Web3;
   readonly address: Address;
   readonly contract: Contract;
 
   protected readonly _pastEvents: Subject<any> = new Subject<any>();
 
-  constructor(web3: Web3, contractAddress: Address, contractInstance: Contract)
-  {
+  constructor(web3: Web3, contractAddress: Address, contractInstance: Contract) {
     if (!web3)
       throw new Error("The 'web3' parameter must be set.");
     if (!web3.utils.isAddress(contractAddress))
@@ -41,8 +38,7 @@ export abstract class Web3Contract implements Addressable
    * Gets all last events that conform to the query specification and feeds the to all subscribers.
    * @param options
    */
-  async feedPastEvents(options: PastEventOptions & { event: string })
-  {
+  async feedPastEvents(options: PastEventOptions & { event: string }) {
     const result = await this.contract.getPastEvents(options.event, options);
     result.forEach(event => this._pastEvents.next(event));
     return result.length;
@@ -53,12 +49,9 @@ export abstract class Web3Contract implements Addressable
    * @param options
    */
   queryEvents(options: PastEventOptions & { event: string })
-    : EventQuery<Event>
-  {
-    const filterPredicate = (event: Event): boolean =>
-    {
-      if (event.event != options.event)
-      {
+    : EventQuery<Event> {
+    const filterPredicate = (event: Event): boolean => {
+      if (event.event != options.event) {
         return false;
       }
 
@@ -76,16 +69,16 @@ export abstract class Web3Contract implements Addressable
 
     return new EventQuery(
       () => self.feedPastEvents(options),
-       self.events([options.event])
+      self.events([options.event])
         .pipe(
           filter(filterPredicate),
           map((event) => <Event>{
-              address: event.address,
-              blockNumber: new BN(event.blockNumber),
-              blockHash: event.blockHash,
-              event: event.event,
-              returnValues: event.returnValues ?? {}
-            }
+            address: event.address,
+            blockNumber: new BN(event.blockNumber),
+            blockHash: event.blockHash,
+            event: event.event,
+            returnValues: event.returnValues ?? {}
+          }
           ))
     );
   }
@@ -94,29 +87,26 @@ export abstract class Web3Contract implements Addressable
    * Subscribes to all of the passed events and returns an Observable instance.
    * @param events
    */
-  events(events: string[])
-  {
+  events(events: string[]) {
     const subject = new Subject<any>(); //subscriber =>
     //{
-      this._pastEvents.subscribe(next => subject.next(next));
+    this._pastEvents.subscribe(next => subject.next(next));
 
-      for (let event of events)
-      {
-        const e = this.contract.events[event];
-        if (!e)
-          throw new Error(`There is no event with the name '${event}' on the ABI description.`);
+    for (let event of events) {
+      const e = this.contract.events[event];
+      if (!e)
+        throw new Error(`There is no event with the name '${event}' on the ABI description.`);
 
-        this.contract.events[event]()
-          .on('data', (event: any) => subject.next(event));
-      }
+      this.contract.events[event]()
+        .on('data', (event: any) => subject.next(event));
+    }
     // });
 
     return subject;
   }
 
-  static async signRawTransaction(ownerAddress:Address, privateKey:ByteString, to: Address, data: ByteString, gasLimit: BN, value: BN)
-    : Promise<ByteString>
-  {
+  static async signRawTransaction(ownerAddress: Address, privateKey: ByteString, to: Address, data: ByteString, gasLimit: BN, value: BN)
+    : Promise<ByteString> {
     const cfg = config.getCurrent();
     const web3 = cfg.web3();
     const ethJsCommon: Common = await config.getCurrent().ethjs.getCommon(web3);
@@ -132,7 +122,7 @@ export abstract class Web3Contract implements Addressable
     };
 
     const txOptions = ethJsCommon
-      ? {common: ethJsCommon}
+      ? { common: ethJsCommon }
       : {};
 
     const tx = new Transaction(rawTx, txOptions);
@@ -141,30 +131,24 @@ export abstract class Web3Contract implements Addressable
     return '0x' + tx.serialize().toString('hex');
   }
 
-  static async sendSignedRawTransaction(serializedTx: ByteString)
-  {
+  static async sendSignedRawTransaction(serializedTx: ByteString) {
     const web3 = config.getCurrent().web3();
     return new Promise<TransactionReceipt>((resolve, reject) => {
       web3.eth.sendSignedTransaction(serializedTx)
-        .once('transactionHash', (hash) =>
-        {
+        .once('transactionHash', (hash) => {
           console.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);
         })
-        .once('receipt', (receipt) =>
-        {
+        .once('receipt', (receipt) => {
           console.log("web3.eth.sendSignedTransaction | Got receipt:", receipt);
         })
-        .once('confirmation', (confNumber) =>
-        {
+        .once('confirmation', (confNumber) => {
           console.log("web3.eth.sendSignedTransaction | Got confirmation. Conf No.: " + confNumber);
         })
-        .once('error', (error) =>
-        {
+        .once('error', (error) => {
           console.log("web3.eth.sendSignedTransaction | Got error:", error);
           reject(error);
         })
-        .then(function (receipt)
-        {
+        .then(function (receipt) {
           console.log("web3.eth.sendSignedTransaction | Transaction was mined.");
           resolve(receipt);
         });

@@ -1,6 +1,6 @@
-import {ProcessArtifact} from "../interfaces/processArtifact";
+import { ProcessArtifact } from "../interfaces/processArtifact";
 
-export const inviteCredits = (key:string, label?:string, isReadonly?:boolean) => {
+export const inviteCredits = (key: string, label?: string, isReadonly?: boolean) => {
   const artifact = <ProcessArtifact>{
     key: key,
     type: "inviteCredits",

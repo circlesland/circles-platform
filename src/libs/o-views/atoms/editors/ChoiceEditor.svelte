@@ -1,6 +1,5 @@
 <script lang="ts">
   import { ProcessArtifact } from "../../../o-processes/interfaces/processArtifact";
-  import { config } from "../../../o-circles-protocol/config";
   import { createEventDispatcher, onMount } from "svelte";
   import Button from "../../../o-views/atoms/Button.svelte";
 

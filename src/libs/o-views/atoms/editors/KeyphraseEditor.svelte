@@ -3,52 +3,44 @@
   import { config } from "../../../o-circles-protocol/config";
   import { createEventDispatcher, onMount } from "svelte";
   import { mnemonicToEntropy } from "bip39";
-  import {ByteString} from "../../../o-circles-protocol/interfaces/byteString";
-  import container from "postcss/lib/container";
+  import { ByteString } from "../../../o-circles-protocol/interfaces/byteString";
 
   export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();
 
-  function isValidKeyPhrase() : boolean {
+  function isValidKeyPhrase(): boolean {
     const privateKey = mnemonicToEntropy(processArtifact.value);
     const ownerAddress = config
       .getCurrent()
       .web3()
       .eth.accounts.privateKeyToAccount("0x" + privateKey).address;
 
-    return config
-      .getCurrent()
-      .web3()
-      .utils.isAddress(ownerAddress);
+    return config.getCurrent().web3().utils.isAddress(ownerAddress);
   }
 
-  function isValidHexKey() : boolean
-  {
-    if (!processArtifact.value)
-      return false;
+  function isValidHexKey(): boolean {
+    if (!processArtifact.value) return false;
 
-    let hexString:ByteString;
+    let hexString: ByteString;
 
-    if(processArtifact.value.startsWith("0x") && processArtifact.value.length == 66)
-    {
+    if (
+      processArtifact.value.startsWith("0x") &&
+      processArtifact.value.length == 66
+    ) {
       // prefixed hex string
       hexString = processArtifact.value.slice(2);
-    }
-    else if (processArtifact.value.length == 64)
-    {
+    } else if (processArtifact.value.length == 64) {
       // non prefixed hex string
       hexString = processArtifact.value;
-    }
-    else
-    {
+    } else {
       return false;
     }
 
-    const address = config.getCurrent().web3().eth.accounts.privateKeyToAccount("0x" + hexString).address;
-    return config
+    const address = config
       .getCurrent()
       .web3()
-      .utils.isAddress(address);
+      .eth.accounts.privateKeyToAccount("0x" + hexString).address;
+    return config.getCurrent().web3().utils.isAddress(address);
   }
 
   function validate() {

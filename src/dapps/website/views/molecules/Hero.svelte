@@ -32,15 +32,9 @@
           Empowered by great tools of great teams
         </p>
         <div class="flex justify-center space-x-4 md:justify-start">
-          <img
-            src="./images/logo/circles.svg"
-            alt="circlesUBI"
-            class="w-12 h-12" />
-          <img
-            src="./images/logo/fission.svg"
-            alt="fission"
-            class="w-12 h-12" />
-          <img src="./images/logo/xDai.png" alt="xDai" class="w-12 h-12" />
+          <img src="logos/circles.svg" alt="circlesUBI" class="w-12 h-12" />
+          <img src="logos/fission.svg" alt="fission" class="w-12 h-12" />
+          <img src="logos/xDai.png" alt="xDai" class="w-12 h-12" />
         </div>
       </div>
     </div>
@@ -49,7 +43,8 @@
       <div
         class="container relative left-0 w-full max-w-4xl lg:absolute xl:max-w-6xl lg:w-screen">
         <img
-          src="./images/laptop.png"
+          src="./illustrations/laptop.png"
+          alt="img"
           class="w-full h-auto mt-20 mb-20 ml-0 lg:mt-24 xl:mt-40 lg:mb-0 lg:h-full lg:-ml-12" />
       </div>
     </div>

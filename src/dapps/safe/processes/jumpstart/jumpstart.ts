@@ -1,24 +1,23 @@
-import {createMachine, send} from "xstate";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {strings} from "../../data/strings";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
+import { createMachine, send } from "xstate";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { strings } from "../../data/strings";
+import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
+import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {RefreshView} from "../../../../libs/o-events/refreshView";
-import {inviteCredits} from "../../../../libs/o-processes/artifacts/inviteCredits";
-import {transferJumpstartXDaiService} from "./services/transferJumpstartXDaiService";
+import { setError } from "../../../../libs/o-processes/actions/setError";
+import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
+import { RefreshView } from "../../../../libs/o-events/refreshView";
+import { inviteCredits } from "../../../../libs/o-processes/artifacts/inviteCredits";
+import { transferJumpstartXDaiService } from "./services/transferJumpstartXDaiService";
 
-export interface JumpstartContext extends ProcessContext
-{
+export interface JumpstartContext extends ProcessContext {
   data: {
     recipient?: ProcessArtifact,
     value?: ProcessArtifact
@@ -35,47 +34,51 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
-      on:{
+      on: {
         "process.continue": {
           target: "intro"
         }
       }
     },
     intro: {
-      entry:sendPrompt((context:JumpstartContext) => {return{
-        title: str.titleIntro(),
-        nextButtonTitle: "Empower " + context.data.recipient.value.substring(0,8),
-        banner: {
-          component: JumpstartIntro,
-          data: {
-            header: str.introHeader(context),
-            subHeader: str.introSubHeader(context),
-            body: str.introBody(context)
-          }
-        },
-        artifacts: {}
-      }}),
+      entry: sendPrompt((context: JumpstartContext) => {
+        return {
+          title: str.titleIntro(),
+          nextButtonTitle: "Empower " + context.data.recipient.value.substring(0, 8),
+          banner: {
+            component: JumpstartIntro,
+            data: {
+              header: str.introHeader(context),
+              subHeader: str.introSubHeader(context),
+              body: str.introBody(context)
+            }
+          },
+          artifacts: {}
+        }
+      }),
       on: {
         "process.cancel": "stop",
         "process.continue": "summarize"
       }
     },
     summarize: {
-      entry: sendPrompt((context:JumpstartContext) => {return{
-        title: str.titleSummary(),
-        nextButtonTitle: "Use 1 invite credit",
-        canGoBack: true,
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerSummary()
+      entry: sendPrompt((context: JumpstartContext) => {
+        return {
+          title: str.titleSummary(),
+          nextButtonTitle: "Use 1 invite credit",
+          canGoBack: true,
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerSummary()
+            }
+          },
+          artifacts: {
+            ...ethereumAddress("recipient", str.titleRecipient(), true),
+            ...inviteCredits("value", str.titleValue())
           }
-        },
-        artifacts: {
-          ...ethereumAddress("recipient", str.titleRecipient(), true),
-          ...inviteCredits("value", str.titleValue())
         }
-      }}),
+      }),
       on: {
         "process.back": "intro",
         "process.cancel": "stop",

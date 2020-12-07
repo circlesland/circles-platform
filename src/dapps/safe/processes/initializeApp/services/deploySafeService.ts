@@ -1,9 +1,8 @@
-import {InitializeAppContext} from "../initializeApp";
-import {BN} from "ethereumjs-util";
+import { InitializeAppContext } from "../initializeApp";
+import { BN } from "ethereumjs-util";
 
-export const deploySafeService = async (context: InitializeAppContext) =>
-{
-  if(!context.environment.fission) {
+export const deploySafeService = async (context: InitializeAppContext) => {
+  if (!context.environment.fission) {
     throw new Error("You're not authenticated.");
   }
 
@@ -15,7 +14,7 @@ export const deploySafeService = async (context: InitializeAppContext) =>
   context.environment.me.mySafeXDaiBalance = new BN("0");
 
   const myProfile = {
-    ... context.environment.me.myProfile,
+    ...context.environment.me.myProfile,
     ... {
       circlesAddress: safeProxy.address
     }

@@ -1,5 +1,5 @@
-import {State} from "xstate";
-import {OmoEvent} from "../../o-events/omoEvent";
+import { State } from "xstate";
+import { OmoEvent } from "../../o-events/omoEvent";
 
 export interface ProcessEvent {
   stopped: boolean;

@@ -1,24 +1,18 @@
-import {TransferCirclesContext} from "../transferCircles";
-import {config} from "../../../../../libs/o-circles-protocol/config";
-import {BN} from "ethereumjs-util";
+import { TransferCirclesContext } from "../transferCircles";
+import { BN } from "ethereumjs-util";
 
-function sendMessage(message)
-{
+function sendMessage(message) {
   // This wraps the message posting/response in a promise, which will resolve if the response doesn't
   // contain an error, and reject with the error if it does. If you'd prefer, it's possible to call
   // controller.postMessage() and set up the onmessage handler independently of a promise, but this is
   // a convenient wrapper.
-  return new Promise(function (resolve, reject)
-  {
+  return new Promise(function (resolve, reject) {
     var messageChannel = new MessageChannel();
-    messageChannel.port1.onmessage = function (event)
-    {
-      if (event.data.error)
-      {
+    messageChannel.port1.onmessage = function (event) {
+      if (event.data.error) {
         reject(event.data.error);
       }
-      else
-      {
+      else {
         resolve(event.data);
       }
     };
@@ -33,12 +27,10 @@ function sendMessage(message)
 }
 
 
-export const transferCirclesService = async (context: TransferCirclesContext) =>
-{
-  try
-  {
+export const transferCirclesService = async (context: TransferCirclesContext) => {
+  try {
     const circlesValueInWei = context.environment.eth.web3.utils
-                              .toWei(context.data.value.value.toString(), "ether");
+      .toWei(context.data.value.value.toString(), "ether");
     const oValueInWei = new BN(circlesValueInWei).div(new BN("3"));
     /*
     const pathResult = await sendMessage({
@@ -56,15 +48,15 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
     const sources = [context.environment.me.mySafe.address];
     const destinations = [context.data.recipient.value];
     const values = [oValueInWei];
-/*
-    (<any>pathResult).data.transfers.forEach(transfer =>
-    {
-      tokenOwners.push(transfer.tokenOwner);
-      sources.push(transfer.from);
-      destinations.push(transfer.to);
-      values.push(transfer.value);
-    });
-*/
+    /*
+        (<any>pathResult).data.transfers.forEach(transfer =>
+        {
+          tokenOwners.push(transfer.tokenOwner);
+          sources.push(transfer.from);
+          destinations.push(transfer.to);
+          values.push(transfer.value);
+        });
+    */
     const transferTroughResult = await context.environment.eth.contracts.hub.transferTrough(
       context.environment.me.myKey.privateKey,
       context.environment.me.mySafe,
@@ -75,8 +67,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
     );
 
     console.log(transferTroughResult);
-  } catch (e)
-  {
+  } catch (e) {
     console.error(e);
     throw e;
   }

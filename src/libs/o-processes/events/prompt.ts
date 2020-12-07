@@ -1,6 +1,6 @@
-import {OmoEventTypes} from "../../o-events/eventTypes";
-import {OmoEvent} from "../../o-events/omoEvent";
-import {ProcessArtifact} from "../interfaces/processArtifact";
+import { OmoEventTypes } from "../../o-events/eventTypes";
+import { OmoEvent } from "../../o-events/omoEvent";
+import { ProcessArtifact } from "../interfaces/processArtifact";
 import type { SvelteComponent } from "svelte"
 
 /**
@@ -11,15 +11,15 @@ export class Prompt implements OmoEvent {
   /**
    * The title.
    */
-  title?:string;
+  title?: string;
   /**
    * When 'true', the next button won't be displayed.
    */
-  hideNextButton?:boolean;
+  hideNextButton?: boolean;
   /**
    * When this property is set to 'true', the user is allowed to navigate one step back.
    */
-  canGoBack?:boolean;
+  canGoBack?: boolean;
   /**
    * Can contain a svelte component which is displayed as banner
    * above of the inputs.
@@ -31,7 +31,7 @@ export class Prompt implements OmoEvent {
   /**
    * If set, the value of this property overrides the default 'Next' text of the next-button.
    */
-  nextButtonTitle?:string;
+  nextButtonTitle?: string;
 
   data: {
     [key: string]: ProcessArtifact

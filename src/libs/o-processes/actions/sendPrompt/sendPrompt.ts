@@ -1,30 +1,27 @@
-import {send} from "xstate";
-import type {EventObject} from "xstate";
-import type {SendAction} from "xstate/lib/types";
-import {ProcessArtifact} from "../../interfaces/processArtifact";
-import {ProcessContext} from "../../interfaces/processContext";
-import {Prompt} from "../../events/prompt";
-import {OmoEvent} from "../../../o-events/omoEvent";
-import {ShellEvent} from "../../events/shellEvent";
-import context from "svelte/types/compiler/parse/read/context";
+import { send } from "xstate";
+import type { EventObject } from "xstate";
+import type { SendAction } from "xstate/lib/types";
+import { ProcessArtifact } from "../../interfaces/processArtifact";
+import { ProcessContext } from "../../interfaces/processContext";
+import { Prompt } from "../../events/prompt";
+import { OmoEvent } from "../../../o-events/omoEvent";
+import { ShellEvent } from "../../events/shellEvent";
 
 export type PromptSpec = {
-  title?:string,
+  title?: string,
   artifacts: { [key: string]: ProcessArtifact },
   banner?: {
-    component:any,
-    data:any
+    component: any,
+    data: any
   },
-  nextButtonTitle?:string,
-  hideNextButton?:boolean,
-  canGoBack?:boolean
+  nextButtonTitle?: string,
+  hideNextButton?: boolean,
+  canGoBack?: boolean
 };
 
-export const sendPrompt = (generateSpec?:(context:ProcessContext) => PromptSpec) =>
-{
+export const sendPrompt = (generateSpec?: (context: ProcessContext) => PromptSpec) => {
   console.log("Send prompt");
-  const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) =>
-  {
+  const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
     const spec = generateSpec(context);
     Object.keys(spec.artifacts)
       .filter(key => context.data[key] !== undefined)
@@ -44,8 +41,7 @@ export const sendPrompt = (generateSpec?:(context:ProcessContext) => PromptSpec)
   return action;
 }
 
-export const sendShellEvent = (shellEvent:OmoEvent) =>
-{
+export const sendShellEvent = (shellEvent: OmoEvent) => {
   const action: SendAction<ProcessContext, EventObject, OmoEvent> = send((context) => {
     console.log("Send shell event")
 

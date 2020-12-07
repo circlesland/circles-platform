@@ -1,6 +1,6 @@
-import {ProcessArtifact} from "../interfaces/processArtifact";
+import { ProcessArtifact } from "../interfaces/processArtifact";
 
-export const file = (key:string, label?:string, isReadonly?:boolean, isOptional?:boolean) => {
+export const file = (key: string, label?: string, isReadonly?: boolean, isOptional?: boolean) => {
   const artifact = <ProcessArtifact>{
     key: key,
     type: "file",

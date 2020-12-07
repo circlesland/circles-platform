@@ -1,7 +1,5 @@
 <script lang="ts">
   import { ProcessArtifact } from "../../../o-processes/interfaces/processArtifact";
-  import { config } from "../../../o-circles-protocol/config";
-  import { BN } from "ethereumjs-util";
   import { createEventDispatcher, onMount } from "svelte";
 
   export let processArtifact: ProcessArtifact;

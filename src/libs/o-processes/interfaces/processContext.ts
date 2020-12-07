@@ -1,7 +1,6 @@
-import {ProcessEnvironment} from "./processEnvironment";
-import {ProcessResult} from "./processResult";
-import {ProcessArtifact} from "./processArtifact";
-import {Profile} from "../../o-fission/entities/profile";
+import { ProcessEnvironment } from "./processEnvironment";
+import { ProcessResult } from "./processResult";
+import { ProcessArtifact } from "./processArtifact";
 
 /**
  * Every running process has a context that stores the state
@@ -11,11 +10,10 @@ import {Profile} from "../../o-fission/entities/profile";
  * The 'data' property is used to store any process artifacts like
  * user input or api responses.
  */
-export interface ProcessContext
-{
+export interface ProcessContext {
   environment: ProcessEnvironment,
   result?: ProcessResult,
   data: {
-    [key: string]: ProcessArtifact|undefined
+    [key: string]: ProcessArtifact | undefined
   }
 }

@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import Common from "ethereumjs-common";
-import {BN} from "ethereumjs-util";
+import { BN } from "ethereumjs-util";
 
 export const config = {
   ganache: {
@@ -15,13 +15,11 @@ export const config = {
     },
     getGasPrice: (web3: Web3) => new BN(web3.utils.toWei("1", "gwei")),
     ethjs: {
-      getCommon: async function (web3: Web3)
-      {
+      getCommon: async function (web3: Web3) {
         return undefined;
       }
     },
-    web3: () =>
-    {
+    web3: () => {
       const provider = new Web3.providers.HttpProvider(
         "HTTP://127.0.0.1:7545"
       );
@@ -44,8 +42,7 @@ export const config = {
     JUMPSTART_MONEY: new BN("9938662113959919"),
     getGasPrice: (web3: Web3) => new BN(web3.utils.toWei("1", "gwei")),
     ethjs: {
-      getCommon: async function (web3: Web3)
-      {
+      getCommon: async function (web3: Web3) {
         return Common.forCustomChain(
           'mainnet',
           {
@@ -57,8 +54,7 @@ export const config = {
         );
       }
     },
-    web3: () =>
-    {
+    web3: () => {
       const provider = new Web3.providers.WebsocketProvider(
         "wss://xdai.poanetwork.dev/wss",
         {
@@ -81,8 +77,7 @@ export const config = {
       return web3;
     }
   },
-  getCurrent: function ()
-  {
+  getCurrent: function () {
     return this.xDai;
   }
 };

@@ -1,7 +1,6 @@
 import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
 import { DappIcon, ProfileHeader } from "src/libs/o-views/interfaces/molecules";
 import { getEnvironment } from "../../../libs/o-os/o";
-import { asyncWaterfall } from "webnative/common";
 
 export const address: string = "TODO";
 

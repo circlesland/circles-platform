@@ -1,7 +1,7 @@
 import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "src/libs/o-events/runProcess";
 import { setTrust, SetTrustContext } from "../processes/setTrust/setTrust";
-import { sendInviteCredits, SendInviteCreditsContext } from "../processes/transferXDai/sendInviteCredits";
+import { sendInviteCredits } from "../processes/transferXDai/sendInviteCredits";
 import { requestUbi } from "../processes/requestUbi/requestUbi";
 import { QuickAction } from "../../../libs/o-os/types/quickAction";
 import { transferCircles } from "../processes/transferCircles/transferCircles";

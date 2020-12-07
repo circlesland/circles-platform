@@ -13,8 +13,7 @@ import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt
 import { strings } from "../../data/strings";
 import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
 import { file } from "../../../../libs/o-processes/artifacts/file";
-import {addOrUpdateMyProfileService} from "../createOmoSapien/services/addOrUpdateMyProfileService";
-import {RefreshView} from "../../../../libs/o-events/refreshView";
+import { addOrUpdateMyProfileService } from "../createOmoSapien/services/addOrUpdateMyProfileService";
 
 export interface UpdateOmoSapienContext extends ProcessContext {
   data: {
@@ -39,19 +38,21 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent |
       }
     },
     promptFirstName: {
-      entry: sendPrompt((context) => {return{
-        title: str.titleFirstName(),
-        nextButtonTitle: str.buttonFirstName(),
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerFirstName()
+      entry: sendPrompt((context) => {
+        return {
+          title: str.titleFirstName(),
+          nextButtonTitle: str.buttonFirstName(),
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerFirstName()
+            }
+          },
+          artifacts: {
+            ...textLine("firstName", undefined, undefined, false)
           }
-        },
-        artifacts: {
-          ...textLine("firstName", undefined, undefined, false)
         }
-      }}),
+      }),
       on: {
         "process.continue": {
           actions: storePromptResponse,
@@ -61,20 +62,22 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent |
       }
     },
     promptLastName: {
-      entry: sendPrompt((context) => {return{
-        canGoBack: true,
-        title: str.titleLastName(),
-        nextButtonTitle: str.buttonLastName(),
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerLastName()
+      entry: sendPrompt((context) => {
+        return {
+          canGoBack: true,
+          title: str.titleLastName(),
+          nextButtonTitle: str.buttonLastName(),
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerLastName()
+            }
+          },
+          artifacts: {
+            ...textLine("lastName", undefined, undefined, true)
           }
-        },
-        artifacts: {
-          ...textLine("lastName", undefined, undefined, true)
         }
-      }}),
+      }),
       on: {
         "process.back": {
           target: "promptFirstName"
@@ -87,20 +90,22 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent |
       }
     },
     promptAvatar: {
-      entry: sendPrompt((context) => {return{
-        canGoBack: true,
-        title: str.titleAvatar(),
-        nextButtonTitle: str.buttonAvatar(),
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerAvatar()
+      entry: sendPrompt((context) => {
+        return {
+          canGoBack: true,
+          title: str.titleAvatar(),
+          nextButtonTitle: str.buttonAvatar(),
+          banner: {
+            component: Banner,
+            data: {
+              text: str.bannerAvatar()
+            }
+          },
+          artifacts: {
+            ...file("avatar", undefined, undefined, true)
           }
-        },
-        artifacts: {
-          ...file("avatar", undefined, undefined, true)
         }
-      }}),
+      }),
       on: {
         "process.back": {
           target: "promptLastName"

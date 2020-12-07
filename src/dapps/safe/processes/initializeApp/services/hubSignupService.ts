@@ -1,10 +1,9 @@
-import {InitializeAppContext} from "../initializeApp";
-import {HubAccount} from "../../../../../libs/o-circles-protocol/model/hubAccount";
-import {ProcessArtifact} from "../../../../../libs/o-processes/interfaces/processArtifact";
+import { InitializeAppContext } from "../initializeApp";
+import { HubAccount } from "../../../../../libs/o-circles-protocol/model/hubAccount";
+import { ProcessArtifact } from "../../../../../libs/o-processes/interfaces/processArtifact";
 
-export const hubSignupService = async (context: InitializeAppContext) =>
-{
-  if(!context.environment.fission) {
+export const hubSignupService = async (context: InitializeAppContext) => {
+  if (!context.environment.fission) {
     throw new Error("You're not authenticated.");
   }
 

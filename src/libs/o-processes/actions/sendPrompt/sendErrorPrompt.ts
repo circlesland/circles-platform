@@ -1,9 +1,9 @@
-import {send} from "xstate";
+import { send } from "xstate";
 import Error from "../../../o-views/atoms/Error.svelte";
-import {ProcessContext} from "../../interfaces/processContext";
-import {Prompt} from "../../events/prompt";
+import { ProcessContext } from "../../interfaces/processContext";
+import { Prompt } from "../../events/prompt";
 
-export const sendErrorPrompt = send((context:ProcessContext) => {
+export const sendErrorPrompt = send((context: ProcessContext) => {
   return <Prompt>{
     nextButtonTitle: "Close",
     type: "process.prompt",

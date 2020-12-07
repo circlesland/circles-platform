@@ -6,18 +6,19 @@
   const dispatch = createEventDispatcher();
 
   function validate() {
-    if ((!processArtifact.value ||
-          processArtifact.value.toString().trim() === "") &&
-          processArtifact.isOptional
+    if (
+      (!processArtifact.value ||
+        processArtifact.value.toString().trim() === "") &&
+      processArtifact.isOptional
     ) {
       processArtifact.isValid = true;
-    } else if (processArtifact.value !== null && processArtifact.value !== undefined) {
-      try
-      {
+    } else if (
+      processArtifact.value !== null &&
+      processArtifact.value !== undefined
+    ) {
+      try {
         processArtifact.isValid = processArtifact.value > 0;
-      }
-      catch (e)
-      {
+      } catch (e) {
         processArtifact.isValid = false;
       }
     }
@@ -42,7 +43,9 @@
         {processArtifact.label}
       </p>
     {/if}
-    <input type="number" min="0"
+    <input
+      type="number"
+      min="0"
       readonly={processArtifact.isReadonly ? 'readonly' : ''}
       placeholder={processArtifact.placeholder ? processArtifact.placeholder : '0.00'}
       class:border-action={processArtifact.isValid}

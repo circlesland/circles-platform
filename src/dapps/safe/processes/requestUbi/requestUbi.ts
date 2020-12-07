@@ -1,15 +1,15 @@
-import {createMachine, send} from "xstate";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
-import {strings} from "../../data/strings";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {getUbi} from "./getUbi";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {RefreshView} from "../../../../libs/o-events/refreshView";
+import { createMachine, send } from "xstate";
+import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { strings } from "../../data/strings";
+import { OmoEvent } from "../../../../libs/o-events/omoEvent";
+import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
+import { getUbi } from "./getUbi";
+import { setError } from "../../../../libs/o-processes/actions/setError";
+import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import { RefreshView } from "../../../../libs/o-events/refreshView";
 
 /**
  * Requests UBI
@@ -19,7 +19,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
-      on:{
+      on: {
         "process.continue": "requestUbi"
       }
     },
@@ -55,7 +55,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
         "process.cancel": "stop"
       },
       after: {
-        2000: {target: 'stop'}
+        2000: { target: 'stop' }
       }
     },
     error: {

@@ -1,25 +1,20 @@
 import type Web3 from "web3";
-import type {AbiItem} from "web3-utils";
-import {CIRCLES_HUB_ABI, ZERO_ADDRESS} from "../consts";
-import type {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
-import {BN} from "ethereumjs-util";
-import {Web3Contract} from "../web3Contract";
-import type {Address} from "../interfaces/address";
-import type {Account} from "../interfaces/account";
-import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
-import {config} from "../config";
-import {from} from "rxjs";
-import {ByteString} from "../interfaces/byteString";
+import type { AbiItem } from "web3-utils";
+import { CIRCLES_HUB_ABI, ZERO_ADDRESS } from "../consts";
+import type { GnosisSafeProxy } from "../safe/gnosisSafeProxy";
+import { BN } from "ethereumjs-util";
+import { Web3Contract } from "../web3Contract";
+import type { Address } from "../interfaces/address";
+import { GnosisSafeOps } from "../interfaces/gnosisSafeOps";
+import { config } from "../config";
+import { ByteString } from "../interfaces/byteString";
 
-export class CirclesHub extends Web3Contract
-{
-  constructor(web3: Web3, hubAddress: Address)
-  {
+export class CirclesHub extends Web3Contract {
+  constructor(web3: Web3, hubAddress: Address) {
     super(web3, hubAddress, new web3.eth.Contract(<AbiItem[]>CIRCLES_HUB_ABI, hubAddress));
   }
 
-  static queryPastSignup(user: Address)
-  {
+  static queryPastSignup(user: Address) {
     return {
       event: CirclesHub.SignupEvent,
       filter: {
@@ -30,8 +25,7 @@ export class CirclesHub extends Web3Contract
     };
   }
 
-  static queryPastSignups(ofUsers:Address[])
-  {
+  static queryPastSignups(ofUsers: Address[]) {
     return {
       event: CirclesHub.SignupEvent,
       filter: {
@@ -42,8 +36,7 @@ export class CirclesHub extends Web3Contract
     };
   }
 
-  static queryPastTransfers(from?: Address, to?: Address)
-  {
+  static queryPastTransfers(from?: Address, to?: Address) {
     if (!from && !to)
       throw new Error("At least one of the two parameters has to be set to a value.");
 
@@ -61,8 +54,7 @@ export class CirclesHub extends Web3Contract
     };
   }
 
-  static queryPastTrusts(canSendTo?: Address, user?: Address)
-  {
+  static queryPastTrusts(canSendTo?: Address, user?: Address) {
     if (!canSendTo && !user)
       throw new Error("At least one of the two parameters has to be set to a value.");
 
@@ -85,8 +77,7 @@ export class CirclesHub extends Web3Contract
   static readonly OrganizationSignupEvent = "OrganizationSignup";
   static readonly TrustEvent = "Trust";
 
-  async signup(privateKey: ByteString, safeProxy: GnosisSafeProxy)
-  {
+  async signup(privateKey: ByteString, safeProxy: GnosisSafeProxy) {
     const txData = this.contract.methods.signup().encodeABI();
 
     return await safeProxy.execTransaction(
@@ -101,8 +92,7 @@ export class CirclesHub extends Web3Contract
       });
   }
 
-  async setTrust(privateKey: ByteString, safeProxy: GnosisSafeProxy, to: Address, trustPercentage: BN)
-  {
+  async setTrust(privateKey: ByteString, safeProxy: GnosisSafeProxy, to: Address, trustPercentage: BN) {
     const txData = this.contract.methods.trust(to, trustPercentage).encodeABI();
 
     return await safeProxy.execTransaction(
@@ -120,11 +110,10 @@ export class CirclesHub extends Web3Contract
   async transferTrough(
     privateKey: ByteString,
     safeProxy: GnosisSafeProxy,
-    tokenOwners:Address[],
-    sources:Address[],
-    destinations:Address[],
-    values: BN[])
-  {
+    tokenOwners: Address[],
+    sources: Address[],
+    destinations: Address[],
+    values: BN[]) {
     const transfer = {
       tokenOwners: tokenOwners,
       sources: sources,
@@ -148,7 +137,7 @@ export class CirclesHub extends Web3Contract
       transfer.destinations,
       transfer.values,
     )
-    .encodeABI();
+      .encodeABI();
 
     console.log("transferTroughAbi:", txData);
 

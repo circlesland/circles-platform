@@ -1,6 +1,6 @@
-import {Observable} from "rxjs";
-import {ProcessEvent} from "./processEvent";
-import {OmoEvent} from "../../o-events/omoEvent";
+import { Observable } from "rxjs";
+import { ProcessEvent } from "./processEvent";
+import { OmoEvent } from "../../o-events/omoEvent";
 
 /**
  * Provides a connection to a running process.

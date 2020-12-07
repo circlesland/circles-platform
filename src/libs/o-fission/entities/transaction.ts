@@ -1,4 +1,4 @@
-import {Entity} from "./entity";
+import { Entity } from "./entity";
 
 /**
  * Describes a transaction as stored in the fission drive.
@@ -23,7 +23,7 @@ export interface Transaction extends Entity {
   /**
    * A transaction recipient can be an omosapien, a circles safe or a plain account on the xDai chain.
    */
-  senderType: "omosapien"|"circles"|"account";
+  senderType: "omosapien" | "circles" | "account";
   /**
    * Depending on the type, this field contains the corresponding handle or address.
    * For omosapien this is the fission username,
@@ -34,7 +34,7 @@ export interface Transaction extends Entity {
   /**
    * A transaction recipient can be an omosapien, a circles safe or a plain account on the xDai chain.
    */
-  recipientType: "omosapien"|"circles"|"account";
+  recipientType: "omosapien" | "circles" | "account";
   /**
    * Depending on the type, this field contains the corresponding handle or address.
    * For omosapien this is the fission username,

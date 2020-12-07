@@ -1,10 +1,9 @@
-import {InitializeAppContext} from "../initializeApp";
-import {BN} from "ethereumjs-util";
-import {Web3Contract} from "../../../../../libs/o-circles-protocol/web3Contract";
+import { InitializeAppContext } from "../initializeApp";
+import { BN } from "ethereumjs-util";
+import { Web3Contract } from "../../../../../libs/o-circles-protocol/web3Contract";
 
-export const fundSafeService = async (context: InitializeAppContext) =>
-{
-  if(!context.environment.fission) {
+export const fundSafeService = async (context: InitializeAppContext) => {
+  if (!context.environment.fission) {
     throw new Error("You're not authenticated.");
   }
 

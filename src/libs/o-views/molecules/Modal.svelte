@@ -1,8 +1,7 @@
 <script lang="ts">
   // imports
-  import { afterUpdate, createEventDispatcher } from "svelte";
-  import { fade, scale, fly } from "svelte/transition";
-  import ProgressBar from "../atoms/ProgressBar.svelte";
+  import { createEventDispatcher } from "svelte";
+  import { fade } from "svelte/transition";
   import InfoBox from "./InfoBox.svelte";
 
   const dispatch = createEventDispatcher();
@@ -10,14 +9,11 @@
   // export let triggerRef = undefined;
   export let isOpen = false;
   export let role = "dialog";
-  // local props
-  let buttonRef;
   // functions
   const handleClose = () => {
     dispatch("closeRequest");
   };
   const handleEsc = (e) => e.key === "Escape" && handleClose();
-  let progressSeries: number[] = [33, 66, 100];
 </script>
 
 <style>

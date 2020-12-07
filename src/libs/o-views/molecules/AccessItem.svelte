@@ -1,6 +1,5 @@
 <script lang="ts">
   import { faMinus } from "@fortawesome/free-solid-svg-icons";
-  import ButtonIcon from "../atoms/ButtonIcon.svelte";
   import { AccessItem } from "./../interfaces/molecules";
 
   export let mapping: AccessItem;

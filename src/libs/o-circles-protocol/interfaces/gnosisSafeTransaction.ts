@@ -1,10 +1,9 @@
-import type {BN} from "ethereumjs-util";
-import type {GnosisSafeOps} from "./gnosisSafeOps";
-import type {ByteString} from "./byteString";
-import type {Address} from "./address";
+import type { BN } from "ethereumjs-util";
+import type { GnosisSafeOps } from "./gnosisSafeOps";
+import type { ByteString } from "./byteString";
+import type { Address } from "./address";
 
-export interface GnosisSafeTransaction
-{
+export interface GnosisSafeTransaction {
   to: Address;
   value: BN;
   data: ByteString;

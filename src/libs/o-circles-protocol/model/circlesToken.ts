@@ -1,21 +1,18 @@
 import type Web3 from "web3";
-import type {Address} from "../interfaces/address";
-import {Erc20Token} from "../token/erc20Token";
-import {BN} from "ethereumjs-util";
-import {ZERO_ADDRESS} from "../consts";
-import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
-import type {Account} from "../interfaces/account";
-import type {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
-import {ByteString} from "../interfaces/byteString";
+import type { Address } from "../interfaces/address";
+import { Erc20Token } from "../token/erc20Token";
+import { BN } from "ethereumjs-util";
+import { ZERO_ADDRESS } from "../consts";
+import { GnosisSafeOps } from "../interfaces/gnosisSafeOps";
+import type { GnosisSafeProxy } from "../safe/gnosisSafeProxy";
+import { ByteString } from "../interfaces/byteString";
 
 export class CirclesToken extends Erc20Token {
-  constructor(web3:Web3, address: Address)
-  {
+  constructor(web3: Web3, address: Address) {
     super(web3, address);
   }
 
-  async getUBI(privateKey: ByteString, safeProxy: GnosisSafeProxy)
-  {
+  async getUBI(privateKey: ByteString, safeProxy: GnosisSafeProxy) {
     const txData = this.contract.methods.update().encodeABI();
 
     return await safeProxy.execTransaction(

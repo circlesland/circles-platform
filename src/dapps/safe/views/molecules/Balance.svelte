@@ -65,7 +65,7 @@
       class="flex items-center justify-center pl-6 mx-auto text-6xl uppercase">
       {circlesBalance}
       <span><img
-          src="images/symbols/o-white.svg"
+          src="symbols/o-white.svg"
           class="h-8 pb-2 pl-2"
           alt="CRC" /></span>
     </div>

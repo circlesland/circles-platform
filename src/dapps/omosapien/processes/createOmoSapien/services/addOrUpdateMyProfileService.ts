@@ -1,8 +1,8 @@
 import { CreateOmoSapienContext } from "../createOmoSapien";
-import {Profile} from "../../../../../libs/o-fission/entities/profile";
+import { Profile } from "../../../../../libs/o-fission/entities/profile";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
-import {RefreshView} from "../../../../../libs/o-events/refreshView";
+import { RefreshView } from "../../../../../libs/o-events/refreshView";
 
 export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) => {
   if (!window.o.fission) {
@@ -18,8 +18,7 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
 
   const fissionUsername = context.environment.fission.username;
 
-  if (!profile.avatar)
-  {
+  if (!profile.avatar) {
     let avatars = new Avatars(sprites);
     let svg = avatars.create(fissionUsername);
     let dataUri = `data:image/svg+xml;base64,${btoa(svg)}`;

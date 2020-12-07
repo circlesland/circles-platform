@@ -12,12 +12,10 @@
     if (
       (!processArtifact.value ||
         processArtifact.value.toString().trim() === "") &&
-        processArtifact.isOptional)
-    {
+      processArtifact.isOptional
+    ) {
       processArtifact.isValid = true;
-    }
-    else
-      {
+    } else {
       try {
         const weiStr = web3.utils.toWei(
           processArtifact.value.toString(),
@@ -30,9 +28,11 @@
           !weiValueBN.eq(new BN("0")) &&
           !weiValueBN.isNeg();
 
-        processArtifact.isValid = (processArtifact.isValid
-          && !processArtifact.max)
-          || (processArtifact.isValid && parseFloat(processArtifact.value) <= parseFloat(processArtifact.max.toString()));
+        processArtifact.isValid =
+          (processArtifact.isValid && !processArtifact.max) ||
+          (processArtifact.isValid &&
+            parseFloat(processArtifact.value) <=
+              parseFloat(processArtifact.max.toString()));
       } catch (e) {
         console.warn("EtherInput validation failed:", e);
         processArtifact.isValid = false;

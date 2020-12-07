@@ -1,10 +1,10 @@
-import {StateMachine} from "xstate";
+import { StateMachine } from "xstate";
 
 export interface ProcessManifest {
-    id?:number;
-    name:string;
+  id?: number;
+  name: string;
 }
 
-export interface ProcessDefinition extends ProcessManifest{
-    stateMachine: (() => StateMachine<any, any, any>)|((args:any) => StateMachine<any, any, any>);
+export interface ProcessDefinition extends ProcessManifest {
+  stateMachine: (() => StateMachine<any, any, any>) | ((args: any) => StateMachine<any, any, any>);
 }

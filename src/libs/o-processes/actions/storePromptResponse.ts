@@ -1,22 +1,19 @@
-import {ProcessContext} from "../interfaces/processContext";
-import {assign} from "xstate";
-import {Continue} from "../events/continue";
+import { ProcessContext } from "../interfaces/processContext";
+import { assign } from "xstate";
+import { Continue } from "../events/continue";
 
 /**
  * Inspects the received 'process.continue' event and gets all changed ProcessArtifacts.
  * Then it overwrites all changed artifacts on the context with the one from the continue event.
  */
-export const storePromptResponse = assign((context:ProcessContext, event) =>
-{
-  if (event.type != "process.continue")
-  {
+export const storePromptResponse = assign((context: ProcessContext, event) => {
+  if (event.type != "process.continue") {
     throw new Error("The 'storePromptResponse' action received an event of type '" + event.type + "' but it supports only 'process.continue' events.");
   }
 
   // Cast to Continue event and filter all changed ProcessArtifacts
   const continueEvent = <Continue>event;
-  if (continueEvent.data)
-  {
+  if (continueEvent.data) {
     const changes = Object.keys(continueEvent.data)
       .map(key => continueEvent.data[key])
       .filter(artifact => artifact.changed);
