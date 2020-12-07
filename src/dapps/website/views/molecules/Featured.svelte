@@ -86,7 +86,7 @@
         </div>
         <a href="https://discord.gg/YedewwChD9" class="w-12 h-12">
           <Button
-            mapping={{ data: { label: 'Pre-Order 6-Pack for 120 ⦿' }, design: { type: 'primary' } }} />
+            mapping={{ data: { label: 'Pre-Order 6-Pack for 150 ⦿' }, design: { type: 'primary' } }} />
         </a>
       </div>
     </div>
