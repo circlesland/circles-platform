@@ -32,9 +32,9 @@
       class="absolute left-0 flex-col items-center justify-center hidden w-full pb-8 mt-48 border-b border-gray-200 md:relative md:w-auto md:bg-transparent md:border-none md:mt-0 md:flex-row md:p-0 md:items-end md:flex md:justify-between">
       <button
         on:click={() => push('#/omoli/dapps')}
-        class="relative z-40 inline-block w-auto h-full px-5 py-3 text-sm font-bold leading-none text-white transition-all transition duration-100 duration-300 bg-indigo-700 rounded shadow-md cursor-pointer fold-bold lg:bg-white lg:text-indigo-700 sm:w-full lg:shadow-none hover:shadow-xl">Login</button>
+        class="relative z-50 inline-block w-auto h-full px-5 py-3 text-sm font-bold leading-none text-white transition-all transition duration-100 duration-300 bg-indigo-700 rounded shadow-md cursor-pointer fold-bold lg:bg-white lg:text-indigo-700 sm:w-full lg:shadow-none hover:shadow-xl">Login</button>
       <svg
-        class="absolute top-0 left-0 z-0 hidden w-screen max-w-3xl -mt-64 -ml-12 lg:block"
+        class="absolute top-0 left-0 z-0 hidden w-screen max-w-3xl -mt-64 -ml-12"
         viewBox="0 0 818 815"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink">
