@@ -86,8 +86,18 @@ export async function getEnvironment(): Promise<ProcessEnvironment> {
   }
 
   if (me.myProfile) {
-    if (me.myProfile?.circlesAddress) {
-      me.mySafe = new GnosisSafeProxy(web3, me.myAddress, me.myProfile.circlesAddress);
+    if ((<any>me.myProfile)?.circlesAddress) {
+      // Option 1 - for backwards compatibility
+      me.mySafe = new GnosisSafeProxy(web3, me.myAddress, (<any>me.myProfile).circlesAddress);
+    }
+    else if (me.myProfile?.profileType == "circles" && me.myProfile.profileRef)
+    {
+      // Option 2 - see connectSafeService.ts or deploySafeService.ts
+      me.mySafe = new GnosisSafeProxy(web3, me.myAddress, me.myProfile.profileRef);
+    }
+    else
+    {
+      throw new Error("Unsupported profile type:" + me.myProfile.profileType);
     }
   }
 

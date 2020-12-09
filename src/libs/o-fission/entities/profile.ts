@@ -1,14 +1,21 @@
 import {Entity} from "./entity";
 
+export type ProfileType = "omosapien"|"circles"|"account";
+
 /**
  * Describes the properties of a profile as stored in the user's fission drive
  */
 export interface Profile extends Entity {
   /**
-   * Can contain the address of the user's gnosis safe proxy
-   * which is registered at the circles hub.
+   * A transaction recipient can be an omosapien, a circles safe or a plain account on the xDai chain.
    */
-  circlesAddress?:string;
+  profileType: ProfileType;
+  /**
+   * Depending on the type, this field contains the corresponding handle or address.
+   * For omosapien this is the fission username,
+   * for cirlces its the safe address and for a plain account just the account address.
+   */
+  profileRef: string;
   /**
    * The user's first name
    */
@@ -22,7 +29,7 @@ export interface Profile extends Entity {
    */
   lastName?:string;
   /**
-   * A URL encoded user picture // TODO: only keep a reference and move the data to somewhere else
+   * A URL encoded user picture
    */
   avatar?:string;
 }

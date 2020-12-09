@@ -112,7 +112,8 @@ export const connectSafeService = async (context: InitializeAppContext) =>
 
     console.log("Linking safe address to profile ..")
 
-    existingProfile.circlesAddress = context.data.safeAddress.value;
+    existingProfile.profileType = "circles";
+    existingProfile.profileRef = context.data.safeAddress.value;
     await window.o.fission.profiles.addOrUpdateMyProfile(existingProfile);
 
     console.log("Updating the context ..")
@@ -125,14 +126,14 @@ export const connectSafeService = async (context: InitializeAppContext) =>
     };
 
     context.environment.me.myAddressXDaiBalance = new BN(await context.environment.eth.web3.eth.getBalance(ownerAddress));
-    context.environment.me.mySafeXDaiBalance = new BN(existingProfile.circlesAddress ? (await context.environment.eth.web3.eth.getBalance(existingProfile.circlesAddress)) : "0");
+    context.environment.me.mySafeXDaiBalance = new BN(existingProfile.profileRef ? (await context.environment.eth.web3.eth.getBalance(existingProfile.profileRef)) : "0");
     context.environment.me.mySafe = new GnosisSafeProxy(context.environment.eth.web3,
       context.environment.me.myAddress,
-      existingProfile.circlesAddress);
+      existingProfile.profileRef);
 
     console.log("Find token of safe ..")
     const hubAccount = new HubAccount(context.environment.eth.contracts.hub,
-      existingProfile.circlesAddress);
+      existingProfile.profileRef);
 
     context.environment.me.myToken = await hubAccount.getOwnToken();
 

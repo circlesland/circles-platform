@@ -1,11 +1,11 @@
-import { Directory, DirectoryChangeType } from "./directory";
 import FileSystem from "webnative/fs/filesystem";
 import { Token } from "../entities/token";
+import {Directory, DirectoryChangeType} from "../directory";
 
 export class Tokens extends Directory<Token>
 {
   constructor(fs: FileSystem) {
-    super(fs, ["tokens"]);
+    super(fs, ["tokens"], json => <Token>JSON.parse(json));
   }
 
   async tryGetMyToken(): Promise<Token | null> {

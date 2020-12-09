@@ -1,6 +1,6 @@
 import FileSystem from "webnative/fs/filesystem";
-import {Entity} from "../entities/entity";
 import {CID} from "webnative/ipfs";
+import {Entity} from "./entities/entity";
 
 export type DirectoryChangeType = "add"|"update"|"remove";
 
@@ -8,13 +8,14 @@ export abstract class Directory<TEntity extends Entity>
 {
   private readonly _fs:FileSystem;
   private readonly _pathParts:string[];
+  private readonly _entityFactory:(data:string) => TEntity;
 
   protected get fs() : FileSystem
   {
     return this._fs;
   }
 
-  constructor(fs:FileSystem, pathParts:string[])
+  constructor(fs:FileSystem, pathParts:string[], entityFactory:(data:string) => TEntity)
   {
     this._pathParts = pathParts;
     this._fs = fs;
@@ -61,7 +62,7 @@ export abstract class Directory<TEntity extends Entity>
       return this.fs.cat(this.getPath([name]));
     }));
 
-    return items.map(item => <TEntity>JSON.parse(<string>item));
+    return items.map(item => <TEntity>this._entityFactory(<string>item));
   }
 
   async tryGetByName<TSpecificEntity extends TEntity>(entityName:string) : Promise<TSpecificEntity>
@@ -72,7 +73,7 @@ export abstract class Directory<TEntity extends Entity>
     }
 
     const contents = await this.fs.cat(this.getPath([entityName]));
-    return <TSpecificEntity>JSON.parse(<string>contents);
+    return <TSpecificEntity>this._entityFactory(<string>contents);
   }
 
   async addOrUpdate(entity:TEntity, publish = true, indexHint?:string) : Promise<{

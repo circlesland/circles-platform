@@ -10,11 +10,11 @@ export class EventQuery<TItem>
     this.execute = execute;
     this.events = events;
   }
-
+/*
   pipe<TResult>(pipe:(events:Observable<TItem>) => Observable<TResult>) : EventQuery<TResult> {
     return new EventQuery<TResult>(this.execute, pipe(this.events));
   }
-
+*/
   async getLatest(groupBy:(e:TItem & {blockNumber:number}) => string)
   {
     const aggregate: { [key: string]: TItem & {blockNumber:number} } = {};

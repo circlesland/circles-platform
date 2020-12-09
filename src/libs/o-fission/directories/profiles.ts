@@ -1,11 +1,51 @@
-import { Directory, DirectoryChangeType } from "./directory";
-import { Profile } from "../entities/profile";
+import {Profile, ProfileType} from "../entities/profile";
 import FileSystem from "webnative/fs/filesystem";
+import {Directory, DirectoryChangeType} from "../directory";
+import {EventStore} from "../eventStore";
+import {CacheEvent} from "../entities/cacheEvent";
+
+export class ProfileImpl implements Profile
+{
+  name: string;
+  profileType: ProfileType;
+  profileRef: string;
+  nickname?:string;
+  firstName?:string;
+  lastName?:string;
+  avatar?:string;
+
+  events:EventStore<CacheEvent>;
+
+  constructor(json:string)
+  {
+    const obj = <Profile>JSON.parse(json);
+    this.name = obj.name;
+    this.profileType = obj.profileType;
+    this.profileRef = obj.profileRef;
+    this.nickname = obj.nickname;
+    this.firstName = obj.firstName;
+    this.lastName = obj.lastName;
+    this.avatar = obj.avatar;
+  }
+
+  async loadEvents ()
+  {
+    const fromBlock = 0;
+    const toBlock = 0;
+    await this.events.loadAllToCache(fromBlock, toBlock);
+  }
+
+  subscribe()
+  {
+  }
+}
 
 export class Profiles extends Directory<Profile>
 {
   constructor(fs: FileSystem) {
-    super(fs, ["profiles"]);
+    super(fs, ["profiles"], (json:string) => {
+      return new ProfileImpl(json);
+    });
   }
 
   async tryGetMyProfile(): Promise<Profile | null> {

@@ -1,11 +1,11 @@
-import { Directory, DirectoryChangeType } from "./directory";
 import { KeyPair } from "../entities/keyPair";
 import FileSystem from "webnative/fs/filesystem";
+import {Directory, DirectoryChangeType} from "../directory";
 
 export class Keys extends Directory<KeyPair>
 {
   constructor(fs: FileSystem) {
-    super(fs, ["keys"]);
+    super(fs, ["keys"], json => <KeyPair>JSON.parse(json));
   }
 
   async tryGetMyKey(): Promise<KeyPair | null> {
