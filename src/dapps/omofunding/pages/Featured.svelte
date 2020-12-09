@@ -4,22 +4,12 @@
 
 <section class="pt-12 overflow-y-scroll bg-white text-light-500">
   <div class="mx-auto">
-    <div class="flex flex-col items-center w-full max-w-6xl px-5 py-24 mx-auto">
-      <h2
-        class="my-5 text-base font-bold tracking-tight uppercase text-tertiary font-title">
-        Featured Projects
-      </h2>
-      <h3
-        class="max-w-4xl px-5 mt-2 text-4xl font-black leading-tight text-center text-primary sm:mt-0 sm:px-0 md:text-5xl">
-        Crowdfund your future economy one project a time
-      </h3>
-    </div>
     <div
       class="flex flex-wrap mx-auto my-20 bg-white border rounded-xl border-light-200 lg:max-w-6xl">
       <img
-        alt="ondria"
+        alt="pflanzenstoff"
         class="object-cover object-center w-full rounded h-96 lg:w-1/2 lg:h-auto"
-        src="./images/market/pflanzenstoff.png" />
+        src="images/market/pflanzenstoff.jpg" />
       <div class="w-full p-12 md:p-16 lg:w-1/2">
         <h2 class="text-sm tracking-widest text-light-500 title-font">FOOD</h2>
         <h1 class="mb-1 text-3xl font-medium text-primary title-font">

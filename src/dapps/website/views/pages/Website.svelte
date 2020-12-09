@@ -27,6 +27,16 @@
       <Video />
     </div>
     <Steps />
+    <div class="flex flex-col items-center w-full px-5 py-24 mx-auto bg-white">
+      <h2
+        class="my-5 text-base font-bold tracking-tight uppercase text-tertiary font-title">
+        Featured Projects
+      </h2>
+      <h3
+        class="max-w-4xl px-5 mt-2 text-4xl font-black leading-tight text-center text-primary sm:mt-0 sm:px-0 md:text-5xl">
+        Crowdfund your future economy one project a time
+      </h3>
+    </div>
     <Featured />
     <div class="pb-12 bg-light-100">
       <div
