@@ -27,8 +27,7 @@
     </div>
 
     <div class="p-8 md:p-16">
-      <Title
-        mapping={{ data: { title: 'A new generation of personal moneys' } }} />
+      <Title mapping={{ data: { title: 'Intro' } }} />
 
       <div class="py-4 text-gray-600 text">
         ...work in progress, coming soon... (intro into the current central bank
@@ -48,7 +47,7 @@
         and OmoCarol their personal moneys to trade for goods and services.
       </div>
     </div>
-    <img src="./illustrations/whitepaper/trust.png" alt="trust" />
+    <img src="./illustrations/lightpaper/trust.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title
@@ -65,7 +64,7 @@
         transaction and is handing over to OmoDave his part of the trade deal.
       </div>
     </div>
-    <img src="./illustrations/whitepaper/weboftrust.png" alt="trust" />
+    <img src="./illustrations/lightpaper/weboftrust.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: "What about evil fake Omo's?" } }} />
@@ -81,7 +80,7 @@
         OmoAlice's account, thus is completely useless.
       </div>
     </div>
-    <img src="./illustrations/whitepaper/fake.png" alt="trust" />
+    <img src="./illustrations/lightpaper/fake.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: 'The limits of web-of-trust' } }} />
@@ -95,7 +94,7 @@
         economy, thus quickly getting frustrated.
       </div>
     </div>
-    <img src="./illustrations/whitepaper/trustlimit.png" alt="trust" />
+    <img src="./illustrations/lightpaper/trustlimit.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title
@@ -270,7 +269,9 @@
     <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: 'Fading away through Death' } }} />
 
-      <div class="py-4 text-gray-600 text">125.000⦿</div>
+      <div class="py-4 text-gray-600 text">
+        ...work in progress, coming soon...
+      </div>
       <div class="py-12 text-3xl font-thin text-tertiary font-primary">
         "When an Omosapien dies the ⦿ money will slowly fade away over time,
         like the memories you shared with this specific Omo"

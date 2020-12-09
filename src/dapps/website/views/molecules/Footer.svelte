@@ -13,33 +13,34 @@
       </p>
     </div>
     <div class="block w-full pl-10 mt-6 text-sm lg:w-3/4 sm:flex lg:mt-0">
-      <!-- <ul
+      <ul
         class="flex flex-col w-full p-0 font-medium text-left text-gray-700 list-none">
         <li
           class="inline-block px-3 py-2 mt-5 font-bold tracking-wide text-gray-800 uppercase md:mt-0">
-          Product
+          Community
         </li>
         <li>
           <a
-            href="#_"
-            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Features</a>
+            href="https://discord.gg/CS6xq7jECR"
+            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Chat</a>
         </li>
         <li>
           <a
-            href="#_"
-            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Integrations</a>
+            href="https://github.com/omoearth/omo-li/discussions"
+            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Forum</a>
         </li>
         <li>
           <a
-            href="#_"
-            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Pricing</a>
+            href="https://github.com/omoearth/omo-li/issues"
+            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Wishes
+            & Bugs</a>
         </li>
         <li>
           <a
-            href="#_"
-            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">FAQ</a>
+            href="https://github.com/omoearth/omo-li/projects/1"
+            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Roadmap</a>
         </li>
-      </ul> -->
+      </ul>
       <ul
         class="flex flex-col w-full p-0 font-medium text-left text-gray-700 list-none">
         <li
