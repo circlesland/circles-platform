@@ -201,7 +201,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Verified by Omo tag</span>
+                <span class="ml-3 text-lg text-gray-700">Verify your identity</span>
               </li>
             </ul>
           </div>

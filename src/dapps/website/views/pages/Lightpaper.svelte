@@ -21,9 +21,24 @@
     tw="bg-white w-full md:border md:border-light-200 md:rounded-xl"
     overflowY>
     <div class="p-8 md:p-16">
-      <div class="text-4xl font-bold text-primary">Vision</div>
+      <div class="text-4xl font-bold text-center text-primary">
+        The Omo Vision
+      </div>
 
-      <div class="py-4 text-gray-600 text">...work in progress...</div>
+      <div class="py-4 text-gray-600 text">
+        <div
+          class="py-12 text-3xl font-thin text-center text-tertiary font-primary">
+          "Our vision is to empower every human and spark their joyfull passion
+          towards an eventful, manifold and fullfilled life"
+        </div>
+
+        Humanity has come a far way and is finally entering a new age of
+        technological advancement and superiority, enfolding the capacity to
+        sustain all of earth and every human. We believe reinventing our
+        monetary system, by equalizing access to basic needs, will advance
+        humanity one giant step into the next era of sustainable growth,
+        creative design and abundance.
+      </div>
     </div>
 
     <div class="p-8 md:p-16">

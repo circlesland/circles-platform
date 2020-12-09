@@ -4,13 +4,12 @@
   import Header from "../molecules/Header.svelte";
   import Hero from "../molecules/Hero.svelte";
   import Pricing from "../molecules/Pricing.svelte";
-  import Testimonials from "../molecules/Testimonials.svelte";
   import Footer from "../molecules/Footer.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import Offers from "src/dapps/omomarket/views/pages/Offers.svelte";
   import Video from "../molecules/Video.svelte";
   import Steps from "../molecules/Steps.svelte";
-  import Featured from "../molecules/Featured.svelte";
+  import Featured from "src/dapps/omofunding/pages/Featured.svelte";
   import Details from "../molecules/Details.svelte";
 
   onMount(async () => {

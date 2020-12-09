@@ -58,6 +58,11 @@
             class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Terms
             of Service</a>
         </li>
+        <li>
+          <a
+            href="#/attributions"
+            class="inline-block px-3 py-2 text-gray-500 no-underline hover:text-gray-600">Attributions</a>
+        </li>
       </ul>
       <div class="flex flex-col w-full text-gray-700">
         <div

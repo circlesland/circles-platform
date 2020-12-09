@@ -55,6 +55,19 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
     },
     {
       data: {
+        title: "OmoFunding",
+        tag: "soon",
+      },
+      action: {
+        route: "omofunding/featured",
+      },
+      design: {
+        type: "",
+        icon: faPeopleCarry,
+      },
+    },
+    {
+      data: {
         title: "Talk",
         tag: "soon",
       },
@@ -64,20 +77,6 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
       design: {
         type: "disabled",
         icon: faComments,
-      },
-    },
-
-    {
-      data: {
-        title: "Crowdfunding",
-        tag: "soon",
-      },
-      action: {
-        route: "omoli/dapps",
-      },
-      design: {
-        type: "disabled",
-        icon: faPeopleCarry,
       },
     },
     {
