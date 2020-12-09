@@ -1,6 +1,6 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import Header from "./../molecules/Header.svelte";
+  import Header from "../molecules/Header.svelte";
   import Chart from "svelte-frappe-charts";
   import { chartMonetaryMass } from "../../data/chartMonetaryMass";
   import { chartCirclesVsOTime } from "../../data/chartCirclesVsOTime";
@@ -9,6 +9,7 @@
   import { chartHoursAliveMinusDecayOver1Year } from "../../data/chartHoursAliveMinusDecayOver1Year";
   import { chartHoursAliveMinusDecayOver10Years } from "../../data/chartHoursAliveMinusDecayOver10Years";
   import { chartHoursAlive1WeekPlusOMoney } from "../../data/chartHoursAlive1WeekPlusOMoney";
+  import { chartOTimeDeath } from "../../data/chartOTimeDeath";
   import Title from "../atoms/Title.svelte";
 </script>
 
@@ -20,12 +21,21 @@
     tw="bg-white w-full md:border md:border-light-200 md:rounded-xl"
     overflowY>
     <div class="p-8 md:p-16">
-      <div class="text-4xl font-bold text-primary">Introduction</div>
+      <div class="text-4xl font-bold text-primary">Vision</div>
+
+      <div class="py-4 text-gray-600 text">...work in progress...</div>
+    </div>
+
+    <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: 'A new generation of personal moneys' } }} />
+
       <div class="py-4 text-gray-600 text">
-        ...coming soon... (intro into the current central bank dept top down
-        money vs the decentralized credit based bottom up money)
+        ...work in progress, coming soon... (intro into the current central bank
+        dept top down money vs the decentralized credit based bottom up money)
       </div>
     </div>
+
     <div class="p-8 md:p-16">
       <Title
         mapping={{ data: { title: 'A new generation of personal moneys' } }} />
@@ -38,7 +48,7 @@
         and OmoCarol their personal moneys to trade for goods and services.
       </div>
     </div>
-    <img src="./illustrations/explain/trust.png" alt="trust" />
+    <img src="./illustrations/whitepaper/trust.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title
@@ -55,7 +65,7 @@
         transaction and is handing over to OmoDave his part of the trade deal.
       </div>
     </div>
-    <img src="./illustrations/explain/weboftrust.png" alt="trust" />
+    <img src="./illustrations/whitepaper/weboftrust.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: "What about evil fake Omo's?" } }} />
@@ -71,7 +81,7 @@
         OmoAlice's account, thus is completely useless.
       </div>
     </div>
-    <img src="./illustrations/explain/fake.png" alt="trust" />
+    <img src="./illustrations/whitepaper/fake.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: 'The limits of web-of-trust' } }} />
@@ -85,15 +95,15 @@
         economy, thus quickly getting frustrated.
       </div>
     </div>
-    <img src="./illustrations/explain/trustlimit.png" alt="trust" />
+    <img src="./illustrations/whitepaper/trustlimit.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title
         mapping={{ data: { title: "Federated identification for lonely Omo's and business accounts" } }} />
       <div class="py-4 text-gray-600 text">
-        ...coming soon... (explaining the federated 2nd layer identification
-        with autoident algorithms and shared open source developer business
-        model)
+        ...work in progress, coming soon... (explaining the federated 2nd layer
+        identification with autoident algorithms and shared open source
+        developer business model)
       </div>
       (placeholder illustration)
     </div>
@@ -151,7 +161,7 @@
       <div class="py-4 text-gray-600 text">
         Omo Sapiens tightly connect their money, they use to trade and barter
         goods and services, to their time alive. They call their money ⦿
-        (pronounced 'o', from latin ora, with the symbol ⦿ which in many
+        (pronounced 'o', from the italian ora, with the symbol ⦿ which in many
         cultures is respresenting the sun that is providing the energy for life
         to grow). Every hour alive, every Omo Sapien is harvesting 1⦿ and over
         the course of 7 days in total 168⦿.
@@ -173,13 +183,14 @@
       <Title mapping={{ data: { title: 'Decay of lazy money' } }} />
 
       <div class="py-4 text-gray-600 text">
-        Like memories are fading away over time, lazy money which you don't use
-        and is just sitting in your account, will decay and fade away. Your ⦿
-        money keeps on growing continouesly instead of being devaluated through
-        hidden debt based money inflation. Comparing the decay rate at 7% to the
+        While your ⦿ money keeps on growing continuously, instead of being
+        devaluated through hidden debt based money inflation, there is still an
+        integrated decay rate to limit the total money supply. Like memories are
+        fading away over time, lazy money which is not used and is just sitting
+        in your account will fade away. Comparing the decay rate at 7% to the
         0€, which you would have in today's money dept system, or the tendency
         that fiat currency today on your bank account will buy you less goods
-        and services next year, makes ⦿ an quite attracative store of value.
+        and services next year, makes ⦿ a quite attractive store of value.
       </div>
       <div class="mt-4 bg-white">
         <p class="text-sm font-bold text-light-500">
@@ -200,12 +211,15 @@
 
       <div class="py-4 text-gray-600 text">
         You might now argue, that the decay rate is stil quite high and a huge
-        devaluation without providing any stable store of value, but rest
-        assured, especially for the lower and middle class exactly the opposite
+        devaluation without providing any stable store of value, while this is
+        real for the rich, for the lower and middle class exactly the opposite
         is true. After 10 years an Omo Sapien has been 87.600 hours alive
         harvested in total 87.600⦿. In case you have been saving all your money,
-        the decay rate of 7% a year, will reduce your harvested ⦿ income to
+        the decay rate of 7% a year will reduce your harvested ⦿ income to
         64.576⦿.
+      </div>
+      <div class="py-12 text-3xl font-thin text-tertiary font-primary">
+        "A great store of value for the lower and middle class"
       </div>
       <div class="mt-4 bg-white">
         <p class="text-sm font-bold text-light-500">
@@ -221,21 +235,24 @@
     </div>
 
     <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'The golden middle' } }} />
+      <Title mapping={{ data: { title: 'The golden middle at 125.000⦿' } }} />
 
       <div class="py-4 text-gray-600 text">
-        Even though the decay rate is at 7% a year, the growth rate of your time
-        alive is always higher until the golden middle of around ~125.000, which
-        you would own after 100 years alive, if you would always save your money
-        and didn't spend any of it. Beyond owning personally 125.000⦿ through
-        other economic activity and for investors, entrepreneurs and businesses,
-        which can not harvest time money, the decay rate will always reduce lazy
-        sitting money over time. This creates for the rich the incentive to
-        continuesly keep money in the economy flowing, by either reinvesting or
-        distributing the profits to teammembers. This special characteristic of
-        the ⦿ money design is keeping the global gap between rich and poor at
-        greater balance. The less you own, the more you harvest, the more you
-        own, the higher your decay tax.
+        The growth rate of your time alive is always higher than the decay rate
+        until the golden middle of around ~125.000, which you would own after
+        100 years alive, when you always save your money and don't spend any of
+        it. Beyond owning personally 125.000⦿ by becoming economically active,
+        the decay rate will always reduce lazy sitting money over time. This
+        special characteristic of the ⦿ money design is keeping the global gap
+        between rich and poor at greater balance. In the below example, you can
+        see how this trait behaves for two people, the first starting at 0⦿ and
+        the second starting at 250.000⦿. Each balance is always pulling towards
+        the equillibrium at ~125.000⦿, which is the maximum money supply that
+        can ever exist per living human.
+      </div>
+      <div class="py-12 text-3xl font-thin text-tertiary font-primary">
+        "The less you own the more you harvest, the more you own the higher your
+        decay tax."
       </div>
       <div class="mt-4 bg-white">
         <p class="text-sm font-bold text-light-500">
@@ -251,10 +268,62 @@
     </div>
 
     <div class="p-8 md:p-16">
+      <Title mapping={{ data: { title: 'Fading away through Death' } }} />
+
+      <div class="py-4 text-gray-600 text">125.000⦿</div>
+      <div class="py-12 text-3xl font-thin text-tertiary font-primary">
+        "When an Omosapien dies the ⦿ money will slowly fade away over time,
+        like the memories you shared with this specific Omo"
+      </div>
+      <div class="mt-4 bg-white">
+        <p class="text-sm font-bold text-light-500">{chartOTimeDeath.title}</p>
+        <Chart
+          data={chartOTimeDeath.data}
+          lineOptions={chartOTimeDeath.design.lineOptions}
+          barOptions={chartOTimeDeath.design.barOptions}
+          axisOptions={chartOTimeDeath.design.axisOptions}
+          colors={chartOTimeDeath.design.colors} />
+      </div>
+    </div>
+
+    <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: 'Counterbalancing the decay rate with the service oriented economy' } }} />
+
+      <div class="py-4 text-gray-600">
+        For investors, entrepreneurs and businesses, which can not harvest ⦿
+        money, the decay rate creates a certain pressure to continuously keep
+        money in the economy flowing in circles, by either reinvesting, spending
+        or distributing the profits to teammembers and stakeholders. This
+        requires for many larger scale businesses of today a 180° mindset shift
+        towards the concept of flowing money and the already fast evolving
+        everything-as-a-service economy. In the Omopreneurship world, long
+        lasting relationships between customers and partners in the form of
+        service oriented subscription business models, rather than running from
+        one time deal to one time deal, will be economically rewarded.
+      </div>
+      <div class="py-12 text-3xl font-thin text-tertiary font-primary">
+        "The new indicator of success is not anymore the amount of money I can
+        hoard on my bank account, but the amount of continuous flowing income
+        stream I can generate through delivering the best service subscriptions"
+      </div>
+    </div>
+
+    <div class="p-8 md:p-16">
       <Title
         mapping={{ data: { title: 'Comparing € money supply to the ⦿ supply' } }} />
 
-      <div class="py-4 text-gray-600 text">...coming soon...</div>
+      <div class="py-4 text-gray-600 text">
+        Since the introduction of the €uro 20 years ago, the money supply has
+        grown from ~4.9 trillion € to ~13 trillion €, while the official
+        population using the €uro has grown from ~320 million to ~341 milion
+        citizens. This results in an average total money supply for each citizen
+        of 14.567€ in 2000 and 36.186€ in 2019. With the introduction of the ⦿
+        in 2020, each new citizen will over the course of 10 years reach the
+        equivalent of its estimated €uro supply. While the monetary mass of the
+        € keeps expanding exponentially, the monetary mass of the ⦿ grows toward
+        the stabilizing equilibrium at 125.000⦿
+      </div>
       <div class="mt-4 bg-white">
         <p class="text-sm font-bold text-light-500">
           {chartMonetaryMass.title}
@@ -272,7 +341,9 @@
       <Title
         mapping={{ data: { title: 'Difference between Circles (nominal units) and ⦿ money (relative units)' } }} />
 
-      <div class="py-4 text-gray-600 text">...coming soon...</div>
+      <div class="py-4 text-gray-600 text">
+        ...work in progress, coming soon...
+      </div>
       <div class="mt-4 bg-white">
         <p class="text-sm font-bold text-light-500">
           {chartCirclesVsOTime.title}
@@ -283,6 +354,49 @@
           barOptions={chartCirclesVsOTime.design.barOptions}
           axisOptions={chartCirclesVsOTime.design.axisOptions}
           colors={chartCirclesVsOTime.design.colors} />
+      </div>
+    </div>
+
+    <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: 'United OmoEurope simulation 2030' } }} />
+
+      <div class="py-4 text-gray-600 text">
+        ...work in progress, coming soon... (500 million Europeaans, Growth in
+        10 years, don't overestimate, what you can achieve in 1 year and don't
+        underestimate what you can achieve in 10 years time)
+      </div>
+    </div>
+
+    <div class="p-8 md:p-16">
+      <Title mapping={{ data: { title: 'United OmoEarth simulation 2050' } }} />
+
+      <div class="py-4 text-gray-600 text">
+        ...work in progress, coming soon... (Our journey from 1 to 10 billion
+        Omo Sapiens)
+      </div>
+    </div>
+
+    <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: 'Total global money supply in usd and ⦿' } }} />
+
+      <div class="py-4 text-gray-600 text">
+        ...work in progress, coming soon... (
+        *https://www.visualcapitalist.com/all-of-the-worlds-money-and-markets-in-one-visualization-2020/)
+      </div>
+    </div>
+
+    <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: 'Defining reference prices in a social contract' } }} />
+
+      <div class="py-4 text-gray-600 text">
+        ...work in progress, coming soon... (Defining prices as a social
+        contract 10 year social contract rollout roadmap keeping a reference
+        price. What do we want rather tthan what the market plays, like a
+        bonding curve with investment into the global human capital instead
+        ofone specific company.)
       </div>
     </div>
   </Compose>

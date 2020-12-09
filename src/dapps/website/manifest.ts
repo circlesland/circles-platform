@@ -1,5 +1,5 @@
 import Website from 'src/dapps/website/views/pages/Website.svelte'
-import Explain from 'src/dapps/website/views/pages/Explain.svelte'
+import Whitepaper from 'src/dapps/website/views/pages/Whitepaper.svelte'
 import Privacy from 'src/dapps/website/views/pages/Privacy.svelte'
 import TOS from 'src/dapps/website/views/pages/TOS.svelte'
 
@@ -32,8 +32,8 @@ export const tos: PageManifest = {
   }
 }
 
-export const explain: PageManifest = {
-  component: Explain,
+export const whitepaper: PageManifest = {
+  component: Whitepaper,
   userData: {
     dapp: "website",
     showActionBar: false,

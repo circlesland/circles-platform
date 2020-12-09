@@ -118,7 +118,7 @@ export let chartOTimeGrowth100Years = {
     ],
     datasets: [
       {
-        name: "decaying",
+        name: "start at 250k ⦿",
         chartType: "line",
         values: [
           250000,
@@ -225,7 +225,7 @@ export let chartOTimeGrowth100Years = {
         ],
       },
       {
-        name: "⦿ money",
+        name: "start at 0⦿",
         chartType: "line",
         values: [
           8760,
