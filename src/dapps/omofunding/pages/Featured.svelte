@@ -2,7 +2,7 @@
   import Button from "src/libs/o-views/atoms/Button.svelte";
 </script>
 
-<section class="pt-12 overflow-hidden bg-white text-light-500">
+<section class="pt-12 overflow-y-scroll bg-white text-light-500">
   <div class="px-5 py-24 mx-auto">
     <div class="flex flex-col items-center w-full max-w-6xl mx-auto ">
       <h2

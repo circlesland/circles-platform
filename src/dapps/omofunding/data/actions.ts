@@ -10,35 +10,12 @@ export const omofundingDefaultActions: QuickAction[] = [
         icon: faStore
       },
       data: {
-        label: "Offers"
+        label: "Projects"
       }
     },
     route: "#/omofunding/featured"
-  }, {
-    type: "route",
-    pos: "2",
-    mapping: {
-      design: {
-        icon: faDove,
-      },
-      data: {
-        label: "soon"
-      }
-    },
-    route: "#/omofunding/featured"
-  }, {
-    type: "route",
-    pos: "3",
-    mapping: {
-      design: {
-        icon: faStar,
-      },
-      data: {
-        label: "soon",
-      }
-    },
-    route: "#/omofunding/featured"
-  }, {
+  },
+  {
     type: "route",
     pos: "4",
     mapping: {
