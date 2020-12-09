@@ -8,20 +8,22 @@ Building with Omo.Li a lightweight and hostless decentralized wallet and marketp
 ## Overview
 
 - Chat: https://discord.gg/gxCpSX2q
+- Discussion Forum: https://github.com/omoearth/omo-li/discussions
 - Wishes & Bugs: https://github.com/omoearth/omo/issues
 - Roadmap: https://github.com/omoearth/omo/projects/1
 - Twitter: https://twitter.com/OmoEarth
-- Circles Whitepaper: https://github.com/CirclesUBI/whitepaper/blob/master/README.md
+- Omo Lightpaper: https://omo.li/#/lightpaper
+
 ## Dapp
 
 
 ## Tech Stack, architecture and status
-- Circles Protocol (UBI-Currency) as non-custodial self-owned personal currency (alpha ready)
-- xDAI Blockchain for fast and low-fee transactions (alpha ready)
-- Transitive circles payments via a clientside pathfinder (planned)
-- Fission: Identity and Key-Management mit keystore-idb, DID and UCAN (planned)
-- Fission: Hostless and user-owned IPFS Storage with service workers syncing P2P between the browser clients (planned)
-- Caching trust graph and limits in ipfs and sync via fission (planned)
+- CirclesUBI Protocol, a non-custodial self-owned personal currency 
+- xDAI Blockchain for fast and low-fee transactions
+- Transitive circles payments via a clientside pathfinder 
+- Fission: Identity and Key-Management mit keystore-idb, DID and UCAN 
+- Fission: Hostless and user-owned IPFS Storage with service workers syncing P2P between the browser clients
+- Caching trust graph and limits in locala browser js-ipfs and sync via fission service-workers
 - Svelte as reactive frontend compiler
 - Tailwind for the UI-Designsystem
 
