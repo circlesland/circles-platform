@@ -17,7 +17,7 @@
         class="px-4 py-1 mr-5 lowercase bg-white border hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Discord
         Chat</a>
       <a
-        href="https://discord.gg/CS6xq7jECR"
+        href="https://github.com/omoearth/omo-li/discussions"
         class="px-4 py-1 mr-5 lowercase bg-white border hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Forum</a>
       <a
         href="#/lightpaper"

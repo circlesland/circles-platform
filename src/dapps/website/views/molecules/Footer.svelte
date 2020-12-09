@@ -45,7 +45,7 @@
         class="flex flex-col w-full p-0 font-medium text-left text-gray-700 list-none">
         <li
           class="inline-block px-3 py-2 mt-5 font-bold tracking-wide text-gray-800 uppercase md:mt-0">
-          Company
+          Organisation
         </li>
         <li>
           <a
