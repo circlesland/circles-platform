@@ -14,7 +14,7 @@
       class="flex flex-wrap items-center justify-center text-base md:ml-auto">
       <a
         href="https://discord.gg/CS6xq7jECR"
-        class="px-4 py-1 mr-5 lowercase bg-white border hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Discord
+        class="px-4 py-1 mr-5 lowercase bg-white border hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">
         Chat</a>
       <a
         href="https://github.com/omoearth/omo-li/discussions"

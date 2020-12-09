@@ -1,8 +1,11 @@
 <script lang="ts">
   import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+  import { identity } from "rxjs";
   import ButtonIconLarge from "src/libs/o-views/atoms/ButtonIconLarge.svelte";
 
+  import Icon from "fa-svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
+  import AccessItem from "src/libs/o-views/molecules/AccessItem.svelte";
 
   let offers = [
     // {
@@ -77,6 +80,7 @@
         title: "Red plaid shirt (Size S/M 39/40)",
         description: "almost new, only worn 2 times",
         price: "150",
+
         city: "Bad Endorf",
         country: "Germany",
         delivery: "pickup or delivery",
@@ -93,6 +97,7 @@
         title: "1-room in shared apartment",
         description:
           "stay 1 night in the center of Munich in a 16qm room in my shared apartment",
+        interval: "night",
         price: "300",
         city: "Munich",
         country: "Germany",
@@ -124,20 +129,84 @@
   ];
 </script>
 
-<Compose
-  columns="repeat(auto-fit, minmax(400px, 1fr))"
-  rows="repeat({offers.length}, minmax(1fr, 1fr))"
-  tw="mx-4 py-4 md:mx-12"
-  gap="1.5rem"
-  overflowY>
-  {#each offers as item}
-    <div class="antialiased text-primary wrapper">
+<Compose rows="1fr" columns="1fr" overflowY>
+  <div
+    class="grid max-w-lg gap-5 p-2 mx-auto md:p-12 md:grid-cols-2 lg:grid-cols-3 md:max-w-none">
+    {#each offers as item}
+      <div
+        class="flex flex-col overflow-hidden border rounded-xl border-light-300">
+        <div class="relative flex-shrink-0">
+          <img
+            class="object-cover w-full h-56"
+            src={item.data.image}
+            alt="img" />
+          <span
+            class="absolute top-0 right-0 inline-flex items-center px-4 pt-2 pb-1 text-3xl font-medium leading-tight text-white rounded-l-full bg-secondary">
+            {item.data.price}<img
+              src="symbols/o-white.svg"
+              alt="o"
+              class="w-4 h-4 mb-1 ml-1" />
+            {#if item.data.interval}
+              <span
+                class="ml-1 text-xs text-blue-200">/{item.data.interval}</span>
+            {/if}</span>
+        </div>
+        <div class="flex flex-col justify-between flex-1">
+          <div class="flex flex-col justify-between flex-1 p-6 bg-white">
+            <div>
+              <p class="block text-xl font-semibold leading-7 text-primary">
+                {item.data.title}
+              </p>
+              <p class="mt-3 text-base leading-6 text-gray-500">
+                {item.data.description}
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex items-center p-4 border-t bg-gray-50 border-light-200">
+            <div class="flex-shrink-0">
+              <img
+                class="w-10 h-10 rounded-xl"
+                src={item.data.offeredBy.image}
+                alt="" />
+            </div>
+            <div class="ml-3">
+              <div class="text-sm font-medium leading-5 text-primary">
+                <p href="#" class="hover:underline">
+                  {item.data.offeredBy.firstName}
+                  {item.data.offeredBy.lastName}
+                </p>
+              </div>
+              <div class="text-xs leading-5 text-gray-600">
+                {item.data.city},
+                {item.data.country}
+                |
+                {item.data.delivery}
+              </div>
+            </div>
+          </div>
+          <a
+            href="https://discord.gg/YedewwChD9"
+            class="flex items-center justify-center p-4 text-base font-medium leading-5 text-center bg-white border-t border-light-200 rounded-b-xl text-primary">
+            <div class="flex">
+              <p class="mr-1 font-bold lowercase">Contact to buy</p>
+              <Icon icon={faShoppingCart} />
+            </div>
+          </a>
+        </div>
+      </div>
+    {/each}
+  </div>
+</Compose>
+<!-- {#each offers as item}
+
+  <div class="antialiased text-primary md:mx-12">
       <div>
         <img
           src={item.data.image}
           alt="img"
           class="object-cover object-center w-full rounded-lg shadow-md h-72 md:h-96" />
-        <div class="relative px-4 -mt-16">
+        <div class="relative -mt-16 md:px-4">
           <div
             class="flex px-4 pt-2 pb-1 text-3xl font-bold text-primary rounded-t-xl font-primary bg-light-200">
             {item.data.price}
@@ -171,7 +240,7 @@
                   class="w-12 h-12 rounded-xl" />
               </div>
 
-              <div class="flex-1 px-4">
+              <div class="flex-1 mx-4">
                 <a
                   href="https://discord.gg/YedewwChD9"
                   class="font-sans text-base font-bold text-primary font-primary">
@@ -192,5 +261,4 @@
         </div>
       </div>
     </div>
-  {/each}
-</Compose>
+  {/each} -->

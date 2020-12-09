@@ -30,7 +30,7 @@
     <Compose
       rows="1fr"
       columns="1fr"
-      tw="mt-4 px-6 py-10 flex justify-center items-center bg-white border border-light-200 rounded-xl text-center text-primary font-primary text-2xl">
+      tw="md:mt-4 px-6 py-10 flex justify-center items-center bg-white border border-light-200 rounded-xl text-center text-primary font-primary text-2xl">
       Welcome,
       {#if profile}{profile.firstName}{/if}
     </Compose>

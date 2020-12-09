@@ -3,8 +3,8 @@
 </script>
 
 <section class="pt-12 overflow-y-scroll bg-white text-light-500">
-  <div class="px-5 py-24 mx-auto">
-    <div class="flex flex-col items-center w-full max-w-6xl mx-auto ">
+  <div class="mx-auto">
+    <div class="flex flex-col items-center w-full max-w-6xl px-5 py-24 mx-auto">
       <h2
         class="my-5 text-base font-bold tracking-tight uppercase text-tertiary font-title">
         Featured Projects
@@ -26,8 +26,8 @@
           Pflanzenstoff (6er Pack)
         </h1>
         <div class="leading-relaxed text-light-500">
-          <span class="text-2xl font-bold text-secondary font-primary">
-            Activate the powerplants of your body cells.</span>
+          <span class="text-2xl font-bold text-light-500 font-primary">
+            Activate the powerplants of your body cells</span>
           <p class="pt-2">
             Pflanzenstoff's superfruits can support your concentration, stamina
             and your mental and bodily health. A vegan fruit and vegetable drink
