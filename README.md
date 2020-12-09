@@ -89,21 +89,6 @@ This will first build and then publish your dapp to ipfs via the fission service
 
 
 ## Frontend Frameworks: Svelte typescript, webpack, tailwind
----
-
-- [Omo Li](#omo-li)
-	- [Overview](#overview)
-	- [Dapp](#dapp)
-	- [Tech Stack, architecture and status](#tech-stack-architecture-and-status)
-	- [Install](#install)
-		- [Building for production](#building-for-production)
-		- [Hostless deployment to ipfs via fission](#hostless-deployment-to-ipfs-via-fission)
-	- [## Frontend Frameworks: Svelte typescript, webpack, tailwind](#-frontend-frameworks-svelte-typescript-webpack-tailwind)
-	- [Usage](#usage)
-		- [Enabling source maps in production](#enabling-source-maps-in-production)
-		- [Path mapping](#path-mapping)
-
----
 
 ### Enabling source maps in production
 By default, this template won't generate source maps for production bundles in order to avoid exposing your source code. If you need to enable source maps in production (such as for debugging), update the `sourceMapsInProduction` variable at the top of `webpack.config.js`.
