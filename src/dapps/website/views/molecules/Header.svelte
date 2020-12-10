@@ -16,14 +16,14 @@
       class="flex flex-wrap items-center justify-center text-base md:ml-auto">
       <a
         href="https://discord.gg/CS6xq7jECR"
-        class="px-3 py-1 mr-2 lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">
+        class="px-3 py-1 mr-2 font-bold lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">
         Chat</a>
       <a
         href="https://github.com/omoearth/omo-li/discussions"
-        class="px-3 py-1 mr-2 lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Forum</a>
+        class="px-3 py-1 mr-2 font-bold lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Forum</a>
       <a
         href="#/whitepaper"
-        class="px-3 py-1 mr-2 lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Lightpaper</a>
+        class="px-3 py-1 mr-2 font-bold lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Lightpaper</a>
     </nav>
     <button
       on:click={() => push('#/omoli/dapps')}
