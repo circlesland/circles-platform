@@ -1,3 +1,10 @@
+<script lang="ts">
+  import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+
+  import Icon from "fa-svelte";
+  import { push } from "svelte-spa-router";
+</script>
+
 <div
   id="features"
   class="relative w-full px-8 py-10 bg-light-100 md:py-16 lg:py-24 xl:py-40 xl:px-0">
@@ -56,5 +63,13 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="flex justify-center w-full mx-auto">
+    <button
+      on:click={() => push('#/omoli/dapps')}
+      class="inline-flex items-center px-4 py-2 mt-4 text-xl font-bold text-white lowercase border-0 bg-secondary rounded-xl focus:outline-none hover:bg-white hover:text-secondary hover:border hover:border-light-300 md:mt-0">Signup
+      Now
+      <span class="mb-1 ml-2"><Icon icon={faUserCircle} />
+      </span></button>
   </div>
 </div>

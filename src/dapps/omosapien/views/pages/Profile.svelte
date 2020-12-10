@@ -52,16 +52,13 @@
   <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
     {#if profile}
       <div>
-        <div class="">
-          <div
-            class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200">
-            <div>
-              <!--<Avataaar mapping={avataaar}/>-->
-              <img
-                src={profile.avatar}
-                class="w-40 h-40 mx-auto my-4 bg-white border-4 rounded-3xl border-light-300"
-                alt="img" />
-            </div>
+        <div
+          class="px-4 py-6 text-xl text-center bg-white border md:mt-4 md:py-10 rounded-xl text-primary border-light-200">
+          <div>
+            <img
+              src={profile.avatar}
+              class="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300"
+              alt="img" />
           </div>
         </div>
         <div class="pt-2 space-y-2">

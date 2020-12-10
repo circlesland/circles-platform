@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
   import { push } from "svelte-spa-router";
+  import Icon from "fa-svelte";
 </script>
 
 <header class="text-primary font-primary">
@@ -14,28 +16,19 @@
       class="flex flex-wrap items-center justify-center text-base md:ml-auto">
       <a
         href="https://discord.gg/CS6xq7jECR"
-        class="px-4 py-1 mr-5 lowercase bg-white border hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">
+        class="px-3 py-1 mr-2 lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">
         Chat</a>
       <a
         href="https://github.com/omoearth/omo-li/discussions"
-        class="px-4 py-1 mr-5 lowercase bg-white border hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Forum</a>
+        class="px-3 py-1 mr-2 lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Forum</a>
       <a
-        href="#/lightpaper"
-        class="px-4 py-1 mr-5 lowercase bg-white border hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Lightpaper</a>
+        href="#/whitepaper"
+        class="px-3 py-1 mr-2 lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Lightpaper</a>
     </nav>
     <button
       on:click={() => push('#/omoli/dapps')}
-      class="inline-flex items-center px-4 py-1 mt-4 text-base font-bold text-white lowercase border-0 bg-secondary-lighter rounded-xl focus:outline-none hover:bg-white hover:text-secondary-lighter hover:border hover:border-light-300 md:mt-0">Login
-      <svg
-        fill="none"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        class="w-4 h-4 ml-1"
-        viewBox="0 0 24 24">
-        <path d="M5 12h14M12 5l7 7-7 7" />
-      </svg>
-    </button>
+      class="inline-flex items-center px-4 py-1 mt-4 text-base font-bold text-white lowercase border-0 bg-secondary rounded-xl focus:outline-none hover:bg-white hover:text-secondary hover:border hover:border-light-300 md:mt-0">Login
+      <span class="mb-1 ml-2"><Icon icon={faUserCircle} />
+      </span></button>
   </div>
 </header>

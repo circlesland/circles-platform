@@ -24,15 +24,15 @@ export const strings = {
         "alreadyTrustedError": (context: SetTrustContext) => `You are already trusting ${context.data.trustReceiver.value.slice(0, 8)}.`
       },
       sendInviteCredits: {
-        "successMessage": (context: SendInviteCreditsContext) => `xDai successfully transferred`,
-        "errorMessage": (context: SendInviteCreditsContext) => `xDai transfer failed`,
+        "successMessage": (context: SendInviteCreditsContext) => `invites successfully transferred`,
+        "errorMessage": (context: SendInviteCreditsContext) => `Invite transfer failed`,
         titleRecipient: () => "Recipient",
         bannerRecipient: () => "Please enter the recipients address",
         titleValue: () => "Amount",
         bannerValue: () => "Please enter the amount (in xDai)",
         titleProgress: () => "sending ..",
         titleSummary: () => "Confirm",
-        bannerSummary: () => "Please check the transaction details and click 'Transfer xDai' to confirm the transaction"
+        bannerSummary: () => "Please check the transaction details and confirm"
       },
       jumpstart: {
         successMessage: (context: JumpstartContext) => `You successfully transferred 1 invite credit to ${context.data.recipient.value}. Please tell the recipient to reload the page.`,
@@ -46,7 +46,7 @@ export const strings = {
         titleIntro: () => "Jumpstart",
         introHeader: (context: JumpstartContext) => `<span class="text-3xl">${context.data.recipient.value.substring(0, 8)}</span>`,
         introSubHeader: (context: JumpstartContext) => `is asking you to empower his/her life`,
-        introBody: (context: JumpstartContext) => `You can use your invite credits to invite and unlock the universal basic income account of ${context.data.recipient.value}. You still have
+        introBody: (context: JumpstartContext) => `You can use your invite credits to invite and unlock the ⦿ time currency of ${context.data.recipient.value}. You still have
       ${Math.floor(parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')) * 10)}
       invite credits (${parseFloat(context.environment.eth.web3.utils.fromWei(context.environment.me.mySafeXDaiBalance?.toString() ?? "", 'ether')).toFixed(2)}
       xDai) left.<br />
@@ -58,8 +58,8 @@ export const strings = {
       },
       requestUbi: {
         titleProgress: () => "harvesting ..",
-        "successMessage": (context: ProcessContext) => `UBI successfully received`,
-        "errorMessage": (context: ProcessContext) => `Error during UBI request. (Probably not sufficient xDai)`
+        "successMessage": (context: ProcessContext) => `⦿ successfully received`,
+        "errorMessage": (context: ProcessContext) => `Error during ⦿ request. (Probably not sufficient xDai)`
       },
       transferCircles: {
         "successMessage": (context: SendInviteCreditsContext) => `⦿ successfully transferred`,
@@ -86,22 +86,22 @@ export const strings = {
         buttonGenerateFundLink: () => "Close",
         bannerGenerateFundLink: async () => {
           const env = await getEnvironment();
-          return "Send this link to a friend to get started or send 0.1 xDai to '" + env.me.myAddress + "'"
+          return "Send this link to a friend who invited your to get started or send 0.1 xDai to '" + env.me.myAddress + "'"
         },
         progressDeploySafe: () => "Creating your safe",
         successDeploySafe: () => "Your new safe was successfully created",
-        choiceConnectSafe: () => "Connect circles",
+        choiceConnectSafe: () => "Connect Circles",
         choiceCreateSafe: () => "Create new",
         bannerConnectOrCreateSafe: () => "Do you want to create a new account or connect an existing circles safe?",
-        titleConnectOrCreateSafe: () => "Existing account?",
-        progressHubSignup: () => "Registering your account",
-        successHubSignup: () => "Successfully registered",
-        progressFundSafe: () => "Sending some xDai to the safe ..",
-        successFundSafe: () => "Sent some xDai to the safe.",
-        successCreatePrivateKey: () => "Private key created.",
-        progressCreatePrivateKey: () => "Creating private key ..",
+        titleConnectOrCreateSafe: () => "Create or Connect",
+        progressHubSignup: () => "Registering...",
+        successHubSignup: () => "Successfully registered account",
+        progressFundSafe: () => "Initilizing your safe...",
+        successFundSafe: () => "Safe successfully created",
+        successCreatePrivateKey: () => "Private key created...",
+        progressCreatePrivateKey: () => "Creating private key...",
         fundLinkHeader: (context: InitializeAppContext) => `Welcome ${context.environment.me.myDisplayName()}`,
-        fundLinkSubHeader: () => `to unlock your account send this invite link to a friend with invite credits`,
+        fundLinkSubHeader: () => `to unlock your account send this link to a friend whow invited you`,
         fundLinkBody(context: InitializeAppContext) {
           return `To unlock yourself send 0.10 xDai to your account address (${context.environment.me.myAddress}) or ask in the
       <a href="https://discord.gg/KgbBdAck8X" style="color: #0D49A3">omo
@@ -109,8 +109,8 @@ export const strings = {
       for help. (One invite credit = 0.10 xDai)`
         },
         buttonBackupKey: () => `I've made a backup`,
-        titleBackupKey: () => `Backup your key`,
-        bannerBackupKey: () => `This is your private key. It's like an unchangeable password. You should store a copy of it in a safe place to prevent you from loosing access to your funds.`,
+        titleBackupKey: () => `Backup your seedphrase`,
+        bannerBackupKey: () => `This is your seedphrase. It's like an unchangeable password. You should store a copy of it in a safe place to prevent you from loosing access to your funds.`,
 
       }
     }
