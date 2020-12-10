@@ -5,7 +5,7 @@ import wrap from "svelte-spa-router/wrap";
 import { transactions, tokens, friends, answerInviteRequest } from "../../dapps/safe/manifest";
 import { omoli } from "../../dapps/omoli/manifest";
 import { profile, access, keys, authenticate } from "../../dapps/omosapien/manifest";
-import { website, lightpaper, privacy, tos, attributions } from "../../dapps/website/manifest";
+import { website, whitepaper, privacy, tos, attributions } from "../../dapps/website/manifest";
 import { offers, requests, favorites } from "../../dapps/omomarket/manifest";
 import { featured } from "../../dapps/omofunding/manifest";
 
@@ -15,7 +15,7 @@ import { featured } from "../../dapps/omofunding/manifest";
 export default {
   // Website
   '/': wrap(website),
-  '/lightpaper': wrap(lightpaper),
+  '/whitepaper': wrap(whitepaper),
   '/attributions': wrap(attributions),
   '/privacy': wrap(privacy),
   '/tos': wrap(tos),

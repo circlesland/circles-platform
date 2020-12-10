@@ -16,19 +16,19 @@
       class="flex flex-wrap items-center justify-center text-base md:ml-auto">
       <a
         href="https://discord.gg/CS6xq7jECR"
-        class="px-3 py-1 mr-2 font-bold lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">
-        Chat</a>
+        class="px-3 font-title text-secondary hover:text-tertiary">chat</a>
       <a
         href="https://github.com/omoearth/omo-li/discussions"
-        class="px-3 py-1 mr-2 font-bold lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Forum</a>
+        class="px-3 font-title text-secondary hover:text-tertiary">forum</a>
       <a
         href="#/whitepaper"
-        class="px-3 py-1 mr-2 font-bold lowercase bg-white border md:mr-5 hover:bg-secondary-lighter hover:text-white border-light-200 rounded-xl">Lightpaper</a>
+        class="px-3 font-title text-secondary hover:text-tertiary">whitepaper</a>
     </nav>
     <button
       on:click={() => push('#/omoli/dapps')}
-      class="inline-flex items-center px-4 py-1 mt-4 text-base font-bold text-white lowercase border-0 bg-secondary rounded-xl focus:outline-none hover:bg-white hover:text-secondary hover:border hover:border-light-300 md:mt-0">Login
-      <span class="mb-1 ml-2"><Icon icon={faUserCircle} />
-      </span></button>
+      class="inline-flex items-center px-2 py-1 mt-4 text-base font-bold text-white lowercase border-0 rounded-full bg-secondary focus:outline-none hover:bg-white hover:text-secondary hover:border hover:border-light-300 md:mt-0">
+      <img src="logos/logo_dark.svg" alt="omo" class="w-6 h-6" />
+      <span class="px-2">login as omo</span>
+    </button>
   </div>
 </header>

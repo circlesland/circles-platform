@@ -41,109 +41,30 @@
       </div>
     </div>
 
-    <div class="p-8 md:p-16">
+    <!-- <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: 'Intro' } }} />
 
       <div class="py-4 text-gray-600 text">
         ...work in progress, coming soon... (intro into the current central bank
         dept top down money vs the decentralized based bottom up money)
       </div>
-    </div>
+    </div> -->
 
     <div class="p-8 md:p-16">
-      <Title
-        mapping={{ data: { title: 'A new generation of personal moneys' } }} />
+      <Title mapping={{ data: { title: 'The history of money' } }} />
 
       <div class="py-4 text-gray-600 text">
-        On Omo Earth every Omo Sapien is creating and using their own personal
-        currency. OmoAlice has her own AliceMoney, OmoBob has his own BobMoney
-        and OmoCarol has his own CarolMoney. Because OmoAlice knows and accepts
-        BobMoney and CarolMoney, OmoAlice can equally interchange with OmoBob
-        and OmoCarol their personal moneys to trade for goods and services.
-      </div>
-    </div>
-    <img src="./illustrations/lightpaper/trust.png" alt="trust" />
-
-    <div class="p-8 md:p-16">
-      <Title
-        mapping={{ data: { title: 'Transacting with Omo strangers you dont know' } }} />
-
-      <div class="py-4 text-gray-600 text">
-        You might now think, but how can I use my money with Omo's I am not
-        conneced to? When a new OmoDave, who doesn't know OmoBob, wants to buy
-        something from OmoBob he can use his web of trust. His DaveMoney will
-        travel in the background to OmoCarol. OmoCarol will keep the DaveMoney
-        and transfers his CarolMoney to OmoAlice. OmoAlice keeps the CarolMoney
-        and transfers her AliceMoney to OmoBob. OmoBob is happy, since he
-        received only money from Omo's he knows and trusts. OmoBob completes the
-        transaction and is handing over to OmoDave his part of the trade deal.
-      </div>
-    </div>
-    <img src="./illustrations/lightpaper/weboftrust.png" alt="trust" />
-
-    <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: "What about evil fake Omo's?" } }} />
-
-      <div class="py-4 text-gray-600 text">
-        So far there are no central authorities involved that control who can
-        create a new personal OmoMoney or who not. Theoretically everyone can
-        make as many fake accounts as they want. But this is quite useless,
-        since at all times every Omo can only receive and hold money of Omo's
-        they know and trust. As you can see below, OmoAlice created a 2nd
-        FakeAlice account and wants to transfer her FakeMoney to OmoBob, but
-        since OmoBob only accepts AliceMoney, FakeAliceMoney will be stuck at
-        OmoAlice's account, thus is completely useless.
-      </div>
-    </div>
-    <img src="./illustrations/lightpaper/fake.png" alt="trust" />
-
-    <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'The limits of web-of-trust' } }} />
-      <div class="py-4 text-gray-600 text">
-        When Omo's are not well connected to others they can not use their money
-        properly. We can see in the following example a very happy OmoAlice, who
-        is well connected and can accept and trade with plenty of different
-        Omo's. On the other hand, there is OmoBob, who has only one connection
-        to OmoAlice. This indeed creates a liquidity bottleneck, where OmoBob
-        becomes quite isolated and lonely and is not well integrated into the
-        economy, thus quickly getting frustrated.
-      </div>
-    </div>
-    <img src="./illustrations/lightpaper/trustlimit.png" alt="trust" />
-
-    <div class="p-8 md:p-16">
-      <Title
-        mapping={{ data: { title: "Federated identification for lonely Omo's and business accounts" } }} />
-      <div class="py-4 text-gray-600 text">
-        ...work in progress, coming soon... (explaining the federated 2nd layer
-        identification with autoident algorithms and shared open source
-        developer business model)
-      </div>
-      (placeholder illustration)
-    </div>
-
-    <div class="p-8 md:p-16">
-      <div class="mt-20 text-4xl font-bold text-primary">
-        Money supply and growth rates
-      </div>
-
-      <div class="py-16">
-        <Title mapping={{ data: { title: 'The history of money' } }} />
-
-        <div class="py-4 text-gray-600 text">
-          In the history, money has always been connected to other references of
-          value, such as seashells or gold, impersonating the role of
-          representing a true store of value. Only recently in the human
-          evolution, through the introduction of fiat money, the reference was
-          abandoned, in favor of trying to keep economic activity, prices and
-          monetary supply in balance. This resulted in a continous growth of
-          money supply, inflating the total amount of debt based money, while
-          silently reducing the purchasing power of the lower classes. In heavy
-          crisis times people tend to loose trust in their government issued
-          fiat currencies, thus even devaluating fiat even further, creating a
-          run on alternative stores of values such as real estate, company
-          shares or cryptocurrencies.
-        </div>
+        In the history, money has always been connected to other references of
+        value, such as seashells or gold, impersonating the role of representing
+        a true store of value. Only recently in the human evolution, through the
+        introduction of fiat money, the reference was abandoned, in favor of
+        trying to keep economic activity, prices and monetary supply in balance.
+        This resulted in a continous growth of money supply, inflating the total
+        amount of debt based money, while silently reducing the purchasing power
+        of the lower classes. In heavy crisis times people tend to loose trust
+        in their government issued fiat currencies, thus even devaluating fiat
+        even further, creating a run on alternative stores of values such as
+        real estate, company shares or cryptocurrencies.
       </div>
       <div class="py-16">
         <Title
@@ -425,7 +346,83 @@
       </div>
     </div>
 
+    <div class="text-4xl font-bold text-center text-primary">
+      The technical layer
+    </div>
+
     <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: 'A new generation of personal moneys' } }} />
+
+      <div class="py-4 text-gray-600 text">
+        On Omo Earth every Omo Sapien is creating and using their own personal
+        currency. OmoAlice has her own AliceMoney, OmoBob has his own BobMoney
+        and OmoCarol has his own CarolMoney. Because OmoAlice knows and accepts
+        BobMoney and CarolMoney, OmoAlice can equally interchange with OmoBob
+        and OmoCarol their personal moneys to trade for goods and services.
+      </div>
+    </div>
+    <img src="illustrations/whitepaper/trust.png" alt="trust" />
+
+    <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: 'Transacting with Omo strangers you dont know' } }} />
+
+      <div class="py-4 text-gray-600 text">
+        You might now think, but how can I use my money with Omo's I am not
+        conneced to? When a new OmoDave, who doesn't know OmoBob, wants to buy
+        something from OmoBob he can use his web of trust. His DaveMoney will
+        travel in the background to OmoCarol. OmoCarol will keep the DaveMoney
+        and transfers his CarolMoney to OmoAlice. OmoAlice keeps the CarolMoney
+        and transfers her AliceMoney to OmoBob. OmoBob is happy, since he
+        received only money from Omo's he knows and trusts. OmoBob completes the
+        transaction and is handing over to OmoDave his part of the trade deal.
+      </div>
+    </div>
+    <img src="illustrations/whitepaper/weboftrust.png" alt="trust" />
+
+    <div class="p-8 md:p-16">
+      <Title mapping={{ data: { title: "What about evil fake Omo's?" } }} />
+
+      <div class="py-4 text-gray-600 text">
+        So far there are no central authorities involved that control who can
+        create a new personal OmoMoney or who not. Theoretically everyone can
+        make as many fake accounts as they want. But this is quite useless,
+        since at all times every Omo can only receive and hold money of Omo's
+        they know and trust. As you can see below, OmoAlice created a 2nd
+        FakeAlice account and wants to transfer her FakeMoney to OmoBob, but
+        since OmoBob only accepts AliceMoney, FakeAliceMoney will be stuck at
+        OmoAlice's account, thus is completely useless.
+      </div>
+    </div>
+    <img src="illustrations/whitepaper/fake.png" alt="trust" />
+
+    <div class="p-8 md:p-16">
+      <Title mapping={{ data: { title: 'The limits of web-of-trust' } }} />
+      <div class="py-4 text-gray-600 text">
+        When Omo's are not well connected to others they can not use their money
+        properly. We can see in the following example a very happy OmoAlice, who
+        is well connected and can accept and trade with plenty of different
+        Omo's. On the other hand, there is OmoBob, who has only one connection
+        to OmoAlice. This indeed creates a liquidity bottleneck, where OmoBob
+        becomes quite isolated and lonely and is not well integrated into the
+        economy, thus quickly getting frustrated.
+      </div>
+    </div>
+    <img src="illustrations/whitepaper/trustlimit.png" alt="trust" />
+
+    <div class="p-8 md:p-16">
+      <Title
+        mapping={{ data: { title: "Federated identification for lonely Omo's and business accounts" } }} />
+      <div class="py-4 text-gray-600 text">
+        ...work in progress, coming soon... (explaining the federated 2nd layer
+        identification with autoident algorithms and shared open source
+        developer business model)
+      </div>
+      (placeholder illustration)
+    </div>
+
+    <!-- <div class="p-8 md:p-16">
       <Title
         mapping={{ data: { title: 'United OmoEurope simulation 2030' } }} />
 
@@ -466,6 +463,6 @@
         curve with investment into the global human capital instead of one
         specific company.)
       </div>
-    </div>
+    </div> -->
   </Compose>
 </Compose>

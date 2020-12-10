@@ -43,7 +43,7 @@
         quantity: "1 bottle",
         ordersInO: "150",
         ordersGoalInO: "60.000",
-        backers: "150",
+        backers: "1",
         backersGoal: "400",
         progressInPercent: "1%",
         offeredBy: {

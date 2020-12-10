@@ -33,7 +33,9 @@
                 0<span class="ml-1 text-xl text-primary">⦿</span>
               </h4>
               <p class="text-sm text-center text-gray-600">
-                to buy or offer anything on the marketplace will always be free
+                to buy or offer anything on the marketplace will always be free.
+                To unlock your ⦿ money yourself, you can send 0,10 xDai to your
+                account.
               </p>
             </div>
 
@@ -130,14 +132,14 @@
             </h3>
             <h4
               class="flex items-center justify-center pb-6 text-5xl font-bold text-center text-primary">
-              7
+              50
               <span class="text-xl">⦿</span><span
-                class="ml-1 text-lg text-gray-700">
-                / week</span>
+                class="ml-1 text-lg text-gray-700" />
             </h4>
             <p class="text-sm text-center text-gray-600">
-              Give back to the passionate entrepreneurs and developers
-              empowering your life with open source apps and infrastructure
+              Verifying your identity will unlock your time currency. You can
+              either pay this yourself, or it will be payed by your crowdfunding
+              project starter, which you helped to grow.
             </p>
           </div>
           <div class="flex justify-start pl-12 mt-8 sm:justify-start">
@@ -172,7 +174,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Empower open source</span>
+                <span class="ml-3 text-lg text-gray-700">Verify your identity</span>
               </li>
               <li class="flex items-center">
                 <div class="p-2 text-green-500 rounded-full fill-current ">
@@ -204,7 +206,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Verify your identity</span>
+                <span class="ml-3 text-lg text-gray-700">Empower open source</span>
               </li>
             </ul>
           </div>

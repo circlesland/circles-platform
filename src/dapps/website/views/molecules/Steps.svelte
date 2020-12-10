@@ -21,44 +21,48 @@
     </h3>
     <div
       class="flex flex-col w-full mt-0 lg:flex-row sm:mt-10 lg:mt-20 text-primary">
-      <div class="w-full max-w-md p-4 mx-auto mb-0 sm:mb-16 lg:mb-0 lg:w-1/3">
+      <div class="w-full mx-auto mb-0 sm:mb-16 lg:mb-0 lg:w-1/3">
         <div
           class="relative flex flex-col items-center justify-center w-full h-full p-20 mr-5 rounded-lg">
-          <img src="illustrations/gift.svg" alt="gift" />
+          <img src="illustrations/register.svg" alt="register" />
 
-          <h4 class="relative mt-6 text-lg font-bold text-center">
-            1. Signup Bonus
+          <h4
+            class="relative mt-6 text-xl text-center font-title text-secondary">
+            Signup
           </h4>
-          <p class="relative mt-2 text-base text-center text-light-500">
-            Receive 150 ⦿ welcome bonus, when you first sign-up 
+          <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
+            Receive 150⦿ welcome bonus, when you first sign-up 
           </p>
         </div>
       </div>
 
-      <div class="w-full max-w-md p-4 mx-auto mb-0 sm:mb-8 lg:mb-0 lg:w-1/3">
+      <div class="w-full mx-auto mb-0 sm:mb-8 lg:mb-0 lg:w-1/3">
         <div
           class="relative flex flex-col items-center justify-center w-full h-full px-12 py-4 mr-5 rounded-lg">
-          <img src="illustrations/fund.svg" alt="gift" />
+          <img src="illustrations/support.svg" alt="support" />
 
-          <h4 class="relative mt-6 text-lg font-bold text-center">
-            2. Order something
+          <h4
+            class="relative mt-6 text-xl text-center font-title text-secondary">
+            Support
           </h4>
-          <p class="relative mt-2 text-base text-center text-light-500">
-            Grow your economy by spending min 150⦿ on the market or crowdfund a
-            project
+          <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
+            Grow your future economy by supporting a crowdfunding project with
+            min 150⦿.
           </p>
         </div>
       </div>
 
-      <div class="w-full max-w-md p-4 mx-auto mb-16 lg:mb-0 lg:w-1/3">
+      <div class="w-full mx-auto mb-16 lg:mb-0 lg:w-1/3">
         <div
           class="relative flex flex-col items-center justify-center w-full h-full p-20 mr-5 rounded-lg">
-          <img src="illustrations/identity.svg" alt="gift" />
-          <h4 class="relative mt-6 text-lg font-bold text-center">
-            3. Unlock your money
+          <img src="illustrations/grow.svg" alt="grow" />
+          <h4
+            class="relative mt-6 text-xl text-center font-title text-secondary">
+            Grow
           </h4>
-          <p class="relative mt-2 text-base text-center text-light-500">
-            Unlock your time currency at 1⦿ per hour by verifying your identity
+          <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
+            Get verified by your supported project omopreneuer and start growing
+            your ⦿ money at 1⦿ per hour
           </p>
         </div>
       </div>

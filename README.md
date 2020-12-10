@@ -12,7 +12,7 @@ Building with Omo.Li a lightweight and hostless decentralized wallet and marketp
 - Wishes & Bugs: https://github.com/omoearth/omo/issues
 - Roadmap: https://github.com/omoearth/omo/projects/1
 - Twitter: https://twitter.com/OmoEarth
-- Omo Lightpaper: https://omo.li/#/lightpaper
+- Omo Wightpaper: https://omo.li/#/whitepaper
 
 ## Dapp
 
