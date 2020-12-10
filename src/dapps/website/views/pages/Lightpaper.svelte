@@ -35,7 +35,7 @@
         Humanity has come a far way and is finally entering a new age of
         technological advancement and superiority, enfolding the capacity to
         sustain all of earth and every human. We believe reinventing our
-        monetary system, by equalizing access to basic needs, will advance
+        monetary system and equalizing access to basic needs, will advance
         humanity one giant step into the next era of sustainable growth,
         creative design and abundance.
       </div>
@@ -405,14 +405,14 @@
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: 'Defining reference prices in a social contract' } }} />
+        mapping={{ data: { title: 'Defining reference pricing in a social contract' } }} />
 
       <div class="py-4 text-gray-600 text">
         ...work in progress, coming soon... (Defining prices as a social
         contract 10 year social contract rollout roadmap keeping a reference
-        price. What do we want rather tthan what the market plays, like a
-        bonding curve with investment into the global human capital instead
-        ofone specific company.)
+        price. What do we want rather than what the market games, like a bonding
+        curve with investment into the global human capital instead of one
+        specific company.)
       </div>
     </div>
   </Compose>

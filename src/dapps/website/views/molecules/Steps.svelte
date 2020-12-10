@@ -25,10 +25,6 @@
           <p class="relative mt-2 text-base text-center text-light-500">
             Receive 150 ⦿ welcome bonus, when you first sign-up 
           </p>
-          <!-- <a
-            href="#_"
-            class="relative flex mt-2 text-sm font-medium text-indigo-500 underline">Learn
-            More</a> -->
         </div>
       </div>
 
@@ -38,16 +34,12 @@
           <img src="illustrations/fund.svg" alt="gift" />
 
           <h4 class="relative mt-6 text-lg font-bold text-center">
-            2. Fund a project
+            2. Offer something
           </h4>
           <p class="relative mt-2 text-base text-center text-light-500">
-            Grow your economy by choosing a crowdfunding project to support and
-            make a pre-order.
+            Grow your economy by offering something on the market for minimum
+            150⦿
           </p>
-          <!-- <a
-            href="#_"
-            class="relative flex mt-2 text-sm font-medium text-indigo-500 underline">Learn
-            More</a> -->
         </div>
       </div>
 
@@ -59,12 +51,8 @@
             3. Unlock your money
           </h4>
           <p class="relative mt-2 text-base text-center text-light-500">
-            Unlock your time currency at 1 ⦿ per hour by verifying your identity
+            Unlock your time currency at 1⦿ per hour by verifying your identity
           </p>
-          <!-- <a
-            href="#_"
-            class="relative flex mt-2 text-sm font-medium text-indigo-500 underline">Learn
-            More</a> -->
         </div>
       </div>
     </div>
