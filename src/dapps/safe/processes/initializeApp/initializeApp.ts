@@ -25,10 +25,12 @@ import Announcement from "../../../../libs/o-views/molecules/Announcement.svelte
 import { hubSignupService } from "./services/hubSignupService";
 import { fundSafeService } from "./services/fundSafeService";
 import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
+import {text} from "../../../../libs/o-processes/artifacts/text";
 
 export interface InitializeAppContext extends ProcessContext {
   data: {
     privateKey?: ProcessArtifact
+    privateKeyPhrase?: ProcessArtifact
     safeAddress?: ProcessArtifact,
     fundLink?: ProcessArtifact,
     safeChoice?: ProcessArtifact,
@@ -164,7 +166,7 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
             }
           },
           artifacts: {
-            ...textLine("privateKey", undefined, true)
+            ...text("privateKeyPhrase", undefined, true)
           }
         }
       }),

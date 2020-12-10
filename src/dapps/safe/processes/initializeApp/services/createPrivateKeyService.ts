@@ -1,5 +1,6 @@
 import { InitializeAppContext } from "../initializeApp";
 import { ProcessArtifact } from "../../../../../libs/o-processes/interfaces/processArtifact";
+import {entropyToMnemonic} from "bip39";
 
 export const createPrivateKeyService = async (context: InitializeAppContext) => {
   console.log("Creating a new account");
@@ -22,6 +23,13 @@ export const createPrivateKeyService = async (context: InitializeAppContext) => 
     key: "privateKey",
     type: "string",
     value: context.environment.me.myKey?.privateKey,
+    isReadonly: true
+  };
+
+  context.data.privateKeyPhrase = <ProcessArtifact>{
+    key: "privateKeyPhrase",
+    type: "string",
+    value: entropyToMnemonic(context.environment.me.myKey?.privateKey),
     isReadonly: true
   };
 }
