@@ -3,7 +3,7 @@
   <div
     id="pricing"
     class="container flex flex-col items-center h-full max-w-6xl mx-auto">
-    <div class="flex flex-col items-center w-full px-5 py-24 mx-auto ">
+    <div class="flex flex-col items-center w-full px-5 pb-24 mx-auto ">
       <h2
         class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
         Pricing

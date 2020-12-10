@@ -352,13 +352,65 @@
           colors={chartMonetaryMass.design.colors} />
       </div>
     </div>
+    <!-- 
+    <div class="p-8 md:p-16">
+      <Title mapping={{ data: { title: 'The different ⦿ units' } }} />
+
+      <div class="py-4 text-gray-600 text">
+        Like in traditional currencies, with cents and f.e. "10k" abbreviations,
+        ⦿ has different units for different situations. Omo's get used to
+        calculate and define prices now in valuable human time. Especially for
+        big number calculations, rather than handling millions aand billions,
+        you calculate in human months and years.
+        <div class="mt-12 text-2xl text-tertiary ">
+          <div class="">60 m⦿ = 0.016 ⦿ (60 min)</div>
+          <div class="">1 ⦿ = 1 ⦿ (60min, 1 hour)</div>
+          <div class="">
+            1 ⦿mo = 24⦿ (24h, 1day -> one day of an omo sapien or one sun cycle
+          </div>
+          <div class="">1 m⦿mo = 28⦿mo or 672⦿ (28 days or 1 moon month)</div>
+          <div class="">1 y⦿mo = 12m⦿mo or 365⦿mo (12 months or 365days)</div>
+        </div>
+      </div> 
+     <div class="mt-4 bg-white">
+        <p class="text-sm font-bold text-light-500">
+          {chartMonetaryMass.title}
+        </p>
+        <Chart
+          data={chartMonetaryMass.data}
+          lineOptions={chartMonetaryMass.design.lineOptions}
+          barOptions={chartMonetaryMass.design.barOptions}
+          axisOptions={chartMonetaryMass.design.axisOptions}
+          colors={chartMonetaryMass.design.colors} />
+      </div>
+    </div>-->
 
     <div class="p-8 md:p-16">
       <Title
         mapping={{ data: { title: 'Difference between Circles (nominal units) and ⦿ money (relative units)' } }} />
 
       <div class="py-4 text-gray-600 text">
-        ...work in progress, coming soon...
+        Our ⦿ is building on top of the CirclesUBI protocol and is actually
+        under the hood the same. You can display your currency in Circles which
+        are nominal units or in ⦿, which are relative units showing you the
+        percentage of the money you own compared to others. On the blockchain,
+        every transaction is calculated and documented in Circles. Circles
+        yearly growth rate is at 7% a year, which is the same as the 7% decay
+        rate of the ⦿. While the nominal Circles Unit keep on growing over the
+        years, we believe introducing a better reference unit, which is coupled
+        to the time alive and has its equillibrium at 125.000⦿, will result in
+        better predictability of prices on the long run. Psychological wise,
+        using relative units shows a much higher transparency on the actual
+        inflation, which currently devaluates your purchasing power without you
+        noticing it. On the other hand and increase in economic growth,
+        strenghens the value of the ⦿ unit and bringing price pressure, which
+        eventually results in lower prices. Indirectly this behaviour
+        contineously strengthens your purchasing power, while the economic
+        activity is growing.
+      </div>
+      <div class="py-12 text-3xl font-thin text-tertiary font-primary">
+        "Relative money units like your ⦿ is strengthening your purchasing power
+        during economic growth, instead of silent devalution through inflation"
       </div>
       <div class="mt-4 bg-white">
         <p class="text-sm font-bold text-light-500">
