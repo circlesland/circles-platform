@@ -23,6 +23,7 @@
   <div class="w-full overflow-x-hidden antialiased">
     <Header />
     <Hero />
+
     <Video />
     <Steps />
     <div class="bg-gray-50">
