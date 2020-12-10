@@ -28,7 +28,7 @@
       <div class="py-4 text-gray-600 text">
         <div
           class="py-12 text-3xl font-thin text-center text-tertiary font-primary">
-          "Our vision is to empower every human and spark their joyfull passion
+          "Our vision is to empower every human to spark their joyfull passion
           towards an eventful, manifold and fullfilled life"
         </div>
 
@@ -46,7 +46,7 @@
 
       <div class="py-4 text-gray-600 text">
         ...work in progress, coming soon... (intro into the current central bank
-        dept top down money vs the decentralized credit based bottom up money)
+        dept top down money vs the decentralized based bottom up money)
       </div>
     </div>
 
