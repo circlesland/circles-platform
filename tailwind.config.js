@@ -9,7 +9,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'title': ['Comfortaa', 'cursive'],
+      'title': ["'Hello-Angel'", 'cursive'],
       'primary': ['Comfortaa', 'cursive'],
       'secondary': ['Quicksand', 'sans-serif']
     },
@@ -21,7 +21,7 @@ module.exports = {
         'primary-darker': "#0A1A52",
         secondary: '#003399',
         'secondary-lighter': "#2377C5",
-        tertiary: "#310F93",
+        tertiary: "#6BBDEB",
         action: '#2AD78B',
         'info-lighter': '#FFF9C2',
         info: '#FCDB85',

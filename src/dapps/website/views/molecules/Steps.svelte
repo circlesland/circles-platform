@@ -4,13 +4,13 @@
   <div
     class="container flex flex-col items-center justify-between h-full max-w-6xl mx-auto">
     <h2
-      class="my-5 text-base font-bold tracking-tight uppercase text-tertiary font-title">
+      class="my-5 text-base font-bold tracking-tight uppercase text-tertiary ">
       How it works
     </h2>
     <h3
-      class="max-w-4xl px-5 mt-2 text-4xl font-black leading-tight text-center text-primary sm:mt-0 sm:px-0 md:text-5xl">
-      Designed to empower
-      <br />your abundance
+      class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wider text-center font-title text-secondary sm:mt-0 sm:px-0 md:text-5xl">
+      <div>Designed to empower</div>
+      <div class="mt-3">your abundance</div>
     </h3>
     <div
       class="flex flex-col w-full mt-0 lg:flex-row sm:mt-10 lg:mt-20 text-primary">
@@ -34,11 +34,11 @@
           <img src="illustrations/fund.svg" alt="gift" />
 
           <h4 class="relative mt-6 text-lg font-bold text-center">
-            2. Offer something
+            2. Order something
           </h4>
           <p class="relative mt-2 text-base text-center text-light-500">
-            Grow your economy by offering something on the market for minimum
-            150⦿
+            Grow your economy by spending min 150⦿ on the market or crowdfund a
+            project
           </p>
         </div>
       </div>

@@ -54,7 +54,7 @@
       <div>
         <div class="">
           <div
-            class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200 font-title">
+            class="px-4 py-10 text-xl text-center bg-white border rounded-xl text-primary border-light-200">
             <div>
               <!--<Avataaar mapping={avataaar}/>-->
               <img
@@ -62,8 +62,6 @@
                 class="w-40 h-40 mx-auto my-4 bg-white border-4 rounded-3xl border-light-300"
                 alt="img" />
             </div>
-            Welcome,
-            {profile.firstName}
           </div>
         </div>
         <div class="pt-2 space-y-2">

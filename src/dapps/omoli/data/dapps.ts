@@ -1,4 +1,4 @@
-import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook } from "@fortawesome/free-solid-svg-icons";
+import { faPiggyBank, faUserAstronaut, faComments, faStore, faPeopleCarry, faHeadphones, faFilm, faBook, faSave, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { DappIcon, ProfileHeader } from "src/libs/o-views/interfaces/molecules";
 import { getEnvironment } from "../../../libs/o-os/o";
 
@@ -17,7 +17,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
     {
       data: {
         title: "OmoSapien",
-        tag: "soon",
+        tag: "alpha",
       },
       action: {
         route: "omosapien/profile",
@@ -29,8 +29,8 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
     },
     {
       data: {
-        title: "Safe",
-        tag: "",
+        title: "OmoSafe",
+        tag: "alpha",
       },
       action: {
         route: "safe/transactions",
@@ -42,8 +42,8 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
     },
     {
       data: {
-        title: "Market",
-        tag: "",
+        title: "OmoMarket",
+        tag: "mockup",
       },
       action: {
         route: "omomarket/offers",
@@ -56,7 +56,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
     {
       data: {
         title: "OmoFunding",
-        tag: "soon",
+        tag: "mockup",
       },
       action: {
         route: "omofunding/featured",
@@ -64,6 +64,32 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
       design: {
         type: "",
         icon: faPeopleCarry,
+      },
+    },
+    {
+      data: {
+        title: "Omo Drive",
+        tag: "soon",
+      },
+      action: {
+        route: "https://drive.fission.codes",
+      },
+      design: {
+        type: "disabled",
+        icon: faSave,
+      },
+    },
+    {
+      data: {
+        title: "Omo Auth",
+        tag: "soon",
+      },
+      action: {
+        route: "https://auth.fission.codes",
+      },
+      design: {
+        type: "disabled",
+        icon: faCheckCircle,
       },
     },
     {

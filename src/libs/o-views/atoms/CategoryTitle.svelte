@@ -5,6 +5,6 @@
 </script>
 
 <div
-  class="px-3 py-1 text-sm font-bold lowercase border border-blue-100 rounded-xl bg-blue-50 text-secondary font-title">
+  class="px-3 py-1 text-sm font-bold lowercase border border-blue-100 rounded-xl bg-blue-50 text-secondary">
   {mapping.data.label}
 </div>

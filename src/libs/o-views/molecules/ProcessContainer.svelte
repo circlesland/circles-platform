@@ -123,7 +123,7 @@
   {#if prompt.title}
     <div class="flex items-center justify-center overflow-hidden ">
       <div
-        class="flex items-center justify-between text-xl font-bold text-center lowercase font-title text-primary">
+        class="flex items-center justify-between text-xl font-bold text-center lowercase text-primary">
         {prompt.title}
       </div>
     </div>
@@ -143,7 +143,7 @@
         class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
         <span>
           <i class="text-2xl" />
-          <p class="lowercase font-title" />
+          <p class="lowercase " />
         </span>
       </div>
     </button>
@@ -157,7 +157,7 @@
         class="flex items-center justify-center w-16 px-2 text-xs text-center hover:text-secondary-lighter">
         <span>
           <i class="text-2xl" />
-          <p class="lowercase font-title" />
+          <p class="lowercase " />
         </span>
       </div>
     </button>

@@ -3,14 +3,17 @@
   <div
     id="pricing"
     class="container flex flex-col items-center h-full max-w-6xl mx-auto">
-    <h2
-      class="my-5 text-base font-bold tracking-tight uppercase font-primary text-tertiary">
-      Our Pricing
-    </h2>
-    <h3
-      class="w-full max-w-2xl px-5 px-8 mt-2 mb-12 text-2xl font-black leading-tight text-center text-primary sm:mt-0 sm:px-0 sm:text-6xl md:px-0">
-      Fair prices for everyone
-    </h3>
+    <div class="flex flex-col items-center w-full px-5 py-24 mx-auto ">
+      <h2
+        class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
+        Pricing
+      </h2>
+      <h3
+        class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wide text-center font-title text-secondary sm:mt-0 sm:px-0 md:text-5xl">
+        <div>Fair Prices</div>
+        <div class="mt-3">for everyone</div>
+      </h3>
+    </div>
 
     <div class="max-w-full mx-auto md:max-w-6xl sm:px-8">
       <!-- Basic Pricing -->

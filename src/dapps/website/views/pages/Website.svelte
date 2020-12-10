@@ -20,36 +20,36 @@
 </script>
 
 <Compose rows="1fr" columns="1fr">
-  <div class="overflow-x-hidden antialiased">
+  <div class="w-full overflow-x-hidden antialiased">
     <Header />
     <Hero />
-    <div class="pb-12 bg-white">
-      <Video />
-    </div>
+    <Video />
     <Steps />
-    <div class="flex flex-col items-center w-full px-5 py-24 mx-auto bg-white">
-      <h2
-        class="my-5 text-base font-bold tracking-tight uppercase text-tertiary font-title">
-        Featured Projects
-      </h2>
-      <h3
-        class="max-w-4xl px-5 mt-2 text-4xl font-black leading-tight text-center text-primary sm:mt-0 sm:px-0 md:text-5xl">
-        Crowdfund your future economy one project a time
-      </h3>
-    </div>
-    <Featured />
-    <div class="pb-12 bg-light-100">
-      <div
-        class="container flex flex-col items-center justify-between h-full max-w-6xl py-12 mx-auto">
+    <div class="bg-gray-50">
+      <div class="flex flex-col items-center w-full px-5 py-24 mx-auto ">
         <h2
-          class="my-5 text-base font-bold tracking-tight uppercase text-tertiary font-title">
-          The Omo Marketplace
+          class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
+          Featured Projects
         </h2>
         <h3
-          class="max-w-4xl px-5 mt-2 text-4xl font-black leading-tight text-center text-primary sm:mt-0 sm:px-0 md:text-5xl">
-          discover a new world of opportunities
+          class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wide text-center font-title text-secondary sm:mt-0 sm:px-0 md:text-5xl">
+          <div>Crowdfund your future</div>
+          <div class="mt-3">one project a time</div>
         </h3>
       </div>
+      <Featured />
+    </div>
+    <div
+      class="flex flex-col items-center w-full px-5 py-24 mx-auto bg-light-100">
+      <h2
+        class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
+        The Omo Marketplace
+      </h2>
+      <h3
+        class="max-w-4xl px-5 pb-12 mt-2 text-3xl font-black leading-loose tracking-wide text-center font-title text-secondary sm:mt-0 sm:px-0 md:text-5xl">
+        <div>Enjoy the growth</div>
+        <div class="mt-3">of your own economy</div>
+      </h3>
       <Offers />
       <a href="https://discord.gg/YedewwChD9">
         <button

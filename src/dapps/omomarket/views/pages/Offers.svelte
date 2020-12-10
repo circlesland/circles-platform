@@ -187,7 +187,7 @@
           </div>
           <a
             href="https://discord.gg/YedewwChD9"
-            class="flex items-center justify-center p-4 text-base font-medium leading-5 text-center bg-white border-t border-light-200 rounded-b-xl text-primary">
+            class="flex items-center justify-center p-4 text-base font-medium leading-5 text-center bg-secondary border-t border-light-200 rounded-b-xl text-white">
             <div class="flex">
               <p class="mr-1 font-bold lowercase">Contact to buy</p>
               <Icon icon={faShoppingCart} />
