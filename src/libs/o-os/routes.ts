@@ -9,7 +9,8 @@ import { website, visionpaper, privacy, tos, attributions } from "../../dapps/we
 import { offers, requests, favorites } from "../../dapps/omomarket/manifest";
 import { featured } from "../../dapps/omofunding/manifest";
 
-
+import Auth from 'src/dapps/fissionauth/pages/Auth.svelte'
+import Drive from 'src/dapps/fissiondrive/pages/Drive.svelte'
 
 // Export the route definition object
 export default {
@@ -42,6 +43,13 @@ export default {
 
   // Omo Funding
   '/omofunding/featured': wrap(featured),
+
+
+  // Omo Funding
+  '/fissionauth/auth': Auth,
+
+  // Omo Funding
+  '/fissiondrive/drive': Drive,
 
   // Catch-all, must be last
   '*': NotFound,

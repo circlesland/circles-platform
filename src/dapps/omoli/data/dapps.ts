@@ -72,7 +72,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "beta",
       },
       action: {
-        route: "https://drive.fission.codes",
+        route: "#/fissiondrive/drive",
       },
       design: {
         type: "",
@@ -85,7 +85,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "beta",
       },
       action: {
-        route: "https://auth.fission.codes",
+        route: "#/fissionauth/auth",
       },
       design: {
         type: "",
