@@ -27,12 +27,16 @@
       <div class="flex-col hidden mt-12 sm:flex lg:mt-24">
         <p
           class="mb-4 text-sm font-medium tracking-widest text-gray-500 uppercase">
-          Empowered by great tools of great teams
+          Build on the foundation of great open source teams
         </p>
         <div class="flex justify-center space-x-4 md:justify-start">
           <img src="logos/circles.svg" alt="circlesUBI" class="w-12 h-12" />
           <img src="logos/fission.svg" alt="fission" class="w-12 h-12" />
-          <img src="logos/xDai.png" alt="xDai" class="w-12 h-12" />
+          <img src="logos/ucan.png" alt="ucan" class="w-12 h-12" />
+          <img src="logos/gnosissafe.svg" alt="gnosissafe" class="w-12 h-12" />
+          <img src="logos/ipfs.png" alt="ipfs" class="w-12 h-12" />
+          <img src="logos/ethereum.png" alt="ethereum" class="w-12 h-12" />
+          <img src="logos/xdai.svg" alt="xDai" class="w-12 h-12" />
         </div>
       </div>
     </div>
