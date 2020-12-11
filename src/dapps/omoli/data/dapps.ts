@@ -20,7 +20,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "alpha",
       },
       action: {
-        route: "omosapien/profile",
+        route: "#/omosapien/profile",
       },
       design: {
         icon: faUserAstronaut,
@@ -33,7 +33,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "alpha",
       },
       action: {
-        route: "safe/transactions",
+        route: "#/safe/transactions",
       },
       design: {
         type: environment.me.mySafe ? "" : "disabled",
@@ -46,7 +46,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "mockup",
       },
       action: {
-        route: "omomarket/offers",
+        route: "#/omomarket/offers",
       },
       design: {
         type: "",
@@ -59,7 +59,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "mockup",
       },
       action: {
-        route: "omofunding/featured",
+        route: "#/omofunding/featured",
       },
       design: {
         type: "",
@@ -68,27 +68,27 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
     },
     {
       data: {
-        title: "Omo Drive",
-        tag: "soon",
+        title: "Fission Drive",
+        tag: "beta",
       },
       action: {
         route: "https://drive.fission.codes",
       },
       design: {
-        type: "disabled",
+        type: "",
         icon: faSave,
       },
     },
     {
       data: {
-        title: "Omo Auth",
-        tag: "soon",
+        title: "Fission Auth",
+        tag: "beta",
       },
       action: {
         route: "https://auth.fission.codes",
       },
       design: {
-        type: "disabled",
+        type: "",
         icon: faCheckCircle,
       },
     },
@@ -98,7 +98,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "soon",
       },
       action: {
-        route: "omoli/dapps",
+        route: "#/omoli/dapps",
       },
       design: {
         type: "disabled",
@@ -111,7 +111,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "soon",
       },
       action: {
-        route: "omoli/dapps",
+        route: "#/omoli/dapps",
       },
       design: {
         type: "disabled",
@@ -124,7 +124,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "soon",
       },
       action: {
-        route: "omoli/dapps",
+        route: "#/omoli/dapps",
       },
       design: {
         type: "disabled",
@@ -137,7 +137,7 @@ export const dapps: () => Promise<DappIcon[]> = async () => {
         tag: "soon",
       },
       action: {
-        route: "omoli/dapps",
+        route: "#/omoli/dapps",
       },
       design: {
         type: "disabled",

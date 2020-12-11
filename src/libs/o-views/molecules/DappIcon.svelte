@@ -7,7 +7,7 @@
 
 {#if mapping.design.type == 'disabled'}
   <a
-    href="#/{mapping.action.route}"
+    href="{mapping.action.route}"
     class="flex items-center justify-center h-full p-6 text-center bg-white border border-gray-200 cursor-not-allowed rounded-xl text-light-300">
     <div class="">
       <Icon icon={mapping.design.icon} class="text-4xl md:text-5xl" />
@@ -19,7 +19,7 @@
   </a>
 {:else}
   <a
-    href="#/{mapping.action.route}"
+    href="{mapping.action.route}"
     class="flex items-center justify-center h-full p-6 text-center bg-white border cursor-pointer rounded-xl border-gray-20w0 text-secondary hover:text-secondary-lighter hover:border-secondary-lighter">
     <div class="">
       <Icon icon={mapping.design.icon} class="text-4xl md:text-5xl" />
