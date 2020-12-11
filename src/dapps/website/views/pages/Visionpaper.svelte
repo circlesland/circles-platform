@@ -21,7 +21,8 @@
     tw="bg-white w-full md:border md:border-light-200 md:rounded-xl"
     overflowY>
     <div class="p-8 md:p-16">
-      <div class="text-4xl font-bold text-center text-primary">
+      <div
+        class="text-4xl font-black text-center uppercase md:text-6xl font-title text-primary">
         The Omo Vision
       </div>
 
@@ -346,7 +347,8 @@
       </div>
     </div>
 
-    <div class="text-4xl font-bold text-center text-primary">
+    <div
+      class="text-4xl font-bold text-center uppercase md:text-6xl text-primary font-title">
       The technical layer
     </div>
 
@@ -362,7 +364,7 @@
         and OmoCarol their personal moneys to trade for goods and services.
       </div>
     </div>
-    <img src="illustrations/whitepaper/trust.png" alt="trust" />
+    <img src="illustrations/visionpaper/trust.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title
@@ -379,7 +381,7 @@
         transaction and is handing over to OmoDave his part of the trade deal.
       </div>
     </div>
-    <img src="illustrations/whitepaper/weboftrust.png" alt="trust" />
+    <img src="illustrations/visionpaper/weboftrust.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: "What about evil fake Omo's?" } }} />
@@ -395,7 +397,7 @@
         OmoAlice's account, thus is completely useless.
       </div>
     </div>
-    <img src="illustrations/whitepaper/fake.png" alt="trust" />
+    <img src="illustrations/visionpaper/fake.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title mapping={{ data: { title: 'The limits of web-of-trust' } }} />
@@ -409,7 +411,7 @@
         economy, thus quickly getting frustrated.
       </div>
     </div>
-    <img src="illustrations/whitepaper/trustlimit.png" alt="trust" />
+    <img src="illustrations/visionpaper/trustlimit.png" alt="trust" />
 
     <div class="p-8 md:p-16">
       <Title

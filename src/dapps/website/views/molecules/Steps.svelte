@@ -15,7 +15,7 @@
       How it works
     </h2>
     <h3
-      class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wider text-center font-title text-secondary sm:mt-0 sm:px-0 md:text-5xl">
+      class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wider text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
       <div>Designed to empower</div>
       <div class="mt-3">your abundance</div>
     </h3>
@@ -27,7 +27,7 @@
           <img src="illustrations/register.svg" alt="register" />
 
           <h4
-            class="relative mt-6 text-xl text-center font-title text-secondary">
+            class="relative mt-6 text-2xl font-black text-center uppercase font-title text-primary">
             Signup
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
@@ -42,12 +42,12 @@
           <img src="illustrations/support.svg" alt="support" />
 
           <h4
-            class="relative mt-6 text-xl text-center font-title text-secondary">
+            class="relative mt-6 text-2xl font-black text-center uppercase font-title text-primary">
             Support
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
             Grow your future economy by supporting a crowdfunding project with
-            min 150⦿.
+            min 100⦿.
           </p>
         </div>
       </div>
@@ -57,7 +57,7 @@
           class="relative flex flex-col items-center justify-center w-full h-full p-20 mr-5 rounded-lg">
           <img src="illustrations/grow.svg" alt="grow" />
           <h4
-            class="relative mt-6 text-xl text-center font-title text-secondary">
+            class="relative mt-6 text-2xl font-black text-center uppercase font-title text-primary">
             Grow
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">

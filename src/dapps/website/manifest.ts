@@ -1,5 +1,5 @@
 import Website from 'src/dapps/website/views/pages/Website.svelte'
-import Whitepaper from 'src/dapps/website/views/pages/Whitepaper.svelte'
+import Visionpaper from 'src/dapps/website/views/pages/Visionpaper.svelte'
 import Privacy from 'src/dapps/website/views/pages/Privacy.svelte'
 import TOS from 'src/dapps/website/views/pages/TOS.svelte'
 import Attributions from 'src/dapps/website/views/pages/Attributions.svelte'
@@ -43,8 +43,8 @@ export const attributions: PageManifest = {
   }
 }
 
-export const whitepaper: PageManifest = {
-  component: Whitepaper,
+export const visionpaper: PageManifest = {
+  component: Visionpaper,
   userData: {
     dapp: "website",
     showActionBar: false,

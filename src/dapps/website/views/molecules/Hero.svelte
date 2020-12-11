@@ -6,17 +6,13 @@
 <div
   class="items-center justify-center w-full py-20 overflow-x-hidden lg:py-40 xl:pt-40 xl:pb-64">
   <div
-    class="container flex flex-col items-center justify-between h-full max-w-6xl px-8 mx-auto -mt-32 lg:flex-row xl:px-0">
+    class="container flex flex-col items-center justify-between h-full max-w-6xl px-8 mx-auto -mt-32 lg:flex-row lg:px-0">
     <div
       class="z-30 flex flex-col items-center w-full max-w-xl pt-40 text-center lg:items-start lg:w-1/2 lg:pt-16 xl:pt-24 lg:text-left">
       <h1
-        class="relative mb-1 text-3xl font-black tracking-wider font-title text-secondary sm:text-4xl lg:text-5xl xl:mb-8">
-        Own your money
+        class="relative text-4xl font-black tracking-wide uppercase font-title text-secondary sm:text-5xl lg:text-6xl xl:mb-4">
+        Own your money own your life!
       </h1>
-      <h2
-        class="relative mb-4 text-3xl font-black tracking-wider font-title text-secondary sm:text-4xl lg:text-5xl xl:mb-8">
-        own your life!
-      </h2>
       <p
         class="pr-0 mb-20 text-base text-light-500 sm:text-lg xl:text-xl lg:pr-20 ">
         Grow now your own personal money tightly interconnected to your time

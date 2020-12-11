@@ -33,9 +33,8 @@
           Featured Projects
         </h2>
         <h3
-          class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wide text-center font-title text-secondary sm:mt-0 sm:px-0 md:text-5xl">
-          <div>Crowdfund your future</div>
-          <div class="mt-3">one project a time</div>
+          class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wide text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
+          <div>Crowdfund your future<br />one project a time</div>
         </h3>
       </div>
       <Featured />
@@ -47,9 +46,8 @@
         The Omo Marketplace
       </h2>
       <h3
-        class="max-w-4xl px-5 pb-12 mt-2 text-3xl font-black leading-loose tracking-wide text-center font-title text-secondary sm:mt-0 sm:px-0 md:text-5xl">
-        <div>Enjoy the growth</div>
-        <div class="mt-3">of your own economy</div>
+        class="max-w-4xl px-5 pb-12 mt-2 text-3xl font-black leading-loose tracking-wide text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
+        <div>Enjoy the growth<br />of your own economy</div>
       </h3>
       <Offers />
       <a href="https://discord.gg/YedewwChD9">

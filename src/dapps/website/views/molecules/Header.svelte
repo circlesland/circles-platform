@@ -16,13 +16,13 @@
       class="flex flex-wrap items-center justify-center text-base md:ml-auto">
       <a
         href="https://discord.gg/CS6xq7jECR"
-        class="px-3 font-title text-secondary hover:text-tertiary">chat</a>
+        class="px-3 uppercase font-title text-secondary hover:text-tertiary">chat</a>
       <a
         href="https://github.com/omoearth/omo-li/discussions"
-        class="px-3 font-title text-secondary hover:text-tertiary">forum</a>
+        class="px-3 uppercase font-title text-secondary hover:text-tertiary">forum</a>
       <a
-        href="#/whitepaper"
-        class="px-3 font-title text-secondary hover:text-tertiary">whitepaper</a>
+        href="#/visionpaper"
+        class="px-3 uppercase font-title text-secondary hover:text-tertiary">visionpaper</a>
     </nav>
     <button
       on:click={() => push('#/omoli/dapps')}

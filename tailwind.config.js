@@ -9,7 +9,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'title': ["'Hello-Angel'", 'cursive'],
+      'title': ["QanelasSoft", 'sans'],
       'primary': ['Comfortaa', 'cursive'],
       'secondary': ['Quicksand', 'sans-serif']
     },
