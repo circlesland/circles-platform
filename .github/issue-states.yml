@@ -11,9 +11,9 @@ openIssueColumns:
   - THIS QUARTER
   - NEXT QUARTER
   - THIS YEAR
-  - 2021
-  - 2030
-  - 2050
+  - "2021"
+  - "2030"
+  - "2050"
 
 # Close issues that are moved to these project columns. Set to `[]` to disable
 closedIssueColumns:
