@@ -129,7 +129,7 @@
 
   $: xDaiOwner = {
     data: {
-      image: "logos/xdai.png",
+      image: "logos/xdai.svg",
       title: "Transaction Credits",
       subtitle: "Estimated transactions you have left",
       balance: "~" + Math.floor(parseFloat(personalEtherBalance) * 20000),
