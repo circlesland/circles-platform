@@ -6,13 +6,12 @@
   let projects = [
     {
       data: {
-        category: "Movement",
+        category: "Campaign",
         title: "I am Omo Sapien",
         subtitle:
           "Discover with us human's full creative potential opening the doors into a new age of abundance",
         image: "images/funding/omojourney.jpg",
-        description:
-          "It all started one inspiring day around 7 years ago, when Martin Köppelmann was sitting down, with the keyboard at his fingertips, pressing down the first keys, as he was writing down the original paper and math around a new generation of personal moneys to empower human's full potential. Soon, a small group of early adopters and visionaries started to form the social and technological foundation for a humanity of abundance.",
+        description: "Campaign description (coming soon).",
         price: "50",
         quantity: " human",
         ordersInO: "50",
