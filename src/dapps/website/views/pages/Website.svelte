@@ -22,9 +22,8 @@
 <Compose rows="1fr" columns="1fr">
   <div class="w-full overflow-x-hidden antialiased">
     <Header />
-    <Hero />
-
     <Video />
+    <Hero />
     <Steps />
     <div class="bg-gray-50">
       <div class="flex flex-col items-center w-full px-5 py-24 mx-auto ">

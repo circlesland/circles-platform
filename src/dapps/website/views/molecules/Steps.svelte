@@ -17,7 +17,7 @@
     <h3
       class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wider text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
       <div>Designed to empower</div>
-      <div class="mt-3">your abundance</div>
+      <div class="mt-3">your life</div>
     </h3>
     <div
       class="flex flex-col w-full mt-0 lg:flex-row sm:mt-10 lg:mt-20 text-primary">

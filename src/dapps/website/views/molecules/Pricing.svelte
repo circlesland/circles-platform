@@ -6,11 +6,11 @@
     <div class="flex flex-col items-center w-full px-5 pb-24 mx-auto ">
       <h2
         class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
-        Pricing
+        Fair Use pricing
       </h2>
       <h3
         class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wide text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
-        <div>Fair Prices <br />for everyone</div>
+        <div>You grow your economy<br />we build the tools for you</div>
       </h3>
     </div>
 
@@ -121,7 +121,7 @@
           class="relative z-10 w-full max-w-md my-8 bg-white rounded-lg shadow-lg sm:w-2/3 lg:w-1/3 sm:my-5">
           <div
             class="py-4 text-sm font-semibold leading-none tracking-wide text-center text-white uppercase rounded-t bg-secondary">
-            Most Popular
+            Support Our Campaign
           </div>
           <div
             class="block max-w-sm px-8 mx-auto mt-5 text-sm text-left text-primary sm:text-md lg:px-6">

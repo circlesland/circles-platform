@@ -1,7 +1,6 @@
 <script lang="ts">
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
   import Compose from "./libs/o-views/atoms/Compose.svelte";
-  import Mobile from "./libs/o-views/templates/Mobile.svelte";
 
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
   import Router, { pop, location, push } from "svelte-spa-router";
@@ -16,40 +15,19 @@
   import Modal from "./libs/o-views/molecules/Modal.svelte";
   import type { OmoEvent } from "./libs/o-events/omoEvent";
   import { RunProcess } from "./libs/o-events/runProcess";
-  import Announcement from "./libs/o-views/molecules/Announcement.svelte";
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
-  import { ShowNotification } from "./libs/o-events/showNotification";
   import { getEnvironment } from "./libs/o-os/o";
   import { BN } from "ethereumjs-util";
-  import {
-    initializeApp,
-    InitializeAppContext,
-  } from "./dapps/safe/processes/initializeApp/initializeApp";
+  import { initializeApp } from "./dapps/safe/processes/initializeApp/initializeApp";
   import { GotProfile } from "./dapps/omosapien/events/gotProfile";
   import { createOmoSapien } from "./dapps/omosapien/processes/createOmoSapien/createOmoSapien";
-  import { ProcessArtifact } from "./libs/o-processes/interfaces/processArtifact";
 
   let actions = [];
 
-  let notifications = [
-    {
-      data: {
-        type: "Attention!",
-        text:
-          "Early alpha testing, data losses can occur, use at own risk! For feedback join our",
-        button: "Chat",
-      },
-      action: {
-        link: "https://discord.gg/Rbhy4j9",
-      },
-    },
-  ];
-
   let isOpen = false;
   let showActionBar = false;
-  let askForCancel = false;
 
   let runningProcess: Process = window.o.stateMachines.current();
 
@@ -70,10 +48,6 @@
         (<RunProcess>event).contextModifier
       );
       isOpen = true;
-    }
-    if (event.type == "shell.showNotification") {
-      //notifications.push((<ShowNotification>event).mapping);
-      //notifications = notifications;
     }
   });
 
@@ -183,13 +157,6 @@
 <ComposeApp tw="font-primary bg-light-100">
   <Compose tw="mx-auto bg-light-100 w-full">
     <Compose columns="1fr" rows="1fr auto" tw="w-full">
-      <!-- <Compose tw="md:my-1">
-        <Mobile>
-          {#each notifications as notification}
-            <Announcement mapping={notification} />
-          {/each}
-        </Mobile>
-      </Compose> -->
       <Compose rows="1fr" columns="1fr">
         <Router
           {routes}
