@@ -133,7 +133,7 @@
               class="flex items-center justify-center pb-6 text-5xl font-bold text-center text-primary">
               50
               <span class="text-xl">⦿</span><span
-                class="ml-1 text-lg text-gray-700" />
+                class="ml-1 text-lg text-gray-700">/ one time</span>
             </h4>
             <p class="text-sm text-center text-gray-600">
               Verifying your identity will unlock your time currency. You can
@@ -210,11 +210,11 @@
             </ul>
           </div>
 
-          <div class="flex items-center block p-8 lowercase">
+          <div class="flex items-center block p-8">
             <a
               href="https://discord.gg/Ac4dy9Army"
               class="block w-full px-6 py-4 mt-3 text-lg font-semibold text-center text-white shadow-sm bg-secondary hover:bg-secondary-lighter rounded-xl">I
-              am Omo</a>
+              am Omo Sapien</a>
           </div>
         </div>
         <!-- Premium Pricing -->

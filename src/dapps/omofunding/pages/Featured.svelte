@@ -6,13 +6,38 @@
   let projects = [
     {
       data: {
+        category: "Movement",
+        title: "I am Omo Sapien",
+        subtitle:
+          "Discover with us human's full creative potential and open the doors into a new age of abundance",
+        image: "images/funding/omojourney.jpg",
+        description:
+          "It all started one inspiring day around 7 years ago, when Martin Köppelmann was sitting down, with the keyboard at his fingertips, pressing down the first keys, as he was writing down the original paper and math around a new generation of personal moneys to empower every human's full potential. Soon, a small crowd of early adopters and visionaries started to form the social and technological foundation of a new human era of abundance.",
+        price: "50",
+        quantity: " human",
+        ordersInO: "50",
+        ordersGoalInO: "500.000",
+        backers: "1",
+        backersGoal: "10.000",
+        progressInPercent: "1%",
+        offeredBy: {
+          firstName: "Samuel",
+          lastName: "Andert",
+          image: "./images/users/samuel.jpg",
+          location: "Munich, Germany",
+          delivery: "January 2021",
+        },
+      },
+    },
+    {
+      data: {
         category: "Food & Beverages",
         title: "Pflanzenstoff Superfruitdrink",
         subtitle: "Activate the powerplants of your body cells",
-        image: "images/market/pflanzenstoff.jpg",
+        image: "images/funding/pflanzenstoff.jpg",
         description:
           "Pflanzenstoff's superfruits can support your concentration, stamina and your mental and bodily health. A vegan fruit and vegetable drink with just 2.5g sugar. It tastes lively and refreshing with its natural only superfood incredients; Acerola, Aronia, Assai, Blackberries, Curcumin, Gojibeeren, Pomoegranate, Green Tea, Ginger, Carot, Mangosteen, Oranges, Beetroot and Grapes.",
-        price: "150",
+        price: "100",
         quantity: "6 pack",
         ordersInO: "450",
         ordersGoalInO: "150.000",
@@ -22,10 +47,10 @@
         daysLimit: 120,
         progressInPercent: "1%",
         offeredBy: {
-          firstName: "Samuel",
-          lastName: "Andert",
-          image: "./images/users/samuel.jpg",
-          location: "Munich, Germany",
+          firstName: "Olivia",
+          lastName: "Okafor",
+          image: "./images/users/olivia.svg",
+          location: "Bad Endorf, Germany",
           delivery: "April 2021",
         },
       },
@@ -33,13 +58,13 @@
     {
       data: {
         category: "Food & Beverages",
-        title: "Great White Chuck Wine",
-        image: "images/market/chuck.jpg",
+        title: "The Great White Chuck",
+        image: "images/funding/chuck.jpg",
         subtitle:
-          "Enjoy the lightness and liveliness of Great White Chuck's wine for a good day and night",
+          "Enjoy the lightness and liveliness of Great White Chuck's wine for an enjoyable evening with friends",
         description:
-          "Great White Chuck is the finest selected white wine from us, Patrick and Chuck. We have discovered over the last year our passion for wines and want to share our taste with you now. Join our journey, as we continue to source the best breeds for you. By supporting this campaign you kickstart our first order of bottles",
-        price: "150",
+          "The Great White Chuck is a white wine from us, Patrick and Chuck. We have discovered over the last year our passion for wines and want to share our taste with you now. Join our journey, as we continue to source the best breeds for you, always perfectly balancing quality and price. By supporting this campaign you kickstart our first order of bottles",
+        price: "80",
         quantity: "1 bottle",
         ordersInO: "150",
         ordersGoalInO: "60.000",
@@ -115,7 +140,7 @@
               </div>
               <p class="text-xs leading-relaxed">
                 of
-                {item.data.ordersGoalInO}⦿ GOAL
+                {item.data.ordersGoalInO}⦿ Goal
               </p>
             </div>
             <div class="w-1/2 p-4 mx-auto text-center">
@@ -124,8 +149,9 @@
                 {item.data.backers}
               </h2>
               <p class="text-xs leading-relaxed">
+                of
                 {item.data.backersGoal}
-                Backers
+                Omo Sapiens
               </p>
             </div>
           </div>

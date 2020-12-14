@@ -47,7 +47,7 @@
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
             Grow your future economy by supporting a crowdfunding project with
-            min 100⦿.
+            min 50⦿.
           </p>
         </div>
       </div>
