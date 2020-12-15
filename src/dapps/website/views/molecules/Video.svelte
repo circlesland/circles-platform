@@ -8,7 +8,7 @@
   style="background:url(./images/video.jpg) no-repeat
   center;">
   <div
-    class="flex flex-col items-center justify-center w-full h-full text-center bg-blue-900 bg-cover opacity-40">
+    class="flex flex-col items-center justify-center w-full h-full text-center bg-cover opacity-50 bg-dark">
     <div
       class="flex items-center justify-center w-24 h-24 mb-8 bg-white rounded-full text-primary hover:bg-gray-200">
       <Icon icon={faPlay} class="text-xl" />

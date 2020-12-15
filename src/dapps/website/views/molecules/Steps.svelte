@@ -27,10 +27,10 @@
 
           <h4
             class="relative mt-6 text-2xl font-black text-center uppercase font-title text-primary">
-            Signup
+            Register
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
-            Receive 150⦿ welcome bonus, when you first sign-up 
+            Receive a 150⦿ welcome gift, when you first register your Omo Sapien
           </p>
         </div>
       </div>

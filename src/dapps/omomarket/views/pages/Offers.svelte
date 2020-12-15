@@ -109,23 +109,41 @@
         },
       },
     },
-    // {
-    //   data: {
-    //     title: "UNU 2 Electro Scooter",
-    //     image: "./images/market/unu.jpg",
-    //     description:
-    //       "Brand new UNU electro scooter delivered straight from the factory to your home. I pre-ordered this unique beauty this summer and according to UNU will be ready for shipping around spring 2021. In the package is a 4000 watt black scooter with 2 batteries and 1 helmet. For more details see: https://unumotors.com/",
-    //     price: "100.000",
-    //     city: "Munich or Berlin",
-    //     country: "Germany",
-    //     delivery: "pickup or delivery",
-    //     offeredBy: {
-    //       image: "images/users/samuel.jpg",
-    //       firstName: "Samuel",
-    //       lastName: "Andert",
-    //     },
-    //   },
-    // },
+    {
+      data: {
+        image: "./images/market/iphone.jpg",
+        title: "iPhone 7 with broken screen",
+        description:
+          "the iPhone is working fine and even got a fresh battery, only the screen is broken and needs to be replaced.",
+        interval: "",
+        price: "750",
+        city: "Bad Endorf",
+        country: "Germany",
+        delivery: "pickup or delivery",
+        offeredBy: {
+          image: "images/users/samuel.jpg",
+          firstName: "Samuel",
+          lastName: "Andert",
+        },
+      },
+    },
+    {
+      data: {
+        title: "UNU 2 Electro Scooter",
+        image: "./images/market/unu.jpg",
+        description:
+          "Brand new UNU electro scooter delivered straight from the factory to your home. I pre-ordered this unique beauty this summer and according to UNU will be ready for shipping around spring 2021. In the package is a 4000 watt black scooter with 2 batteries and 1 helmet. For more details see: https://unumotors.com/",
+        price: "100.000",
+        city: "Munich or Berlin",
+        country: "Germany",
+        delivery: "pickup or delivery",
+        offeredBy: {
+          image: "images/users/samuel.jpg",
+          firstName: "Samuel",
+          lastName: "Andert",
+        },
+      },
+    },
   ];
 </script>
 
@@ -137,11 +155,11 @@
         class="flex flex-col overflow-hidden border rounded-xl border-light-300">
         <div class="relative flex-shrink-0">
           <img
-            class="object-cover w-full h-56"
+            class="object-cover w-full h-72"
             src={item.data.image}
             alt="img" />
           <span
-            class="absolute top-0 right-0 inline-flex items-center px-4 pt-2 pb-1 text-3xl font-medium leading-tight text-white rounded-l-full bg-secondary">
+            class="absolute top-0 right-0 inline-flex items-center px-4 pt-2 pb-1 mt-4 text-3xl font-medium leading-tight text-white rounded-l-full bg-secondary">
             {item.data.price}<img
               src="symbols/o-white.svg"
               alt="o"
@@ -187,7 +205,7 @@
           </div>
           <a
             href="https://discord.gg/YedewwChD9"
-            class="flex items-center justify-center p-4 text-base font-medium leading-5 text-center bg-secondary border-t border-light-200 rounded-b-xl text-white">
+            class="flex items-center justify-center p-4 text-base font-medium leading-5 text-center text-white border-t bg-secondary border-light-200 rounded-b-xl">
             <div class="flex">
               <p class="mr-1 font-bold lowercase">Contact to buy</p>
               <Icon icon={faShoppingCart} />
