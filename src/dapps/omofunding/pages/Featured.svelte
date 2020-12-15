@@ -1,5 +1,5 @@
 <script>
-  import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+  import { faRocket, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
   import Icon from "fa-svelte";
 
@@ -83,17 +83,17 @@
 </script>
 
 <div
-  class="grid max-w-lg gap-5 p-2 mx-auto overflow-y-scroll md:p-12 md:grid-cols-2 md:max-w-none">
+  class="grid max-w-lg gap-5 p-2 mx-auto overflow-y-scroll md:gap-10 md:p-12 md:grid-cols-2 md:max-w-none">
   {#each projects as item}
     <div
-      class="flex flex-wrap mx-auto bg-white border rounded-xl border-light-200 lg:max-w-6xl">
+      class="relative overflow-hidden text-gray-800 bg-white rounded-lg shadow hover:shadow-lg">
       <div class="relative w-full">
         <img
           class="object-cover w-full h-96 rounded-t-xl"
           src={item.data.image}
           alt="img" />
         <span
-          class="absolute top-0 right-0 inline-flex items-center px-4 pt-2 pb-1 text-3xl font-medium leading-tight text-white rounded-l-full bg-secondary">
+          class="absolute top-0 right-0 inline-flex items-center px-4 pt-2 pb-1 mt-4 text-3xl font-medium leading-tight text-white rounded-l-full bg-secondary">
           {item.data.price}<img
             src="symbols/o-white.svg"
             alt="o"
@@ -102,32 +102,29 @@
             <span
               class="ml-1 text-xs text-blue-200">/{item.data.quantity}</span>
           {/if}</span>
-        <div class="bg-light-200">
-          <div class="w-1/12 py-1 rounded-r-xl bg-action">
-            <div
-              class="inline-block px-2 text-sm text-white bg-action rounded-xl">
-              {item.data.progressInPercent}
-            </div>
-          </div>
-        </div>
       </div>
-      <div class="w-full p-6 md:p-12">
-        <h2 class="text-sm tracking-widest text-light-500 title-font">
-          {item.data.category}
-        </h2>
-        <h1 class="mb-1 text-3xl font-medium text-primary title-font">
+      <div class="z-30 flex justify-center">
+        <img
+          src={item.data.offeredBy.image}
+          class="z-30 object-cover object-center mr-2 -mt-20 bg-white border-8 border-white rounded-full h-36 w-36"
+          alt="" />
+      </div>
+
+      <div class="h-40 p-4 overflow-hidden sm:h-60 md:h-84">
+        <div
+          class="text-xl font-bold text-center uppercase font-title text-primary">
           {item.data.title}
-        </h1>
-        <div class="leading-relaxed text-light-500">
-          <span class="text-xl font-bold text-blue-400 font-primary">
-            {item.data.subtitle}</span>
-          <p class="pt-2">{item.data.description}</p>
+        </div>
+        <p class="text-center text-gray-600">{item.data.subtitle}</p>
+        <div class="h-full px-4 py-3 text-sm text-center text-light-500">
+          {item.data.description}
         </div>
       </div>
-      <section class="w-full border-t text-light-500 border-light-200">
-        <div class="container w-full p-6 mx-auto">
+
+      <section class="w-full mt-4 border-t text-light-500 border-light-200">
+        <div class="container w-full p-4 mx-auto md:p-6">
           <div class="flex flex-wrap justify-between text-center">
-            <div class="w-1/2 p-4 mx-auto text-center">
+            <div class="w-1/2 p-2 mx-auto text-center">
               <div class="flex justify-center">
                 <h2
                   class="flex text-3xl font-medium text-primary title-font sm:text-4xl">
@@ -142,7 +139,7 @@
                 {item.data.ordersGoalInO}⦿ Goal
               </p>
             </div>
-            <div class="w-1/2 p-4 mx-auto text-center">
+            <div class="w-1/2 p-2 mx-auto text-center">
               <h2
                 class="text-3xl font-medium text-primary title-font sm:text-4xl">
                 {item.data.backers}
@@ -156,6 +153,14 @@
           </div>
         </div>
       </section>
+      <div class="bg-light-200">
+        <div class="w-1/12 py-1 rounded-r-xl bg-action">
+          <div
+            class="inline-block px-2 text-sm text-white bg-action rounded-xl">
+            {item.data.progressInPercent}
+          </div>
+        </div>
+      </div>
       <div
         class="flex items-center w-full p-4 border-t bg-gray-50 border-light-200">
         <div class="flex-shrink-0">
@@ -178,13 +183,14 @@
           </div>
         </div>
       </div>
+
       <div class="w-full">
         <a
           href="https://discord.gg/YedewwChD9"
           class="flex items-center justify-center p-4 text-base font-medium leading-5 text-center text-white border-t border-light-200 rounded-b-xl bg-secondary">
           <div class="flex">
             <p class="mr-1 font-bold lowercase">Pre-Order Now</p>
-            <Icon icon={faShoppingCart} />
+            <Icon icon={faRocket} />
           </div>
         </a>
       </div>

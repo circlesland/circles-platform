@@ -8,7 +8,7 @@
   style="background:url(./images/video.jpg) no-repeat
   center;">
   <div
-    class="flex flex-col items-center justify-center w-full h-full text-center bg-blue-900 bg-cover opacity-50">
+    class="flex flex-col items-center justify-center w-full h-full text-center bg-blue-900 bg-cover opacity-40">
     <div
       class="flex items-center justify-center w-24 h-24 mb-8 bg-white rounded-full text-primary hover:bg-gray-200">
       <Icon icon={faPlay} class="text-xl" />
@@ -20,7 +20,7 @@
     </label>
     <h3
       class="m-4 mx-auto text-4xl font-black leading-normal text-white uppercase md:m8 md:text-6xl font-title">
-      Ready to lead humanity
+      Ready to lead earth
       <br />into a new age of abundance?<br />
       <span class="text-2xl">(video coming soon)</span>
     </h3>

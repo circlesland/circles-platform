@@ -15,10 +15,10 @@
     </div>
 
     <div class="max-w-full mx-auto md:max-w-6xl sm:px-8">
-      <!-- Basic Pricing -->
-      <div class="relative flex flex-col items-center block sm:flex-row">
+      <div class="relative flex flex-col items-center md:flex-row">
+        <!-- Basic Pricing -->
         <div
-          class="relative z-0 w-11/12 max-w-sm my-8 border border-gray-200 rounded-lg sm:w-3/5 lg:w-1/3 sm:my-5 md:-mr-4">
+          class="relative z-0 w-11/12 max-w-sm my-8 border border-gray-200 rounded-lg lg:w-1/3 sm:my-5 md:-mr-4">
           <div
             class="overflow-hidden bg-white border-t border-gray-100 rounded-lg shadow-sm text-primary">
             <div
@@ -118,7 +118,7 @@
         </div>
         <!-- Pro Pricing -->
         <div
-          class="relative z-10 w-full max-w-md my-8 bg-white rounded-lg shadow-lg sm:w-2/3 lg:w-1/3 sm:my-5">
+          class="relative z-10 w-full max-w-md my-8 bg-white rounded-lg shadow-lg lg:w-1/3 sm:my-5">
           <div
             class="py-4 text-sm font-semibold leading-none tracking-wide text-center text-white uppercase rounded-t bg-secondary">
             Support Our Campaign
@@ -219,7 +219,7 @@
         </div>
         <!-- Premium Pricing -->
         <div
-          class="relative z-0 w-11/12 max-w-sm my-8 rounded-lg shadow-lg sm:w-3/5 lg:w-1/3 sm:my-5 md:-ml-4">
+          class="relative z-0 w-11/12 max-w-sm my-8 rounded-lg shadow-lg lg:w-1/3 sm:my-5 md:-ml-4">
           <div
             class="overflow-hidden text-black bg-white rounded-lg shadow-lg shadow-inner">
             <div

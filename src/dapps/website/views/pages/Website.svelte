@@ -33,7 +33,7 @@
         </h2>
         <h3
           class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wide text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
-          <div>Crowdfund your future<br />one project a time</div>
+          <div>Crowdfund your dreams<br />one project a time</div>
         </h3>
       </div>
       <Featured />
