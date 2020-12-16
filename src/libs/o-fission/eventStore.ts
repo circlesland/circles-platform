@@ -130,15 +130,20 @@ export class EventStore
       return;
     }
 
+    const presentSources = this._buffer.events.reduce((p,c) => {
+      p[c.source] = c;
+      return p;
+    }, {});
+
     const startDay = Math.floor(this._buffer.firstBlockNo / EventStore.blocksPerDay);
     const endDay = Math.floor(this._buffer.lastBlockNo / EventStore.blocksPerDay);
 
     // Load all events in that range from the FS to the buffer
-    await Promise.all(Object.keys(this._eventSources).map(async sourceName =>
+    await Promise.all(Object.keys(presentSources).map(async sourceName =>
       await this.loadEventsFromFsToBuffer(sourceName, startDay, endDay)));
 
     // Then group, sort and deduplicate all events
-    let daysPerSource = await Promise.all(Object.keys(this._eventSources).map(async sourceName => this.bufferToDailyGroups(sourceName)));
+    let daysPerSource = await Promise.all(Object.keys(presentSources).map(async sourceName => this.bufferToDailyGroups(sourceName)));
     daysPerSource = daysPerSource.map(dps => this.orderAndDeduplicateDailyGroups(dps));
 
     // Finally write them back to the fs.
@@ -381,7 +386,7 @@ export class EventStore
 
     for (const dayIdx in days.days)
     {
-      console.log("Saving day " + dayIdx + " of source " + days.source + " to fission drive: ", {
+      console.log("Saving '" + dayIdx + "' of source '" + days.source + "' to fission drive: ", {
         name: dayIdx,
         events: days.days[dayIdx].events
       });

@@ -76,6 +76,7 @@ export async function bootstrap(env:ProcessEnvironment) {
   const counters = {};
   (await Promise.all(counterPromises)).forEach(counter => counters[counter.name] = counter.value);
 
+  console.log("Counters:", counters);
 
   // 2) Query my signup
   const mySignup = circlesHub.queryEvents(CirclesHub.queryPastSignup(env.me.mySafe.address, counters["mySignup"] ? counters["mySignup"] + 1 : null));
