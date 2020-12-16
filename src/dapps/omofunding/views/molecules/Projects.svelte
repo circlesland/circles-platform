@@ -1,5 +1,5 @@
 <script>
-  import { faRocket, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+  import { faRocket } from "@fortawesome/free-solid-svg-icons";
 
   import Icon from "fa-svelte";
 
@@ -79,35 +79,35 @@
         },
       },
     },
-    {
-      data: {
-        category: "Food & Beverages",
-        title: "Original greek aromatic oliveoil",
-        image: "images/funding/oliveoil.jpg",
-        subtitle:
-          "Have you ever tried really good oliveoil? You will be astonished!",
-        description: "coming soon",
-        price: "250",
-        quantity: "1 liter",
-        ordersInO: "250",
-        ordersGoalInO: "100.000",
-        backers: "1",
-        backersGoal: "500",
-        progressInPercent: "1%",
-        offeredBy: {
-          firstName: "Timo",
-          lastName: "Cook",
-          image: "./images/users/timon.jpg",
-          location: "Oslo, Norway",
-          delivery: "Mai 2021",
-        },
-      },
-    },
+    // {
+    //   data: {
+    //     category: "Food & Beverages",
+    //     title: "Original greek aromatic oliveoil",
+    //     image: "images/funding/oliveoil.jpg",
+    //     subtitle:
+    //       "Have you ever tried really good oliveoil? You will be astonished!",
+    //     description: "coming soon",
+    //     price: "250",
+    //     quantity: "1 liter",
+    //     ordersInO: "250",
+    //     ordersGoalInO: "100.000",
+    //     backers: "1",
+    //     backersGoal: "500",
+    //     progressInPercent: "1%",
+    //     offeredBy: {
+    //       firstName: "Timo",
+    //       lastName: "Cook",
+    //       image: "./images/users/timon.jpg",
+    //       location: "Oslo, Norway",
+    //       delivery: "Mai 2021",
+    //     },
+    //   },
+    // },
   ];
 </script>
 
 <div
-  class="grid max-w-lg gap-5 p-2 mx-auto overflow-y-scroll md:gap-10 md:p-12 md:grid-cols-2 md:max-w-none">
+  class="grid max-w-lg gap-5 p-2 mx-auto md:gap-10 md:p-12 md:grid-cols-2 md:max-w-none">
   {#each projects as item}
     <div
       class="relative overflow-hidden text-gray-800 bg-white rounded-lg shadow hover:shadow-lg">
@@ -185,8 +185,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex items-center w-full p-4 border-t bg-gray-50 border-light-200">
+      <div class="flex items-center w-full p-4 border-t border-light-200">
         <div class="flex-shrink-0">
           <img
             class="w-10 h-10 rounded-xl"
@@ -208,16 +207,15 @@
         </div>
       </div>
 
-      <div class="w-full">
-        <a
-          href="https://discord.gg/YedewwChD9"
-          class="flex items-center justify-center p-4 text-base font-medium leading-5 text-center text-white border-t border-light-200 rounded-b-xl bg-secondary">
-          <div class="flex">
-            <p class="mr-1 font-bold lowercase">Pre-Order Now</p>
-            <Icon icon={faRocket} />
-          </div>
-        </a>
-      </div>
+      <a
+        href="https://discord.gg/YedewwChD9"
+        class="flex items-center w-full p-4 space-x-4 ">
+        <button
+          class="w-full px-4 py-2 font-semibold bg-transparent border-2 text-secondary border-secondary rounded-xl hover:bg-secondary hover:text-white hover:border-transparent">
+          Pre-Order Now
+          <Icon icon={faRocket} />
+        </button>
+      </a>
     </div>
   {/each}
 </div>

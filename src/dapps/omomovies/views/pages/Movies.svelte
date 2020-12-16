@@ -143,7 +143,7 @@
               href="https://discord.gg/tqRSx8XnSW"
               class="flex items-center w-full p-4 space-x-4 ">
               <button
-                class="w-full px-4 py-2 font-semibold text-blue-700 bg-transparent border-2 border-blue-500 rounded-xl hover:bg-blue-500 hover:text-white hover:border-transparent">
+                class="w-full px-4 py-2 font-semibold bg-transparent border-2 text-secondary border-secondary rounded-xl hover:bg-secondary hover:text-white hover:border-transparent">
                 {item.design.button.label}
               </button>
               <button
