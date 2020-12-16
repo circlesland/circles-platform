@@ -24,7 +24,7 @@
 </script>
 
 <div class="h-full overflow-hidden">
-  <div class="h-full overflow-hidden md:flex md:p-4">
+  <div class="h-full overflow-y-scroll md:overflow-hidden md:flex md:p-4">
     {#if profile}
       <div
         class="p-4 text-xl text-center bg-white border md:w-72 rounded-xl text-primary border-light-200">
@@ -41,7 +41,7 @@
       </div>
     {/if}
     <div
-      class="grid w-full h-full grid-cols-2 gap-4 p-4 overflow-y-scroll md:py-0 md:grid-cols-3 lg:grid-cols-4">
+      class="grid w-full h-full grid-cols-2 gap-4 p-4 md:overflow-y-scroll md:py-0 md:grid-cols-3 lg:grid-cols-4">
       {#each _dapps as item}
         <DappIcon mapping={item} />
       {/each}
