@@ -4,7 +4,7 @@ export interface PageManifest {
   component: any;
   conditions?: any[];
   userData: {
-    dapp: "omosapien" | "omoli" | "omomarket" | "omofunding" | "safe" | "website";
+    dapp: "omosapien" | "omoli" | "omomarket" | "omofunding" | "omomovies" | "safe" | "website";
     showActionBar?: boolean;
     actions: QuickAction[]
   }

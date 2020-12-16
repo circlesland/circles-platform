@@ -8,6 +8,8 @@ import { profile, access, keys, authenticate } from "../../dapps/omosapien/manif
 import { website, visionpaper, privacy, tos, attributions } from "../../dapps/website/manifest";
 import { offers, requests, favorites } from "../../dapps/omomarket/manifest";
 import { featured } from "../../dapps/omofunding/manifest";
+import { movies } from "../../dapps/omomovies/manifest";
+
 
 import Auth from 'src/dapps/fissionauth/pages/Auth.svelte'
 import Drive from 'src/dapps/fissiondrive/pages/Drive.svelte'
@@ -43,6 +45,9 @@ export default {
 
   // Omo Funding
   '/omofunding/featured': wrap(featured),
+
+  // Omo Funding
+  '/omomovies/movies': wrap(movies),
 
 
   // Omo Funding
