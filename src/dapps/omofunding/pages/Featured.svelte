@@ -87,7 +87,7 @@
         subtitle:
           "Have you ever tried really good oliveoil? You will be astonished!",
         description: "coming soon",
-        price: "200",
+        price: "250",
         quantity: "1 liter",
         ordersInO: "250",
         ordersGoalInO: "100.000",
@@ -99,7 +99,7 @@
           lastName: "Cook",
           image: "./images/users/timon.jpg",
           location: "Oslo, Norway",
-          delivery: "April 2021",
+          delivery: "Mai 2021",
         },
       },
     },

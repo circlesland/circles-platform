@@ -14,6 +14,7 @@ export const omoli: PageManifest = {
   ],
   userData: {
     dapp: "omoli",
+    showActionBar: false,
     actions: [{
       type: "trigger",
       pos: "overflow",
