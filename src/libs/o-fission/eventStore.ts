@@ -159,13 +159,17 @@ export class EventStore
         value: maxBlockNo,
         name: o.source
       }, false, "updateCounter");
+
       await this._eventSources[o.source].directory.publish();
+      console.log("published changes in '" + o.source + "'.")
     }));
 
     await this.counters.publish();
+    console.log("published changes in '_counters'.")
 
     return "";
   }
+
   clearBuffer()
   {
     this._buffer = {

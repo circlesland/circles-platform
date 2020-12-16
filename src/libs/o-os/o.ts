@@ -83,13 +83,14 @@ export async function bootstrap(env:ProcessEnvironment) {
   await env.fission.events.attachEventSource("mySignup", mySignup);
 
   // 3) Query all my trusts
-  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address, null, counters["myIncomingTrusts"] ? counters["myIncomingTrusts"] + 1 : null));
+  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address, counters["myIncomingTrusts"] ? counters["myIncomingTrusts"] + 1 : null));
   await env.fission.events.attachEventSource("myIncomingTrusts", myIncomingTrusts);
 
-  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address, counters["myOutgoingTrusts"] ? counters["myOutgoingTrusts"] + 1 : null));
+  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address, null, counters["myOutgoingTrusts"] ? counters["myOutgoingTrusts"] + 1 : null));
   await env.fission.events.attachEventSource("myOutgoingTrusts", myOutgoingTrusts);
 
   await env.fission.events.flush();
+  env.fission.events.clearBuffer();
 }
 
 /**
@@ -129,6 +130,7 @@ export async function getEnvironment(): Promise<ProcessEnvironment> {
     }
 
     me.myAddress = web3.eth.accounts.privateKeyToAccount(me.myKey.privateKey).address;
+    console.log("my safe owner address:", me.myAddress);
     me.myAddressXDaiBalance = new BN(await web3.eth.getBalance(me.myAddress));
   }
 
