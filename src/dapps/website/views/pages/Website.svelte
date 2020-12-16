@@ -6,11 +6,11 @@
   import Pricing from "../molecules/Pricing.svelte";
   import Footer from "../molecules/Footer.svelte";
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import Offers from "src/dapps/omomarket/views/pages/Offers.svelte";
+  import Offers from "src/dapps/omomarket/views/molecules/Offers.svelte";
   import Video from "../molecules/Video.svelte";
   import Steps from "../molecules/Steps.svelte";
-  import Featured from "src/dapps/omofunding/pages/Featured.svelte";
   import Details from "../molecules/Details.svelte";
+  import Projects from "src/dapps/omofunding/views/molecules/Projects.svelte";
 
   onMount(async () => {
     if (window.o.fission) {
@@ -36,7 +36,7 @@
           <div>Crowdfund your dreams<br />one project a time</div>
         </h3>
       </div>
-      <Featured />
+      <Projects />
     </div>
     <div
       class="flex flex-col items-center w-full px-5 py-24 mx-auto bg-light-100">

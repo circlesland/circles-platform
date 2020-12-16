@@ -1,4 +1,4 @@
-import Featured from './pages/Featured.svelte'
+import Featured from './views/pages/Featured.svelte';
 
 import { PageManifest } from "../../libs/o-os/interfaces/pageManifest";
 import { omofundingDefaultActions, omofundingOverflowActions } from './data/actions';
