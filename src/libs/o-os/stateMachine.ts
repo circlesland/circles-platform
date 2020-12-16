@@ -5,6 +5,7 @@ import {ProcessContext} from "../o-processes/interfaces/processContext";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Process} from "../o-processes/interfaces/process";
 import {getProcessContext} from "./o";
+import {ShellEvent} from "../o-processes/events/shellEvent";
 
 export const stateMachine = {
   _current: null,
@@ -18,6 +19,7 @@ export const stateMachine = {
   },
   async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>)
   {
+    console.log("run", definition.name);
     const {service, state, send} = useMachine(
       (<any>definition).stateMachine(),
       {
@@ -30,6 +32,12 @@ export const stateMachine = {
 
     service.onTransition((state1, event) =>
     {
+      console.log(event);
+      if (event.type === "process.shellEvent")
+      {
+        window.o.publishEvent((<ShellEvent>event).payload);
+      }
+
       processEvents.next(<any>{
         stopped: false,
         currentState: state1,

@@ -58,9 +58,9 @@
   function subscribeToProcess() {
     ensureProcess((process) => {
       subscription = process.events.subscribe((next) => {
-        if (next.event?.type === "process.shellEvent") {
+        /*if (next.event?.type === "process.shellEvent") {
           window.o.publishEvent((<ShellEvent>next.event).payload);
-        } else if (next.event?.type === "process.prompt") {
+        } else*/ if (next.event?.type === "process.prompt") {
           prompt = <PromptEvent>next.event;
           let artifactsArr = Object.keys(prompt.data).map(
             (key) => prompt.data[key]

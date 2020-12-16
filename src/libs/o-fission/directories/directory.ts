@@ -126,7 +126,7 @@ export abstract class Directory<TEntity extends Entity>
     };
   }
 
-  protected async publish(): Promise<string> {
+  async publish(): Promise<string> {
     return await this.fs.publish();
   }
 }

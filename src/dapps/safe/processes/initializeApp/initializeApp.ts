@@ -26,6 +26,8 @@ import { hubSignupService } from "./services/hubSignupService";
 import { fundSafeService } from "./services/fundSafeService";
 import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
 import {text} from "../../../../libs/o-processes/artifacts/text";
+import {RefreshView} from "../../../../libs/o-events/refreshView";
+import {GotSafe} from "../../events/gotSafe";
 
 export interface InitializeAppContext extends ProcessContext {
   data: {
@@ -247,9 +249,15 @@ const processDefinition = () => createMachine<InitializeAppContext, OmoEvent>({
       }
     },
     checkToken: {
-      entry: send({
-        type: "process.continue"
-      }),
+      entry: [
+        send({
+          type: "process.shellEvent",
+          payload: new GotSafe()
+        }),
+        send({
+          type: "process.continue"
+        })
+      ],
       on: {
         "process.continue": [{
           cond: "noToken",

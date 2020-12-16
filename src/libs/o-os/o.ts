@@ -22,9 +22,19 @@ import { Erc20Token } from "../o-circles-protocol/token/erc20Token";
 const eventBroker = new EventBroker();
 const shellEvents = eventBroker.createTopic("omo", "shell");
 
-shellEvents.observable.subscribe((event: OmoEvent) => {
-  if (event.type === "shell.authenticated") {
+let initialized:boolean = false;
+
+shellEvents.observable.subscribe(async (event: OmoEvent) =>
+{
+  if (event.type === "shell.authenticated")
+  {
     window.o.fission = new FissionDrive((<Authenticated>event).fissionAuth);
+  }
+  else if (event.type === "shell.gotSafe" && !initialized)
+  {
+    initialized = true;
+    const env = await window.o.getEnvironment();
+    // await bootstrap(env);
   }
 });
 
@@ -61,17 +71,18 @@ export async function bootstrap(env:ProcessEnvironment) {
   const circlesHub = new CirclesHub(web3, cfg.HUB_ADDRESS);
   // const hubAccount = new HubAccount(circlesHub, env.me.mySafe.address, env.me.myToken?.address);
 
-  // 2) Query all trust events
+  // 2) Query my signup
   const mySignup = circlesHub.queryEvents(CirclesHub.queryPastSignup(env.me.mySafe.address));
-  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address));
-  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address));
-
   await env.fission.events.attachEventSource("mySignup", mySignup);
-  await env.fission.events.flush();
-  /*
+
+  // 3) Query all my trusts
+  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address));
   await env.fission.events.attachEventSource("myIncomingTrusts", myIncomingTrusts);
+
+  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address));
   await env.fission.events.attachEventSource("myOutgoingTrusts", myOutgoingTrusts);
-   */
+
+  await env.fission.events.flush();
 }
 
 /**
@@ -132,10 +143,6 @@ export async function getEnvironment(): Promise<ProcessEnvironment> {
     eth: eth,
     me: me
   };
-
-  if (me.mySafe) {
-    // await bootstrap(environment)
-  }
 
   return environment;
 }

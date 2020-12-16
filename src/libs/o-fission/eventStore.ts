@@ -7,7 +7,17 @@ import {Directory, DirectoryChangeType} from "./directories/directory";
 import {CacheEvent, CacheEventGroup} from "./entities/cacheEvent";
 
 export type CacheEventGroups = {
-  [day:string]: CacheEventGroup
+  source: string,
+  days: {
+    [day: string]: CacheEventGroup
+  }
+}
+
+export class EventDirectory extends Directory<CacheEventGroup>
+{
+  async maintainIndexes(change: DirectoryChangeType, entity: CacheEventGroup, indexHint: string | undefined): Promise<void>
+  {
+  }
 }
 
 /**
@@ -18,7 +28,7 @@ export type CacheEventGroups = {
  * To write the buffered events to the fs, call flush().
  */
 export class EventStore
-  extends Directory<CacheEventGroup>
+  /*extends Directory<CacheEventGroup>*/
 {
   // Assuming one new block per 5 seconds:
   private static readonly blocksPerDay = 17280;
@@ -26,7 +36,8 @@ export class EventStore
   private readonly _eventSources: {
     [name: string]: {
       source: EventQuery<Event>,
-      subscription: Subscription
+      subscription: Subscription,
+      directory: Directory<CacheEventGroup>
     }
   } = {};
 
@@ -40,9 +51,13 @@ export class EventStore
     events: []
   };
 
+  private _fs: FileSystem;
+  private _pathParts: string[];
+
   constructor(fs: FileSystem, pathParts: string[])
   {
-    super(fs, pathParts);
+    this._fs = fs;
+    this._pathParts = pathParts;
   }
 
   /**
@@ -60,9 +75,12 @@ export class EventStore
     const subscription = source.events.subscribe(
       event => this.onEvent(name, self, event));
 
+    const eventDirectory = new EventDirectory(this._fs, this._pathParts.concat([name]));
+
     this._eventSources[name] = {
-      source,
-      subscription
+      source: source,
+      subscription: subscription,
+      directory: eventDirectory
     };
 
     await source.execute();
@@ -92,16 +110,20 @@ export class EventStore
     const endDay = Math.floor(this._buffer.lastBlockNo / EventStore.blocksPerDay);
 
     // Load all events in that range from the FS to the buffer
-    await this.loadEventsFromFsToBuffer(startDay, endDay);
+    await Promise.all(Object.keys(this._eventSources).map(async sourceName =>
+      await this.loadEventsFromFsToBuffer(sourceName, startDay, endDay)));
 
     // Then group, sort and deduplicate all events
-    let days = this.bufferToDailyGroups();
-    days = this.orderAndDeduplicateDailyGroups(days);
+    let daysPerSource = await Promise.all(Object.keys(this._eventSources).map(async sourceName => this.bufferToDailyGroups(sourceName)));
+
+    daysPerSource = daysPerSource.map(dps => this.orderAndDeduplicateDailyGroups(dps));
 
     // Finally write them back to the fs.
-    return await this.writeDailyGroupsToFs(days);
-  }
+    await Promise.all(daysPerSource.map(async dps => await this.writeDailyGroupsToFs(dps)));
+    await Promise.all(daysPerSource.map(async o => await this._eventSources[o.source].directory.publish()));
 
+    return "";
+  }
   clearBuffer()
   {
     this._buffer = {
@@ -113,11 +135,14 @@ export class EventStore
 
   /**
    * Loads stored events for the given time span and returns an array of CacheEvents.
+   * @param source
    * @param fromDay
    * @param toDay
    */
-  async loadEventsFromFs(fromDay: number, toDay: number) : Promise<CacheEvent[]>
+  async loadEventsFromFs(source:string, fromDay: number, toDay: number) : Promise<CacheEvent[]>
   {
+    const directory = this._eventSources[source].directory;
+
     if (fromDay > toDay)
     {
       throw new Error(`The fromDay (${fromDay}) is larger than the toDay (${toDay})`);
@@ -134,12 +159,12 @@ export class EventStore
       // Every group corresponds to one day.
       const groupName = "day_" + i.toString();
 
-      if (!(await this.exists([groupName])))
+      if (!(await directory.exists([groupName])))
       {
         continue;
       }
 
-      const existingData = await this.tryGetByName(groupName);
+      const existingData = await directory.tryGetByName(groupName);
       for (const blockNo in existingData.events)
       {
         const blockEvents = existingData.events[blockNo];
@@ -155,12 +180,13 @@ export class EventStore
 
   /**
    * Loads stored events from the filesystem to the in-memory buffer.
+   * @param source
    * @param fromDay
    * @param toDay
    */
-  private async loadEventsFromFsToBuffer(fromDay: number, toDay: number)
+  private async loadEventsFromFsToBuffer(source:string, fromDay: number, toDay: number)
   {
-    const storedEvents = await this.loadEventsFromFs(fromDay, toDay);
+    const storedEvents = await this.loadEventsFromFs(source, fromDay, toDay);
     storedEvents.forEach(existingEvent =>
     {
       if (existingEvent.blockNo < this._buffer.firstBlockNo)
@@ -245,19 +271,27 @@ export class EventStore
   }
 
   /**
-   * Groups all events per day and sorts the list within that group by block no. DESC.
+   * Groups all events per source per day and sorts the list within that group by block no. DESC.
    */
-  private bufferToDailyGroups(): CacheEventGroups
+  private bufferToDailyGroups(source:string): {
+    source: string,
+    days: {
+      [day: string]: CacheEventGroup
+    }
+  }
   {
-    const days: CacheEventGroups = {};
+    const daysOfSource: CacheEventGroups = {
+      source: source,
+      days: {}
+    };
 
-    for (const event of this._buffer.events)
+    for (const event of this._buffer.events.filter(o => o.source == source))
     {
       const dayIdx = "day_" + Math.floor(event.blockNo / EventStore.blocksPerDay).toString();
 
       // Get or create day group
-      const day = days[dayIdx]
-        ? days[dayIdx]
+      const day = daysOfSource.days[dayIdx]
+        ? daysOfSource.days[dayIdx]
         : {
           name: dayIdx,
           events: {}
@@ -273,22 +307,22 @@ export class EventStore
       day.events[event.blockNo] = eventsOfDay;
 
       // Update the group
-      days[dayIdx] = day;
+      daysOfSource.days[dayIdx] = day;
     }
 
-    return days;
+    return daysOfSource;
   }
 
   private orderAndDeduplicateDailyGroups(days: CacheEventGroups) : CacheEventGroups
   {
-    for (const dayIdx in days)
+    for (const dayIdx in days.days)
     {
-      for (const blockNo in days[dayIdx].events)
+      for (const blockNo in days.days[dayIdx].events)
       {
-        days[dayIdx].events[blockNo].sort(
+        days.days[dayIdx].events[blockNo].sort(
           (a, b) => a.blockNo < b.blockNo ? 1 : a.blockNo > b.blockNo ? -1 : 0);
 
-        const distinctEvents = days[dayIdx].events[blockNo].reduce((p, c) =>
+        const distinctEvents = days.days[dayIdx].events[blockNo].reduce((p, c) =>
         {
           p[this.hashString(JSON.stringify(c))] = c;
           return p;
@@ -297,7 +331,7 @@ export class EventStore
         const distinctEventsArray = Object.keys(distinctEvents)
           .map(key => distinctEvents[key]);
 
-        days[dayIdx].events[blockNo] = distinctEventsArray;
+        days.days[dayIdx].events[blockNo] = distinctEventsArray;
       }
     }
 
@@ -306,23 +340,25 @@ export class EventStore
 
   private async writeDailyGroupsToFs(days: CacheEventGroups)
   {
-    for (const dayIdx in days)
-    {
-      for (const blockNo in days[dayIdx].events)
-      {
-        console.log("Saving group " + dayIdx + " to fission drive: ", {
-          name: dayIdx,
-          events: days[dayIdx].events
-        });
+    const directory = this._eventSources[days.source].directory;
 
-        await this.addOrUpdate({
+    for (const dayIdx in days.days)
+    {
+      console.log("Saving day " + dayIdx + " of source " + days.source + " to fission drive: ", {
+        name: dayIdx,
+        events: days.days[dayIdx].events
+      });
+
+      for (const blockNo in days.days[dayIdx].events)
+      {
+        console.log("Adding block " + blockNo);
+
+        await directory.addOrUpdate({
           name: dayIdx,
-          events: days[dayIdx].events
+          events: days.days[dayIdx].events
         }, false, "flush");
       }
     }
-
-    return await this.publish();
   }
 
   async maintainIndexes(change: DirectoryChangeType, entity: CacheEventGroup, indexHint: string | undefined): Promise<void>
