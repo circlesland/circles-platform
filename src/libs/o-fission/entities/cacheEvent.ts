@@ -3,6 +3,7 @@
  */
 import {Entity} from "./entity";
 
+
 /**
  * Groups multiple blockchain events and transactions.
  */

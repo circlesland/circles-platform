@@ -48,6 +48,35 @@ export type Ethereum = {
   }
 };
 
+
+/**
+ * Creates all event sources, registers them at the EventStore and makes sure that all current events are available
+ * before returning.
+ */
+export async function bootstrap(env:ProcessEnvironment) {
+
+  // 1) Init a HubAccount
+  const cfg = config.getCurrent();
+  const web3 = cfg.web3();
+  const circlesHub = new CirclesHub(web3, cfg.HUB_ADDRESS);
+  // const hubAccount = new HubAccount(circlesHub, env.me.mySafe.address, env.me.myToken?.address);
+
+  // 2) Query all trust events
+  const mySignup = circlesHub.queryEvents(CirclesHub.queryPastSignup(env.me.mySafe.address));
+  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address));
+  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address));
+
+  await env.fission.events.attachEventSource("mySignup", mySignup);
+  await env.fission.events.flush();
+  /*
+  await env.fission.events.attachEventSource("myIncomingTrusts", myIncomingTrusts);
+  await env.fission.events.attachEventSource("myOutgoingTrusts", myOutgoingTrusts);
+   */
+}
+
+/**
+ * Gets all environment properties like the currently logged-on account, token and profile.
+ */
 export async function getEnvironment(): Promise<ProcessEnvironment> {
   const cfg = config.getCurrent();
   const web3 = cfg.web3();
@@ -98,11 +127,17 @@ export async function getEnvironment(): Promise<ProcessEnvironment> {
     me.myToken = await p.getOwnToken();
   }
 
-  return <ProcessEnvironment>{
+  const environment = <ProcessEnvironment>{
     fission: myData,
     eth: eth,
     me: me
   };
+
+  if (me.mySafe) {
+    // await bootstrap(environment)
+  }
+
+  return environment;
 }
 
 export async function getProcessContext(): Promise<ProcessContext> {

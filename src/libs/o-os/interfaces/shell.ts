@@ -13,7 +13,7 @@ export interface Shell {
   stateMachines: {
     current(): Process | null,
     cancel(),
-    run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => ProcessContext) => Process
+    run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<ProcessContext>) => Process
   },
   getEnvironment: () => Promise<ProcessEnvironment>,
   wn: any

@@ -3,6 +3,7 @@ import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
 import { AuthSucceeded, Continuation } from "webnative";
 import { Tokens } from "./directories/tokens";
+import {EventStore} from "./eventStore";
 
 export class FissionDrive {
   private readonly _fissionAuth: AuthSucceeded | Continuation;
@@ -27,6 +28,11 @@ export class FissionDrive {
   }
   private readonly _tokens: Tokens;
 
+  get events():EventStore {
+    return this._events;
+  }
+  private readonly _events:EventStore;
+
   constructor(fissionAuth: AuthSucceeded | Continuation) {
     this._fissionAuth = fissionAuth;
     this._fs = fissionAuth.fs;
@@ -34,5 +40,6 @@ export class FissionDrive {
     this._profiles = new Profiles(this._fs);
     this._keys = new Keys(this._fs);
     this._tokens = new Tokens(this._fs);
+    this._events = new EventStore(this._fs, ["eventStore"]);
   }
 }
