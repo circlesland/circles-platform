@@ -1,6 +1,7 @@
 import FileSystem from "webnative/fs/filesystem";
 import { Entity } from "../entities/entity";
 import { CID } from "webnative/ipfs";
+import {CacheEventGroup} from "../entities/cacheEvent";
 
 export type DirectoryChangeType = "add" | "update" | "remove";
 
@@ -8,14 +9,16 @@ export abstract class Directory<TEntity extends Entity>
 {
   private readonly _fs: FileSystem;
   private readonly _pathParts: string[];
+  private readonly _entityFactory?:(data:string) => TEntity;
 
   protected get fs(): FileSystem {
     return this._fs;
   }
 
-  constructor(fs: FileSystem, pathParts: string[]) {
+  constructor(fs: FileSystem, pathParts: string[], entityFactory?:(data:string) => TEntity) {
     this._pathParts = pathParts;
     this._fs = fs;
+    this._entityFactory = entityFactory;
   }
 
   abstract maintainIndexes(change: DirectoryChangeType, entity: TEntity, indexHint?: string): Promise<void>;
@@ -53,6 +56,10 @@ export abstract class Directory<TEntity extends Entity>
       return this.fs.cat(this.getPath([name]));
     }));
 
+    if (this._entityFactory) {
+      return items.map(o => this._entityFactory(o.toString()));
+    }
+
     return items.map(item => <TEntity>JSON.parse(<string>item));
   }
 
@@ -62,6 +69,11 @@ export abstract class Directory<TEntity extends Entity>
     }
 
     const contents = await this.fs.cat(this.getPath([entityName]));
+
+    if (this._entityFactory) {
+      return <TSpecificEntity>this._entityFactory(contents.toString());
+    }
+
     return <TSpecificEntity>JSON.parse(<string>contents);
   }
 
