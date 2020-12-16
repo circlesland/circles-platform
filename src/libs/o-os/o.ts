@@ -34,7 +34,7 @@ shellEvents.observable.subscribe(async (event: OmoEvent) =>
   {
     initialized = true;
     const env = await window.o.getEnvironment();
-    // await bootstrap(env);
+    await bootstrap(env);
   }
 });
 
@@ -69,17 +69,23 @@ export async function bootstrap(env:ProcessEnvironment) {
   const cfg = config.getCurrent();
   const web3 = cfg.web3();
   const circlesHub = new CirclesHub(web3, cfg.HUB_ADDRESS);
-  // const hubAccount = new HubAccount(circlesHub, env.me.mySafe.address, env.me.myToken?.address);
+
+  const counterPromises = (await env.fission.events.counters.listNames())
+    .map(async counterName => await env.fission.events.counters.tryGetByName(counterName));
+
+  const counters = {};
+  (await Promise.all(counterPromises)).forEach(counter => counters[counter.name] = counter.value);
+
 
   // 2) Query my signup
-  const mySignup = circlesHub.queryEvents(CirclesHub.queryPastSignup(env.me.mySafe.address));
+  const mySignup = circlesHub.queryEvents(CirclesHub.queryPastSignup(env.me.mySafe.address, counters["mySignup"] ? counters["mySignup"] + 1 : null));
   await env.fission.events.attachEventSource("mySignup", mySignup);
 
   // 3) Query all my trusts
-  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address));
+  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address, null, counters["myIncomingTrusts"] ? counters["myIncomingTrusts"] + 1 : null));
   await env.fission.events.attachEventSource("myIncomingTrusts", myIncomingTrusts);
 
-  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address));
+  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address, counters["myOutgoingTrusts"] ? counters["myOutgoingTrusts"] + 1 : null));
   await env.fission.events.attachEventSource("myOutgoingTrusts", myOutgoingTrusts);
 
   await env.fission.events.flush();

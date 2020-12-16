@@ -14,29 +14,29 @@ export class CirclesHub extends Web3Contract {
     super(web3, hubAddress, new web3.eth.Contract(<AbiItem[]>CIRCLES_HUB_ABI, hubAddress));
   }
 
-  static queryPastSignup(user: Address) {
+  static queryPastSignup(user: Address, fromBlock?:number) {
     return {
       event: CirclesHub.SignupEvent,
       filter: {
         user: user
       },
-      fromBlock: config.getCurrent().HUB_BLOCK,
+      fromBlock: fromBlock ?? config.getCurrent().HUB_BLOCK,
       toBlock: "latest"
     };
   }
 
-  static queryPastSignups(ofUsers: Address[]) {
+  static queryPastSignups(ofUsers: Address[], fromBlock?:number) {
     return {
       event: CirclesHub.SignupEvent,
       filter: {
         user: ofUsers
       },
-      fromBlock: config.getCurrent().HUB_BLOCK,
+      fromBlock: fromBlock ?? config.getCurrent().HUB_BLOCK,
       toBlock: "latest"
     };
   }
 
-  static queryPastTransfers(from?: Address, to?: Address) {
+  static queryPastTransfers(from?: Address, to?: Address, fromBlock?:number) {
     if (!from && !to)
       throw new Error("At least one of the two parameters has to be set to a value.");
 
@@ -49,12 +49,12 @@ export class CirclesHub extends Web3Contract {
     return {
       event: CirclesHub.HubTransferEvent,
       filter: f,
-      fromBlock: config.getCurrent().HUB_BLOCK,
+      fromBlock: fromBlock ?? config.getCurrent().HUB_BLOCK,
       toBlock: "latest"
     };
   }
 
-  static queryPastTrusts(canSendTo?: Address, user?: Address) {
+  static queryPastTrusts(canSendTo?: Address, user?: Address, fromBlock?:number) {
     if (!canSendTo && !user)
       throw new Error("At least one of the two parameters has to be set to a value.");
 
@@ -67,7 +67,7 @@ export class CirclesHub extends Web3Contract {
     return {
       event: CirclesHub.TrustEvent,
       filter: f,
-      fromBlock: config.getCurrent().HUB_BLOCK,
+      fromBlock: fromBlock ?? config.getCurrent().HUB_BLOCK,
       toBlock: "latest"
     };
   }

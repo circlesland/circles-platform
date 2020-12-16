@@ -5,11 +5,24 @@ import FileSystem from "webnative/fs/filesystem";
 import {BN} from "ethereumjs-util";
 import {Directory, DirectoryChangeType} from "./directories/directory";
 import {CacheEvent, CacheEventGroup} from "./entities/cacheEvent";
+import {Entity} from "./entities/entity";
 
 export type CacheEventGroups = {
   source: string,
   days: {
     [day: string]: CacheEventGroup
+  }
+}
+
+export class CounterEntity implements Entity {
+  name: string;
+  value: number
+}
+
+export class CountersDirectory extends Directory<CounterEntity>
+{
+  async maintainIndexes(change: DirectoryChangeType, entity: CounterEntity, indexHint: string | undefined): Promise<void>
+  {
   }
 }
 
@@ -54,10 +67,14 @@ export class EventStore
   private _fs: FileSystem;
   private _pathParts: string[];
 
+  readonly counters:CountersDirectory;
+
   constructor(fs: FileSystem, pathParts: string[])
   {
     this._fs = fs;
     this._pathParts = pathParts;
+
+    this.counters = new CountersDirectory(this._fs, this._pathParts.concat(["_counters"]));
   }
 
   /**
@@ -106,6 +123,13 @@ export class EventStore
    */
   async flush(): Promise<string>
   {
+    if (this._buffer.firstBlockNo == Number.MAX_SAFE_INTEGER
+    || this._buffer.lastBlockNo == Number.MIN_SAFE_INTEGER)
+    {
+      console.log("No new events to flush");
+      return;
+    }
+
     const startDay = Math.floor(this._buffer.firstBlockNo / EventStore.blocksPerDay);
     const endDay = Math.floor(this._buffer.lastBlockNo / EventStore.blocksPerDay);
 
@@ -115,12 +139,25 @@ export class EventStore
 
     // Then group, sort and deduplicate all events
     let daysPerSource = await Promise.all(Object.keys(this._eventSources).map(async sourceName => this.bufferToDailyGroups(sourceName)));
-
     daysPerSource = daysPerSource.map(dps => this.orderAndDeduplicateDailyGroups(dps));
 
     // Finally write them back to the fs.
     await Promise.all(daysPerSource.map(async dps => await this.writeDailyGroupsToFs(dps)));
-    await Promise.all(daysPerSource.map(async o => await this._eventSources[o.source].directory.publish()));
+    await Promise.all(daysPerSource.map(async o => {
+      // Maintain a counter per event source to keep track of the last blockNo
+      const maxBlockNo = Object.keys(o.days).map(dayIdx => o.days[dayIdx].events).reduce((p,c) => {
+        const maxOfDay = Object.keys(c).reduce((p_, c_) => parseInt(c_) > p_ ? parseInt(c_) : p_, 0);
+        return maxOfDay > p ? maxOfDay : p;
+      }, 0);
+
+      await this.counters.addOrUpdate(<CounterEntity>{
+        value: maxBlockNo,
+        name: o.source
+      }, false, "updateCounter");
+      await this._eventSources[o.source].directory.publish();
+    }));
+
+    await this.counters.publish();
 
     return "";
   }
@@ -349,15 +386,10 @@ export class EventStore
         events: days.days[dayIdx].events
       });
 
-      for (const blockNo in days.days[dayIdx].events)
-      {
-        console.log("Adding block " + blockNo);
-
-        await directory.addOrUpdate({
-          name: dayIdx,
-          events: days.days[dayIdx].events
-        }, false, "flush");
-      }
+      await directory.addOrUpdate({
+        name: dayIdx,
+        events: days.days[dayIdx].events
+      }, false, "flush");
     }
   }
 
