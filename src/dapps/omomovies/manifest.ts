@@ -1,16 +1,28 @@
 import Movies from 'src/dapps/omomovies/views/pages/Movies.svelte'
 
-import { PageManifest } from "../../libs/o-os/interfaces/pageManifest";
 import { omomoviesDefaultActions, omomoviesOverflowActions } from './data/actions';
+import {faFilm} from "@fortawesome/free-solid-svg-icons";
+import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 
-export const movies: PageManifest = {
-  component: Movies,
-  userData: {
-    dapp: "omomovies",
-    showActionBar: true,
-    actions: [
-      ...omomoviesDefaultActions,
-      ...omomoviesOverflowActions
-    ]
-  }
+export interface OmoMoviesState {}
+export const omomovies : DappManifest<OmoMoviesState,OmoMoviesState> = {
+  id: "omo.movies:1",
+  dependencies: [],
+  icon: faFilm,
+  title: "Movies",
+  routeParts: ["omomovies"],
+  tag: Promise.resolve("mockup"),
+  isEnabled: true,
+  pages: [{
+    isDefault: true,
+    routeParts: ["movies"],
+    component: Movies,
+    userData: {
+      showActionBar: true,
+      actions: [
+        ...omomoviesDefaultActions,
+        ...omomoviesOverflowActions
+      ]
+    }
+  }]
 }

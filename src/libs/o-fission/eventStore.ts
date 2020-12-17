@@ -185,20 +185,37 @@ export class EventStore
    * @param fromDay
    * @param toDay
    */
-  async loadEventsFromFs(source:string, fromDay: number, toDay: number) : Promise<CacheEvent[]>
+  async loadEventsFromFs(source:string, fromDay?: number, toDay?: number) : Promise<CacheEvent[]>
   {
     const directory = this._eventSources[source].directory;
 
-    if (fromDay > toDay)
+    if (fromDay && fromDay > toDay)
     {
       throw new Error(`The fromDay (${fromDay}) is larger than the toDay (${toDay})`);
     }
-    if (fromDay < 0 || toDay < 0)
+    if ((fromDay && fromDay < 0) || (toDay &&  toDay < 0))
     {
       throw new Error(`The fromDay (${fromDay}) or toDay (${toDay}) is smaller than zero`);
     }
 
     let allEvents:CacheEvent[] = [];
+
+    if (!fromDay || !toDay)
+    {
+      const env = await window.o.getEnvironment();
+
+      const counterPromises = (await env.fission.events.counters.listNames())
+        .map(async counterName => await env.fission.events.counters.tryGetByName(counterName));
+
+      const counters = await Promise.all(counterPromises);
+      console.log("Counters:", counters);
+
+      fromDay = Math.floor(counters.reduce((p, c) => c.value < p ? c.value : p, Number.MAX_SAFE_INTEGER) / EventStore.blocksPerDay);
+      toDay = Math.ceil(counters.reduce((p, c) => c.value > p ? c.value : p, Number.MIN_SAFE_INTEGER) / EventStore.blocksPerDay);
+
+      console.log("new fromDay:", fromDay);
+      console.log("new toDay:", toDay);
+    }
 
     for (let i = fromDay; i <= toDay; i++)
     {

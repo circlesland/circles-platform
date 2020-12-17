@@ -1,31 +1,41 @@
 <script lang="ts">
   import DappIcon from "../../../../libs/o-views/molecules/DappIcon.svelte";
-  import { dapps } from "src/dapps/omoli/data/dapps";
-  import { onMount } from "svelte";
   import { getEnvironment } from "src/libs/o-os/o";
-  import { Profile } from "../../../../libs/o-fission/entities/profile";
+  import {constructAppUrl, dapps} from "../../../../libs/o-os/loader";
 
-  let profile: Profile;
-
-  let _dapps = [];
-  async function loadDapps() {
-    _dapps = await dapps();
-  }
-  loadDapps();
-
-  async function init() {
-    const environment = await getEnvironment();
-    profile = environment.me.myProfile;
-  }
-
-  onMount(async () => {
-    await init();
+  let availableDapps = dapps.filter(o => !o.isHidden).map(dapp => {
+    const appUrls = constructAppUrl(dapp);
+    return {
+      data: {
+        title: dapp.title,
+        tag: dapp.tag,
+      },
+      action: {
+        route: "#" + appUrls.appDefaultRoute,
+      },
+      design: {
+        icon: dapp.icon,
+        type: dapp.isEnabled ? "" : "disabled",
+      }
+    }
   });
+
+  async function getMyProfile() {
+    const environment = await getEnvironment();
+    return environment.me.myProfile;
+  }
 </script>
 
 <div class="h-full overflow-hidden">
   <div class="h-full overflow-y-scroll md:overflow-hidden md:flex md:p-4">
-    {#if profile}
+    {#await getMyProfile()}
+      <div
+        class="p-4 text-xl text-center bg-white border md:w-72 rounded-xl text-primary border-light-200">
+        <div class="py-4 text-2xl font-bold uppercase font-title md:text-3xl">
+          &nbsp;Welcome Omo
+        </div>
+      </div>
+    {:then profile}
       <div
         class="p-4 text-xl text-center bg-white border md:w-72 rounded-xl text-primary border-light-200">
         <div>
@@ -39,10 +49,10 @@
           {profile.lastName}
         </div>
       </div>
-    {/if}
+    {/await}
     <div
       class="grid w-full h-full grid-cols-2 gap-4 p-4 md:overflow-y-scroll md:py-0 md:grid-cols-3 lg:grid-cols-4">
-      {#each _dapps as item}
+      {#each availableDapps as item}
         <DappIcon mapping={item} />
       {/each}
     </div>

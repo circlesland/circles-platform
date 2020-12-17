@@ -1,9 +1,6 @@
 import { stateMachine } from "./stateMachine";
 import * as webnative from "webnative";
-import { EventBroker } from "./eventBroker";
 import { Shell } from "./interfaces/shell";
-import { OmoEvent } from "../o-events/omoEvent";
-import { Authenticated } from "../../dapps/omosapien/events/authenticated";
 import { config } from "../o-circles-protocol/config";
 import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
 import { ProcessEnvironment } from "../o-processes/interfaces/processEnvironment";
@@ -18,25 +15,6 @@ import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafePro
 import { ProcessContext } from "../o-processes/interfaces/processContext";
 import { HubAccount } from "../o-circles-protocol/model/hubAccount";
 import { Erc20Token } from "../o-circles-protocol/token/erc20Token";
-
-const eventBroker = new EventBroker();
-const shellEvents = eventBroker.createTopic("omo", "shell");
-
-let initialized:boolean = false;
-
-shellEvents.observable.subscribe(async (event: OmoEvent) =>
-{
-  if (event.type === "shell.authenticated")
-  {
-    window.o.fission = new FissionDrive((<Authenticated>event).fissionAuth);
-  }
-  else if (event.type === "shell.gotSafe" && !initialized)
-  {
-    initialized = true;
-    const env = await window.o.getEnvironment();
-    await bootstrap(env);
-  }
-});
 
 export type Me = {
   myData?: FissionDrive,
@@ -57,41 +35,6 @@ export type Ethereum = {
     safeProxyFactory: GnosisSafeProxyFactory
   }
 };
-
-
-/**
- * Creates all event sources, registers them at the EventStore and makes sure that all current events are available
- * before returning.
- */
-export async function bootstrap(env:ProcessEnvironment) {
-
-  // 1) Init a HubAccount
-  const cfg = config.getCurrent();
-  const web3 = cfg.web3();
-  const circlesHub = new CirclesHub(web3, cfg.HUB_ADDRESS);
-
-  const counterPromises = (await env.fission.events.counters.listNames())
-    .map(async counterName => await env.fission.events.counters.tryGetByName(counterName));
-
-  const counters = {};
-  (await Promise.all(counterPromises)).forEach(counter => counters[counter.name] = counter.value);
-
-  console.log("Counters:", counters);
-
-  // 2) Query my signup
-  const mySignup = circlesHub.queryEvents(CirclesHub.queryPastSignup(env.me.mySafe.address, counters["mySignup"] ? counters["mySignup"] + 1 : null));
-  await env.fission.events.attachEventSource("mySignup", mySignup);
-
-  // 3) Query all my trusts
-  const myIncomingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(null, env.me.mySafe.address, counters["myIncomingTrusts"] ? counters["myIncomingTrusts"] + 1 : null));
-  await env.fission.events.attachEventSource("myIncomingTrusts", myIncomingTrusts);
-
-  const myOutgoingTrusts = circlesHub.queryEvents(CirclesHub.queryPastTrusts(env.me.mySafe.address, null, counters["myOutgoingTrusts"] ? counters["myOutgoingTrusts"] + 1 : null));
-  await env.fission.events.attachEventSource("myOutgoingTrusts", myOutgoingTrusts);
-
-  await env.fission.events.flush();
-  env.fission.events.clearBuffer();
-}
 
 /**
  * Gets all environment properties like the currently logged-on account, token and profile.
@@ -164,8 +107,6 @@ export async function getProcessContext(): Promise<ProcessContext> {
 }
 
 export const o: Shell = {
-  events: shellEvents.observable,
-  publishEvent: event => shellEvents.publish(event),
   fission: undefined,
   getEnvironment: async () => await getEnvironment(),
   stateMachines: <any>stateMachine,

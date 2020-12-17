@@ -4,7 +4,7 @@
 
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
   import Router, { location, push } from "svelte-spa-router";
-  import routes from "./libs/o-os/routes";
+  import routes from "./libs/o-os/loader";
 
   import "./libs/o-views/css/base.css";
   import "./libs/o-views/css/components.css";

@@ -3,29 +3,38 @@ import Transactions from "./views/pages/Transactions.svelte"
 import Friends from "./views/pages/Friends.svelte"
 import Tokens from "./views/pages/Tokens.svelte"
 import {safeDefaultActions, safeOverflowActions} from "./data/actions"
-import {PageManifest} from "../../libs/o-os/interfaces/pageManifest";
 import {QuickAction} from "../../libs/o-os/types/quickAction";
 import {RunProcess} from "../../libs/o-events/runProcess";
-import {faCheck, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faPiggyBank, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {sendInviteCredits, SendInviteCreditsContext} from "./processes/transferXDai/sendInviteCredits";
 import {ProcessArtifact} from "../../libs/o-processes/interfaces/processArtifact";
 import {CloseModal} from "../../libs/o-events/closeModal";
 import {push} from "svelte-spa-router";
+import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 
-export const answerInviteRequest: PageManifest = {
-  component: AnswerInviteRequest,
-  conditions: [
-    (detail) => {
-      console.log("Starting answer invite process ..", detail);
-      return true;
-    }
-  ],
-  userData: {
-    showActionBar: true,
-    dapp: "safe",
-    actions: <QuickAction[]>[
-      ...safeDefaultActions,
-      ...[{
+export interface OmoSafeState {}
+export const omosafe : DappManifest<OmoSafeState,OmoSafeState> = {
+  id: "omo.safe:1",
+  dependencies: ["omo.sapien:1"],
+  icon: faPiggyBank,
+  title: "OmoSafe",
+  routeParts: ["safe"],
+  tag: Promise.resolve("alpha"),
+  isEnabled: true,
+  pages: [{
+    routeParts: ["empowerMe", ":from"],
+    component: AnswerInviteRequest,
+    available: [
+      (detail) => {
+        console.log("Starting answer invite process ..", detail);
+        return true;
+      }
+    ],
+    userData: {
+      showActionBar: true,
+      actions: <QuickAction[]>[
+        ...safeDefaultActions,
+        ...[{
           type: "trigger",
           pos: "overflow",
           mapping: {
@@ -45,72 +54,68 @@ export const answerInviteRequest: PageManifest = {
             return context;
           })
         },{
-        type: "trigger",
-        pos: "overflow",
-        mapping: {
-          design: {
-            icon: faTimes
+          type: "trigger",
+          pos: "overflow",
+          mapping: {
+            design: {
+              icon: faTimes
+            },
+            data: {
+              label: "Cancel"
+            }
           },
-          data: {
-            label: "Cancel"
-          }
-        },
-        event: () => {push("#/safe/transactions"); window.o.publishEvent(new CloseModal())}
-      }]
-    ]
-  }
-}
-
-export const transactions: PageManifest = {
-  component: Transactions,
-  conditions: [
-    (detail) => {
-      console.log("routeGuard.detail:", detail);
-      return window.o.fission !== undefined
+          event: () => {push("#/safe/transactions"); window.o.publishEvent(new CloseModal())}
+        }]
+      ]
     }
-  ],
-  userData: {
-    showActionBar: true,
-    dapp: "safe",
-    actions: <QuickAction[]>[
-      ...safeDefaultActions,
-      ...safeOverflowActions
-    ]
-  }
-}
-
-export const friends: PageManifest = {
-  component: Friends,
-  conditions: [
-    (detail) => {
-      console.log("routeGuard.detail:", detail);
-      return window.o.fission !== undefined
+  }, {
+    isDefault: true,
+    routeParts: ["transactions"],
+    component: Transactions,
+    available: [
+      (detail) => {
+        console.log("routeGuard.detail:", detail);
+        return window.o.fission !== undefined
+      }
+    ],
+    userData: {
+      showActionBar: true,
+      actions: <QuickAction[]>[
+        ...safeDefaultActions,
+        ...safeOverflowActions
+      ]
     }
-  ],
-  userData: {
-    showActionBar: true,
-    dapp: "safe",
-    actions: <QuickAction[]>[
-      ...safeDefaultActions,
-      ...safeOverflowActions
-    ]
-  }
-}
-
-export const tokens: PageManifest = {
-  component: Tokens,
-  conditions: [
-    (detail) => {
-      console.log("routeGuard.detail:", detail);
-      return window.o.fission !== undefined
+  }, {
+    routeParts: ["friends"],
+    component: Friends,
+    available: [
+      (detail) => {
+        console.log("routeGuard.detail:", detail);
+        return window.o.fission !== undefined
+      }
+    ],
+    userData: {
+      showActionBar: true,
+      actions: <QuickAction[]>[
+        ...safeDefaultActions,
+        ...safeOverflowActions
+      ]
     }
-  ],
-  userData: {
-    showActionBar: true,
-    dapp: "safe",
-    actions: <QuickAction[]>[
-      ...safeDefaultActions,
-      ...safeOverflowActions
-    ]
-  }
-}
+  }, {
+    routeParts: ["tokens"],
+    component: Tokens,
+    available: [
+      (detail) => {
+        console.log("routeGuard.detail:", detail);
+        return window.o.fission !== undefined
+      }
+    ],
+    userData: {
+      showActionBar: true,
+      actions: <QuickAction[]>[
+        ...safeDefaultActions,
+        ...safeOverflowActions
+      ]
+    }
+  }]
+};

@@ -39,16 +39,21 @@
     reload();
   }
 
-  async function reload() {
-    let t1: AddressLookup = await person.getPersonsThatTrustMe();
-    let t2: AddressLookup = await person.getPersonsITrust();
+  async function reload()
+  {
+    // let peopleThatTrustMe: AddressLookup = await person.getPersonsThatTrustMe();
+    const cachedPeopleThatTrustMe = await environment.fission.events.loadEventsFromFs("myIncomingTrusts");
+    console.log(cachedPeopleThatTrustMe);
 
-    Object.keys(t1)
-      .map((k) => <TokenAndOwner>t1[k])
+    // let peopleThatITrust: AddressLookup = await person.getPersonsITrust();
+    const cachedPeopleITrust = await environment.fission.events.loadEventsFromFs("myOutgoingTrusts");
+/*
+    Object.keys(peopleThatTrustMe)
+      .map((k) => <TokenAndOwner>peopleThatTrustMe[k])
       .filter((o) => o.limit > 0);
 
-    untrusted = Object.keys(t2)
-      .map((k) => <TokenAndOwner>t2[k])
+    untrusted = Object.keys(peopleThatITrust)
+      .map((k) => <TokenAndOwner>peopleThatITrust[k])
       .filter((o) => o && o.limit == 0)
       .map((mutualTrust) => {
         untrusted_[mutualTrust.owner.address] = true;
@@ -70,15 +75,15 @@
     console.log("untrusted:", untrusted);
 
     let tt2 = {};
-    Object.keys(t2)
-      .map((o) => t2[o])
+    Object.keys(peopleThatITrust)
+      .map((o) => peopleThatITrust[o])
       .filter((o) => o.limit > 0)
       .forEach((o) => {
         tt2[o.owner.address] = o;
       });
 
-    mutualFriends = Object.keys(t1)
-      .map((k) => <TokenAndOwner>t1[k])
+    mutualFriends = Object.keys(peopleThatTrustMe)
+      .map((k) => <TokenAndOwner>peopleThatTrustMe[k])
       .filter((o) => o.limit > 0)
       .filter((o) => {
         const isMutual = tt2[o.owner.address] !== undefined;
@@ -108,8 +113,8 @@
 
     console.log("mutualFriends:", mutualFriends);
 
-    personsThatTrustMe = Object.keys(t1)
-      .map((k) => <TokenAndOwner>t1[k])
+    personsThatTrustMe = Object.keys(peopleThatTrustMe)
+      .map((k) => <TokenAndOwner>peopleThatTrustMe[k])
       .filter((o) => o.limit > 0)
       .filter((o) => !mutual[o.owner.address] && !untrusted_[o.owner.address])
       .map((personsThatTrustMe) => {
@@ -130,8 +135,8 @@
 
     console.log("personsThatTrustMe:", personsThatTrustMe);
 
-    personsITrust = Object.keys(t2)
-      .map((k) => <TokenAndOwner>t2[k])
+    personsITrust = Object.keys(peopleThatITrust)
+      .map((k) => <TokenAndOwner>peopleThatITrust[k])
       .filter((o) => o.limit > 0)
       .filter((o) => !mutual[o.owner.address])
       .map((personsITrust) => {
@@ -151,6 +156,8 @@
       });
 
     console.log("personsITrust:", personsITrust);
+
+ */
   }
 
   let subscription: Subscription = window.o.events.subscribe(

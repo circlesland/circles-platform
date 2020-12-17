@@ -1,11 +1,12 @@
 import { QuickAction } from "../types/quickAction";
 
 export interface PageManifest {
-  component: any;
-  conditions?: any[];
-  userData: {
-    dapp: "omosapien" | "omoli" | "omomarket" | "omofunding" | "omomovies" | "safe" | "website";
-    showActionBar?: boolean;
+  component: any,
+  isDefault?:boolean,
+  available?: any[],
+  routeParts: string[],
+  userData?: {
+    showActionBar?: boolean,
     actions: QuickAction[]
   }
 }

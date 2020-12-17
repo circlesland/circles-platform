@@ -2,11 +2,11 @@
   import NavItem from "../atoms/NavItem.svelte";
   import { location, push } from "svelte-spa-router";
   import { createEventDispatcher } from "svelte";
-  import type { QuickAction } from "../../o-os/routes";
   import Compose from "../atoms/Compose.svelte";
   import Icon from "fa-svelte";
 
   import { faPlus } from "@fortawesome/free-solid-svg-icons";
+  import {QuickAction} from "../../o-os/types/quickAction";
 
   const dispatch = createEventDispatcher();
   export let quickActions: QuickAction[] = [];
