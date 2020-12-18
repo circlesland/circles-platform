@@ -3,10 +3,9 @@
   import {onMount} from "svelte";
   import {pop, push} from "svelte-spa-router";
   import {RunProcess} from "../../../../libs/o-events/runProcess";
-  import {sendInviteCredits, SendInviteCreditsContext} from "../../processes/transferXDai/sendInviteCredits";
   import {CloseModal} from "../../../../libs/o-events/closeModal";
   import { Jumper } from "svelte-loading-spinners";
-  import {jumpstart, JumpstartContext} from "../../processes/jumpstart/jumpstart";
+  import {jumpstart, JumpstartContext} from "../../processes/omo/jumpstart";
 
   export let params: {
     from?:string

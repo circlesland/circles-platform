@@ -54,7 +54,6 @@ export interface DappManifest<TInternalState, TExternalState>
    * @param runtimeDapp
    */
   initialize?: (stack:RuntimeDapp<any, any>[], runtimeDapp: RuntimeDapp<TInternalState, TExternalState>) => Promise<{
-    dappState: TInternalState,
     initialPage: PageManifest,
     cancelDependencyLoading: boolean,
   }>

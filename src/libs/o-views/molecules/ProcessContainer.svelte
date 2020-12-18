@@ -56,11 +56,18 @@
   }
 
   function subscribeToProcess() {
-    ensureProcess((process) => {
-      subscription = process.events.subscribe((next) => {
-        /*if (next.event?.type === "process.shellEvent") {
+
+    ensureProcess((process) =>
+    {
+      subscription = process.events.subscribe((next) =>
+      {
+        if (next.event?.type === "process.shellEvent")
+        {
+          console.log("publishing shell event:", next.event);
           window.o.publishEvent((<ShellEvent>next.event).payload);
-        } else*/ if (next.event?.type === "process.prompt") {
+        }
+        else if (next.event?.type === "process.prompt")
+        {
           prompt = <PromptEvent>next.event;
           let artifactsArr = Object.keys(prompt.data).map(
             (key) => prompt.data[key]

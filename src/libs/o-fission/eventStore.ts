@@ -1,11 +1,13 @@
 import {EventQuery} from "../o-circles-protocol/eventQuery";
 import {Event} from "../o-circles-protocol/interfaces/event";
-import {Subscription} from "rxjs";
+import {Observable, Subject, Subscription} from "rxjs";
 import FileSystem from "webnative/fs/filesystem";
 import {BN} from "ethereumjs-util";
 import {Directory, DirectoryChangeType} from "./directories/directory";
 import {CacheEvent, CacheEventGroup} from "./entities/cacheEvent";
 import {Entity} from "./entities/entity";
+import {tryGetDappState} from "../o-os/loader";
+import {FissionAuthState} from "../../dapps/fissionauth/manifest";
 
 export type CacheEventGroups = {
   source: string,
@@ -44,7 +46,7 @@ export class EventStore
   /*extends Directory<CacheEventGroup>*/
 {
   // Assuming one new block per 5 seconds:
-  private static readonly blocksPerDay = 17280;
+  public static readonly blocksPerDay = 17280;
 
   private readonly _eventSources: {
     [name: string]: {
@@ -87,10 +89,16 @@ export class EventStore
   async attachEventSource(
     name: string,
     source: EventQuery<Event>)
+  : Promise<Observable<Event>>
   {
     const self = this;
+    const subject = new Subject<Event>();
     const subscription = source.events.subscribe(
-      event => this.onEvent(name, self, event));
+      event => {
+        this.onEvent(name, self, event);
+        subject.next(event);
+      });
+
 
     const eventDirectory = new EventDirectory(this._fs, this._pathParts.concat([name]));
 
@@ -100,7 +108,8 @@ export class EventStore
       directory: eventDirectory
     };
 
-    await source.execute();
+    return await source.execute()
+      .then(() => subject);
   }
 
   /**
@@ -185,11 +194,20 @@ export class EventStore
    * @param fromDay
    * @param toDay
    */
-  async loadEventsFromFs(source:string, fromDay?: number, toDay?: number) : Promise<CacheEvent[]>
+  async loadEventsFromFs(source:string, fromDay: number, toDay?: number) : Promise<CacheEvent[]>
   {
-    const directory = this._eventSources[source].directory;
+    const directory =
+    (await this._fs.exists(this._fs.appPath(this._pathParts.concat([source]))))
+      ? new EventDirectory(this._fs, this._pathParts.concat([source]))
+      : this._eventSources[source]?.directory;
 
-    if (fromDay && fromDay > toDay)
+    if (!directory)
+    {
+      // The directory doesn't exist. Return an empty array.
+      return [];
+    }
+
+    if (toDay && fromDay && fromDay > toDay)
     {
       throw new Error(`The fromDay (${fromDay}) is larger than the toDay (${toDay})`);
     }
@@ -198,25 +216,19 @@ export class EventStore
       throw new Error(`The fromDay (${fromDay}) or toDay (${toDay}) is smaller than zero`);
     }
 
-    let allEvents:CacheEvent[] = [];
-
-    if (!fromDay || !toDay)
+    if (!toDay)
     {
-      const env = await window.o.getEnvironment();
-
-      const counterPromises = (await env.fission.events.counters.listNames())
-        .map(async counterName => await env.fission.events.counters.tryGetByName(counterName));
-
-      const counters = await Promise.all(counterPromises);
-      console.log("Counters:", counters);
-
-      fromDay = Math.floor(counters.reduce((p, c) => c.value < p ? c.value : p, Number.MAX_SAFE_INTEGER) / EventStore.blocksPerDay);
-      toDay = Math.ceil(counters.reduce((p, c) => c.value > p ? c.value : p, Number.MIN_SAFE_INTEGER) / EventStore.blocksPerDay);
-
-      console.log("new fromDay:", fromDay);
-      console.log("new toDay:", toDay);
+      const counterEntity = await this.counters.tryGetByName(source);
+      toDay = counterEntity?.value;
     }
 
+    if (!toDay)
+    {
+      // There are no stored entities for this source
+      return [];
+    }
+
+    let allEvents:CacheEvent[] = [];
     for (let i = fromDay; i <= toDay; i++)
     {
       // Every group corresponds to one day.
@@ -334,7 +346,7 @@ export class EventStore
   }
 
   /**
-   * Groups all events per source per day and sorts the list within that group by block no. DESC.
+   * Groups all events per source per day and sorts the list within that group by block no. ASC.
    */
   private bufferToDailyGroups(source:string): {
     source: string,
@@ -383,7 +395,7 @@ export class EventStore
       for (const blockNo in days.days[dayIdx].events)
       {
         days.days[dayIdx].events[blockNo].sort(
-          (a, b) => a.blockNo < b.blockNo ? 1 : a.blockNo > b.blockNo ? -1 : 0);
+          (a, b) => a.blockNo < b.blockNo ? -1 : a.blockNo > b.blockNo ? 1 : 0);
 
         const distinctEvents = days.days[dayIdx].events[blockNo].reduce((p, c) =>
         {

@@ -5,7 +5,6 @@ export type OmoEventTypes =
   | "shell.refreshView"
   | "shell.authenticated"
   | "shell.gotProfile"
-  | "shell.gotSafe"
   | "shell.showNotification"
   | "shell.closeModal"
   | "process.ready"

@@ -1,14 +1,9 @@
 <script lang="ts">
   import type { Address } from "../../o-circles-protocol/interfaces/address";
-  /*
-  import {
-    transferCircles,
-    TransferCirclesContext,
-  } from "../../../dapps/safe/processes/transferCircles/transferCircles"; */
   import {
     setTrust,
     SetTrustContext,
-  } from "../../../dapps/safe/processes/setTrust/setTrust";
+  } from "../../../dapps/safe/processes/circles/setTrust";
   import ButtonIcon from "../atoms/ButtonIcon.svelte";
   import { RunProcess } from "../../o-events/runProcess";
 
@@ -25,11 +20,11 @@
   import {
     unTrust,
     UnTrustContext,
-  } from "../../../dapps/safe/processes/unTrust/unTrust";
+  } from "../../../dapps/safe/processes/circles/unTrust";
   import {
     transferCircles,
     TransferCirclesContext,
-  } from "../../../dapps/safe/processes/transferCircles/transferCircles";
+  } from "../../../dapps/safe/processes/circles/transferCircles";
   import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
   import { config } from "../../o-circles-protocol/config";
   import { getEnvironment } from "../../o-os/o";

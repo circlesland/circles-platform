@@ -1,10 +1,12 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import { onMount } from "svelte";
-  import {push, replace} from "svelte-spa-router";
-  import { Authenticated } from "../events/authenticated";
+  import {push} from "svelte-spa-router";
   import { Jumper } from "svelte-loading-spinners";
   import Mobile from "src/libs/o-views/templates/Mobile.svelte";
+  import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
+  import {setDappState} from "../../../libs/o-os/loader";
+  import {FissionAuthState} from "../manifest";
 
   const wn = window.o.wn;
 
@@ -42,8 +44,11 @@
         // state.username         -  The user's username.
         //
         // ☞ We can now interact with our file system (more on that later)
-        window.o.fissionAuth = state;
-        window.o.publishEvent(new Authenticated(state));
+        setDappState<FissionAuthState>("omo.fission.auth:1", current => {
+          return {
+            fission: new FissionDrive(state)
+          };
+        });
 
         if (params && params.redirectTo)
         {
@@ -52,7 +57,6 @@
 
         if (window.o.redirectTo)
         {
-          // replace(window.o.redirectTo);
           push("#/waiting-area/please-wait");
         }
         else

@@ -25,6 +25,7 @@ import ErrorIndicator from 'src/libs/o-views/atoms/ErrorIndicator.svelte'
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import wrap from "svelte-spa-router/wrap";
 import {waitingarea} from "../../dapps/waitingarea/manifest";
+import {pop} from "svelte-spa-router";
 
 const errorIndicator = ErrorIndicator;
 
@@ -44,6 +45,26 @@ export const dapps:DappManifest<any, any>[] = [
   waitingarea
 ];
 
+export const loadedDapps:RuntimeDapp<any, any>[] = [];
+
+export const dappStates: {
+  [dappId:string]: any
+} = {};
+
+export function tryGetDappState<T>(dappId:string)
+{
+  const state = dappStates[dappId];
+  if (!state)
+    return null;
+  return <T>state;
+}
+
+export function setDappState<T>(dappId:string, setter:(T) => T)
+{
+  const state = dappStates[dappId];
+  dappStates[dappId] = setter(state);
+}
+
 export function constructAppUrl(dappManifest: DappManifest<any, any>) : {appBaseUrl:string, appDefaultRoute: string}
 {
   const appBaseUrl = dappManifest.routeParts.reduce((p, c) => p + "/" + c, "");
@@ -62,52 +83,60 @@ function constructPageUrl(appBaseUrl:string, pageManifest:PageManifest) : string
   return pageUrl;
 }
 
-export const loadedDapps:RuntimeDapp<any, any>[] = [];
+
+async function getDappEntryPoint(dappManifest, pageManifest) {
+  try
+  {
+    let runtimeDapp = loadedDapps.find(o => o.id == dappManifest.id);
+    if (!runtimeDapp)
+    {
+      // The dapp isn't yet loaded
+      const freshRuntimeDapp = await loadDapp([], dappManifest);
+
+      if (freshRuntimeDapp.cancelDependencyLoading)
+      {
+        console.log("A dependency requested the cancellation of the dependency loading process.")
+
+        if (!freshRuntimeDapp.initialPage)
+        {
+          // If the loading process was cancelled but the cancelling dapp hasn't provided
+          // a default page to go to, simply stay.
+          pop();
+          return;
+        }
+
+        return freshRuntimeDapp.initialPage.component;
+      }
+      else
+      {
+        loadedDapps.push(freshRuntimeDapp.runtimeDapp);
+      }
+    }
+
+    return pageManifest.component;
+  }
+  catch (e)
+  {
+    console.error(e);
+    return errorIndicator;
+  }
+}
 
 function constructRoutes(dappManifests:DappManifest<any, any>[])
 {
   const routes = {};
 
-  dappManifests.forEach(dappManifest => {
+  dappManifests.forEach(dappManifest =>
+  {
     const appUrls = constructAppUrl(dappManifest);
+
     dappManifest.pages.forEach(pageManifest =>
     {
       const pageUrl = constructPageUrl(appUrls.appBaseUrl, pageManifest);
       routes[pageUrl] = wrap({
         loadingComponent: LoadingIndicator,
         userData: pageManifest.userData,
-        asyncComponent: async () =>
-        {
-          try
-          {
-            let runtimeDapp = loadedDapps.find(o => o.id == dappManifest.id);
-            if (!runtimeDapp)
-            {
-              // The dapp isn't yet loaded
-              const freshRuntimeDapp = await loadDapp([], dappManifest);
-              loadedDapps.push(freshRuntimeDapp.runtimeDapp);
-
-              if (freshRuntimeDapp.cancelDependencyLoading)
-              {
-                console.log("A dependency requested the cancellation of the dependency loading process.")
-
-                if (!freshRuntimeDapp.initialPage)
-                {
-                  throw new Error("Every dependency that returns 'cancelDependencyLoading' == 'true' must also provide a 'initialPage' which can be displayed on cancel.")
-                }
-
-                return freshRuntimeDapp.initialPage.component;
-              }
-            }
-
-            return pageManifest.component;
-          }
-          catch (e)
-          {
-            console.error(e);
-            return errorIndicator;
-          }
-        }
+        asyncComponent: async () => await getDappEntryPoint(dappManifest, pageManifest)
       });
     });
   });
@@ -141,10 +170,10 @@ async function initializeDapp(stack:RuntimeDapp<any, any>[], runtimeDapp:Runtime
 {
   const logPrefix = "  ".repeat(stack.length) + "initializeDapp(" + runtimeDapp.id + "): ";
 
-  let defaultPage = runtimeDapp.pages.find(o => o.isDefault) ?? runtimeDapp.pages[0];
   let cancelled = false;
+  let defaultPage = null;
 
-  // first check if all dependencies are fulfilled
+// first check if all dependencies are fulfilled
   if (runtimeDapp.dependencies)
   {
     console.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
@@ -158,9 +187,13 @@ async function initializeDapp(stack:RuntimeDapp<any, any>[], runtimeDapp:Runtime
       console.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
 
       const nextStack = [...stack, runtimeDapp];
-      const loadedDependencies = await Promise.all(missingDependencies.map(async dep => {
+      await Promise.all(missingDependencies.map(async dep =>
+      {
         if (cancelled)
+        {
           return;
+        }
+
         const dappManifest = dapps.find(o => o.id == dep);
         if (!dappManifest)
         {
@@ -171,44 +204,50 @@ async function initializeDapp(stack:RuntimeDapp<any, any>[], runtimeDapp:Runtime
         {
           console.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
           cancelled = true;
-          defaultPage = loadDappResult.initialPage;
+          if (loadDappResult.initialPage)
+          {
+            defaultPage = loadDappResult.initialPage;
+          }
         }
       }));
 
       if (cancelled)
       {
         console.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
+        return {
+          runtimeDapp,
+          cancelDependencyLoading: true,
+          initialPage: defaultPage
+        };
       } else {
         console.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
       }
     }
   }
 
-  let initializedDappState:{
-    dappState: any,
+  if (!cancelled)
+  {
+    defaultPage = runtimeDapp.pages.find(o => o.isDefault) ?? runtimeDapp.pages[0];
+  }
+
+  let initializationResult:{
     initialPage: PageManifest,
     cancelDependencyLoading: boolean,
   } = {
-    dappState: {},
     initialPage: defaultPage,
     cancelDependencyLoading: cancelled
   };
 
   if (runtimeDapp.initialize)
   {
-    initializedDappState = await runtimeDapp.initialize(stack, runtimeDapp);
-    console.log("initializedDappState", initializedDappState);
+    initializationResult = await runtimeDapp.initialize(stack, runtimeDapp);
+    console.log("initializedDappState", initializationResult);
   }
-
-  runtimeDapp = <RuntimeDapp<any, any>>{
-    ... runtimeDapp,
-    state: initializedDappState.dappState
-  };
 
   return {
     runtimeDapp,
-    cancelDependencyLoading: initializedDappState.cancelDependencyLoading,
-    initialPage: initializedDappState.initialPage
+    cancelDependencyLoading: initializationResult.cancelDependencyLoading,
+    initialPage: initializationResult.initialPage
   };
 }
 

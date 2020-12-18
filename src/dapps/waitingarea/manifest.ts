@@ -6,7 +6,7 @@ export interface WaitingAreaState {}
 export const waitingarea : DappManifest<WaitingAreaState,WaitingAreaState> = {
   id: "omo.waitingarea:1",
   dependencies: [],
-  isHidden: false,
+  isHidden: true,
   icon: faHourglass,
   title: "Waiting area",
   routeParts: ["waiting-area"],

@@ -33,10 +33,12 @@ export const stateMachine = {
     service.onTransition((state1, event) =>
     {
       console.log(event);
+      /*
       if (event.type === "process.shellEvent")
       {
         window.o.publishEvent((<ShellEvent>event).payload);
       }
+       */
 
       processEvents.next(<any>{
         stopped: false,

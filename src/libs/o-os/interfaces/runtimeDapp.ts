@@ -22,11 +22,6 @@ export interface RuntimeDapp<TInternalState, TExternalState> extends DappManifes
   outEvents?:Topic<OmoEvent>,
 
   /**
-   * Holds the full state of the running dapp.
-   */
-  state: TInternalState,
-
-  /**
    * A filter function that filters and/or transforms the internal state
    * for external consumption.
    * E.g. the Dapp can publish a StateChanged-event to prompt

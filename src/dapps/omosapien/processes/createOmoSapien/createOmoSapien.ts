@@ -1,4 +1,4 @@
-import { createMachine, send } from "xstate";
+import { createMachine} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import { OmoEvent } from "../../../../libs/o-events/omoEvent";
@@ -14,8 +14,7 @@ import { strings } from "../../data/strings";
 import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
 import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
 import { file } from "../../../../libs/o-processes/artifacts/file";
-import { RunProcess } from "../../../../libs/o-events/runProcess";
-import { initializeApp } from "../../../safe/processes/initializeApp/initializeApp";
+import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 
 export interface CreateOmoSapienContext extends ProcessContext {
   data: {
@@ -129,18 +128,20 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
           target: "error"
         },
         onDone: {
-          actions: [
-            setResult(str.successMessage),
-            () => setTimeout(() => {
-              window.o.publishEvent(new RunProcess(initializeApp));
-            }, 100)
-          ],
-          target: "stop"
+          actions: setResult(strings.omosapien.processes.createOmoSapien.successMessage),
+          target: "success"
         }
       }
     },
     error: {
       entry: sendErrorPrompt,
+      on: {
+        "process.continue": "stop",
+        "process.cancel": "stop"
+      }
+    },
+    success: {
+      entry: sendSuccessPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

@@ -3,16 +3,48 @@ import Auth from "./pages/Auth.svelte";
 import Authenticate from "./pages/Authenticate.svelte";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 import {omoSapienDefaultActions, omoSapienOverflowActions} from "../omosapien/data/actions";
-import {AuthSucceeded, Continuation} from "webnative";
-import {push} from "svelte-spa-router";
-import {shellEvents} from "../../libs/o-os/shellEvents";
+import {FissionDrive} from "../../libs/o-fission/fissionDrive";
+import {tryGetDappState} from "../../libs/o-os/loader";
 
 export interface FissionAuthState {
-  fissionAuth: AuthSucceeded | Continuation
+  fission: FissionDrive
+}
+
+/**
+ * Checks if the user is authenticated and redirects him to the 'Authentication' page if not.
+ * If the user is already authenticated, he is presented with the default page of this dapp.
+ * @param stack
+ * @param runtimeDapp
+ */
+async function initialize(stack, runtimeDapp)
+{
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  if (fissionAuthState?.fission)
+  {
+    return {
+      cancelDependencyLoading: false,
+      initialPage: authPage
+    };
+  }
+  else
+  {
+    console.log("X - Cancel dependency loading")
+    if (stack.length == 0)
+    {
+      window.o.redirectTo = runtimeDapp.route;
+    }
+    else
+    {
+      window.o.redirectTo = stack[0].route;
+    }
+    return {
+      cancelDependencyLoading: true,
+      initialPage: authenticate
+    }
+  }
 }
 
 const authenticate = {
-  isDefault: true,
   routeParts: ["authenticate", ":redirectTo?"],
   component: Authenticate,
   userData: {
@@ -24,6 +56,7 @@ const authenticate = {
 };
 
 const authPage = {
+  isDefault: true,
   routeParts: ["auth"],
   component: Auth,
   available: []
@@ -38,29 +71,7 @@ export const fissionauth : DappManifest<FissionAuthState,FissionAuthState> = {
   title: "Fission Auth",
   routeParts: ["fissionauth"],
   tag: Promise.resolve("beta"),
-  initialize: async (stack, runtimeDapp) =>
-  {
-    if (runtimeDapp.shell.fissionAuth){
-      console.log("Continue dependency loading ..")
-      return {
-        cancelDependencyLoading: false,
-        initialPage: authPage,
-        dappState: {
-          fissionAuth: runtimeDapp.shell.fissionAuth
-        }
-      };
-    } else {
-      console.log("X - Cancel dependency loading")
-      window.o.redirectTo = stack[0].route;
-      return {
-        cancelDependencyLoading: true,
-        initialPage: authenticate,
-        dappState: {
-          fissionAuth: null
-        }
-      }
-    }
-  },
+  initialize: initialize,
   pages: [
     authenticate,
     authPage

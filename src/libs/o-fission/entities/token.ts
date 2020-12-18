@@ -13,4 +13,6 @@ export interface Token extends Entity {
    * The token's address.
    */
   tokenAddress?: string;
+
+  createdInBlockNo: number;
 }

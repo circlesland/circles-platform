@@ -3,7 +3,7 @@
   import Compose from "./libs/o-views/atoms/Compose.svelte";
 
   import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, { location, push } from "svelte-spa-router";
+  import Router, { push } from "svelte-spa-router";
   import routes from "./libs/o-os/loader";
 
   import "./libs/o-views/css/base.css";
@@ -18,12 +18,6 @@
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
-  import { getEnvironment } from "./libs/o-os/o";
-  import { BN } from "ethereumjs-util";
-  import { initializeApp } from "./dapps/safe/processes/initializeApp/initializeApp";
-  import { GotProfile } from "./dapps/omosapien/events/gotProfile";
-  import { createOmoSapien } from "./dapps/omosapien/processes/createOmoSapien/createOmoSapien";
-  import {GotSafe} from "./dapps/safe/events/gotSafe";
 
   let actions = [];
 
@@ -57,35 +51,7 @@
 
     showActionBar = e.detail.userData.showActionBar;
     actions = e.detail.userData.actions;
-
-    initialize();
   }
-
-  const initialize = async () => {
-    if (!window.o.fission || location === "/") {
-      return;
-    }
-
-    const environment = await getEnvironment();
-    const profile = environment.me.myProfile;
-
-    if (profile) {
-      if (
-        !profile.circlesAddress ||
-        !environment.me.myKey ||
-        !environment.me.mySafe ||
-        !environment.me.myToken ||
-        environment.me.myAddressXDaiBalance.lte(new BN("100"))
-      ) {
-        window.o.publishEvent(new RunProcess(initializeApp));
-      } else if (environment.me.mySafe) {
-        window.o.publishEvent(new GotSafe());
-      }
-      window.o.publishEvent(new GotProfile(profile));
-    } else {
-      window.o.publishEvent(new RunProcess(createOmoSapien));
-    }
-  };
 
   let quickActions: any[] = [];
   let overflowActions: any[] = [];

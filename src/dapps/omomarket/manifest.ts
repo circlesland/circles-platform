@@ -5,6 +5,8 @@ import Favorites from 'src/dapps/omomarket/views/pages/Favorites.svelte'
 import { omomarketDefaultActions, omomarketOverflowActions } from './data/actions';
 import {faPeopleCarry} from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
+import {tryGetDappState} from "../../libs/o-os/loader";
+import {FissionAuthState} from "../fissionauth/manifest";
 
 export interface OmoMarketState {}
 export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
@@ -22,7 +24,8 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     available: [
       (detail) => {
         console.log("routeGuard.detail:", detail);
-        return window.o.fission !== undefined
+        const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+        return fissionAuthState.fission !== undefined
       }
     ],
     userData: {
@@ -38,7 +41,8 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     available: [
       (detail) => {
         console.log("routeGuard.detail:", detail);
-        return window.o.fission !== undefined
+        const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+        return fissionAuthState.fission !== undefined
       }
     ],
     userData: {
@@ -54,7 +58,8 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     available: [
       (detail) => {
         console.log("routeGuard.detail:", detail);
-        return window.o.fission !== undefined
+        const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+        return fissionAuthState.fission !== undefined
       }
     ],
     userData: {

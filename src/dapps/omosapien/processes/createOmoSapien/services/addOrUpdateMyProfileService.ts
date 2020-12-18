@@ -3,20 +3,26 @@ import { Profile } from "../../../../../libs/o-fission/entities/profile";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
 import { RefreshView } from "../../../../../libs/o-events/refreshView";
+import {setDappState, tryGetDappState} from "../../../../../libs/o-os/loader";
+import {FissionAuthState} from "../../../../fissionauth/manifest";
+import {OmoSapienState} from "../../../manifest";
 
-export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) => {
-  if (!window.o.fission) {
+export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) =>
+{
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  if (!fissionAuthState.fission) {
     throw new Error("You're not authenticated");
   }
 
-  const profile = context.environment.me.myProfile ?? <Profile>{};
-  profile.name = "me";
+  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+  const profile = omosapienState.myProfile ?? <Profile>{};
 
+  profile.name = "me";
   profile.firstName = context.data.firstName.value;
   profile.lastName = context.data.lastName ? context.data.lastName.value : null;
   profile.avatar = context.data.avatar ? context.data.avatar.value : null;
 
-  const fissionUsername = context.environment.fission.username;
+  const fissionUsername = fissionAuthState.fission.username;
 
   if (!profile.avatar) {
     let avatars = new Avatars(sprites);
@@ -25,7 +31,12 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
     profile.avatar = dataUri;
   }
 
-  await context.environment.fission.profiles.addOrUpdateMyProfile(profile);
+  await fissionAuthState.fission.profiles.addOrUpdateMyProfile(profile);
+
+  setDappState<OmoSapienState>("omo.sapien:1", current => {
+    current.myProfile = profile;
+    return current;
+  });
 
   window.o.publishEvent(new RefreshView("omosapien.profile"));
 }

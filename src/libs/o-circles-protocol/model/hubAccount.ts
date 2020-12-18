@@ -81,7 +81,7 @@ export class HubAccount implements Safe {
 
   async getUBI(privateKey: ByteString, safe: GnosisSafeProxy): Promise<any> {
     const owntoken = await this.getOwnToken();
-    return await owntoken.getUBI(privateKey, safe);
+    return await owntoken.token.getUBI(privateKey, safe);
   }
 
   async getTokenBalance(reload?: boolean): Promise<BN> {
@@ -130,7 +130,7 @@ export class HubAccount implements Safe {
       Object
         .keys(possibleReceivers)
         .map(async address =>
-          myToken
+          myToken.token
             .queryEvents(Erc20Token.queryPastTransfers(this.address, address))
             .toArray()
         ));
@@ -256,11 +256,7 @@ export class HubAccount implements Safe {
   /**
    * Gets the personal circles token of this person.
    */
-  async getOwnToken(): Promise<CirclesToken | undefined> {
-    if (this._tokenAddress) {
-      return new CirclesToken(this.circlesHub.web3, this._tokenAddress);
-    }
-
+  async getOwnToken(): Promise<{token:CirclesToken, createdInBlockNo:number} | undefined> {
     const events = await this.circlesHub.queryEvents(CirclesHub.queryPastSignup(this.address)).toArray();
 
     if (events.length == 0)
@@ -271,6 +267,9 @@ export class HubAccount implements Safe {
     if (!this._tokenAddress)
       return undefined;
 
-    return new CirclesToken(this.circlesHub.web3, this._tokenAddress);
+    return {
+      token: new CirclesToken(this.circlesHub.web3, this._tokenAddress),
+      createdInBlockNo: events[0].blockNumber.toNumber()
+    };
   }
 }

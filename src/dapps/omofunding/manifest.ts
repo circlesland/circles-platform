@@ -3,6 +3,8 @@ import Featured from './views/pages/Featured.svelte';
 import { omofundingDefaultActions, omofundingOverflowActions } from './data/actions';
 import {faPeopleCarry} from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
+import {tryGetDappState} from "../../libs/o-os/loader";
+import {FissionAuthState} from "../fissionauth/manifest";
 
 export interface OmoFundingState {}
 export const omofunding : DappManifest<OmoFundingState,OmoFundingState> = {
@@ -20,7 +22,8 @@ export const omofunding : DappManifest<OmoFundingState,OmoFundingState> = {
     available: [
       (detail) => {
         console.log("routeGuard.detail:", detail);
-        return window.o.fission !== undefined
+        const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+        return fissionAuthState.fission !== undefined
       }
     ],
     userData: {

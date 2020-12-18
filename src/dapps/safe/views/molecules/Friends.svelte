@@ -1,231 +1,117 @@
 <script lang="ts">
-  import {
-    AddressLookup,
-    HubAccount,
-    TokenAndOwner,
-  } from "src/libs/o-circles-protocol/model/hubAccount";
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import { Jumper } from "svelte-loading-spinners";
+  import {Jumper} from "svelte-loading-spinners";
   import {
     labelTrusted,
     labelMutual,
     labelTrusting,
     labelRevoked,
   } from "../../data/friends";
-  import { Subscription } from "rxjs";
-  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import { onDestroy, onMount } from "svelte";
-  import { getEnvironment } from "../../../../libs/o-os/o";
-  import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
+  import {Subscription} from "rxjs";
+  import {onDestroy, onMount} from "svelte";
+  import {tryGetDappState} from "../../../../libs/o-os/loader";
+  import {Contact, OmoSafeState} from "../../manifest";
 
-  let mySafeAddress: string;
+  let safeState: OmoSafeState = {};
+  let contactsSubscription: Subscription;
+  let contacts: Contact[] = [];
 
-  let person: HubAccount;
-  let personsThatTrustMe: any[];
-  let personsITrust: any[];
-  let mutualFriends: any[];
-  let mutual: { [address: string]: any } = {};
-  let untrusted: any[] = [];
-  let untrusted_: { [address: string]: any } = {};
-
-  let environment: ProcessEnvironment;
-
-  async function init() {
-    environment = await getEnvironment();
-    mySafeAddress = environment.me.mySafe.address;
-    person = new HubAccount(environment.eth.contracts.hub, mySafeAddress);
-
-    reload();
-  }
-
-  async function reload()
+  function init()
   {
-    // let peopleThatTrustMe: AddressLookup = await person.getPersonsThatTrustMe();
-    const cachedPeopleThatTrustMe = await environment.fission.events.loadEventsFromFs("myIncomingTrusts");
-    console.log(cachedPeopleThatTrustMe);
+    if (contactsSubscription)
+    {
+      contactsSubscription.unsubscribe();
+      contactsSubscription = null;
+    }
 
-    // let peopleThatITrust: AddressLookup = await person.getPersonsITrust();
-    const cachedPeopleITrust = await environment.fission.events.loadEventsFromFs("myOutgoingTrusts");
-/*
-    Object.keys(peopleThatTrustMe)
-      .map((k) => <TokenAndOwner>peopleThatTrustMe[k])
-      .filter((o) => o.limit > 0);
+    safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
-    untrusted = Object.keys(peopleThatITrust)
-      .map((k) => <TokenAndOwner>peopleThatITrust[k])
-      .filter((o) => o && o.limit == 0)
-      .map((mutualTrust) => {
-        untrusted_[mutualTrust.owner.address] = true;
-        return {
-          image:
-            "https://avatars.dicebear.com/api/avataaars/" +
-            mutualTrust.owner.address +
-            ".svg ",
-          title: mutualTrust.owner.address.slice(0, 8),
-          connection: "trustRevoked",
-          detail: {
-            limit: "0",
-            address: mutualTrust.owner.address,
-          },
-          actions: ["trust"],
-        };
+    if (safeState.myContacts)
+    {
+      contactsSubscription = safeState.myContacts.subscribe(contactList => {
+        contacts = contactList;
       });
-
-    console.log("untrusted:", untrusted);
-
-    let tt2 = {};
-    Object.keys(peopleThatITrust)
-      .map((o) => peopleThatITrust[o])
-      .filter((o) => o.limit > 0)
-      .forEach((o) => {
-        tt2[o.owner.address] = o;
-      });
-
-    mutualFriends = Object.keys(peopleThatTrustMe)
-      .map((k) => <TokenAndOwner>peopleThatTrustMe[k])
-      .filter((o) => o.limit > 0)
-      .filter((o) => {
-        const isMutual = tt2[o.owner.address] !== undefined;
-        if (isMutual) mutual[o.owner.address] = true;
-        return isMutual;
-      })
-      .map((mutualTrust) => {
-        return {
-          image:
-            environment.me.mySafe.address == mutualTrust.owner.address
-              ? environment.me.myProfile.avatar
-              : "https://avatars.dicebear.com/api/avataaars/" +
-                mutualTrust.owner.address +
-                ".svg ",
-          title:
-            environment.me.mySafe.address == mutualTrust.owner.address
-              ? environment.me.myDisplayName()
-              : mutualTrust.owner.address.slice(0, 8),
-          connection: "trustedMutual",
-          detail: {
-            address: mutualTrust.owner.address,
-            limit: mutualTrust.limit,
-          },
-          actions: ["untrust", "send"],
-        };
-      });
-
-    console.log("mutualFriends:", mutualFriends);
-
-    personsThatTrustMe = Object.keys(peopleThatTrustMe)
-      .map((k) => <TokenAndOwner>peopleThatTrustMe[k])
-      .filter((o) => o.limit > 0)
-      .filter((o) => !mutual[o.owner.address] && !untrusted_[o.owner.address])
-      .map((personsThatTrustMe) => {
-        return {
-          image:
-            "https://avatars.dicebear.com/api/avataaars/" +
-            personsThatTrustMe.owner.address +
-            ".svg ",
-          title: personsThatTrustMe.owner.address.slice(0, 8),
-          connection: "trustingMe",
-          detail: {
-            address: personsThatTrustMe.owner.address,
-            limit: personsThatTrustMe.limit,
-          },
-          actions: ["trust", "send"],
-        };
-      });
-
-    console.log("personsThatTrustMe:", personsThatTrustMe);
-
-    personsITrust = Object.keys(peopleThatITrust)
-      .map((k) => <TokenAndOwner>peopleThatITrust[k])
-      .filter((o) => o.limit > 0)
-      .filter((o) => !mutual[o.owner.address])
-      .map((personsITrust) => {
-        return {
-          image:
-            "https://avatars.dicebear.com/api/avataaars/" +
-            personsITrust.owner.address +
-            ".svg ",
-          title: personsITrust.owner.address.slice(0, 8),
-          connection: "trustedByMe",
-          detail: {
-            address: personsITrust.owner.address,
-            limit: personsITrust.limit,
-          },
-          actions: ["untrust"],
-        };
-      });
-
-    console.log("personsITrust:", personsITrust);
-
- */
+    }
   }
 
-  let subscription: Subscription = window.o.events.subscribe(
-    (event: OmoEvent) => {
-      if (event.type === "shell.refreshView") {
-        init();
-      }
-    }
-  );
+  function mapToListItem(contact: Contact)
+  {
+    return {
+      image:
+        "https://avatars.dicebear.com/api/avataaars/" +
+        contact.safeAddress +
+        ".svg ",
+      title: contact.safeAddress.slice(0, 8),
+      connection: "trustedByMe",
+      detail: {
+        address: contact.safeAddress,
+        trust: contact.trust,
+      },
+      actions: ["untrust"],
+    };
+  }
 
-  onDestroy(() => {
-    if (!subscription) return;
+  onDestroy(() =>
+  {
+    if (!contactsSubscription) return;
 
-    subscription.unsubscribe();
-    subscription = null;
+    contactsSubscription.unsubscribe();
+    contactsSubscription = null;
   });
 
-  onMount(() => {
+  onMount(() =>
+  {
     init();
   });
 </script>
 
 <div class="h-full">
-  {#if !personsThatTrustMe || !mutualFriends || !personsITrust || !untrusted}
+  {#if contacts.length === 0}
     <div class="flex items-center justify-center h-full">
-      <Jumper size="150" color="#071D69" unit="px" />
+      <Jumper size="150" color="#071D69" unit="px"/>
     </div>
   {:else}
-    {#if personsThatTrustMe && personsThatTrustMe.length}
+    {#if contacts.filter(o => o.trust.in > 0).length > 0}
       <div class="mb-4">
-        <CategoryTitle mapping={labelTrusted} />
+        <CategoryTitle mapping={labelTrusted}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each personsThatTrustMe as personThatTrustMe}
-          <FriendItem data={personThatTrustMe} />
+        {#each contacts.filter(o => o.trust.in > 0) as personThatTrustMe}
+          <FriendItem data={mapToListItem(personThatTrustMe)}/>
         {/each}
       </div>
     {/if}
 
-    {#if mutualFriends && mutualFriends.length}
+    {#if contacts.filter(o => o.trust.in > 0 && o.trust.out > 0).length > 0}
       <div class="mb-4">
-        <CategoryTitle mapping={labelMutual} />
+        <CategoryTitle mapping={labelMutual}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each mutualFriends as mutualTrust}
-          <FriendItem data={mutualTrust} />
+        {#each contacts.filter(o => o.trust.in > 0 && o.trust.out > 0) as mutualTrust}
+          <FriendItem data={mapToListItem(mutualTrust)}/>
         {/each}
       </div>
     {/if}
 
-    {#if personsITrust && personsITrust.length}
+    {#if contacts.filter(o => o.trust.out > 0).length > 0}
       <div class="mb-4">
-        <CategoryTitle mapping={labelTrusting} />
+        <CategoryTitle mapping={labelTrusting}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each personsITrust as personITrust}
-          <FriendItem data={personITrust} />
+        {#each contacts.filter(o => o.trust.out > 0) as personITrust}
+          <FriendItem data={mapToListItem(personITrust)}/>
         {/each}
       </div>
     {/if}
 
-    {#if untrusted && untrusted.length}
+    {#if contacts.filter(o => o.trust.out === 0 && o.trust.in === 0).length > 0}
       <div class="mb-4">
-        <CategoryTitle mapping={labelRevoked} />
+        <CategoryTitle mapping={labelRevoked}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each untrusted as ut}
-          <FriendItem data={ut} />
+        {#each contacts.filter(o => o.trust.out === 0 && o.trust.in === 0) as ut}
+          <FriendItem data={mapToListItem(ut)}/>
         {/each}
       </div>
     {/if}
