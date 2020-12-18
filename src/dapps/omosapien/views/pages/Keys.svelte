@@ -6,12 +6,15 @@
   import { getEnvironment } from "src/libs/o-os/o";
   import { labelKeys } from "../../data/keys";
   import Mobile from "src/libs/o-views/templates/Mobile.svelte";
+  import {tryGetDappState} from "../../../../libs/o-os/loader";
+  import {OmoSafeState} from "../../../safe/manifest";
+  import {FissionAuthState} from "../../../fissionauth/manifest";
 
   let keys: any[] = [];
 
   async function getKeys() {
-    const env = await getEnvironment();
-    keys = (await env.me.myData.keys.listItems()).map((o) => {
+    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+    keys = (await fissionAuthState.fission.keys.listItems()).map((o) => {
       return {
         data: {
           image: "/icons/paperWallet.svg",

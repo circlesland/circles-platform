@@ -16,15 +16,52 @@
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
   import { onDestroy, onMount } from "svelte";
   import { getEnvironment } from "../../../../libs/o-os/o";
+  import {tryGetDappState} from "../../../../libs/o-os/loader";
+  import {CirclesTransaction, Contact, OmoSafeState} from "../../manifest";
+
+
+  let safeState: OmoSafeState = {};
+  let transactionsSubscription: Subscription;
+  let transactions: CirclesTransaction[] = [];
+
+  function init()
+  {
+    if (transactionsSubscription)
+    {
+      transactionsSubscription.unsubscribe();
+      transactionsSubscription = null;
+    }
+
+    safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+
+    if (safeState.myContacts)
+    {
+      transactionsSubscription = safeState.myTransactions.subscribe(transactionList => {
+        transactions = transactionList;
+      });
+    }
+
+    console.log("MyTransactions:", transactions);
+  }
+
+  onDestroy(() => {
+    if (!transactionsSubscription) return;
+
+    transactionsSubscription.unsubscribe();
+    transactionsSubscription = null;
+  });
+
+  onMount(() => init());
+  /*
 
   export let address: string;
 
   let person: HubAccount;
-  let transactions;
+  //let transactions;
 
   async function init() {
-    const environment = await getEnvironment();
-    address = environment.me.mySafe.address;
+    const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+    address = safeState.mySafeAddress;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
@@ -88,15 +125,7 @@
       }
     }
   );
-
-  onDestroy(() => {
-    if (!subscription) return;
-
-    subscription.unsubscribe();
-    subscription = null;
-  });
-
-  onMount(() => init());
+  */
 
   const labelTransactions = {
     data: {

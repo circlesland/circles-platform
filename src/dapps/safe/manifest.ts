@@ -16,15 +16,15 @@ import {config} from "../../libs/o-circles-protocol/config";
 import {BN} from "ethereumjs-util";
 import {sendInviteCredits, SendInviteCreditsContext} from "./processes/omo/sendInviteCredits";
 import {deploySafe} from "./processes/safe/deploySafe";
-import {Token} from "../../libs/o-fission/entities/token";
+import {Token as TokenEntity} from "../../libs/o-fission/entities/token";
 import {KeyPair} from "../../libs/o-fission/entities/keyPair";
 import {Address} from "../../libs/o-circles-protocol/interfaces/address";
 import {FissionAuthState} from "../fissionauth/manifest";
 import {BehaviorSubject} from "rxjs";
-import {HubAccount} from "../../libs/o-circles-protocol/model/hubAccount";
 import {CirclesHub} from "../../libs/o-circles-protocol/circles/circlesHub";
 import {EventStore} from "../../libs/o-fission/eventStore";
 import {CacheEvent} from "../../libs/o-fission/entities/cacheEvent";
+import {HubAccount} from "../../libs/o-circles-protocol/model/hubAccount";
 
 export interface Contact
 {
@@ -35,6 +35,24 @@ export interface Contact
   }
 }
 
+export interface Token
+{
+  createdInBlockNo: number,
+  ownerSafeAddress: Address,
+  tokenAddress: Address,
+  balance: BN
+}
+
+export interface CirclesTransaction
+{
+  timestamp: Date,
+  direction: "in"|"out",
+  subject: string,
+  from: Address,
+  to: Address,
+  amount: BN,
+}
+
 export interface OmoSafeState
 {
   mySafeAddress?: Address,
@@ -42,7 +60,9 @@ export interface OmoSafeState
   myToken?: Token,
   myAccountXDaiBalance?: BN,
   mySafeXDaiBalance?: BN,
-  myContacts?: BehaviorSubject<Contact[]>
+  myContacts?: BehaviorSubject<Contact[]>,
+  myKnownTokens?: BehaviorSubject<{[safeAddress:string]:Token}>,
+  myTransactions?: BehaviorSubject<CirclesTransaction[]>,
 }
 
 const transactionPage = {
@@ -69,7 +89,29 @@ const transactionPage = {
 async function tryInitMyToken()
 {
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const myToken = await fissionAuthState.fission.tokens.tryGetMyToken();
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  let myToken = await fissionAuthState.fission.tokens.tryGetMyToken();
+
+  if (!myToken)
+  {
+    const cfg = config.getCurrent();
+    const web3 = config.getCurrent().web3();
+    const hub = new CirclesHub(web3, cfg.HUB_ADDRESS);
+
+    const mySignupEvents = hub.queryEvents(CirclesHub.queryPastSignup(safeState.mySafeAddress));
+    const mySignupArr = await mySignupEvents.toArray();
+    const mySignup = mySignupArr[0];
+
+    if (mySignup)
+    {
+      myToken = {
+        name: "me",
+        tokenAddress: mySignup.returnValues.token,
+        circlesAddress: mySignup.returnValues.user,
+        createdInBlockNo: mySignup.blockNumber.toNumber()
+      }
+    }
+  }
 
   setDappState<OmoSafeState>("omo.safe:1", currentState =>
   {
@@ -78,6 +120,23 @@ async function tryInitMyToken()
       myToken: myToken
     };
   });
+}
+
+async function tryInitSafeAddress()
+{
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  const myProfile = await fissionAuthState.fission.profiles.tryGetMyProfile();
+
+  if (myProfile?.circlesAddress)
+  {
+    setDappState<OmoSafeState>("omo.safe:1", currentState =>
+    {
+      return {
+        ...currentState,
+        mySafeAddress: myProfile.circlesAddress
+      };
+    });
+  }
 }
 
 async function tryInitMyKey()
@@ -128,6 +187,126 @@ async function tryInitXDaiBalances()
   });
 }
 
+
+async function tryInitMyKnownTokens()
+{
+  const myKnownTokensSubject: BehaviorSubject<{[safeAddress:string]:Token}> = new BehaviorSubject<{[safeAddress:string]:Token}>({});
+  const knownTokens:{[safeAddress:string]:Token} = {};
+
+  const cfg = config.getCurrent();
+  const web3 = config.getCurrent().web3();
+  const hub = new CirclesHub(web3, cfg.HUB_ADDRESS);
+
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+
+  // Load the known tokens from the fission cache
+  const allTokens = await fissionAuthState.fission.tokens.listItems();
+  allTokens.forEach(cachedToken => {
+    knownTokens[cachedToken.circlesAddress] = {
+      createdInBlockNo: cachedToken.createdInBlockNo,
+      tokenAddress: cachedToken.tokenAddress,
+      ownerSafeAddress: cachedToken.circlesAddress,
+      balance: new BN("0")
+    };
+  });
+  myKnownTokensSubject.next(knownTokens);
+
+  // Update the token list whenever the contact list changes
+  safeState.myContacts.subscribe(async contactList =>
+  {
+    // Only contacts for which we don't have the token already are relevant
+    const newContacts = contactList.filter(contact => !knownTokens[contact.safeAddress]);
+
+    const newContactsSignupEvents = hub.queryEvents(CirclesHub.queryPastSignups(newContacts.map(o => o.safeAddress)));
+    const newContactsSignupArr = await newContactsSignupEvents.toArray();
+
+    const addedTokens = await Promise.all(newContactsSignupArr.map(async signupEvent => {
+      knownTokens[signupEvent.returnValues.user] = {
+        tokenAddress: signupEvent.returnValues.token,
+        createdInBlockNo: signupEvent.blockNumber.toNumber(),
+        ownerSafeAddress: signupEvent.returnValues.user,
+        balance: new BN("0")
+      };
+
+      await fissionAuthState.fission.tokens.addOrUpdate({
+        name: signupEvent.returnValues.user,
+        tokenAddress: signupEvent.returnValues.token,
+        circlesAddress: signupEvent.returnValues.user,
+        createdInBlockNo: signupEvent.blockNumber.toNumber()
+      }, false);
+
+      return 0;
+    }));
+
+    if (addedTokens.length > 0)
+    {
+      await fissionAuthState.fission.tokens.publish();
+    }
+
+    myKnownTokensSubject.next(knownTokens);
+  });
+
+  setDappState<OmoSafeState>("omo.safe:1", existing => {
+    return {
+      ...existing,
+      myKnownTokens: myKnownTokensSubject
+    }
+  });
+}
+
+async function tryInitMyTransactions()
+{
+  const myTransactionsSubject: BehaviorSubject<CirclesTransaction[]> = new BehaviorSubject<CirclesTransaction[]>([]);
+
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  const hubAddress = config.getCurrent().HUB_ADDRESS;
+  const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
+  const hubAccount = new HubAccount(circlesHub, safeState.mySafeAddress, safeState.myToken?.tokenAddress);
+
+  const incomingTransactionsName = "Transactions_In";
+  const outgoingTransactionsName = "Transactions_Out";
+
+  const fromBlockNo = safeState.myToken?.createdInBlockNo ?? config.getCurrent().HUB_BLOCK;
+  let lastCachedBlock: number = fromBlockNo;
+
+  //
+  // First, try to feed-in all cached transactions
+  //
+  const fromDayIdx = Math.floor(fromBlockNo / EventStore.blocksPerDay);
+  const cachedTransactions = (await fissionAuthState.fission.events.loadEventsFromFs(incomingTransactionsName, fromDayIdx))
+    .concat(await fissionAuthState.fission.events.loadEventsFromFs(outgoingTransactionsName, fromDayIdx));
+
+  const cachedCirclesTransactions = cachedTransactions.map(transactionEvent =>
+  {
+    lastCachedBlock = lastCachedBlock < transactionEvent.blockNo
+      ? transactionEvent.blockNo
+      : lastCachedBlock;
+
+    return <CirclesTransaction>{
+      direction: transactionEvent.senderRef == safeState.mySafeAddress ? "out" : "in",
+      from: transactionEvent.senderRef,
+      to: transactionEvent.recipientRef,
+      amount: new BN(transactionEvent.valueInWei),
+      subject: transactionEvent.data,
+      timestamp: new Date()
+    };
+  });
+  myTransactionsSubject.next(cachedCirclesTransactions);
+
+  //
+  // Then get all transactions after the last cached block
+  //
+
+  setDappState<OmoSafeState>("omo.safe:1", existing => {
+    return {
+      ...existing,
+      myTransactions: myTransactionsSubject
+    }
+  });
+}
+
 async function tryInitMyContacts()
 {
   const incomingTrustsName = "Trust_In";
@@ -158,17 +337,20 @@ async function tryInitMyContacts()
     const contact = myContacts[otherSafeAddress]
       ?? <Contact>{
         safeAddress: otherSafeAddress,
-        trust: {}
+        trust: {
+          in: 0,
+          out: 0
+        }
       };
 
     // If I can send circles to someone, then this person trusts me -> 'in'
     contact.trust.in = user == safeState.mySafeAddress
-      ? limit
+      ? parseInt(limit ?? "0")
       : contact.trust.in;
 
     // If someone can send circles to me, then I trust that person -> 'out'
     contact.trust.out = canSendTo == safeState.mySafeAddress
-      ? limit
+      ? parseInt(limit ?? "0")
       : contact.trust.out;
 
     myContacts[otherSafeAddress] = contact;
@@ -202,10 +384,6 @@ async function tryInitMyContacts()
     safeState.mySafeAddress,
     lastCachedBlock));
 
-  let lastEventTimestamp = undefined;
-  let flushDelayTimeInMs = 20 * 1000;
-  let flushing = false;
-
   const incomingTrustEvents = await fissionAuthState.fission.events.attachEventSource(incomingTrustsName, myIncomingTrusts);
   incomingTrustEvents.subscribe(trustEvent => {
     console.log("New trust event:", trustEvent);
@@ -219,7 +397,6 @@ async function tryInitMyContacts()
       senderRef: trustEvent.address
     });
 
-    lastEventTimestamp = Date.now();
     myContactsSubject.next(Object.values(myContacts));
   });
 
@@ -241,30 +418,8 @@ async function tryInitMyContacts()
       senderRef: trustEvent.address
     });
 
-    lastEventTimestamp = Date.now();
     myContactsSubject.next(Object.values(myContacts));
   });
-
-  setInterval(async () =>
-  {
-    if (flushing)
-    {
-      return;
-    }
-    if (lastEventTimestamp > Date.now() - flushDelayTimeInMs)
-    {
-      return;
-    }
-
-    flushing = true;
-
-    console.log("Flushing events to fission ..")
-    await fissionAuthState.fission.events.flush();
-    fissionAuthState.fission.events.clearBuffer();
-    console.log("Flushed events to fission.")
-
-    flushing = false;
-  }, 1000);
 
   setDappState<OmoSafeState>("omo.safe:1", existing => {
     return {
@@ -284,9 +439,12 @@ async function tryInitMyContacts()
 async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 {
   await tryInitMyKey();
+  await tryInitSafeAddress();
   await tryInitMyToken();
   await tryInitXDaiBalances();
   await tryInitMyContacts();
+  await tryInitMyKnownTokens();
+  await tryInitMyTransactions();
 
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 

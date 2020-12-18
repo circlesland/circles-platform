@@ -219,7 +219,7 @@ export class EventStore
     if (!toDay)
     {
       const counterEntity = await this.counters.tryGetByName(source);
-      toDay = counterEntity?.value;
+      toDay = Math.ceil(counterEntity?.value / EventStore.blocksPerDay);
     }
 
     if (!toDay)

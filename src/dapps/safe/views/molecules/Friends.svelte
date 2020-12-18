@@ -33,6 +33,8 @@
         contacts = contactList;
       });
     }
+
+    console.log("MyContacts:", contacts);
   }
 
   function mapToListItem(contact: Contact)
@@ -72,12 +74,12 @@
       <Jumper size="150" color="#071D69" unit="px"/>
     </div>
   {:else}
-    {#if contacts.filter(o => o.trust.in > 0).length > 0}
+    {#if contacts.filter(o => o.trust.in > 0 && o.trust.out === 0).length > 0}
       <div class="mb-4">
         <CategoryTitle mapping={labelTrusted}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each contacts.filter(o => o.trust.in > 0) as personThatTrustMe}
+        {#each contacts.filter(o => o.trust.in > 0 && o.trust.out === 0) as personThatTrustMe}
           <FriendItem data={mapToListItem(personThatTrustMe)}/>
         {/each}
       </div>
@@ -94,12 +96,12 @@
       </div>
     {/if}
 
-    {#if contacts.filter(o => o.trust.out > 0).length > 0}
+    {#if contacts.filter(o => o.trust.out > 0 && o.trust.in === 0).length > 0}
       <div class="mb-4">
         <CategoryTitle mapping={labelTrusting}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each contacts.filter(o => o.trust.out > 0) as personITrust}
+        {#each contacts.filter(o => o.trust.out > 0 && o.trust.in === 0) as personITrust}
           <FriendItem data={mapToListItem(personITrust)}/>
         {/each}
       </div>

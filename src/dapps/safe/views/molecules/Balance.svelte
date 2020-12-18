@@ -8,8 +8,8 @@
   import { Subscription } from "rxjs";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
   import { onDestroy, onMount } from "svelte";
-  import { getEnvironment } from "../../../../libs/o-os/o";
-  import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
+  import {tryGetDappState} from "../../../../libs/o-os/loader";
+  import {OmoSafeState} from "../../manifest";
 
   export let address: string;
 
@@ -18,11 +18,9 @@
 
   let circlesBalance: Number;
 
-  let environment: ProcessEnvironment;
-
   async function init() {
-    environment = await getEnvironment();
-    address = environment.me.mySafe.address;
+    const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+    address = safeState.mySafeAddress;
     const hubAddress = config.getCurrent().HUB_ADDRESS;
     const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
 
