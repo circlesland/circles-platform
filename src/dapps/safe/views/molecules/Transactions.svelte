@@ -1,8 +1,4 @@
 <script lang="ts">
-  import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { HubAccount } from "src/libs/o-circles-protocol/model/hubAccount";
-  import { config } from "src/libs/o-circles-protocol/config";
-  import { BN } from "ethereumjs-util";
   import dayjs from "dayjs";
   import { Jumper } from "svelte-loading-spinners";
   import {
@@ -13,16 +9,22 @@
   import Icon from "fa-svelte";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import { Subscription } from "rxjs";
-  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
   import { onDestroy, onMount } from "svelte";
-  import { getEnvironment } from "../../../../libs/o-os/o";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {CirclesTransaction, Contact, OmoSafeState} from "../../manifest";
-
+  import {BN} from "ethereumjs-util";
+  import {config} from "../../../../libs/o-circles-protocol/config";
 
   let safeState: OmoSafeState = {};
   let transactionsSubscription: Subscription;
   let transactions: CirclesTransaction[] = [];
+
+  const web3 = config.getCurrent().web3();
+
+  function formatBN(bn:BN)
+  {
+    return parseFloat(web3.utils.fromWei(bn)).toFixed(2);
+  }
 
   function init()
   {
@@ -37,11 +39,10 @@
     if (safeState.myContacts)
     {
       transactionsSubscription = safeState.myTransactions.subscribe(transactionList => {
+        transactionList.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
         transactions = transactionList;
       });
     }
-
-    console.log("MyTransactions:", transactions);
   }
 
   onDestroy(() => {
@@ -52,80 +53,6 @@
   });
 
   onMount(() => init());
-  /*
-
-  export let address: string;
-
-  let person: HubAccount;
-  //let transactions;
-
-  async function init() {
-    const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-    address = safeState.mySafeAddress;
-    const hubAddress = config.getCurrent().HUB_ADDRESS;
-    const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-
-    person = new HubAccount(circlesHub, address);
-
-    reload();
-  }
-
-  async function reload() {
-    const incomingTransactions = await person.getIncomingTransactions();
-    const outgoingTransactions = await person.getOutgoingTransactions();
-    const allTransactions = incomingTransactions.concat(outgoingTransactions);
-    allTransactions.sort((a, b) => -a.blockNo.cmp(b.blockNo));
-
-    const web3 = config.getCurrent().web3();
-    const latestBlockNo = await web3.eth.getBlockNumber();
-
-    //
-    // Get the measures for a time estimation from the latest 2 block of the chain.
-    //
-    const probes = [0, 1];
-    const blocks = await Promise.all(
-      probes.map(async (i) => await web3.eth.getBlock(latestBlockNo - i))
-    );
-
-    let latestTimestamp;
-    let lastTimestamp = 0;
-    let delta = 0;
-    for (let block of blocks) {
-      if (lastTimestamp == 0) {
-        delta += 0;
-      } else {
-        delta += lastTimestamp - block.timestamp;
-      }
-      if (!latestTimestamp) {
-        latestTimestamp = block.timestamp;
-      }
-      lastTimestamp = block.timestamp;
-    }
-
-    const latestBlockNoOnChain = new BN(latestBlockNo.toString());
-    const timePerBlock = delta / (probes.length - 1);
-
-    transactions = allTransactions.map((o) => {
-      const blockDelta = latestBlockNoOnChain.sub(o.blockNo);
-      const timeDelta = timePerBlock * blockDelta.toNumber();
-      const thenTime = (latestTimestamp - timeDelta).toFixed(0);
-      const estimatedBlockTime = new Date(thenTime * 1000);
-
-      o.timestamp = estimatedBlockTime;
-      const amountNo = parseFloat(o.amount) * 3;
-      o.amount = amountNo < 0.01 ? "0.01" : amountNo.toFixed(2);
-      return o;
-    });
-  }
-
-  let subscription: Subscription = window.o.events.subscribe(
-    (event: OmoEvent) => {
-      if (event.type === "shell.refreshView") {
-        init();
-      }
-    }
-  );
-  */
 
   const labelTransactions = {
     data: {
@@ -186,12 +113,12 @@
               {#if t.direction === 'out'}
                 <div
                   class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-primary">
-                  <span>-{t.amount}</span>
+                  <span>-{formatBN(t.amount)}</span>
                 </div>
               {:else}
                 <div
                   class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-action">
-                  {t.amount}
+                  {formatBN(t.amount)}
                 </div>
               {/if}
             </div>
@@ -233,13 +160,13 @@
                 <div class="max-w-full text-gray-500 ">
                   Amount in circles:
                   <span
-                    class=" text-primary">{t.o.returnValues.value / 1000000000000000000}
+                    class=" text-primary">{formatBN(t.o.returnValues.value)}
                     CRC</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount in ⦿:
                   <span
-                    class=" text-primary">{(t.o.returnValues.value / 1000000000000000000) * 3}
+                    class=" text-primary">{(formatBN(t.o.returnValues.value) * 3).toFixed(2)}
                     ⦿</span>
                 </div>
                 <!-- <div

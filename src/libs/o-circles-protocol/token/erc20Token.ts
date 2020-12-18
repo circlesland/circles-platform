@@ -17,7 +17,8 @@ export class Erc20Token extends Web3Contract {
   static readonly TransferEvent = "Transfer";
   static readonly ApprovalEvent = "Approval";
 
-  static queryPastTransfers(from?: Address, to?: Address) {
+  static queryPastTransfers(from?: Address, to?: Address, fromBlock?: number)
+  {
     if (!from && !to)
       throw new Error("At least one of the two parameters has to be set to a value.");
 
@@ -30,7 +31,7 @@ export class Erc20Token extends Web3Contract {
     return {
       event: "Transfer",
       filter: f,
-      fromBlock: config.getCurrent().HUB_BLOCK,
+      fromBlock: fromBlock ?? config.getCurrent().HUB_BLOCK,
       toBlock: "latest"
     };
   }

@@ -1,19 +1,14 @@
 <script lang="ts">
-  import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { HubAccount } from "src/libs/o-circles-protocol/model/hubAccount";
   import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import { Subscription } from "rxjs";
-  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
   import { onDestroy, onMount } from "svelte";
-  import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {CirclesTransaction, OmoSafeState, Token} from "../../manifest";
+  import {OmoSafeState, Token} from "../../manifest";
   import {OmoSapienState} from "../../../omosapien/manifest";
-  import {FissionAuthState} from "../../../fissionauth/manifest";
 
 
   let safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
@@ -23,7 +18,6 @@
 
   const web3 = config.getCurrent().web3();
   const myAccountAddress = web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey).address;
-
 
   let accountxDai = {
     data: {
@@ -101,7 +95,7 @@
                   ? `${omosapienState.myProfile.firstName} ${omosapienState.myProfile.lastName}`
                   : token.ownerSafeAddress.slice(0, 8),
           description: token.ownerSafeAddress,
-          balance: (parseFloat("0") * 3).toFixed(2),
+          balance:(parseFloat("0") * 3).toFixed(2),
           subtitle: "time in ⦿",
       },
     }

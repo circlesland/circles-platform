@@ -99,7 +99,6 @@ export class EventStore
         subject.next(event);
       });
 
-
     const eventDirectory = new EventDirectory(this._fs, this._pathParts.concat([name]));
 
     this._eventSources[name] = {
@@ -108,8 +107,8 @@ export class EventStore
       directory: eventDirectory
     };
 
-    return await source.execute()
-      .then(() => subject);
+    source.execute();
+    return subject;
   }
 
   /**

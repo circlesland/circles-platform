@@ -21,10 +21,13 @@ import {KeyPair} from "../../libs/o-fission/entities/keyPair";
 import {Address} from "../../libs/o-circles-protocol/interfaces/address";
 import {FissionAuthState} from "../fissionauth/manifest";
 import {BehaviorSubject} from "rxjs";
+import {Event} from "../../libs/o-circles-protocol/interfaces/event";
 import {CirclesHub} from "../../libs/o-circles-protocol/circles/circlesHub";
 import {EventStore} from "../../libs/o-fission/eventStore";
 import {CacheEvent} from "../../libs/o-fission/entities/cacheEvent";
 import {HubAccount} from "../../libs/o-circles-protocol/model/hubAccount";
+import {Erc20Token} from "../../libs/o-circles-protocol/token/erc20Token";
+import {fundAccountForSafeCreation} from "./processes/omo/fundAccountForSafeCreation";
 
 export interface Contact
 {
@@ -45,6 +48,8 @@ export interface Token
 
 export interface CirclesTransaction
 {
+  blockNo: number,
+  key: string,
   timestamp: Date,
   direction: "in"|"out",
   subject: string,
@@ -261,9 +266,11 @@ async function tryInitMyTransactions()
 
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  const hubAddress = config.getCurrent().HUB_ADDRESS;
-  const circlesHub = new CirclesHub(config.getCurrent().web3(), hubAddress);
-  const hubAccount = new HubAccount(circlesHub, safeState.mySafeAddress, safeState.myToken?.tokenAddress);
+
+  const cfg = config.getCurrent();
+  const web3 = cfg.web3();
+  const hubAddress = cfg.HUB_ADDRESS;
+  const circlesHub = new CirclesHub(web3, hubAddress);
 
   const incomingTransactionsName = "Transactions_In";
   const outgoingTransactionsName = "Transactions_Out";
@@ -278,26 +285,112 @@ async function tryInitMyTransactions()
   const cachedTransactions = (await fissionAuthState.fission.events.loadEventsFromFs(incomingTransactionsName, fromDayIdx))
     .concat(await fissionAuthState.fission.events.loadEventsFromFs(outgoingTransactionsName, fromDayIdx));
 
+  function mapTransactionEvent(transactionEvent:CacheEvent|Event)
+  {
+    if ((<Event>transactionEvent).returnValues)
+    {
+      const ev = <Event>transactionEvent;
+      return <CirclesTransaction>{
+        direction: ev.returnValues.from == safeState.mySafeAddress ? "out" : "in",
+        from: ev.returnValues.from,
+        to: ev.returnValues.to,
+        amount: new BN(ev.returnValues.value),
+        subject: "",
+        timestamp: new Date(),
+        blockNo: ev.blockNumber.toNumber()
+      };
+    }
+    else
+    {
+      const ev = <CacheEvent>transactionEvent;
+      return <CirclesTransaction>{
+        direction: ev.senderRef == safeState.mySafeAddress ? "out" : "in",
+        from: ev.senderRef,
+        to: ev.recipientRef,
+        amount: new BN(ev.valueInWei),
+        subject: ev.data,
+        timestamp: new Date(),
+        blockNo: ev.blockNo
+      };
+    }
+  }
+
   const cachedCirclesTransactions = cachedTransactions.map(transactionEvent =>
   {
     lastCachedBlock = lastCachedBlock < transactionEvent.blockNo
       ? transactionEvent.blockNo
       : lastCachedBlock;
 
-    return <CirclesTransaction>{
-      direction: transactionEvent.senderRef == safeState.mySafeAddress ? "out" : "in",
-      from: transactionEvent.senderRef,
-      to: transactionEvent.recipientRef,
-      amount: new BN(transactionEvent.valueInWei),
-      subject: transactionEvent.data,
-      timestamp: new Date()
-    };
+    return mapTransactionEvent(transactionEvent);
   });
   myTransactionsSubject.next(cachedCirclesTransactions);
 
   //
-  // Then get all transactions after the last cached block
+  // Then query all transactions after the last cached block
   //
+  let inSubscriptions = [];
+  let outSubscriptions = [];
+
+  safeState.myKnownTokens.subscribe(async tokenList =>
+  {
+    // If there are already subscriptions, cancel them first
+    outSubscriptions.concat(inSubscriptions).forEach(sub => sub.unsubscribe());
+    inSubscriptions = [];
+    outSubscriptions = [];
+
+    const tokens = Object.values(tokenList);
+    const allTokenInEventObservables = await Promise.all(tokens.map(async token =>
+    {
+      const erc20Contract = new Erc20Token(web3, token.tokenAddress);
+      const inTransactionsQuery = Erc20Token.queryPastTransfers(
+        undefined,
+        safeState.mySafeAddress,
+        token.createdInBlockNo > lastCachedBlock
+          ? token.createdInBlockNo
+          : lastCachedBlock);
+      const inTranactionEventQuery = erc20Contract.queryEvents(inTransactionsQuery);
+      const inTransactionEvents = await fissionAuthState.fission.events.attachEventSource(`${incomingTransactionsName}_${token.tokenAddress}`, inTranactionEventQuery);
+      return inTransactionEvents;
+    }));
+
+    // Go trough all known tokens and subscribe to the in-transfer events
+    inSubscriptions = allTokenInEventObservables.map(o =>
+    {
+      return o.subscribe(erc20TransferEvent =>
+      {
+        const transaction = mapTransactionEvent(erc20TransferEvent);
+        console.log("New incoming transaction:", transaction);
+        cachedCirclesTransactions.push(transaction);
+        myTransactionsSubject.next(cachedCirclesTransactions);
+      });
+    });
+
+    const allTokenOutEventObservables = await Promise.all(tokens.map(async token =>
+    {
+      const erc20Contract = new Erc20Token(web3, token.tokenAddress);
+      const outTransactionsQuery = Erc20Token.queryPastTransfers(
+        safeState.mySafeAddress,
+        undefined,
+        token.createdInBlockNo > lastCachedBlock
+          ? token.createdInBlockNo
+          : lastCachedBlock);
+      const outTransactionEventQuery = erc20Contract.queryEvents(outTransactionsQuery);
+      const outTransactionEvents = await fissionAuthState.fission.events.attachEventSource(`${outgoingTransactionsName}_${token.tokenAddress}`, outTransactionEventQuery);
+      return outTransactionEvents;
+    }));
+
+    // Go trough all known tokens and subscribe to the in-transfer events
+    outSubscriptions = allTokenOutEventObservables.map(o =>
+    {
+      return o.subscribe(erc20TransferEvent =>
+      {
+        cachedCirclesTransactions.push(mapTransactionEvent(erc20TransferEvent));
+        myTransactionsSubject.next(cachedCirclesTransactions);
+      });
+    });
+
+    console.log(`subscribed to the in- and out-transfer events of ${outSubscriptions.length} tokens. Transactions:`, cachedCirclesTransactions);
+  });
 
   setDappState<OmoSafeState>("omo.safe:1", existing => {
     return {
@@ -445,6 +538,26 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   await tryInitMyContacts();
   await tryInitMyKnownTokens();
   await tryInitMyTransactions();
+
+
+  const status = {
+    working: false
+  };
+
+  setInterval(async () => {
+    if (status.working)
+      return;
+
+    status.working = true;
+    console.log("Started flushing events ...")
+
+    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+    await fissionAuthState.fission.events.flush();
+    await fissionAuthState.fission.events.clearBuffer();
+
+    status.working = false;
+    console.log("Finished flushing events.")
+  }, 10000);
 
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
