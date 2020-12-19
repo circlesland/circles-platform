@@ -25,7 +25,7 @@
 
 <div class="h-full overflow-hidden">
   <div class="h-full overflow-y-scroll md:overflow-hidden md:flex md:p-4">
-    {#if !omosapien}
+    {#if !omosapien || !omosapien.myProfile}
       <div
         class="p-4 text-xl text-center bg-white border md:w-72 rounded-xl text-primary border-light-200">
         <div class="py-4 text-2xl font-bold uppercase font-title md:text-3xl">

@@ -16,6 +16,9 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   constructor(fs: FileSystem, pathParts: string[], entityFactory?:(data:string) => TEntity) {
+
+    console.log("Directory.ctor(pathParts:" + pathParts.join(",") + ")")
+
     this._pathParts = pathParts;
     this._fs = fs;
     this._entityFactory = entityFactory;
@@ -64,10 +67,13 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async tryGetByName<TSpecificEntity extends TEntity>(entityName: string): Promise<TSpecificEntity> {
+    console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
     if (!await this.exists([entityName])) {
+      console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Doesn't exist");
       return null;
     }
 
+    console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
     const contents = await this.fs.cat(this.getPath([entityName]));
 
     if (this._entityFactory) {

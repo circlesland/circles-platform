@@ -18,6 +18,8 @@ export async function initMyContacts()
   // Look for cached trust events
   const fromBlockNo = safeState.myToken?.createdInBlockNo ?? config.getCurrent().HUB_BLOCK;
 
+  console.log("initMyContacts() -> fromBlockNo:", fromBlockNo);
+
   const myContacts:{
     [safeAddress:string]: Contact
   } = {}
@@ -56,7 +58,7 @@ export async function initMyContacts()
     myContacts[otherSafeAddress] = contact;
 
     lastCachedBlock = lastCachedBlock < trustEvent.blockNo
-      ? trustEvent.blockNo
+      ? trustEvent.blockNo + 1
       : lastCachedBlock;
   }
 
@@ -64,9 +66,19 @@ export async function initMyContacts()
   // and keep only the latest trust values per connection.
   // Keep also track of the latest cached block number.
   const fromDayIdx = Math.floor(fromBlockNo / EventStore.blocksPerDay);
-  const cachedTrustEvents = (await fissionAuthState.fission.events.loadEventsFromFs(incomingTrustsName, fromDayIdx))
-    .concat(await fissionAuthState.fission.events.loadEventsFromFs(outgoingTrustsName, fromDayIdx));
+  console.log("initMyContacts() -> loading cached events from day:", fromDayIdx);
+
+  const cachedIncomingTrustEvents = await fissionAuthState.fission.events.loadEventsFromFs(incomingTrustsName, fromDayIdx);
+  console.log("initMyContacts() -> got cachedIncomingTrustEvents:", cachedIncomingTrustEvents);
+
+  const cachedOutgoingTrustEvents = await fissionAuthState.fission.events.loadEventsFromFs(outgoingTrustsName, fromDayIdx);
+  console.log("initMyContacts() -> got cachedOutgoingTrustEvents:", cachedOutgoingTrustEvents);
+
+  const cachedTrustEvents = cachedIncomingTrustEvents.concat(cachedOutgoingTrustEvents);
+  console.log("initMyContacts() -> got all cached trust events:", cachedTrustEvents);
+
   cachedTrustEvents.forEach(aggregateContacts);
+  console.log("initMyContacts() -> myContactsSubject.next(Object.values(myContacts));", myContacts);
   myContactsSubject.next(Object.values(myContacts));
 
   //

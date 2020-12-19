@@ -6,8 +6,13 @@ import {FissionAuthState} from "../../fissionauth/manifest";
 import {BN} from "ethereumjs-util";
 import {OmoSafeState, Token} from "../manifest";
 
-export async function initMyKnownTokens (){
+export async function initMyKnownTokens ()
+{
+  console.log("initMyKnownTokens()")
+
   const myKnownTokensSubject: BehaviorSubject<{[safeAddress:string]:Token}> = new BehaviorSubject<{[safeAddress:string]:Token}>({});
+
+  const alreadySeenSafes:{[safeAddress:string]:boolean} = {};
   const knownTokens:{[safeAddress:string]:Token} = {};
 
   const cfg = config.getCurrent();
@@ -27,24 +32,42 @@ export async function initMyKnownTokens (){
       balance: new BN("0")
     };
   });
+  console.log("Loaded " + allTokens.length + " tokens from the fission cache.");
   myKnownTokensSubject.next(knownTokens);
 
   // Update the token list whenever the contact list changes
   safeState.myContacts.subscribe(async contactList =>
   {
     // Only contacts for which we don't have the token already are relevant
-    const newContacts = contactList.filter(contact => !knownTokens[contact.safeAddress]);
+    const newContacts = contactList.filter(contact => {
+      const alreadySeen = alreadySeenSafes[contact.safeAddress];
+      if (!alreadySeen)
+      {
+        alreadySeenSafes[contact.safeAddress] = true;
+      }
+
+      return !alreadySeen;
+    });
+
+    if (newContacts.length == 0)
+    {
+      return;
+    }
 
     const newContactsSignupEvents = hub.queryEvents(CirclesHub.queryPastSignups(newContacts.map(o => o.safeAddress)));
     const newContactsSignupArr = await newContactsSignupEvents.toArray();
 
-    const addedTokens = await Promise.all(newContactsSignupArr.map(async signupEvent => {
-      knownTokens[signupEvent.returnValues.user] = {
+    const addedTokens = await Promise.all(newContactsSignupArr.map(async signupEvent =>
+    {
+      const t = {
         tokenAddress: signupEvent.returnValues.token,
         createdInBlockNo: signupEvent.blockNumber.toNumber(),
         ownerSafeAddress: signupEvent.returnValues.user,
         balance: new BN("0")
       };
+
+      console.log(`Adding token to the list of knownTokens: `, t);
+      knownTokens[signupEvent.returnValues.user] = t;
 
       await fissionAuthState.fission.tokens.addOrUpdate({
         name: signupEvent.returnValues.user,

@@ -43,6 +43,8 @@ export class EventQuery<TItem>
     if (sortComparer) {
       events.sort(sortComparer);
     }
+
+    console.log("EventQuery.toArray() result: ", events);
     return events;
   }
 }

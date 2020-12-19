@@ -181,8 +181,8 @@ export class EventStore
   clearBuffer()
   {
     this._buffer = {
-      firstBlockNo: 0,
-      lastBlockNo: 0,
+      firstBlockNo: Number.MAX_SAFE_INTEGER,
+      lastBlockNo: Number.MIN_SAFE_INTEGER,
       events: []
     };
   }
@@ -195,16 +195,36 @@ export class EventStore
    */
   async loadEventsFromFs(source:string, fromDay: number, toDay?: number) : Promise<CacheEvent[]>
   {
+    console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay})`)
+
+    const eventDir = this._fs.appPath(this._pathParts.concat([source]));
+    console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> Looking if source dir '${eventDir}' exists ...`)
+
+    const parentDir = this._fs.appPath(this._pathParts);
+    console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> Checking if parent dir '${parentDir}' exists ....`)
+
+    if (!(await this._fs.exists(parentDir)))
+    {
+      console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> The parent dir of '" + eventDir + "' doesn't exist.`)
+    }
+    else
+    {
+      console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> The parent dir of '${eventDir}' exists (${parentDir}).`)
+    }
+
     const directory =
-    (await this._fs.exists(this._fs.appPath(this._pathParts.concat([source]))))
+      (await this._fs.exists(eventDir))
       ? new EventDirectory(this._fs, this._pathParts.concat([source]))
       : this._eventSources[source]?.directory;
 
     if (!directory)
     {
+      console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> No directory for source`)
       // The directory doesn't exist. Return an empty array.
       return [];
     }
+
+    console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> Source directory exists`)
 
     if (toDay && fromDay && fromDay > toDay)
     {
@@ -217,6 +237,7 @@ export class EventStore
 
     if (!toDay)
     {
+      console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> No 'toDay'. Reading it from the counters ..`)
       const counterEntity = await this.counters.tryGetByName(source);
       toDay = Math.ceil(counterEntity?.value / EventStore.blocksPerDay);
     }

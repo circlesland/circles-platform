@@ -49,7 +49,7 @@ export interface CirclesTransaction
   blockNo: number,
   key: string,
   timestamp: Date,
-  direction: "in"|"out",
+  direction: "in" | "out",
   subject: string,
   from: Address,
   to: Address,
@@ -64,7 +64,7 @@ export interface OmoSafeState
   myAccountXDaiBalance?: BN,
   mySafeXDaiBalance?: BN,
   myContacts?: BehaviorSubject<Contact[]>,
-  myKnownTokens?: BehaviorSubject<{[safeAddress:string]:Token}>,
+  myKnownTokens?: BehaviorSubject<{ [safeAddress: string]: Token }>,
   myTransactions?: BehaviorSubject<CirclesTransaction[]>,
 }
 
@@ -90,7 +90,6 @@ const transactionPage = {
 };
 
 
-
 /**
  * Checks if the omosapien has a private  key in its storage.
  * If the user doesn't have a private key, he's prompted to either
@@ -100,31 +99,41 @@ const transactionPage = {
  */
 async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 {
+  console.log("safe manifest  -> initialize()")
+
+  console.log("safe manifest  -> initMyKey()")
   await initMyKey();
+  console.log("safe manifest  -> initSafeAddress()")
   await initSafeAddress();
+  console.log("safe manifest  -> initMyToken()")
   await initMyToken();
+  console.log("safe manifest  -> initXDaiBalances()")
   await initXDaiBalances();
+  console.log("safe manifest  -> initMyContacts()")
   await initMyContacts();
+  console.log("safe manifest  -> initMyKnownTokens()")
   await initMyKnownTokens();
+  console.log("safe manifest  -> initMyTransactions()")
   await initMyTransactions();
 
-    const status = {
-      working: false
-    };
-    setInterval(async () => {
-      if (status.working)
-        return;
+  const status = {
+    working: false
+  };
+  setInterval(async () =>
+  {
+    if (status.working)
+      return;
 
-      status.working = true;
-      console.log("Started flushing events ...")
+    status.working = true;
+    console.log("Started flushing events ...")
 
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      await fissionAuthState.fission.events.flush();
-      await fissionAuthState.fission.events.clearBuffer();
+    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+    await fissionAuthState.fission.events.flush();
+    await fissionAuthState.fission.events.clearBuffer();
 
-      status.working = false;
-      console.log("Finished flushing events.")
-    }, 10000);
+    status.working = false;
+    console.log("Finished flushing events.")
+  }, 10000);
 
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
