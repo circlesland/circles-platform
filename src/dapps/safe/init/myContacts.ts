@@ -65,7 +65,7 @@ export async function initMyContacts()
   // Go trough all cached trust events (must be ordered from old to new - ASC)
   // and keep only the latest trust values per connection.
   // Keep also track of the latest cached block number.
-  const fromDayIdx = Math.floor(fromBlockNo / EventStore.blocksPerDay);
+  const fromDayIdx = Math.floor(fromBlockNo / EventStore.pageSize);
   console.log("initMyContacts() -> loading cached events from day:", fromDayIdx);
 
   const cachedIncomingTrustEvents = await fissionAuthState.fission.events.loadEventsFromFs(incomingTrustsName, fromDayIdx);

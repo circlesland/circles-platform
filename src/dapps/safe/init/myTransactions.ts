@@ -62,7 +62,7 @@ export async function initMyTransactions()
   //
   // First, try to feed-in all cached transactions
   //
-  const fromDayIdx = Math.floor(fromBlockNo / EventStore.blocksPerDay);
+  const fromDayIdx = Math.floor(fromBlockNo / EventStore.pageSize);
   const waitForCache = new Promise(async (resolve, reject) =>
   {
     const tokenList = safeState.myKnownTokens.getValue();

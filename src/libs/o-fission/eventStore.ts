@@ -45,8 +45,8 @@ export class EventDirectory extends Directory<CacheEventGroup>
 export class EventStore
   /*extends Directory<CacheEventGroup>*/
 {
-  // Assuming one new block per 5 seconds:
-  public static readonly blocksPerDay = 17280;
+  // Assuming one new block per 5 seconds this should be worth a week of events:
+  public static readonly pageSize = 17280 * 7;
 
   private readonly _eventSources: {
     [name: string]: {
@@ -143,8 +143,8 @@ export class EventStore
       return p;
     }, {});
 
-    const startDay = Math.floor(this._buffer.firstBlockNo / EventStore.blocksPerDay);
-    const endDay = Math.floor(this._buffer.lastBlockNo / EventStore.blocksPerDay);
+    const startDay = Math.floor(this._buffer.firstBlockNo / EventStore.pageSize);
+    const endDay = Math.floor(this._buffer.lastBlockNo / EventStore.pageSize);
 
     // Load all events in that range from the FS to the buffer
     await Promise.all(Object.keys(presentSources).map(async sourceName =>
@@ -239,7 +239,7 @@ export class EventStore
     {
       console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay}) -> No 'toDay'. Reading it from the counters ..`)
       const counterEntity = await this.counters.tryGetByName(source);
-      toDay = Math.ceil(counterEntity?.value / EventStore.blocksPerDay);
+      toDay = Math.ceil(counterEntity?.value / EventStore.pageSize);
     }
 
     if (!toDay)
@@ -252,7 +252,7 @@ export class EventStore
     for (let i = fromDay; i <= toDay; i++)
     {
       // Every group corresponds to one day.
-      const groupName = "day_" + i.toString();
+      const groupName = "page_" + i.toString();
 
       if (!(await directory.exists([groupName])))
       {
@@ -286,12 +286,12 @@ export class EventStore
     {
       if (existingEvent.blockNo < this._buffer.firstBlockNo)
       {
-        this._buffer.firstBlockNo = Math.floor(existingEvent.blockNo / EventStore.blocksPerDay) * EventStore.blocksPerDay;
+        this._buffer.firstBlockNo = Math.floor(existingEvent.blockNo / EventStore.pageSize) * EventStore.pageSize;
       }
 
       if (existingEvent.blockNo > this._buffer.lastBlockNo)
       {
-        this._buffer.lastBlockNo = (Math.ceil(existingEvent.blockNo / EventStore.blocksPerDay) * EventStore.blocksPerDay) - 1;
+        this._buffer.lastBlockNo = (Math.ceil(existingEvent.blockNo / EventStore.pageSize) * EventStore.pageSize) - 1;
       }
 
       this._buffer.events.push(existingEvent);
@@ -328,12 +328,12 @@ export class EventStore
 
     if (event.blockNumber.lt(new BN(this._buffer.firstBlockNo.toString())))
     {
-      this._buffer.firstBlockNo = Math.floor(event.blockNumber.toNumber() / EventStore.blocksPerDay) * EventStore.blocksPerDay;
+      this._buffer.firstBlockNo = Math.floor(event.blockNumber.toNumber() / EventStore.pageSize) * EventStore.pageSize;
     }
 
     if (new BN(event.blockNumber).gt(new BN(this._buffer.lastBlockNo.toString())))
     {
-      this._buffer.lastBlockNo = (Math.ceil(event.blockNumber.toNumber() / EventStore.blocksPerDay) * EventStore.blocksPerDay) - 1;
+      this._buffer.lastBlockNo = (Math.ceil(event.blockNumber.toNumber() / EventStore.pageSize) * EventStore.pageSize) - 1;
     }
 
     this._buffer.events.push(entity);
@@ -376,7 +376,7 @@ export class EventStore
 
     for (const event of this._buffer.events.filter(o => o.source == source))
     {
-      const dayIdx = "day_" + Math.floor(event.blockNo / EventStore.blocksPerDay).toString();
+      const dayIdx = "page_" + Math.floor(event.blockNo / EventStore.pageSize).toString();
 
       // Get or create day group
       const day = daysOfSource.days[dayIdx]
