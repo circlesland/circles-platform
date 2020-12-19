@@ -36,7 +36,7 @@
 
     safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
-    if (safeState.myContacts)
+    if (safeState.myTransactions)
     {
       transactionsSubscription = safeState.myTransactions.subscribe(transactionList => {
         transactionList.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
@@ -160,13 +160,13 @@
                 <div class="max-w-full text-gray-500 ">
                   Amount in circles:
                   <span
-                    class=" text-primary">{formatBN(t.o.returnValues.value)}
+                    class=" text-primary">{formatBN(t.amount)}
                     CRC</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount in ⦿:
                   <span
-                    class=" text-primary">{(formatBN(t.o.returnValues.value) * 3).toFixed(2)}
+                    class=" text-primary">{(formatBN(t.amount) * 3).toFixed(2)}
                     ⦿</span>
                 </div>
                 <!-- <div

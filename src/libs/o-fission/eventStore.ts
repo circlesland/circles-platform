@@ -280,7 +280,6 @@ export class EventStore
   /**
    * Writes incoming events to the in-memory buffer.
    * @param source
-   * @param factory
    * @param self
    * @param event
    * @protected
@@ -317,11 +316,6 @@ export class EventStore
     }
 
     this._buffer.events.push(entity);
-
-    console.log("Buffered new event from block: " + event.blockNumber.toNumber() + ":", entity);
-    console.log("Current buffer dimensions:     " + this._buffer.firstBlockNo + " -> " + this._buffer.lastBlockNo);
-    console.log("Current buffer item count:     " + this._buffer.events.length);
-    console.log("Current buffer fill factor:    " + (this._buffer.events.length / (this._buffer.lastBlockNo - this._buffer.firstBlockNo)).toFixed(2));
   }
 
   /**
