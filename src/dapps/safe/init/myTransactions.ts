@@ -98,6 +98,9 @@ export async function initMyTransactions()
   await waitForCache;
   console.log("Cache processed.");
 
+  // Increment by one if not still in the initial state
+  lastCachedBlock = lastCachedBlock == fromBlockNo ? lastCachedBlock : lastCachedBlock + 1;
+
   //
   // Then query all transactions after the last cached block
   //
