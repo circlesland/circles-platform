@@ -3,11 +3,9 @@
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import KeyItem from "src/libs/o-views/molecules/KeyItem.svelte";
   import { onMount } from "svelte";
-  import { getEnvironment } from "src/libs/o-os/o";
   import { labelKeys } from "../../data/keys";
   import Mobile from "src/libs/o-views/templates/Mobile.svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {OmoSafeState} from "../../../safe/manifest";
   import {FissionAuthState} from "../../../fissionauth/manifest";
 
   let keys: any[] = [];

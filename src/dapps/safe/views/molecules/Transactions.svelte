@@ -39,7 +39,6 @@
     if (safeState.myTransactions)
     {
       transactionsSubscription = safeState.myTransactions.subscribe(transactionList => {
-        transactionList.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
         transactions = transactionList;
       });
     }

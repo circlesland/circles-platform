@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Jumper } from "svelte-loading-spinners";
   import { onMount } from "svelte";
-  import { getEnvironment } from "../../../../libs/o-os/o";
   import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
 
   let environment: ProcessEnvironment;

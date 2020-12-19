@@ -2,7 +2,6 @@ import Dapps from 'src/dapps/omoli/views/pages/Dapps.svelte'
 import {faBoxes, faCoins} from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from 'src/libs/o-events/runProcess';
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
-import {initializeApp} from "../safe/processes/omo/initializeApp";
 import {tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
 
@@ -40,7 +39,7 @@ export const omoli : DappManifest<OmoLiState,OmoLiState> = {
             label: "Connect Circles Safe"
           }
         },
-        event: () => new RunProcess(initializeApp)
+        // event: () => new RunProcess(initializeApp)
       }]
     }
   }]

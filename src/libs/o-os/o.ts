@@ -1,9 +1,7 @@
 import { stateMachine } from "./stateMachine";
 import * as webnative from "webnative";
 import { Shell } from "./interfaces/shell";
-import { config } from "../o-circles-protocol/config";
 import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
-import { ProcessEnvironment } from "../o-processes/interfaces/processEnvironment";
 import { GnosisSafeProxy } from "../o-circles-protocol/safe/gnosisSafeProxy";
 import { BN } from "ethereumjs-util";
 import { FissionDrive } from "../o-fission/fissionDrive";
@@ -35,41 +33,13 @@ export type Ethereum = {
   }
 };
 
-/**
- * Gets all environment properties like the currently logged-on account, token and profile.
- */
-export async function getEnvironment(): Promise<ProcessEnvironment>
-{
-  const cfg = config.getCurrent();
-  const web3 = cfg.web3();
-
-  const eth: Ethereum = {
-    web3: web3,
-    contracts: {
-      hub: new CirclesHub(web3, cfg.HUB_ADDRESS),
-      safeProxyFactory: new GnosisSafeProxyFactory(
-        web3,
-        cfg.PROXY_FACTORY_ADDRESS,
-        cfg.GNOSIS_SAFE_ADDRESS)
-    }
-  };
-
-  const environment = <ProcessEnvironment>{
-    eth: eth
-  };
-
-  return environment;
-}
-
 export async function getProcessContext(): Promise<ProcessContext> {
   return <ProcessContext>{
-    environment: await getEnvironment(),
     data: {}
   };
 }
 
 export const o: Shell = {
-  getEnvironment: async () => await getEnvironment(),
   stateMachines: <any>stateMachine,
   wn: webnative
 }

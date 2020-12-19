@@ -26,6 +26,7 @@ import {initMyKnownTokens} from "./init/myKnownTokens";
 import {initMyTransactions} from "./init/myTransactions";
 import {initSafeAddress} from "./init/safeAddress";
 import {initMyToken} from "./init/myToken";
+import {initMyBalances} from "./init/circlesBalances";
 
 export interface Contact
 {
@@ -46,6 +47,8 @@ export interface Token
 
 export interface CirclesTransaction
 {
+  token: Address,
+  tokenOwner: Address,
   blockNo: number,
   key: string,
   timestamp: Date,
@@ -54,6 +57,13 @@ export interface CirclesTransaction
   from: Address,
   to: Address,
   amount: BN,
+}
+
+export interface CirclesBalance
+{
+  lastBlockNo: number,
+  tokenAddress: string,
+  balance: BN
 }
 
 export interface OmoSafeState
@@ -66,6 +76,7 @@ export interface OmoSafeState
   myContacts?: BehaviorSubject<Contact[]>,
   myKnownTokens?: BehaviorSubject<{ [safeAddress: string]: Token }>,
   myTransactions?: BehaviorSubject<CirclesTransaction[]>,
+  myBalances?: BehaviorSubject<CirclesBalance[]>
 }
 
 const transactionPage = {
@@ -115,6 +126,8 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   await initMyKnownTokens();
   console.log("safe manifest  -> initMyTransactions()")
   await initMyTransactions();
+
+  await initMyBalances();
 
   const status = {
     working: false

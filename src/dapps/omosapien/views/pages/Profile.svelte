@@ -1,19 +1,12 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import { onMount } from "svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
-  import { push } from "svelte-spa-router";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import { Profile } from "../../../../libs/o-fission/entities/profile";
-  import { getEnvironment } from "../../../../libs/o-os/o";
   import { RefreshView } from "../../../../libs/o-events/refreshView";
   import Mobile from "src/libs/o-views/templates/Mobile.svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../manifest";
 
-  const wn = window.o.wn;
-
-  //let profile: Profile;
   let omosapien = tryGetDappState<OmoSapienState>("omo.sapien:1");
 
   window.o.events.subscribe((event: OmoEvent) => {

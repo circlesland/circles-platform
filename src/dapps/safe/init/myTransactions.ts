@@ -9,13 +9,15 @@ import {BN} from "ethereumjs-util";
 import {Erc20Token} from "../../../libs/o-circles-protocol/token/erc20Token";
 import {CirclesTransaction, OmoSafeState, Token} from "../manifest";
 
-function mapTransactionEvent(transactionEvent: CacheEvent | Event)
+function mapTransactionEvent(token:Token, transactionEvent: CacheEvent | Event)
 {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   if ((<Event>transactionEvent).returnValues)
   {
     const ev = <Event>transactionEvent;
     return <CirclesTransaction>{
+      token: token.tokenAddress,
+      tokenOwner: token.ownerSafeAddress,
       direction: ev.returnValues.from == safeState.mySafeAddress ? "out" : "in",
       from: ev.returnValues.from,
       to: ev.returnValues.to,
@@ -30,6 +32,8 @@ function mapTransactionEvent(transactionEvent: CacheEvent | Event)
     const ev = <CacheEvent>transactionEvent;
     const data = JSON.parse(ev.data);
     return <CirclesTransaction>{
+      token: token.tokenAddress,
+      tokenOwner: token.ownerSafeAddress,
       direction: ev.senderRef == safeState.mySafeAddress ? "out" : "in",
       from: data.from,
       to: data.from,
@@ -82,7 +86,7 @@ export async function initMyTransactions()
           ? transactionEvent.blockNo
           : lastCachedBlock;
 
-        const txEvent = mapTransactionEvent(transactionEvent);
+        const txEvent = mapTransactionEvent(token, transactionEvent);
         cachedCirclesTransactions.push(txEvent);
       });
 
@@ -90,6 +94,7 @@ export async function initMyTransactions()
     }));
 
     console.log(`initMyTransactions(): Cached transaction loading finished.`);
+    cachedCirclesTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
     myTransactionsSubject.next(cachedCirclesTransactions);
     resolve(null);
   });
@@ -147,9 +152,11 @@ export async function initMyTransactions()
     {
       const sub = o.observable.subscribe(erc20TransferEvent =>
       {
-        const transaction = mapTransactionEvent(erc20TransferEvent);
+        const transaction = mapTransactionEvent(o.token, erc20TransferEvent);
         console.log("New incoming transaction:", transaction);
         cachedCirclesTransactions.push(transaction);
+
+        cachedCirclesTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
         myTransactionsSubject.next(cachedCirclesTransactions);
       });
 
@@ -181,13 +188,13 @@ export async function initMyTransactions()
     {
       const sub = o.observable.subscribe(erc20TransferEvent =>
       {
-        const transaction = mapTransactionEvent(erc20TransferEvent);
+        const transaction = mapTransactionEvent(o.token, erc20TransferEvent);
         console.log("New incoming transaction:", transaction);
         cachedCirclesTransactions.push(transaction);
         myTransactionsSubject.next(cachedCirclesTransactions);
       });
 
-      inSubscriptions[o.token.ownerSafeAddress] = {
+      outSubscriptions[o.token.ownerSafeAddress] = {
         token: o.token,
         subscription: sub
       };

@@ -27,7 +27,6 @@
   } from "../../../dapps/safe/processes/circles/transferCircles";
   import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
   import { config } from "../../o-circles-protocol/config";
-  import { getEnvironment } from "../../o-os/o";
 
   export let data = {
     image: "",
