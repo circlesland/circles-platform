@@ -9,7 +9,6 @@ export async function initMyBalances()
 {
   const myCirclesBalancesSubject: BehaviorSubject<CirclesBalance[]> = new BehaviorSubject<CirclesBalance[]>([]);
 
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const web3 = config.getCurrent().web3();
 
@@ -18,7 +17,8 @@ export async function initMyBalances()
     const amounts = transactions.map(o => {
       return {
         token: o.token,
-        amount: o.direction == "out" ? o.amount.neg() : o.amount
+        amount: o.direction == "out" ? o.amount.neg() : o.amount,
+        blockNo: o.blockNo
       };
     });
 
@@ -27,19 +27,28 @@ export async function initMyBalances()
     const balances = amounts.reduce((p,c) => {
       if (!p[c.token])
       {
-        p[c.token] = new BN("0");
+        p[c.token] = {
+          balance: new BN("0"),
+          lastBlockNo: 0
+        };
       }
-      p[c.token] = p[c.token].add(c.amount)
+      p[c.token] = {
+        balance: p[c.token].balance.add(c.amount),
+        lastBlockNo: p[c.token].lastBlockNo < c.blockNo ? c.blockNo : p[c.token].lastBlockNo
+      }
       return p;
     }, {});
 
-    const readableBalances = Object.keys(balances).map(key => {
-      return {
-        token: key,
-        balance: web3.utils.fromWei(balances[key])
+    const circlesBalances = Object.keys(balances).map(key => {
+      const balance = balances[key];
+      return <CirclesBalance>{
+        tokenAddress: key,
+        balance: web3.utils.fromWei(balance.balance),
+        lastBlockNo: balance.lastBlockNo
       }
     })
-    console.log("My circles balances:", readableBalances);
+    console.log("My circles balances:", circlesBalances);
+    myCirclesBalancesSubject.next(circlesBalances);
   });
 
   setDappState<OmoSafeState>("omo.safe:1", existing =>

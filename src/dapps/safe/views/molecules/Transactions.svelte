@@ -11,7 +11,7 @@
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {CirclesTransaction, Contact, OmoSafeState} from "../../manifest";
+  import {CirclesTransaction, OmoSafeState} from "../../manifest";
   import {BN} from "ethereumjs-util";
   import {config} from "../../../../libs/o-circles-protocol/config";
 

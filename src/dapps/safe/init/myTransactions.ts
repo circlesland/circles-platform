@@ -34,7 +34,7 @@ function mapTransactionEvent(token:Token, transactionEvent: CacheEvent | Event)
     return <CirclesTransaction>{
       token: token.tokenAddress,
       tokenOwner: token.ownerSafeAddress,
-      direction: ev.senderRef == safeState.mySafeAddress ? "out" : "in",
+      direction: data.from == safeState.mySafeAddress ? "out" : "in",
       from: data.from,
       to: data.from,
       amount: new BN(data.value),
@@ -76,8 +76,12 @@ export async function initMyTransactions()
     {
       console.log(`initMyTransactions(): Loading all cached transfer events for token ${token.tokenAddress} ..`);
 
-      const cachedTransactions = (await fissionAuthState.fission.events.loadEventsFromFs(`${incomingTransactionsName}_${token.tokenAddress}`, fromDayIdx))
-        .concat(await fissionAuthState.fission.events.loadEventsFromFs(`${outgoingTransactionsName}_${token.tokenAddress}`, fromDayIdx));
+      const cachedInTransactions = await fissionAuthState.fission.events.loadEventsFromFs(`${incomingTransactionsName}_${token.tokenAddress}`, fromDayIdx);
+      console.log("cachedInTransactions", cachedInTransactions)
+      const cachedOutTransactions = await fissionAuthState.fission.events.loadEventsFromFs(`${outgoingTransactionsName}_${token.tokenAddress}`, fromDayIdx);
+      console.log("cachedOutTransactions", cachedOutTransactions)
+
+      const cachedTransactions = cachedInTransactions.concat(cachedOutTransactions);
 
       console.log(`initMyTransactions(): Got ${cachedTransactions.length} cached transfer events for token ${token.tokenAddress}.`);
       cachedTransactions.forEach(transactionEvent =>
@@ -189,7 +193,7 @@ export async function initMyTransactions()
       const sub = o.observable.subscribe(erc20TransferEvent =>
       {
         const transaction = mapTransactionEvent(o.token, erc20TransferEvent);
-        console.log("New incoming transaction:", transaction);
+        console.log("New out transaction:", transaction);
         cachedCirclesTransactions.push(transaction);
         myTransactionsSubject.next(cachedCirclesTransactions);
       });
