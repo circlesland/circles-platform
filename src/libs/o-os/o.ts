@@ -12,6 +12,8 @@ import Web3 from "web3";
 import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 import { ProcessContext } from "../o-processes/interfaces/processContext";
 import { Erc20Token } from "../o-circles-protocol/token/erc20Token";
+import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
+import {config} from "../o-circles-protocol/config";
 
 export type Me = {
   myData?: FissionDrive,
@@ -33,8 +35,35 @@ export type Ethereum = {
   }
 };
 
+/**
+ * Gets all environment properties like the currently logged-on account, token and profile.
+ */
+export async function getEnvironment(): Promise<ProcessEnvironment>
+{
+  const cfg = config.getCurrent();
+  const web3 = cfg.web3();
+
+  const eth: Ethereum = {
+    web3: web3,
+    contracts: {
+      hub: new CirclesHub(web3, cfg.HUB_ADDRESS),
+      safeProxyFactory: new GnosisSafeProxyFactory(
+        web3,
+        cfg.PROXY_FACTORY_ADDRESS,
+        cfg.GNOSIS_SAFE_ADDRESS)
+    }
+  };
+
+  const environment = <ProcessEnvironment>{
+    eth: eth
+  };
+
+  return environment;
+}
+
 export async function getProcessContext(): Promise<ProcessContext> {
   return <ProcessContext>{
+    environment: await getEnvironment(),
     data: {}
   };
 }

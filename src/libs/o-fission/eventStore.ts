@@ -16,7 +16,8 @@ export type CacheEventGroups = {
   }
 }
 
-export class CounterEntity implements Entity {
+export class CounterEntity implements Entity
+{
   name: string;
   value: number
 }
@@ -69,7 +70,7 @@ export class EventStore
   private _fs: FileSystem;
   private _pathParts: string[];
 
-  readonly counters:CountersDirectory;
+  readonly counters: CountersDirectory;
 
   constructor(fs: FileSystem, pathParts: string[])
   {
@@ -89,12 +90,13 @@ export class EventStore
   async attachEventSource(
     name: string,
     source: EventQuery<Event>)
-  : Promise<Observable<Event>>
+    : Promise<Observable<Event>>
   {
     const self = this;
     const subject = new Subject<Event>();
     const subscription = source.events.subscribe(
-      event => {
+      event =>
+      {
         this.onEvent(name, self, event);
         subject.next(event);
       });
@@ -132,13 +134,14 @@ export class EventStore
   async flush(): Promise<string>
   {
     if (this._buffer.firstBlockNo == Number.MAX_SAFE_INTEGER
-    || this._buffer.lastBlockNo == Number.MIN_SAFE_INTEGER)
+      || this._buffer.lastBlockNo == Number.MIN_SAFE_INTEGER)
     {
       console.log("No new events to flush");
       return;
     }
 
-    const presentSources = this._buffer.events.reduce((p,c) => {
+    const presentSources = this._buffer.events.reduce((p, c) =>
+    {
       p[c.source] = c;
       return p;
     }, {});
@@ -155,25 +158,25 @@ export class EventStore
     daysPerSource = daysPerSource.map(dps => this.orderAndDeduplicateDailyGroups(dps));
 
     // Finally write them back to the fs.
-    await Promise.all(daysPerSource.map(async dps => await this.writeDailyGroupsToFs(dps)));
-    await Promise.all(daysPerSource.map(async o => {
+    await Promise.all(daysPerSource.map(async dps =>
+    {
+      await this.writeDailyGroupsToFs(dps);
+
       // Maintain a counter per event source to keep track of the last blockNo
-      const maxBlockNo = Object.keys(o.days).map(dayIdx => o.days[dayIdx].events).reduce((p,c) => {
+      const maxBlockNo = Object.keys(dps.days).map(dayIdx => dps.days[dayIdx].events).reduce((p, c) =>
+      {
         const maxOfDay = Object.keys(c).reduce((p_, c_) => parseInt(c_) > p_ ? parseInt(c_) : p_, 0);
         return maxOfDay > p ? maxOfDay : p;
       }, 0);
 
       await this.counters.addOrUpdate(<CounterEntity>{
         value: maxBlockNo,
-        name: o.source
+        name: dps.source
       }, false, "updateCounter");
 
-      await this._eventSources[o.source].directory.publish();
-      console.log("published changes in '" + o.source + "'.")
+      await this.counters.publish();
+      console.log("published changes in '_counters'.")
     }));
-
-    await this.counters.publish();
-    console.log("published changes in '_counters'.")
 
     return "";
   }
@@ -193,7 +196,7 @@ export class EventStore
    * @param fromDay
    * @param toDay
    */
-  async loadEventsFromFs(source:string, fromDay: number, toDay?: number) : Promise<CacheEvent[]>
+  async loadEventsFromFs(source: string, fromDay: number, toDay?: number): Promise<CacheEvent[]>
   {
     console.log(`EventStore.loadEventsFromFs(source:'${source}', fromDay: ${fromDay}, toDay: ${toDay})`)
 
@@ -214,8 +217,8 @@ export class EventStore
 
     const directory =
       (await this._fs.exists(eventDir))
-      ? new EventDirectory(this._fs, this._pathParts.concat([source]))
-      : this._eventSources[source]?.directory;
+        ? new EventDirectory(this._fs, this._pathParts.concat([source]))
+        : this._eventSources[source]?.directory;
 
     if (!directory)
     {
@@ -230,7 +233,7 @@ export class EventStore
     {
       throw new Error(`The fromDay (${fromDay}) is larger than the toDay (${toDay})`);
     }
-    if ((fromDay && fromDay < 0) || (toDay &&  toDay < 0))
+    if ((fromDay && fromDay < 0) || (toDay && toDay < 0))
     {
       throw new Error(`The fromDay (${fromDay}) or toDay (${toDay}) is smaller than zero`);
     }
@@ -248,7 +251,7 @@ export class EventStore
       return [];
     }
 
-    let allEvents:CacheEvent[] = [];
+    let allEvents: CacheEvent[] = [];
     for (let i = fromDay; i <= toDay; i++)
     {
       // Every group corresponds to one day.
@@ -279,7 +282,7 @@ export class EventStore
    * @param fromDay
    * @param toDay
    */
-  private async loadEventsFromFsToBuffer(source:string, fromDay: number, toDay: number)
+  private async loadEventsFromFsToBuffer(source: string, fromDay: number, toDay: number)
   {
     const storedEvents = await this.loadEventsFromFs(source, fromDay, toDay);
     storedEvents.forEach(existingEvent =>
@@ -312,7 +315,7 @@ export class EventStore
   {
     // Events from event attached event sources always originate from contracts.
     // The value and recipient fields stay empty, they're only used for transactions.
-    const entity:CacheEvent = {
+    const entity: CacheEvent = {
       blockNo: event.blockNumber.toNumber(),
       source: source,
       data: JSON.stringify(event.returnValues),
@@ -362,7 +365,7 @@ export class EventStore
   /**
    * Groups all events per source per day and sorts the list within that group by block no. ASC.
    */
-  private bufferToDailyGroups(source:string): {
+  private bufferToDailyGroups(source: string): {
     source: string,
     days: {
       [day: string]: CacheEventGroup
@@ -402,7 +405,7 @@ export class EventStore
     return daysOfSource;
   }
 
-  private orderAndDeduplicateDailyGroups(days: CacheEventGroups) : CacheEventGroups
+  private orderAndDeduplicateDailyGroups(days: CacheEventGroups): CacheEventGroups
   {
     for (const dayIdx in days.days)
     {
@@ -443,6 +446,9 @@ export class EventStore
         events: days.days[dayIdx].events
       }, false, "flush");
     }
+
+    await directory.publish();
+    console.log("published changes in '" + days.source + "'.")
   }
 
   async maintainIndexes(change: DirectoryChangeType, entity: CacheEventGroup, indexHint: string | undefined): Promise<void>

@@ -159,7 +159,6 @@ export async function initMyTransactions()
         const transaction = mapTransactionEvent(o.token, erc20TransferEvent);
         console.log("New incoming transaction:", transaction);
         cachedCirclesTransactions.push(transaction);
-
         cachedCirclesTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
         myTransactionsSubject.next(cachedCirclesTransactions);
       });
@@ -195,6 +194,7 @@ export async function initMyTransactions()
         const transaction = mapTransactionEvent(o.token, erc20TransferEvent);
         console.log("New out transaction:", transaction);
         cachedCirclesTransactions.push(transaction);
+        cachedCirclesTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
         myTransactionsSubject.next(cachedCirclesTransactions);
       });
 

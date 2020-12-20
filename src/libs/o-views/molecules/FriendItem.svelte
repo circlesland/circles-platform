@@ -27,6 +27,9 @@
   } from "../../../dapps/safe/processes/circles/transferCircles";
   import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
   import { config } from "../../o-circles-protocol/config";
+  import {tryGetDappState} from "../../o-os/loader";
+  import {OmoSapienState} from "../../../dapps/omosapien/manifest";
+  import {OmoSafeState} from "../../../dapps/safe/manifest";
 
 
   export let data = {
@@ -63,15 +66,10 @@
   }
 
   async function runTransferCircles(recipientAddress: Address) {
-    const env = await getEnvironment();
-    const myToken = await env.me.myToken;
-    const myBalance = config
-      .getCurrent()
-      .web3()
-      .utils.fromWei(
-        await myToken.getBalanceOf(env.me.mySafe.address),
-        "ether"
-      );
+
+    const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+    const myBalance = safeState.myBalances.getValue().map(o => parseFloat(o.balance)).reduce((p,c) => p + c, 0).toFixed(2);
+
     const contextInitializer = async (context: TransferCirclesContext) => {
       context.data.recipient = <ProcessArtifact>{
         key: "recipient",
@@ -80,6 +78,7 @@
       };
       return context;
     };
+
     window.o.publishEvent(
       new RunProcess(
         {
