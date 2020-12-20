@@ -28,6 +28,7 @@
   import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
   import { config } from "../../o-circles-protocol/config";
 
+
   export let data = {
     image: "",
     title: "",
@@ -38,9 +39,22 @@
         out: 0
       },
     },
-    connection: "",
     actions: [],
   };
+
+  $:{
+    if (data)
+    {
+      if (data.detail.trust.in > 0 && data.detail.trust.out === null)
+        data.actions = ["trust", "send"];
+      if (data.detail.trust.in > 0 && data.detail.trust.out > 0)
+        data.actions = ["untrust", "send"];
+      if (data.detail.trust.out > 0 && data.detail.trust.in === null)
+        data.actions = ["untrust"];
+      if (data.detail.trust.out === 0)
+        data.actions = ["trust"];
+    }
+  }
 
   let openDetail: boolean = false;
 
@@ -149,10 +163,10 @@
         <p class="text-gray-500 text-xxs md:text-xs ">
           {#if data.detail.trust.in > 0 && data.detail.trust.out > 0} <!-- mutual trust -->
             <Icon icon={faExchangeAlt} /><span class="ml-2"> mutual trust</span>
-          {:else if data.detail.trust.in > 0 && data.detail.trust.out === 0} <!-- is only trusting me -->
+          {:else if data.detail.trust.in > 0 && data.detail.trust.out === null} <!-- is only trusting me -->
             <Icon icon={faArrowRight} /><span class="ml-2">
               is trusting you</span>
-          {:else if data.detail.trust.in === 0 && data.detail.trust.out > 0} <!-- is only trusted by me -->
+          {:else if data.detail.trust.out > 0 && data.detail.trust.in === null} <!-- is only trusted by me -->
             <Icon icon={faArrowLeft} /><span class="ml-2"> trusted by you</span>
           {:else}
             <Icon icon={faMinusCircle} /><span class="ml-2">

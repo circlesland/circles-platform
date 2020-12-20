@@ -33,8 +33,8 @@ export interface Contact
   safeAddress: Address,
   lastBlockNo: number,
   trust: {
-    in: number,
-    out: number
+    in?: number,
+    out?: number
   }
 }
 

@@ -46,8 +46,8 @@ export async function initMyContacts()
           lastBlockNo: trustEvent.blockNo,
           safeAddress: canSendTo,
           trust: {
-            in: limit,
-            out: 0
+            in: parseInt(limit),
+            out: null
           }
         };
 
@@ -64,8 +64,8 @@ export async function initMyContacts()
           lastBlockNo: trustEvent.blockNo,
           safeAddress: user,
           trust: {
-            in: 0,
-            out: limit
+            in: null,
+            out: parseInt(limit)
           }
         };
 
