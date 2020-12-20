@@ -9,7 +9,7 @@ import type { Address } from "./interfaces/address";
 import type { ByteString } from "./interfaces/byteString";
 import type { Addressable } from "./interfaces/addressable";
 import { filter, map } from "rxjs/operators";
-import type { Event } from "./interfaces/event";
+import type { BlockchainEvent } from "./interfaces/blockchainEvent";
 import { isArray } from "rxjs/internal-compatibility";
 import { EventQuery } from "./eventQuery";
 import type { TransactionReceipt } from "web3-core";
@@ -49,8 +49,8 @@ export abstract class Web3Contract implements Addressable {
    * @param options
    */
   queryEvents(options: PastEventOptions & { event: string })
-    : EventQuery<Event> {
-    const filterPredicate = (event: Event): boolean => {
+    : EventQuery<BlockchainEvent> {
+    const filterPredicate = (event: BlockchainEvent): boolean => {
       if (event.event != options.event) {
         return false;
       }
@@ -72,7 +72,7 @@ export abstract class Web3Contract implements Addressable {
       self.events([options.event])
         .pipe(
           filter(filterPredicate),
-          map((event) => <Event>{
+          map((event) => <BlockchainEvent>{
             address: event.address,
             blockNumber: new BN(event.blockNumber),
             blockHash: event.blockHash,

@@ -1,7 +1,6 @@
 import FileSystem from "webnative/fs/filesystem";
 import { Entity } from "../entities/entity";
 import { CID } from "webnative/ipfs";
-import {CacheEventGroup} from "../entities/cacheEvent";
 
 export type DirectoryChangeType = "add" | "update" | "remove";
 

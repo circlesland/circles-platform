@@ -1,6 +1,5 @@
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader"
 import {BehaviorSubject} from "rxjs";
-import {CacheEvent} from "../../../libs/o-fission/entities/cacheEvent";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 import {OmoSafeState} from "../manifest";
@@ -60,7 +59,7 @@ export async function initMyContacts()
   });
 }
 
-function indexContact(safeState:OmoSafeState, trustEvent: CacheEvent)
+function indexContact(safeState:OmoSafeState, trustEvent)
 {
   const {canSendTo, user, limit} = JSON.parse(trustEvent.data);
 
@@ -110,7 +109,8 @@ function indexContact(safeState:OmoSafeState, trustEvent: CacheEvent)
 }
 
 function toCacheEvent(source:string, event) {
-  return <CacheEvent>{
+  // TODO: Remove redundant conversion
+  return {
     blockNo: event.blockNumber.toNumber(),
     data: JSON.stringify(event.returnValues),
     source: source,

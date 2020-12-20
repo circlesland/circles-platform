@@ -52,7 +52,7 @@
         data.actions = ["untrust", "send"];
       if (data.detail.trust.out > 0 && data.detail.trust.in === null)
         data.actions = ["untrust"];
-      if (data.detail.trust.out === 0)
+      if (data.detail.trust.out == 0)
         data.actions = ["trust"];
     }
   }
@@ -214,8 +214,14 @@
           Address:<br /><span class=" text-primary">{data.detail.address}</span>
         </div>
         <div>
-          Trust Limit:<span
-            class="pl-2 text-primary">{data.detail.limit}%</span>
+          {#if data.detail.trust.out}
+            I trust:<span
+            class="pl-2 text-primary">{data.detail.trust.out}%</span>
+          {/if}<br/>
+          {#if data.detail.trust.in}
+            I'm trusted:<span
+            class="pl-2 text-primary">{data.detail.trust.in}%</span><br/>
+          {/if}
         </div>
       </div>
     </div>

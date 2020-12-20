@@ -85,27 +85,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   await initMyTransactions();
   await initMyBalances();
 
-  const status = {
-    working: false
-  };
-  setInterval(async () =>
-  {
-    if (status.working)
-      return;
-
-    status.working = true;
-    console.log("Started flushing events ...")
-
-    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    await fissionAuthState.fission.events.flush();
-    await fissionAuthState.fission.events.clearBuffer();
-
-    status.working = false;
-    console.log("Finished flushing events.")
-  }, 10000);
-
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-
   if (safeState.mySafeAddress && safeState.myToken)
   {
     // Everything is already set up

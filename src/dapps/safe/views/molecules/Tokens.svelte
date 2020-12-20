@@ -36,9 +36,9 @@
     data: {
       image: "logos/omo.svg",
       title: "Invite Credits",
-      balance: Math.floor(parseFloat(web3.utils.fromWei(safeState.myAccountXDaiBalance)) * 10),
+      balance: Math.floor(parseFloat(web3.utils.fromWei(safeState.mySafeXDaiBalance)) * 10),
       subtitle: "Invites you have left",
-      description: "xDai balance: " + parseFloat(web3.utils.fromWei(safeState.myAccountXDaiBalance)),
+      description: "xDai balance: " + parseFloat(web3.utils.fromWei(safeState.mySafeXDaiBalance)),
     }
   };
 
@@ -99,7 +99,7 @@
     {
       balanceSubscriptions = safeState.myBalances.subscribe(balanceList =>
       {
-        const weiBalance = balanceList.map(o => o.balance).reduce((p, c) => p.add(c), new BN("0"));
+        const weiBalance = balanceList.map(o => o.balance.mul(new BN(3))).reduce((p, c) => p.add(c), new BN("0"));
         safeCirclesBalance = {
           data: {
             image: "symbols/o.svg",
@@ -115,7 +115,7 @@
           const token = tokens.find(t => t.tokenAddress == balanceEntry.tokenAddress);
           if (token)
           {
-            token.balance = balanceEntry.balance;
+            token.balance = balanceEntry.balance.mul(new BN(3));
           }
           return token;
         }).filter(o => !!o);

@@ -1,7 +1,7 @@
 import type { Address } from "./address";
-import type { Event } from "./event";
+import type { BlockchainEvent } from "./blockchainEvent";
 
-export interface TrustRelation extends Event {
+export interface TrustRelation extends BlockchainEvent {
   from: Address
   to: Address
   limit: number

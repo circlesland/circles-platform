@@ -11,9 +11,11 @@
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {CirclesTransaction, Contact, OmoSafeState} from "../../manifest";
   import {BN} from "ethereumjs-util";
   import {config} from "../../../../libs/o-circles-protocol/config";
+  import {OmoSafeState} from "../../manifest";
+  import {CirclesTransaction} from "../../../../libs/o-circles-protocol/model/circlesTransaction";
+  import {Contact} from "../../../../libs/o-circles-protocol/model/contact";
 
   let safeState: OmoSafeState = {};
   let transactionsSubscription: Subscription;
@@ -107,7 +109,11 @@
                   {:else}Harvested Time{/if}
                 </b>
                 <p class="text-gray-500 text-xxs md:text-xs">
-                  {dayjs(t.timestamp).fromNow()}
+                  {#if !t.timestamp}
+                    ...
+                  {:else}
+                    {dayjs(new Date(t.timestamp * 1000)).fromNow()}
+                  {/if}
                   {#if t.direction === 'in'}
                     {#if t.from !== '0x0000000000000000000000000000000000000000'}
                       from
@@ -138,12 +144,12 @@
               {#if t.direction === 'out'}
                 <div
                   class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-primary">
-                  <span>-{formatBN(t.amount)}</span>
+                  <span>-{formatBN(t.amount.mul(new BN(3)))}</span>
                 </div>
               {:else}
                 <div
                   class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-action">
-                  {formatBN(t.amount)}
+                  {formatBN(t.amount.mul(new BN(3)))}
                 </div>
               {/if}
             </div>
@@ -210,13 +216,13 @@
                 <div class="max-w-full text-gray-500 ">
                   Amount in circles:
                   <span
-                    class=" text-primary">{formatBN(t.amount)}
+                    class=" text-primary">{t.amount.toString()}
                     CRC</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount in ⦿:
                   <span
-                    class=" text-primary">{(formatBN(t.amount) * 3).toFixed(2)}
+                    class=" text-primary">{t.amount.mul(new BN(3)).toString()}
                     ⦿</span>
                 </div>
                 <!-- <div

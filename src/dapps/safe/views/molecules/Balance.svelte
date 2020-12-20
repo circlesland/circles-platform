@@ -45,7 +45,7 @@
   class="flex items-center justify-center h-full font-bold text-center text-white bg-primary md:rounded-xl">
     <div
       class="flex items-center justify-center pl-6 mx-auto text-6xl uppercase">
-      {parseFloat(web3.utils.fromWei(balance)).toFixed(2)}
+      {parseFloat(web3.utils.fromWei(balance.mul(new BN(3)))).toFixed(2)}
       <span><img
           src="symbols/o-white.svg"
           class="h-8 pb-2 pl-2"

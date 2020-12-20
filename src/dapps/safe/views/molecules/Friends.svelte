@@ -32,7 +32,7 @@
     {
       contactsSubscription = safeState.myContacts.subscribe(async contactList =>
       {
-        contacts = contactList;
+        contacts = contactList.filter(o => o.safeAddress !== safeState.mySafeAddress);
       });
     }
   }
@@ -76,12 +76,12 @@
       <Jumper size="150" color="#071D69" unit="px"/>
     </div>
   {:else}
-    {#if contacts.filter(o => o.trust.in > 0 && o.trust.out === null).length > 0}
+    {#if contacts.filter(o => o.trust.in > 0 && !o.trust.out).length > 0}
       <div class="mb-4">
         <CategoryTitle mapping={labelTrusted}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each contacts.filter(o => o.trust.in > 0 && o.trust.out === null) as personThatTrustMe}
+        {#each contacts.filter(o => o.trust.in > 0 && !o.trust.out) as personThatTrustMe}
           <FriendItem data={mapToListItem(personThatTrustMe)}/>
         {/each}
       </div>
@@ -109,12 +109,12 @@
       </div>
     {/if}
 
-    {#if contacts.filter(o => o.trust.out === 0).length > 0}
+    {#if contacts.filter(o => o.trust.out == 0).length > 0}
       <div class="mb-4">
         <CategoryTitle mapping={labelRevoked}/>
       </div>
       <div class="mb-4 space-y-2">
-        {#each contacts.filter(o => o.trust.out === 0) as ut}
+        {#each contacts.filter(o => o.trust.out == 0) as ut}
           <FriendItem data={mapToListItem(ut)}/>
         {/each}
       </div>

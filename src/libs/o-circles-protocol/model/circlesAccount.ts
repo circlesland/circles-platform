@@ -3,7 +3,7 @@ import {config} from "../config";
 import {CirclesHub} from "../circles/circlesHub";
 import {BN} from "ethereumjs-util";
 import {Observable, Subject} from "rxjs";
-import {Event} from "../interfaces/event";
+import {BlockchainEvent} from "../interfaces/blockchainEvent";
 import {CirclesToken} from "./circlesToken";
 import {ByteString} from "../interfaces/byteString";
 import {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
@@ -98,9 +98,9 @@ export class CirclesAccount
     return balances;
   }
 
-  subscribeToMyContacts(): Observable<Event>
+  subscribeToMyContacts(): Observable<BlockchainEvent>
   {
-    const subject = new Subject<Event>();
+    const subject = new Subject<BlockchainEvent>();
 
     const myIncomingTrusts = this.hub.queryEvents(CirclesHub.queryPastTrusts(null, this.safeAddress));
     myIncomingTrusts.events.subscribe(trustEvent =>
