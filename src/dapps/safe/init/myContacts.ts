@@ -1,11 +1,10 @@
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader"
-import {config} from "../../../libs/o-circles-protocol/config";
 import {BehaviorSubject} from "rxjs";
 import {CacheEvent} from "../../../libs/o-fission/entities/cacheEvent";
-import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
-import {CirclesProfile, Contact, OmoSafeState} from "../manifest";
 import {BlockIndex} from "./blockIndex";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
+import {CirclesAccount, CirclesProfile, Contact} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {OmoSafeState} from "../manifest";
 
 const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
 const blockIndex = new BlockIndex();
@@ -42,28 +41,13 @@ const updateTrigger = new DelayedTrigger(30, async () =>
 export async function initMyContacts()
 {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  const circlesAccount = new CirclesAccount(safeState.mySafeAddress);
 
-  const cfg = config.getCurrent();
-  const web3 = config.getCurrent().web3();
-  const hub = new CirclesHub(web3, cfg.HUB_ADDRESS);
-
-  const myIncomingTrusts = await hub.queryEvents(CirclesHub.queryPastTrusts(null, safeState.mySafeAddress));
-  myIncomingTrusts.events.subscribe(trustEvent =>
+  circlesAccount.subscribeToMyContacts().subscribe(trustEvent =>
   {
     indexContact(safeState, toCacheEvent("Trust_In", trustEvent));
     updateTrigger.trigger();
   });
-
-  myIncomingTrusts.execute();
-
-  const myOutgoingTrusts = await hub.queryEvents(CirclesHub.queryPastTrusts(safeState.mySafeAddress, null));
-  myOutgoingTrusts.events.subscribe(trustEvent =>
-  {
-    indexContact(safeState, toCacheEvent("Trust_Out", trustEvent));
-    updateTrigger.trigger();
-  });
-
-  myOutgoingTrusts.execute();
 
   setDappState<OmoSafeState>("omo.safe:1", existing =>
   {

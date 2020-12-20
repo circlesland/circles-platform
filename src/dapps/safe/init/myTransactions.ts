@@ -5,18 +5,19 @@ import {CacheEvent} from "../../../libs/o-fission/entities/cacheEvent";
 import {Event} from "../../../libs/o-circles-protocol/interfaces/event";
 import {BN} from "ethereumjs-util";
 import {Erc20Token} from "../../../libs/o-circles-protocol/token/erc20Token";
-import {CirclesTransaction, OmoSafeState, Token} from "../manifest";
 import {BlockIndex} from "./blockIndex";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
+import {CirclesToken, CirclesTransaction} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {OmoSafeState} from "../manifest";
 
-function mapTransactionEvent(token:Token, transactionEvent: CacheEvent | Event)
+function mapTransactionEvent(token:CirclesToken, transactionEvent: CacheEvent | Event)
 {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
   const ev = <Event>transactionEvent;
   return <CirclesTransaction>{
     token: token.tokenAddress,
-    tokenOwner: token.ownerSafeAddress,
+    tokenOwner: token.tokenOwner,
     direction: ev.returnValues.from == safeState.mySafeAddress ? "out" : "in",
     from: ev.returnValues.from,
     to: ev.returnValues.to,

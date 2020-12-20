@@ -1,38 +1,27 @@
 import {config} from "../../../libs/o-circles-protocol/config";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {BN} from "ethereumjs-util";
 import {OmoSafeState} from "../manifest";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
 
 export async function initXDaiBalances()
 {
   const web3 = config.getCurrent().web3();
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  const balances: {
-    accountXDaiBalance?: BN,
-    safeXDaiBalance?: BN
-  } = {};
 
-  if (safeState.myKey)
-  {
-    const ownerAddress = web3
+    const ownerAddress = safeState.myKey ? web3
       .eth
       .accounts
       .privateKeyToAccount(safeState.myKey.privateKey)
-      .address;
+      .address
+      : undefined;
 
-    balances.accountXDaiBalance = new BN(await web3.eth.getBalance(ownerAddress));
-  }
-
-  if (safeState.mySafeAddress)
-  {
-    balances.safeXDaiBalance = new BN(await web3.eth.getBalance(safeState.mySafeAddress));
-  }
+  const balances = await new CirclesAccount(safeState.mySafeAddress)
+    .tryGetXDaiBalance(ownerAddress);
 
   setDappState<OmoSafeState>("omo.safe:1", (current) => {
     return {
       ...current,
-      mySafeXDaiBalance: balances.safeXDaiBalance,
-      myAccountXDaiBalance: balances.accountXDaiBalance
+      ...balances
     }
   });
 }

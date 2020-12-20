@@ -8,7 +8,7 @@ export interface Token extends Entity {
    * Can contain the address of the user's gnosis safe proxy
    * which is registered at the circles hub.
    */
-  circlesAddress?: string;
+  tokenOwner?: string;
   /**
    * The token's address.
    */

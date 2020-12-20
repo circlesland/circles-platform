@@ -7,13 +7,15 @@
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {Contact, OmoSafeState, Token} from "../../manifest";
+
   import {OmoSapienState} from "../../../omosapien/manifest";
+  import {CirclesToken, Contact} from "../../../../libs/o-circles-protocol/queryModel/circlesAccount";
+  import {OmoSafeState} from "../../manifest";
 
 
   let safeState:OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let balanceSubscriptions: Subscription;
-  let balances: Token[] = [];
+  let balances: CirclesToken[] = [];
   let contacts: {[safeAddress:string]:Contact} = {};
   let omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
 
@@ -110,7 +112,7 @@
         };
 
         balances = balanceList.map(balanceEntry => {
-          const tokens:Token[] = Object.values(safeState.myKnownTokens.getValue());
+          const tokens:CirclesToken[] = Object.values(safeState.myKnownTokens.getValue());
           const token = tokens.find(t => t.tokenAddress == balanceEntry.tokenAddress);
           if (token)
           {
@@ -131,12 +133,12 @@
 
   onMount(() => init());
 
-  function mapToListItem(token:Token)
+  function mapToListItem(token:CirclesToken)
   {
-    const image = contacts[token.ownerSafeAddress]?.circlesProfile?.avatarUrl
-      ?? "https://avatars.dicebear.com/api/avataaars/" + token.ownerSafeAddress + ".svg";
+    const image = contacts[token.tokenOwner]?.circlesProfile?.avatarUrl
+      ?? "https://avatars.dicebear.com/api/avataaars/" + token.tokenOwner + ".svg";
 
-    const title = contacts[token.ownerSafeAddress]?.circlesProfile?.username
+    const title = contacts[token.tokenOwner]?.circlesProfile?.username
       ??  token.tokenAddress.slice(0, 8);
 
     const balance = token.balance ? parseFloat(token.balance).toFixed(2) : "0";
@@ -145,7 +147,7 @@
         image:image,
           balanceBN: new BN("0"),
           title: title,
-          description: token.ownerSafeAddress,
+          description: token.tokenOwner,
           balance: balance,
           subtitle: "time in ⦿",
       },

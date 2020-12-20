@@ -27,64 +27,22 @@ import {initMyTransactions} from "./init/myTransactions";
 import {initSafeAddress} from "./init/safeAddress";
 import {initMyToken} from "./init/myToken";
 import {initMyBalances} from "./init/circlesBalances";
-
-export interface CirclesProfile {
-  loaded: boolean,
-  avatarUrl?: string,
-  id?: number,
-  safeAddress: string,
-  username?: string
-}
-
-export interface Contact
-{
-  circlesProfile?: CirclesProfile,
-  safeAddress: Address,
-  lastBlockNo: number,
-  trust: {
-    in?: number,
-    out?: number
-  }
-}
-
-export interface Token
-{
-  createdInBlockNo: number,
-  ownerSafeAddress: Address,
-  tokenAddress: Address,
-  balance: BN
-}
-
-export interface CirclesTransaction
-{
-  id: string,
-  token: Address,
-  tokenOwner: Address,
-  blockNo: number,
-  timestamp: Date,
-  direction: "in" | "out",
-  subject: string,
-  from: Address,
-  to: Address,
-  amount: BN,
-}
-
-export interface CirclesBalance
-{
-  lastBlockNo: number,
-  tokenAddress: string,
-  balance: BN
-}
+import {
+  CirclesBalance,
+  CirclesToken,
+  CirclesTransaction,
+  Contact
+} from "../../libs/o-circles-protocol/queryModel/circlesAccount";
 
 export interface OmoSafeState
 {
   mySafeAddress?: Address,
   myKey?: KeyPair,
-  myToken?: Token,
+  myToken?: CirclesToken,
   myAccountXDaiBalance?: BN,
   mySafeXDaiBalance?: BN,
   myContacts?: BehaviorSubject<Contact[]>,
-  myKnownTokens?: BehaviorSubject<{ [safeAddress: string]: Token }>,
+  myKnownTokens?: BehaviorSubject<{ [safeAddress: string]: CirclesToken }>,
   myTransactions?: BehaviorSubject<CirclesTransaction[]>,
   myBalances?: BehaviorSubject<CirclesBalance[]>
 }

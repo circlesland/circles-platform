@@ -3,6 +3,7 @@ import {FissionAuthState} from "../../fissionauth/manifest";
 import {config} from "../../../libs/o-circles-protocol/config";
 import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
 import {OmoSafeState} from "../manifest";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
 
 export async function initMyToken()
 {
@@ -12,21 +13,14 @@ export async function initMyToken()
 
   if (!myToken)
   {
-    const cfg = config.getCurrent();
-    const web3 = config.getCurrent().web3();
-    const hub = new CirclesHub(web3, cfg.HUB_ADDRESS);
-
-    const mySignupEvents = hub.queryEvents(CirclesHub.queryPastSignup(safeState.mySafeAddress));
-    const mySignupArr = await mySignupEvents.toArray();
-    const mySignup = mySignupArr[0];
-
+    const mySignup = await new CirclesAccount(safeState.mySafeAddress).tryGetMyToken();
     if (mySignup)
     {
       myToken = {
         name: "me",
-        tokenAddress: mySignup.returnValues.token,
-        circlesAddress: mySignup.returnValues.user,
-        createdInBlockNo: mySignup.blockNumber.toNumber()
+        tokenAddress: mySignup.tokenAddress,
+        tokenOwner: mySignup.tokenOwner,
+        createdInBlockNo: mySignup.createdInBlockNo
       }
     }
   }

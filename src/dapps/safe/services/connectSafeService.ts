@@ -141,7 +141,7 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
     await fissionAuthState.fission.tokens.addMyToken({
       name: "me",
       tokenAddress: myToken.token.address,
-      circlesAddress: hubAccount.address,
+      tokenOwner: hubAccount.address,
       createdInBlockNo: myToken.createdInBlockNo
     });
 
