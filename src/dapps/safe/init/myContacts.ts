@@ -2,10 +2,10 @@ import {setDappState, tryGetDappState} from "../../../libs/o-os/loader"
 import {BehaviorSubject} from "rxjs";
 import {CacheEvent} from "../../../libs/o-fission/entities/cacheEvent";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 import {OmoSafeState} from "../manifest";
-import {Contact} from "../../../libs/o-circles-protocol/queryModel/contact";
-import {CirclesProfile} from "../../../libs/o-circles-protocol/queryModel/circlesProfile";
+import {Contact} from "../../../libs/o-circles-protocol/model/contact";
+import {CirclesProfile} from "../../../libs/o-circles-protocol/model/circlesProfile";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 
 const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);

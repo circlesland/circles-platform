@@ -3,7 +3,7 @@ import type { GnosisSafeOps } from "./gnosisSafeOps";
 import type { ByteString } from "./byteString";
 import type { Address } from "./address";
 
-export interface GnosisSafeTransaction {
+export interface SafeTransaction {
   to: Address;
   value: BN;
   data: ByteString;

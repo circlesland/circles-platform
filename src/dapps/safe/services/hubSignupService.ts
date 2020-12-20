@@ -1,9 +1,9 @@
-import {HubAccount} from "../../../libs/o-circles-protocol/model/hubAccount";
 import {SignupAtCirclesContext} from "../processes/omo/signupAtCircles";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
 import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 
 export const hubSignupService = async (context: SignupAtCirclesContext) =>
 {
@@ -27,15 +27,14 @@ export const hubSignupService = async (context: SignupAtCirclesContext) =>
     gnosisSafeProxy
   );
 
-  const hubAccount = new HubAccount(context.environment.eth.contracts.hub,
-    safeState.mySafeAddress);
+  const circlesAccount = new CirclesAccount(safeState.mySafeAddress);
 
-  const myToken = await hubAccount.getOwnToken();
+  const myToken = await circlesAccount.tryGetMyToken();
   await fissionAuthState.fission.tokens.addMyToken({
     name: "me",
-    tokenAddress: myToken.token.address,
+    tokenAddress: myToken.tokenAddress,
     createdInBlockNo: myToken.createdInBlockNo,
-    tokenOwner: hubAccount.address
+    tokenOwner: myToken.tokenOwner
   });
 
   setDappState<OmoSafeState>("omo.safe:1", existing => {

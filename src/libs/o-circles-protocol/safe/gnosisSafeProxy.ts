@@ -1,25 +1,28 @@
-import type { AbiItem } from "web3-utils";
+import type {AbiItem} from "web3-utils";
 import type Web3 from "web3";
-import { EMPTY_DATA, GNOSIS_SAFE_ABI, ZERO_ADDRESS } from "../consts";
-import { BN } from "ethereumjs-util";
-import { config } from "../config";
+import {EMPTY_DATA, GNOSIS_SAFE_ABI, ZERO_ADDRESS} from "../consts";
+import {BN} from "ethereumjs-util";
+import {config} from "../config";
 import EthLibAccount from "eth-lib/lib/account";
-import { Web3Contract } from "../web3Contract";
-import type { Address } from "../interfaces/address";
-import type { GnosisSafeTransaction } from "../interfaces/gnosisSafeTransaction";
-import { GnosisSafeOps } from "../interfaces/gnosisSafeOps";
-import type { ByteString } from "../interfaces/byteString";
-import type { TransactionReceipt } from "web3-core";
+import {Web3Contract} from "../web3Contract";
+import type {Address} from "../interfaces/address";
+import type {SafeTransaction} from "../interfaces/gnosisSafeTransaction";
+import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
+import type {ByteString} from "../interfaces/byteString";
+import type {TransactionReceipt} from "web3-core";
 
-export class GnosisSafeProxy extends Web3Contract {
+export class GnosisSafeProxy extends Web3Contract
+{
   readonly creatorAddress: Address;
 
-  constructor(web3: Web3, creatorAddress: Address, safeProxyAddress: Address) {
+  constructor(web3: Web3, creatorAddress: Address, safeProxyAddress: Address)
+  {
     super(web3, safeProxyAddress, new web3.eth.Contract(<AbiItem[]>GNOSIS_SAFE_ABI, safeProxyAddress));
     this.creatorAddress = creatorAddress;
   }
 
-  static queryPastSuccessfulExecutions(address: Address) {
+  static queryPastSuccessfulExecutions(address: Address)
+  {
     return {
       event: "ExecutionSuccess",
       address: address,
@@ -41,16 +44,19 @@ export class GnosisSafeProxy extends Web3Contract {
   static readonly RemovedOwnerEvent = "RemovedOwner";
   static readonly SignMsgEvent = "SignMsg";
 
-  async getOwners(): Promise<string[]> {
+  async getOwners(): Promise<string[]>
+  {
     return await this.contract.methods.getOwners().call();
   }
 
-  async getNonce(): Promise<number> {
+  async getNonce(): Promise<number>
+  {
     return parseInt(await this.contract.methods.nonce().call());
   }
 
-  async transferEth(privateKey: ByteString, value: BN, to: Address) {
-    const safeTransaction = <GnosisSafeTransaction>{
+  async transferEth(privateKey: ByteString, value: BN, to: Address)
+  {
+    const safeTransaction = <SafeTransaction>{
       value: value,
       to: to,
       operation: GnosisSafeOps.CALL,
@@ -62,7 +68,8 @@ export class GnosisSafeProxy extends Web3Contract {
     return await this.execTransaction(privateKey, safeTransaction);
   }
 
-  async execTransaction(privateKey: string, safeTransaction: GnosisSafeTransaction, dontEstimate?: boolean): Promise<TransactionReceipt> {
+  async execTransaction(privateKey: string, safeTransaction: SafeTransaction, dontEstimate?: boolean): Promise<TransactionReceipt>
+  {
     this.validateSafeTransaction(safeTransaction);
 
     const estimatedBaseGas = dontEstimate
@@ -77,7 +84,7 @@ export class GnosisSafeProxy extends Web3Contract {
 
     const nonce = await this.getNonce();
 
-    const executableTransaction = <GnosisSafeTransaction>{
+    const executableTransaction = <SafeTransaction>{
       to: safeTransaction.to,
       value: safeTransaction.value,
       data: safeTransaction.data,
@@ -118,7 +125,8 @@ export class GnosisSafeProxy extends Web3Contract {
     return await Web3Contract.sendSignedRawTransaction(signedTransactionData);
   }
 
-  private validateSafeTransaction(safeTransaction: GnosisSafeTransaction) {
+  private validateSafeTransaction(safeTransaction: SafeTransaction)
+  {
     if (safeTransaction.safeTxGas && !BN.isBN(safeTransaction.safeTxGas))
       throw new Error("The 'safeTxGas' property of the transaction is not a valid bn.js BigNum.");
     if (safeTransaction.baseGas && !BN.isBN(safeTransaction.baseGas))
@@ -142,7 +150,8 @@ export class GnosisSafeProxy extends Web3Contract {
    * by the owners of the safe to authorize it.
    * @param safeTransaction
    */
-  private async getTransactionHash(safeTransaction: GnosisSafeTransaction) {
+  private async getTransactionHash(safeTransaction: SafeTransaction)
+  {
     this.validateSafeTransaction(safeTransaction);
 
     return await this.contract.methods.getTransactionHash(
@@ -159,7 +168,8 @@ export class GnosisSafeProxy extends Web3Contract {
     ).call();
   }
 
-  private async estimateSafeTxGasCosts(safeTransaction: GnosisSafeTransaction): Promise<BN> {
+  private async estimateSafeTxGasCosts(safeTransaction: SafeTransaction): Promise<BN>
+  {
     // from https://github.com/gnosis/safe-react -> /src/logic/safe/transactions/gasNew.ts
     this.validateSafeTransaction(safeTransaction);
 
@@ -176,12 +186,14 @@ export class GnosisSafeProxy extends Web3Contract {
       to: this.address,
       data: estimateDataCallData
     })
-      .catch(e => {
+      .catch(e =>
+      {
         if (!e.data)
           throw new Error(JSON.stringify(e));
 
         let estimateInError = e.data;
-        if (estimateInError.startsWith("Reverted 0x")) {
+        if (estimateInError.startsWith("Reverted 0x"))
+        {
           estimateInError = estimateInError.substr(11);
         }
         txGasEstimation = new BN(estimateInError.substring(138), 16)
@@ -196,7 +208,8 @@ export class GnosisSafeProxy extends Web3Contract {
     return txGasEstimation.add(dataGasEstimation);
   }
 
-  private estimateBaseGasCosts(safeTransaction: GnosisSafeTransaction, signatureCount: number): BN {
+  private estimateBaseGasCosts(safeTransaction: SafeTransaction, signatureCount: number): BN
+  {
     const abiMessage = this.toAbiMessage(safeTransaction);
     const dataGasCosts = this.estimateDataGasCosts(abiMessage);
     const signatureCosts = signatureCount == 0
@@ -206,12 +219,14 @@ export class GnosisSafeProxy extends Web3Contract {
     return dataGasCosts.add(signatureCosts);
   }
 
-  private static estimateSignatureCosts(signatureCount: number): BN {
+  private static estimateSignatureCosts(signatureCount: number): BN
+  {
     // (array count (3 -> r, s, v) + ecrecover costs) * signature count;
     return new BN(signatureCount * (68 + 2176 + 2176 + 6000));
   }
 
-  private toAbiMessage(safeTransaction: GnosisSafeTransaction, signatures?: string) {
+  private toAbiMessage(safeTransaction: SafeTransaction, signatures?: string)
+  {
     this.validateSafeTransaction(safeTransaction);
 
     return this.contract.methods.execTransaction(
@@ -228,13 +243,17 @@ export class GnosisSafeProxy extends Web3Contract {
       .encodeABI();
   }
 
-  private estimateDataGasCosts(data: ByteString): BN {
-    const reducer = (accumulator: any, currentValue: string) => {
-      if (currentValue === EMPTY_DATA) {
+  private estimateDataGasCosts(data: ByteString): BN
+  {
+    const reducer = (accumulator: any, currentValue: string) =>
+    {
+      if (currentValue === EMPTY_DATA)
+      {
         return accumulator + 0
       }
 
-      if (currentValue === '00') {
+      if (currentValue === '00')
+      {
         return accumulator + 4
       }
 
@@ -248,7 +267,8 @@ export class GnosisSafeProxy extends Web3Contract {
     web3: Web3,
     safeOwnerPrivateKey: string,
     transactionHash: string
-  ) {
+  )
+  {
     const signature = EthLibAccount.sign(transactionHash, safeOwnerPrivateKey);
     const vrs = EthLibAccount.decodeSignature(signature);
 

@@ -1,29 +1,57 @@
-import type Web3 from "web3";
-import type { Address } from "../interfaces/address";
-import { Erc20Token } from "../token/erc20Token";
-import { BN } from "ethereumjs-util";
-import { ZERO_ADDRESS } from "../consts";
-import { GnosisSafeOps } from "../interfaces/gnosisSafeOps";
-import type { GnosisSafeProxy } from "../safe/gnosisSafeProxy";
-import { ByteString } from "../interfaces/byteString";
+import {Address} from "../interfaces/address";
+import {BN} from "ethereumjs-util";
+import {Observable, Subject} from "rxjs";
+import {Event} from "../interfaces/event";
+import {Erc20Token} from "../token/erc20Token";
+import {config} from "../config";
+import {CirclesHub} from "../circles/circlesHub";
 
-export class CirclesToken extends Erc20Token {
-  constructor(web3: Web3, address: Address) {
-    super(web3, address);
+export class CirclesToken
+{
+  createdInBlockNo: number;
+  tokenAddress: Address;
+  tokenOwner: Address;
+  balance?: BN;
+
+  private readonly cfg = config.getCurrent();
+  private readonly web3 = config.getCurrent().web3();
+  private readonly hub:CirclesHub;
+  private readonly safeAddress:string;
+
+  constructor(safeAddress:string)
+  {
+    this.safeAddress = safeAddress;
   }
 
-  async getUBI(privateKey: ByteString, safeProxy: GnosisSafeProxy) {
-    const txData = this.contract.methods.update().encodeABI();
+  subscribeToTransactions(): Observable<Event>
+  {
+    const subject = new Subject<Event>();
 
-    return await safeProxy.execTransaction(
-      privateKey,
-      {
-        to: this.address,
-        data: txData,
-        value: new BN("0"),
-        refundReceiver: ZERO_ADDRESS,
-        gasToken: ZERO_ADDRESS,
-        operation: GnosisSafeOps.CALL
-      });
+    const erc20Contract = new Erc20Token(this.web3, this.tokenAddress);
+    const inTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
+      undefined,
+      this.safeAddress,
+      this.createdInBlockNo));
+
+    inTransactionsQuery.events.subscribe(inTransactionEvent =>
+    {
+      subject.next(inTransactionEvent);
+    });
+
+    inTransactionsQuery.execute();
+
+    const outTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
+      this.safeAddress,
+      undefined,
+      this.createdInBlockNo));
+
+    outTransactionsQuery.events.subscribe(outTransactionEvent =>
+    {
+      subject.next(outTransactionEvent);
+    });
+
+    outTransactionsQuery.execute();
+
+    return subject;
   }
 }

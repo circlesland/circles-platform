@@ -6,9 +6,9 @@ import {Event} from "../../../libs/o-circles-protocol/interfaces/event";
 import {BN} from "ethereumjs-util";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {OmoSafeState} from "../manifest";
-import {CirclesToken} from "../../../libs/o-circles-protocol/queryModel/circlesToken";
-import {CirclesTransaction} from "../../../libs/o-circles-protocol/queryModel/circlesTransaction";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
+import {CirclesTransaction} from "../../../libs/o-circles-protocol/model/circlesTransaction";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 
 function mapTransactionEvent(token:CirclesToken, transactionEvent: CacheEvent | Event)
@@ -81,7 +81,7 @@ export async function initMyTransactions()
 
     newTokens.forEach(newToken =>
     {
-      const tokenTransactions = circlesAccount.subscribeToTransactionsOfToken(newToken);
+      const tokenTransactions = newToken.subscribeToTransactions();
       tokenTransactions.subscribe(inTransactionEvent =>
       {
         indexTransaction(newToken, inTransactionEvent);

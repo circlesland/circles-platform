@@ -1,7 +1,7 @@
 import {config} from "../../../libs/o-circles-protocol/config";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 
 export async function initXDaiBalances()
 {

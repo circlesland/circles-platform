@@ -10,8 +10,8 @@
 
   import {OmoSapienState} from "../../../omosapien/manifest";
   import {OmoSafeState} from "../../manifest";
-  import {CirclesToken} from "../../../../libs/o-circles-protocol/queryModel/circlesToken";
-  import {Contact} from "../../../../libs/o-circles-protocol/queryModel/contact";
+  import {CirclesToken} from "../../../../libs/o-circles-protocol/model/circlesToken";
+  import {Contact} from "../../../../libs/o-circles-protocol/model/contact";
 
   let safeState:OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let balanceSubscriptions: Subscription;

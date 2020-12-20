@@ -12,7 +12,7 @@
   import {onDestroy, onMount} from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
-  import {Contact} from "../../../../libs/o-circles-protocol/queryModel/contact";
+  import {Contact} from "../../../../libs/o-circles-protocol/model/contact";
 
   let safeState: OmoSafeState = {};
   let contactsSubscription: Subscription;

@@ -3,7 +3,7 @@ import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {BN} from "ethereumjs-util";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {OmoSafeState} from "../manifest";
-import {CirclesBalance} from "../../../libs/o-circles-protocol/queryModel/circlesBalance";
+import {CirclesBalance} from "../../../libs/o-circles-protocol/model/circlesBalance";
 
 const myCirclesBalancesSubject: BehaviorSubject<CirclesBalance[]> = new BehaviorSubject<CirclesBalance[]>([]);
 let myBalances: CirclesBalance[] = [];

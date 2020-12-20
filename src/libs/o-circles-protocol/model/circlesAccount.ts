@@ -5,8 +5,11 @@ import {BN} from "ethereumjs-util";
 import {Observable, Subject} from "rxjs";
 import {Event} from "../interfaces/event";
 import {CirclesToken} from "./circlesToken";
+import {ByteString} from "../interfaces/byteString";
+import {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
+import {ZERO_ADDRESS} from "../consts";
+import {GnosisSafeOps} from "../interfaces/gnosisSafeOps";
 import {Erc20Token} from "../token/erc20Token";
-
 
 export class CirclesAccount
 {
@@ -22,22 +25,43 @@ export class CirclesAccount
     this.hub = new CirclesHub(this.web3, this.cfg.HUB_ADDRESS);
   }
 
-  async tryGetMyToken() : Promise<CirclesToken>
+  async getUBI(privateKey: ByteString, safe: GnosisSafeProxy): Promise<any>
+  {
+    const ownToken = await this.tryGetMyToken();
+    const erc20Contract = new Erc20Token(this.web3, ownToken.tokenAddress);
+    const txData = erc20Contract.contract.methods.update().encodeABI();
+
+    return await safe.execTransaction(
+      privateKey,
+      {
+        to: ownToken.tokenAddress,
+        data: txData,
+        value: new BN("0"),
+        refundReceiver: ZERO_ADDRESS,
+        gasToken: ZERO_ADDRESS,
+        operation: GnosisSafeOps.CALL
+      });
+  }
+
+  async tryGetMyToken(): Promise<CirclesToken>
   {
     const result = await this.hub.queryEvents(CirclesHub.queryPastSignup(this.safeAddress)).toArray();
     if (result.length == 0)
+    {
       return null;
+    }
 
     const signupEvent = result[0];
 
-    return {
-      tokenAddress: signupEvent.returnValues.token,
-      tokenOwner: signupEvent.returnValues.user,
-      createdInBlockNo: signupEvent.blockNumber.toNumber()
-    }
+    const token = new CirclesToken(this.safeAddress);
+    token.tokenAddress = signupEvent.returnValues.token;
+    token.tokenOwner = signupEvent.returnValues.user;
+    token.createdInBlockNo = signupEvent.blockNumber.toNumber()
+
+    return token;
   }
 
-  async tryGetTokensBySafeAddress(safeAddresses:Address[]) : Promise<CirclesToken[]>
+  async tryGetTokensBySafeAddress(safeAddresses: Address[]): Promise<CirclesToken[]>
   {
     const tokensBySafeAddress = await this.hub.queryEvents(
       CirclesHub.queryPastSignups(safeAddresses)
@@ -45,20 +69,21 @@ export class CirclesAccount
 
     return tokensBySafeAddress.map(signupEvent =>
     {
-      return {
-        tokenAddress: signupEvent.returnValues.token,
-        tokenOwner: signupEvent.returnValues.user,
-        createdInBlockNo: signupEvent.blockNumber.toNumber()
-      }
+      const token = new CirclesToken(this.safeAddress);
+      token.tokenAddress = signupEvent.returnValues.token;
+      token.tokenOwner = signupEvent.returnValues.user;
+      token.createdInBlockNo = signupEvent.blockNumber.toNumber();
+
+      return token;
     });
   }
 
-  async tryGetXDaiBalance(safeOwner?:Address) : Promise<{
+  async tryGetXDaiBalance(safeOwner?: Address): Promise<{
     mySafeXDaiBalance: BN,
     myAccountXDaiBalance?: BN
   }>
   {
-    const balances:{
+    const balances: {
       mySafeXDaiBalance: BN,
       myAccountXDaiBalance?: BN
     } = {
@@ -73,7 +98,7 @@ export class CirclesAccount
     return balances;
   }
 
-  subscribeToMyContacts() : Observable<Event>
+  subscribeToMyContacts(): Observable<Event>
   {
     const subject = new Subject<Event>();
 
@@ -92,38 +117,6 @@ export class CirclesAccount
     });
 
     myOutgoingTrusts.execute();
-
-    return subject;
-  }
-
-  subscribeToTransactionsOfToken(token: CirclesToken) : Observable<Event>
-  {
-    const subject = new Subject<Event>();
-
-    const erc20Contract = new Erc20Token(this.web3, token.tokenAddress);
-    const inTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
-      undefined,
-      this.safeAddress,
-      token.createdInBlockNo));
-
-    inTransactionsQuery.events.subscribe(inTransactionEvent =>
-    {
-      subject.next(inTransactionEvent);
-    });
-
-    inTransactionsQuery.execute();
-
-    const outTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
-      this.safeAddress,
-      undefined,
-      token.createdInBlockNo));
-
-    outTransactionsQuery.events.subscribe(outTransactionEvent =>
-    {
-      subject.next(outTransactionEvent);
-    });
-
-    outTransactionsQuery.execute();
 
     return subject;
   }

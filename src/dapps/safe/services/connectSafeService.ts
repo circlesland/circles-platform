@@ -2,12 +2,12 @@ import { mnemonicToEntropy } from "bip39";
 import { BN } from "ethereumjs-util";
 import {config} from "../../../libs/o-circles-protocol/config";
 import {ByteString} from "../../../libs/o-circles-protocol/interfaces/byteString";
-import {HubAccount} from "../../../libs/o-circles-protocol/model/hubAccount";
 import {ConnectSafeContext} from "../processes/omo/importCircles";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {OmoSafeState} from "../manifest";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 
 
 function isValidKeyPhrase(value: string): string | null {
@@ -133,15 +133,13 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
       : "0");
 
     console.log("Find token of safe ..")
-    const hubAccount = new HubAccount(context.environment.eth.contracts.hub,
-      omosapienState.myProfile.circlesAddress);
-
-    const myToken = await hubAccount.getOwnToken();
+    const circlesAccount = new CirclesAccount(omosapienState.myProfile.circlesAddress);
+    const myToken = await circlesAccount.tryGetMyToken();
 
     await fissionAuthState.fission.tokens.addMyToken({
       name: "me",
-      tokenAddress: myToken.token.address,
-      tokenOwner: hubAccount.address,
+      tokenAddress: myToken.tokenAddress,
+      tokenOwner: circlesAccount.safeAddress,
       createdInBlockNo: myToken.createdInBlockNo
     });
 

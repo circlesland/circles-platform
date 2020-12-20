@@ -1,9 +1,9 @@
 import {ProcessContext} from "../../../libs/o-processes/interfaces/processContext";
-import {HubAccount} from "../../../libs/o-circles-protocol/model/hubAccount";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
 import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 
 export const requestUbiService = async (context: ProcessContext) =>
 {
@@ -21,7 +21,6 @@ export const requestUbiService = async (context: ProcessContext) =>
     .address;
 
   const gnosisSafeProxy = new GnosisSafeProxy(web3, ownerAddress, safeState.mySafeAddress);
-
-  const p = new HubAccount(context.environment.eth.contracts.hub, safeState.mySafeAddress);
-  return await p.getUBI(safeState.myKey.privateKey, gnosisSafeProxy);
+  const circlesAccount = new CirclesAccount(safeState.mySafeAddress);
+  return await circlesAccount.getUBI(safeState.myKey.privateKey, gnosisSafeProxy);
 }

@@ -1,16 +1,18 @@
 import type Web3 from "web3";
-import type { AbiItem } from "web3-utils";
-import { GNOSIS_SAFE_ABI, PROXY_FACTORY_ABI, ZERO_ADDRESS } from "../consts";
-import { BN } from "ethereumjs-util";
-import { GnosisSafeProxy } from "./gnosisSafeProxy";
-import { Web3Contract } from "../web3Contract";
-import type { Address } from "../interfaces/address";
-import { ByteString } from "../interfaces/byteString";
+import type {AbiItem} from "web3-utils";
+import {GNOSIS_SAFE_ABI, PROXY_FACTORY_ABI, ZERO_ADDRESS} from "../consts";
+import {BN} from "ethereumjs-util";
+import {GnosisSafeProxy} from "./gnosisSafeProxy";
+import {Web3Contract} from "../web3Contract";
+import type {Address} from "../interfaces/address";
+import {ByteString} from "../interfaces/byteString";
 
-export class GnosisSafeProxyFactory extends Web3Contract {
+export class GnosisSafeProxyFactory extends Web3Contract
+{
   readonly masterSafeAddress: Address;
 
-  constructor(web3: Web3, proxyFactoryAddress: Address, masterSafeAddress: Address) {
+  constructor(web3: Web3, proxyFactoryAddress: Address, masterSafeAddress: Address)
+  {
     super(web3, proxyFactoryAddress, new web3.eth.Contract(<AbiItem[]>PROXY_FACTORY_ABI, proxyFactoryAddress));
     this.masterSafeAddress = masterSafeAddress;
   }
@@ -25,7 +27,8 @@ export class GnosisSafeProxyFactory extends Web3Contract {
    * @param gasPrice The gas price in wei
    */
   async deployNewSafeProxy(privateKey: ByteString)
-    : Promise<GnosisSafeProxy> {
+    : Promise<GnosisSafeProxy>
+  {
     const ownerAddress = this.web3.eth.accounts.privateKeyToAccount(privateKey).address;
     const gnosisSafe = new this.web3.eth.Contract(<AbiItem[]>GNOSIS_SAFE_ABI, this.masterSafeAddress);
 
@@ -61,8 +64,10 @@ export class GnosisSafeProxyFactory extends Web3Contract {
     const minedReceipt = await Web3Contract.sendSignedRawTransaction(signedRawTransaction);
 
     let proxyAddress = undefined;
-    for (let logEntry of minedReceipt.logs) {
-      if (logEntry.address != this.address) {
+    for (let logEntry of minedReceipt.logs)
+    {
+      if (logEntry.address != this.address)
+      {
         continue;
       }
 

@@ -1,15 +1,16 @@
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
-import {config} from "../../../libs/o-circles-protocol/config";
-import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
 import {OmoSafeState} from "../manifest";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
+import {Token} from "../../../libs/o-fission/entities/token";
+import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
+import {BN} from "ethereumjs-util";
 
 export async function initMyToken()
 {
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  let myToken = await fissionAuthState.fission.tokens.tryGetMyToken();
+  let myToken:Token = await fissionAuthState.fission.tokens.tryGetMyToken();
 
   if (!myToken)
   {
@@ -27,9 +28,15 @@ export async function initMyToken()
 
   setDappState<OmoSafeState>("omo.safe:1", currentState =>
   {
+    const t = new CirclesToken(safeState.mySafeAddress);
+    t.tokenOwner = myToken.tokenOwner;
+    t.tokenAddress = myToken.tokenAddress;
+    t.balance = new BN("0");
+    t.createdInBlockNo = myToken.createdInBlockNo;
+
     return {
       ...currentState,
-      myToken: myToken
+      myToken: t
     };
   });
 }
