@@ -12,8 +12,8 @@
 
 
   let safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  let knownTokensSubscription: Subscription;
-  let knownTokens: Token[] = [];
+  let balanceSubscriptions: Subscription;
+  let balances: Token[] = [];
   let omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
 
   const web3 = config.getCurrent().web3();
@@ -61,28 +61,50 @@
     },
   };
 
+  function formatBN(bn:BN)
+  {
+    return parseFloat(web3.utils.fromWei(bn)).toFixed(2);
+  }
+
   function init()
   {
-    if (knownTokensSubscription)
+    if (balanceSubscriptions)
     {
-      knownTokensSubscription.unsubscribe();
-      knownTokensSubscription = null;
+      balanceSubscriptions.unsubscribe();
+      balanceSubscriptions = null;
     }
 
     safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
-    if (safeState.myContacts)
+    if (safeState.myBalances)
     {
-      knownTokensSubscription = safeState.myKnownTokens.subscribe(tokenList => {
-        knownTokens = Object.values(tokenList);
+      const tokens:Token[] = Object.values(safeState.myKnownTokens.getValue());
+      balanceSubscriptions = safeState.myBalances.subscribe(balanceList =>
+      {
+        balances = balanceList.map(o => {
+          const token = tokens.find(t => t.tokenAddress == o.tokenAddress);
+          if (token)
+          {
+            token.balance = o.balance;
+          }
+          return token;
+        }).filter(o => !!o);
       });
     }
-
-    console.log("MyKnownTokens:", knownTokens);
   }
+
+  onDestroy(() => {
+    if (!balanceSubscriptions) return;
+
+    balanceSubscriptions.unsubscribe();
+    balanceSubscriptions = null;
+  });
+
+  onMount(() => init());
 
   function mapToListItem(token:Token)
   {
+    const balance = token.balance ? parseFloat(token.balance).toFixed(2) : "0";
     return {
       data: {
         image:
@@ -95,17 +117,17 @@
                   ? `${omosapienState.myProfile.firstName} ${omosapienState.myProfile.lastName}`
                   : token.ownerSafeAddress.slice(0, 8),
           description: token.ownerSafeAddress,
-          balance:(parseFloat("0") * 3).toFixed(2),
+          balance: balance,
           subtitle: "time in ⦿",
       },
     }
   }
 
   onDestroy(() => {
-    if (!knownTokensSubscription) return;
+    if (!balanceSubscriptions) return;
 
-    knownTokensSubscription.unsubscribe();
-    knownTokensSubscription = null;
+    balanceSubscriptions.unsubscribe();
+    balanceSubscriptions = null;
   });
 
   onMount(() => init());
@@ -124,8 +146,8 @@
     <CategoryTitle mapping={labelDistribution} />
   </div>
   <div class="mb-4 space-y-2">
-    {#if knownTokens.length > 0}
-      {#each knownTokens as token}
+    {#if balances.length > 0}
+      {#each balances as token}
         <TokenItem mapping={mapToListItem(token)} />
       {/each}
     {:else}
