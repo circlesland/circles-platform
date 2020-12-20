@@ -31,6 +31,7 @@ import {initMyBalances} from "./init/circlesBalances";
 export interface Contact
 {
   safeAddress: Address,
+  lastBlockNo: number,
   trust: {
     in: number,
     out: number

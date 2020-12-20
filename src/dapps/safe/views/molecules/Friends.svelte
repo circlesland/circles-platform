@@ -17,6 +17,20 @@
   let contactsSubscription: Subscription;
   let contacts: Contact[] = [];
 
+  let circlesProfiles:{[safeAddress:string]:{
+    loaded: boolean,
+    avatarUrl?: string,
+    id?: number,
+    safeAddress: string,
+    username?: string
+  }} = {};
+
+  $:{
+    if (circlesProfiles) {
+      contacts = contacts;
+    }
+  }
+
   function init()
   {
     if (contactsSubscription)
@@ -29,8 +43,29 @@
 
     if (safeState.myContacts)
     {
-      contactsSubscription = safeState.myContacts.subscribe(contactList => {
+      contactsSubscription = safeState.myContacts.subscribe(async contactList =>
+      {
         contacts = contactList;
+
+        const circlesApiUrls = contacts.filter(o => !circlesProfiles[o.safeAddress]).map(o => {
+          circlesProfiles[o.safeAddress] = {
+            safeAddress: o.safeAddress,
+            loaded: false
+          };
+          return "address[]=" + o.safeAddress;
+        }).join("&");
+
+        if (circlesApiUrls !== "")
+        {
+          let url = "https://api.circles.garden/api/users/?" + circlesApiUrls;
+          const response = await fetch(url);
+          const responseJson = await response.json();
+          responseJson.data.forEach(entry => {
+            circlesProfiles[entry.safeAddress] = entry;
+          });
+          circlesProfiles = circlesProfiles;
+          console.log("Circles profiles:", circlesProfiles);
+        }
       });
     }
 
@@ -39,13 +74,15 @@
 
   function mapToListItem(contact: Contact)
   {
+    const image = circlesProfiles[contact.safeAddress]?.avatarUrl
+      ?? "https://avatars.dicebear.com/api/avataaars/" + contact.safeAddress + ".svg";
+
+    const title = circlesProfiles[contact.safeAddress]?.username
+      ??  contact.safeAddress.slice(0, 8);
+
     return {
-      image:
-        "https://avatars.dicebear.com/api/avataaars/" +
-        contact.safeAddress +
-        ".svg ",
-      title: contact.safeAddress.slice(0, 8),
-      connection: "trustedByMe",
+      image: image,
+      title: title,
       detail: {
         address: contact.safeAddress,
         trust: contact.trust,

@@ -1,14 +1,11 @@
 <script lang="ts">
-  import { CirclesHub } from "src/libs/o-circles-protocol/circles/circlesHub";
-  import { HubAccount } from "src/libs/o-circles-protocol/model/hubAccount";
   import { config } from "src/libs/o-circles-protocol/config";
   import { BN } from "ethereumjs-util";
 
-  import { Jumper } from "svelte-loading-spinners";
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {CirclesBalance, OmoSafeState} from "../../manifest";
+  import {OmoSafeState} from "../../manifest";
 
   let safeState: OmoSafeState = {};
   let balanceSubscriptions: Subscription;

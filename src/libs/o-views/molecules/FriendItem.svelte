@@ -33,7 +33,10 @@
     title: "",
     detail: {
       address: "",
-      limit: "",
+      trust: {
+        in: 0,
+        out: 0
+      },
     },
     connection: "",
     actions: [],
@@ -144,14 +147,14 @@
       <div class="p-2">
         <div class="text-xs md:text-base text-primary">{data.title}</div>
         <p class="text-gray-500 text-xxs md:text-xs ">
-          {#if data.connection == 'trustedMutual'}
+          {#if data.detail.trust.in > 0 && data.detail.trust.out > 0} <!-- mutual trust -->
             <Icon icon={faExchangeAlt} /><span class="ml-2"> mutual trust</span>
-          {:else if data.connection == 'trustingMe'}
+          {:else if data.detail.trust.in > 0 && data.detail.trust.out === 0} <!-- is only trusting me -->
             <Icon icon={faArrowRight} /><span class="ml-2">
               is trusting you</span>
-          {:else if data.connection == 'trustedByMe'}
+          {:else if data.detail.trust.in === 0 && data.detail.trust.out > 0} <!-- is only trusted by me -->
             <Icon icon={faArrowLeft} /><span class="ml-2"> trusted by you</span>
-          {:else if data.connection == 'trustRevoked'}
+          {:else}
             <Icon icon={faMinusCircle} /><span class="ml-2">
               revoked trust</span>
           {/if}

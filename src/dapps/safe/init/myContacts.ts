@@ -16,19 +16,18 @@ export async function initMyContacts()
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
   // Look for cached trust events
-  const fromBlockNo = safeState.myToken?.createdInBlockNo ?? config.getCurrent().HUB_BLOCK;
-
+  const fromBlockNo = config.getCurrent().HUB_BLOCK;
   console.log("initMyContacts() -> fromBlockNo:", fromBlockNo);
 
-  const myContacts:{
-    [safeAddress:string]: Contact
+  const myContacts: {
+    [safeAddress: string]: Contact
   } = {}
 
   const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
 
   let lastCachedBlock: number = fromBlockNo;
 
-  function aggregateContacts(trustEvent:CacheEvent)
+  function aggregateContacts(trustEvent: CacheEvent)
   {
     const {canSendTo, user, limit} = JSON.parse(trustEvent.data);
 
@@ -36,26 +35,45 @@ export async function initMyContacts()
       ? canSendTo
       : user;
 
-    const contact = myContacts[otherSafeAddress]
-      ?? <Contact>{
-        safeAddress: otherSafeAddress,
-        trust: {
-          in: 0,
-          out: 0
-        }
-      };
+    const direction = user == safeState.mySafeAddress
+      ? "in"
+      : "out";
 
-    // If I can send circles to someone, then this person trusts me -> 'in'
-    contact.trust.in = user == safeState.mySafeAddress
-      ? parseInt(limit ?? "0")
-      : contact.trust.in;
+    if (direction == "in")
+    {
+      const contact = myContacts[canSendTo]
+        ?? <Contact>{
+          lastBlockNo: trustEvent.blockNo,
+          safeAddress: canSendTo,
+          trust: {
+            in: limit,
+            out: 0
+          }
+        };
 
-    // If someone can send circles to me, then I trust that person -> 'out'
-    contact.trust.out = canSendTo == safeState.mySafeAddress
-      ? parseInt(limit ?? "0")
-      : contact.trust.out;
+      contact.trust.in = limit;
+      contact.lastBlockNo = contact.lastBlockNo <= trustEvent.blockNo ? trustEvent.blockNo : contact.lastBlockNo;
 
-    myContacts[otherSafeAddress] = contact;
+      myContacts[canSendTo] = contact;
+    }
+
+    if (direction == "out")
+    {
+      const contact = myContacts[user]
+        ?? <Contact>{
+          lastBlockNo: trustEvent.blockNo,
+          safeAddress: user,
+          trust: {
+            in: 0,
+            out: limit
+          }
+        };
+
+      contact.trust.out = limit;
+      contact.lastBlockNo = contact.lastBlockNo <= trustEvent.blockNo ? trustEvent.blockNo : contact.lastBlockNo;
+
+      myContacts[user] = contact;
+    }
 
     lastCachedBlock = lastCachedBlock < trustEvent.blockNo
       ? trustEvent.blockNo + 1
@@ -75,8 +93,10 @@ export async function initMyContacts()
   console.log("initMyContacts() -> got cachedOutgoingTrustEvents:", cachedOutgoingTrustEvents);
 
   const cachedTrustEvents = cachedIncomingTrustEvents.concat(cachedOutgoingTrustEvents);
-  console.log("initMyContacts() -> got all cached trust events:", cachedTrustEvents);
+  console.log("initMyContacts() -> got all cached trust events:", JSON.parse(JSON.stringify(cachedTrustEvents)));
 
+  cachedTrustEvents.sort(o => o.blockNo);
+  console.log("initMyContacts() -> got all cached trust events (sorted):", cachedTrustEvents);
   cachedTrustEvents.forEach(aggregateContacts);
   console.log("initMyContacts() -> myContactsSubject.next(Object.values(myContacts));", myContacts);
   myContactsSubject.next(Object.values(myContacts));
@@ -97,7 +117,8 @@ export async function initMyContacts()
     lastCachedBlock));
 
   const incomingTrustEvents = await fissionAuthState.fission.events.attachEventSource(incomingTrustsName, myIncomingTrusts);
-  incomingTrustEvents.subscribe(trustEvent => {
+  incomingTrustEvents.subscribe(trustEvent =>
+  {
     console.log("New trust event:", trustEvent);
     aggregateContacts({
       blockNo: trustEvent.blockNumber.toNumber(),
@@ -118,7 +139,8 @@ export async function initMyContacts()
     lastCachedBlock));
 
   const outgoingTrustEvents = await fissionAuthState.fission.events.attachEventSource(outgoingTrustsName, myOutgoingTrusts);
-  outgoingTrustEvents.subscribe(trustEvent => {
+  outgoingTrustEvents.subscribe(trustEvent =>
+  {
     console.log("New trust event:", trustEvent);
     aggregateContacts({
       blockNo: trustEvent.blockNumber.toNumber(),
@@ -133,7 +155,8 @@ export async function initMyContacts()
     myContactsSubject.next(Object.values(myContacts));
   });
 
-  setDappState<OmoSafeState>("omo.safe:1", existing => {
+  setDappState<OmoSafeState>("omo.safe:1", existing =>
+  {
     return {
       ...existing,
       myContacts: myContactsSubject
