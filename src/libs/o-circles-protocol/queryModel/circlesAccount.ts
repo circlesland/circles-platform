@@ -4,54 +4,9 @@ import {CirclesHub} from "../circles/circlesHub";
 import {BN} from "ethereumjs-util";
 import {Observable, Subject} from "rxjs";
 import {Event} from "../interfaces/event";
+import {CirclesToken} from "./circlesToken";
+import {Erc20Token} from "../token/erc20Token";
 
-export interface CirclesTransaction
-{
-  id: string,
-  token: Address,
-  tokenOwner: Address,
-  blockNo: number,
-  timestamp: Date,
-  direction: "in" | "out",
-  subject: string,
-  from: Address,
-  to: Address,
-  amount: BN,
-}
-
-export interface CirclesBalance
-{
-  lastBlockNo: number,
-  tokenAddress: string,
-  balance: BN
-}
-
-export interface CirclesProfile {
-  loaded: boolean,
-  avatarUrl?: string,
-  id?: number,
-  safeAddress: string,
-  username?: string
-}
-
-export interface CirclesToken
-{
-  createdInBlockNo: number;
-  tokenAddress: Address;
-  tokenOwner: Address;
-  balance?: BN;
-}
-
-export interface Contact
-{
-  circlesProfile?: CirclesProfile,
-  safeAddress: Address,
-  lastBlockNo: number,
-  trust: {
-    in?: number,
-    out?: number
-  }
-}
 
 export class CirclesAccount
 {
@@ -137,6 +92,38 @@ export class CirclesAccount
     });
 
     myOutgoingTrusts.execute();
+
+    return subject;
+  }
+
+  subscribeToTransactionsOfToken(token: CirclesToken) : Observable<Event>
+  {
+    const subject = new Subject<Event>();
+
+    const erc20Contract = new Erc20Token(this.web3, token.tokenAddress);
+    const inTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
+      undefined,
+      this.safeAddress,
+      token.createdInBlockNo));
+
+    inTransactionsQuery.events.subscribe(inTransactionEvent =>
+    {
+      subject.next(inTransactionEvent);
+    });
+
+    inTransactionsQuery.execute();
+
+    const outTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
+      this.safeAddress,
+      undefined,
+      token.createdInBlockNo));
+
+    outTransactionsQuery.events.subscribe(outTransactionEvent =>
+    {
+      subject.next(outTransactionEvent);
+    });
+
+    outTransactionsQuery.execute();
 
     return subject;
   }

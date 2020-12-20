@@ -99,7 +99,6 @@
     {
       balanceSubscriptions = safeState.myBalances.subscribe(balanceList =>
       {
-        console.log("got safeState.myBalances");
         const b = balanceList.map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
         safeCirclesBalance = {
           data: {

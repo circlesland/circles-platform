@@ -3,8 +3,10 @@ import {BehaviorSubject} from "rxjs";
 import {CacheEvent} from "../../../libs/o-fission/entities/cacheEvent";
 import {BlockIndex} from "./blockIndex";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
-import {CirclesAccount, CirclesProfile, Contact} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
 import {OmoSafeState} from "../manifest";
+import {Contact} from "../../../libs/o-circles-protocol/queryModel/contact";
+import {CirclesProfile} from "../../../libs/o-circles-protocol/queryModel/circlesProfile";
 
 const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
 const blockIndex = new BlockIndex();

@@ -7,8 +7,10 @@ import {BN} from "ethereumjs-util";
 import {Erc20Token} from "../../../libs/o-circles-protocol/token/erc20Token";
 import {BlockIndex} from "./blockIndex";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
-import {CirclesToken, CirclesTransaction} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
 import {OmoSafeState} from "../manifest";
+import {CirclesToken} from "../../../libs/o-circles-protocol/queryModel/circlesToken";
+import {CirclesTransaction} from "../../../libs/o-circles-protocol/queryModel/circlesTransaction";
+import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
 
 function mapTransactionEvent(token:CirclesToken, transactionEvent: CacheEvent | Event)
 {
@@ -68,44 +70,24 @@ export async function initMyTransactions()
 {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const cfg = config.getCurrent();
-  const web3 = cfg.web3();
+  const circlesAccount = new CirclesAccount(safeState.mySafeAddress);
 
   safeState.myKnownTokens.subscribe(async tokenList =>
   {
-    const unsubscribedTokens = Object.values(tokenList).filter(o => !myTransactions[o.tokenAddress]);
-    if (unsubscribedTokens.length == 0)
+    const newTokens = Object.values(tokenList).filter(o => !myTransactions[o.tokenAddress]);
+    if (newTokens.length == 0)
     {
       return;
     }
 
-    unsubscribedTokens.forEach(unsubscribedToken =>
+    newTokens.forEach(newToken =>
     {
-      const erc20Contract = new Erc20Token(web3, unsubscribedToken.tokenAddress);
-      const inTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
-        undefined,
-        safeState.mySafeAddress,
-        unsubscribedToken.createdInBlockNo));
-
-      inTransactionsQuery.events.subscribe(inTransactionEvent =>
+      const tokenTransactions = circlesAccount.subscribeToTransactionsOfToken(newToken);
+      tokenTransactions.subscribe(inTransactionEvent =>
       {
-        indexTransaction(unsubscribedToken, inTransactionEvent);
+        indexTransaction(newToken, inTransactionEvent);
         updateTrigger.trigger();
       });
-
-      inTransactionsQuery.execute();
-
-      const outTransactionsQuery = erc20Contract.queryEvents(Erc20Token.queryPastTransfers(
-        safeState.mySafeAddress,
-        undefined,
-        unsubscribedToken.createdInBlockNo));
-
-      outTransactionsQuery.events.subscribe(outTransactionEvent =>
-      {
-        indexTransaction(unsubscribedToken, outTransactionEvent);
-        updateTrigger.trigger();
-      });
-
-      outTransactionsQuery.execute();
     });
   });
 
