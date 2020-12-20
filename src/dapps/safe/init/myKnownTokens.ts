@@ -1,10 +1,10 @@
 import {BehaviorSubject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {BlockIndex} from "./blockIndex";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {CirclesToken} from "../../../libs/o-circles-protocol/queryModel/circlesToken";
 import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {BlockIndex} from "../../../libs/o-os/blockIndex";
 
 const myKnownTokensSubject: BehaviorSubject<{ [safeAddress: string]: CirclesToken }> = new BehaviorSubject<{ [safeAddress: string]: CirclesToken }>({});
 const blockIndex = new BlockIndex();

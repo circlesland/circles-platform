@@ -4,13 +4,12 @@ import {config} from "../../../libs/o-circles-protocol/config";
 import {CacheEvent} from "../../../libs/o-fission/entities/cacheEvent";
 import {Event} from "../../../libs/o-circles-protocol/interfaces/event";
 import {BN} from "ethereumjs-util";
-import {Erc20Token} from "../../../libs/o-circles-protocol/token/erc20Token";
-import {BlockIndex} from "./blockIndex";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {OmoSafeState} from "../manifest";
 import {CirclesToken} from "../../../libs/o-circles-protocol/queryModel/circlesToken";
 import {CirclesTransaction} from "../../../libs/o-circles-protocol/queryModel/circlesTransaction";
 import {CirclesAccount} from "../../../libs/o-circles-protocol/queryModel/circlesAccount";
+import {BlockIndex} from "../../../libs/o-os/blockIndex";
 
 function mapTransactionEvent(token:CirclesToken, transactionEvent: CacheEvent | Event)
 {

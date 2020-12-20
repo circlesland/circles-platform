@@ -26,11 +26,11 @@ import {initMyKnownTokens} from "./init/myKnownTokens";
 import {initMyTransactions} from "./init/myTransactions";
 import {initSafeAddress} from "./init/safeAddress";
 import {initMyToken} from "./init/myToken";
-import {initMyBalances} from "./init/circlesBalances";
 import {CirclesToken} from "../../libs/o-circles-protocol/queryModel/circlesToken";
 import {Contact} from "../../libs/o-circles-protocol/queryModel/contact";
 import {CirclesTransaction} from "../../libs/o-circles-protocol/queryModel/circlesTransaction";
 import {CirclesBalance} from "../../libs/o-circles-protocol/queryModel/circlesBalance";
+import {initMyBalances} from "./init/myBalances";
 
 export interface OmoSafeState
 {

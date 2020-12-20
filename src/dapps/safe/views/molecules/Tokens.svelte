@@ -9,9 +9,9 @@
   import {tryGetDappState} from "../../../../libs/o-os/loader";
 
   import {OmoSapienState} from "../../../omosapien/manifest";
-  import {CirclesToken, Contact} from "../../../../libs/o-circles-protocol/queryModel/circlesAccount";
   import {OmoSafeState} from "../../manifest";
-
+  import {CirclesToken} from "../../../../libs/o-circles-protocol/queryModel/circlesToken";
+  import {Contact} from "../../../../libs/o-circles-protocol/queryModel/contact";
 
   let safeState:OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let balanceSubscriptions: Subscription;
@@ -99,13 +99,13 @@
     {
       balanceSubscriptions = safeState.myBalances.subscribe(balanceList =>
       {
-        const b = balanceList.map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
+        const weiBalance = balanceList.map(o => o.balance).reduce((p, c) => p.add(c), new BN("0"));
         safeCirclesBalance = {
           data: {
             image: "symbols/o.svg",
             title: "time in ⦿",
             description: "Address: " + safeState.mySafeAddress,
-            balance: b,
+            balance: parseFloat(web3.utils.fromWei(weiBalance)).toFixed(2),
             subtitle: "hours in your safe account",
           }
         };
@@ -140,7 +140,7 @@
     const title = contacts[token.tokenOwner]?.circlesProfile?.username
       ??  token.tokenAddress.slice(0, 8);
 
-    const balance = token.balance ? parseFloat(token.balance).toFixed(2) : "0";
+    const balance = token.balance ? parseFloat(web3.utils.fromWei(token.balance)).toFixed(2) : "0";
     return {
       data: {
         image:image,

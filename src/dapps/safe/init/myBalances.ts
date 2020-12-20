@@ -1,21 +1,19 @@
 import {BehaviorSubject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {BN} from "ethereumjs-util";
-import {config} from "../../../libs/o-circles-protocol/config";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {OmoSafeState} from "../manifest";
 import {CirclesBalance} from "../../../libs/o-circles-protocol/queryModel/circlesBalance";
 
 const myCirclesBalancesSubject: BehaviorSubject<CirclesBalance[]> = new BehaviorSubject<CirclesBalance[]>([]);
-let circlesBalances: CirclesBalance[] = [];
+let myBalances: CirclesBalance[] = [];
 const updateTrigger = new DelayedTrigger(30, async () => {
-  myCirclesBalancesSubject.next(circlesBalances);
+  myCirclesBalancesSubject.next(myBalances);
 });
 
 export async function initMyBalances()
 {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  const web3 = config.getCurrent().web3();
 
   safeState.myTransactions.subscribe(transactions =>
   {
@@ -44,11 +42,11 @@ export async function initMyBalances()
       return p;
     }, {});
 
-    circlesBalances = Object.keys(balances).map(key => {
+    myBalances = Object.keys(balances).map(key => {
       const balance = balances[key];
       return <CirclesBalance>{
         tokenAddress: key,
-        balance: web3.utils.fromWei(balance.balance),
+        balance: balance.balance,
         lastBlockNo: balance.lastBlockNo
       }
     });

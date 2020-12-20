@@ -11,7 +11,8 @@
   import {Subscription} from "rxjs";
   import {onDestroy, onMount} from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {Contact, OmoSafeState} from "../../manifest";
+  import {OmoSafeState} from "../../manifest";
+  import {Contact} from "../../../../libs/o-circles-protocol/queryModel/contact";
 
   let safeState: OmoSafeState = {};
   let contactsSubscription: Subscription;
