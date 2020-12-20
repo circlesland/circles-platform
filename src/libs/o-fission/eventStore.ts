@@ -127,6 +127,9 @@ export class EventStore
     delete this._eventSources[name];
   }
 
+  // TODO: Hack
+  isInitial:boolean = true;
+
   /**
    * Writes all entries in the buffer to the FS.
    * This method leaves the buffer intact, to clear it use clearBuffer()
@@ -134,8 +137,10 @@ export class EventStore
   async flush(): Promise<string>
   {
     if (this._buffer.firstBlockNo == Number.MAX_SAFE_INTEGER
-      || this._buffer.lastBlockNo == Number.MIN_SAFE_INTEGER)
+      || this._buffer.lastBlockNo == Number.MIN_SAFE_INTEGER
+      && !this.isInitial)
     {
+      this.isInitial = true;
       console.log("No new events to flush");
       return;
     }
@@ -158,9 +163,25 @@ export class EventStore
     daysPerSource = daysPerSource.map(dps => this.orderAndDeduplicateDailyGroups(dps));
 
     // Finally write them back to the fs.
-    await Promise.all(daysPerSource.map(async dps =>
+    for (let dps of daysPerSource)
     {
-      await this.writeDailyGroupsToFs(dps);
+      const directory = this._eventSources[dps.source].directory;
+
+      for (const dayIdx in dps.days)
+      {
+        console.log("Saving '" + dayIdx + "' of source '" + dps.source + "' to fission drive: ", {
+          name: dayIdx,
+          events: dps.days[dayIdx].events
+        });
+
+        await directory.addOrUpdate({
+          name: dayIdx,
+          events: dps.days[dayIdx].events
+        }, false, "flush");
+      }
+
+      await directory.publish();
+      console.log("published changes in '" + dps.source + "'.")
 
       // Maintain a counter per event source to keep track of the last blockNo
       const maxBlockNo = Object.keys(dps.days).map(dayIdx => dps.days[dayIdx].events).reduce((p, c) =>
@@ -176,7 +197,7 @@ export class EventStore
 
       await this.counters.publish();
       console.log("published changes in '_counters'.")
-    }));
+    }
 
     return "";
   }
@@ -428,27 +449,6 @@ export class EventStore
     }
 
     return days;
-  }
-
-  private async writeDailyGroupsToFs(days: CacheEventGroups)
-  {
-    const directory = this._eventSources[days.source].directory;
-
-    for (const dayIdx in days.days)
-    {
-      console.log("Saving '" + dayIdx + "' of source '" + days.source + "' to fission drive: ", {
-        name: dayIdx,
-        events: days.days[dayIdx].events
-      });
-
-      await directory.addOrUpdate({
-        name: dayIdx,
-        events: days.days[dayIdx].events
-      }, false, "flush");
-    }
-
-    await directory.publish();
-    console.log("published changes in '" + days.source + "'.")
   }
 
   async maintainIndexes(change: DirectoryChangeType, entity: CacheEventGroup, indexHint: string | undefined): Promise<void>

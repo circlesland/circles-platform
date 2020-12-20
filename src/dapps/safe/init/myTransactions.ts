@@ -59,17 +59,20 @@ export async function initMyTransactions()
   const outgoingTransactionsName = "Out";
 
   const fromBlockNo = safeState.myToken?.createdInBlockNo ?? config.getCurrent().HUB_BLOCK;
-  let lastCachedBlock: number = fromBlockNo;
+
+  let lastCachedBlock: {[tokenAddress:string]:number} = {};
 
   let cachedCirclesTransactions: CirclesTransaction[] = []
 
   //
   // First, try to feed-in all cached transactions
   //
+  const tokenList = safeState.myKnownTokens.getValue();
   const fromDayIdx = Math.floor(fromBlockNo / EventStore.pageSize);
+  const cachedBlocks:{[blockNo:number]:any} = {};
+
   const waitForCache = new Promise(async (resolve, reject) =>
   {
-    const tokenList = safeState.myKnownTokens.getValue();
     console.log(`initMyTransactions(): Loading cached transactions for tokenList:`, tokenList);
 
     await Promise.all(Object.values(tokenList).map(async token =>
@@ -86,9 +89,11 @@ export async function initMyTransactions()
       console.log(`initMyTransactions(): Got ${cachedTransactions.length} cached transfer events for token ${token.tokenAddress}.`);
       cachedTransactions.forEach(transactionEvent =>
       {
-        lastCachedBlock = lastCachedBlock < transactionEvent.blockNo
+        lastCachedBlock[token.tokenAddress] = !lastCachedBlock[token.tokenAddress] || lastCachedBlock[token.tokenAddress] < transactionEvent.blockNo
           ? transactionEvent.blockNo
-          : lastCachedBlock;
+          : (lastCachedBlock[token.tokenAddress] ?? token.createdInBlockNo);
+
+        cachedBlocks[transactionEvent.blockNo] = true;
 
         const txEvent = mapTransactionEvent(token, transactionEvent);
         cachedCirclesTransactions.push(txEvent);
@@ -107,9 +112,6 @@ export async function initMyTransactions()
   await waitForCache;
   console.log("Cache processed.");
 
-  // Increment by one if not still in the initial state
-  lastCachedBlock = lastCachedBlock == fromBlockNo ? lastCachedBlock : lastCachedBlock + 1;
-
   //
   // Then query all transactions after the last cached block
   //
@@ -126,6 +128,80 @@ export async function initMyTransactions()
     }
   } = {};
 
+  const mostRecentBlock = await web3.eth.getBlockNumber();
+  const fullRanges = Object.values(tokenList).map(token => {
+    return {
+      token: token,
+      from: token.createdInBlockNo,
+      to: mostRecentBlock
+    }
+  });
+
+  const partialRanges = fullRanges.reduce((p,c) =>
+  {
+    const prs:{token: Token, from:number, to:number}[] = [];
+    let lastSegmentBegin = c.from;
+
+    for (let i = c.from; i < c.to; i++)
+    {
+      if (cachedBlocks[i])
+      {
+        prs.push({
+          token: c.token,
+          from: lastSegmentBegin,
+          to: i
+        });
+        lastSegmentBegin = i + 1;
+      }
+    }
+
+    prs.push({
+      token: c.token,
+      from: lastSegmentBegin,
+      to: c.to
+    });
+
+    return p.concat(prs);
+  }, []);
+
+  console.log("Partial Ranges: ", partialRanges);
+
+  partialRanges.map(async partialRange =>
+  {
+    const erc20Contract = new Erc20Token(web3, partialRange.token.tokenAddress);
+    const inTransactionsQuery = Erc20Token.queryPastTransfers(
+      undefined,
+      safeState.mySafeAddress,
+      partialRange.from,
+      partialRange.to);
+
+    const inTransactionsQ = await erc20Contract.queryEvents(inTransactionsQuery);
+    const inTransactions = await inTransactionsQ.toArray();
+    inTransactions.forEach(it => {
+      const transaction = mapTransactionEvent(partialRange.token, it);
+      console.log("New incoming transaction:", transaction);
+      cachedCirclesTransactions.push(transaction);
+      cachedCirclesTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
+      myTransactionsSubject.next(cachedCirclesTransactions);
+    });
+
+    const outTransactionsQuery = Erc20Token.queryPastTransfers(
+      safeState.mySafeAddress,
+      undefined,
+      partialRange.from,
+      partialRange.to);
+
+    const outTransactionsQ = await erc20Contract.queryEvents(outTransactionsQuery);
+    const outTransactions = await outTransactionsQ.toArray();
+    outTransactions.forEach(ot => {
+      const transaction = mapTransactionEvent(partialRange.token, ot);
+      console.log("New outgoing transaction:", transaction);
+      cachedCirclesTransactions.push(transaction);
+      cachedCirclesTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
+      myTransactionsSubject.next(cachedCirclesTransactions);
+    });
+  });
+
   safeState.myKnownTokens.subscribe(async tokenList =>
   {
     const tokens = Object.values(tokenList)
@@ -140,11 +216,9 @@ export async function initMyTransactions()
       const inTransactionsQuery = Erc20Token.queryPastTransfers(
         undefined,
         safeState.mySafeAddress,
-        token.createdInBlockNo > lastCachedBlock
-          ? token.createdInBlockNo
-          : lastCachedBlock);
-      const inTranactionEventQuery = erc20Contract.queryEvents(inTransactionsQuery);
-      const inTransactionEvents = await fissionAuthState.fission.events.attachEventSource(`${incomingTransactionsName}_${token.tokenAddress}`, inTranactionEventQuery);
+        lastCachedBlock[token.tokenAddress]);
+      const inTransactionEventQuery = erc20Contract.queryEvents(inTransactionsQuery);
+      const inTransactionEvents = await fissionAuthState.fission.events.attachEventSource(`${incomingTransactionsName}_${token.tokenAddress}`, inTransactionEventQuery);
       return {
         token: token,
         observable: inTransactionEvents
@@ -175,9 +249,7 @@ export async function initMyTransactions()
       const outTransactionsQuery = Erc20Token.queryPastTransfers(
         safeState.mySafeAddress,
         undefined,
-        token.createdInBlockNo > lastCachedBlock
-          ? token.createdInBlockNo
-          : lastCachedBlock);
+        lastCachedBlock[token.tokenAddress]);
       const outTransactionEventQuery = erc20Contract.queryEvents(outTransactionsQuery);
       const outTransactionEvents = await fissionAuthState.fission.events.attachEventSource(`${outgoingTransactionsName}_${token.tokenAddress}`, outTransactionEventQuery);
       return {
