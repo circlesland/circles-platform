@@ -17,20 +17,6 @@
   let contactsSubscription: Subscription;
   let contacts: Contact[] = [];
 
-  let circlesProfiles:{[safeAddress:string]:{
-    loaded: boolean,
-    avatarUrl?: string,
-    id?: number,
-    safeAddress: string,
-    username?: string
-  }} = {};
-
-  $:{
-    if (circlesProfiles) {
-      contacts = contacts;
-    }
-  }
-
   function init()
   {
     if (contactsSubscription)
@@ -46,38 +32,16 @@
       contactsSubscription = safeState.myContacts.subscribe(async contactList =>
       {
         contacts = contactList;
-
-        const circlesApiUrls = contacts.filter(o => !circlesProfiles[o.safeAddress]).map(o => {
-          circlesProfiles[o.safeAddress] = {
-            safeAddress: o.safeAddress,
-            loaded: false
-          };
-          return "address[]=" + o.safeAddress;
-        }).join("&");
-
-        if (circlesApiUrls !== "")
-        {
-          let url = "https://api.circles.garden/api/users/?" + circlesApiUrls;
-          const response = await fetch(url);
-          const responseJson = await response.json();
-          responseJson.data.forEach(entry => {
-            circlesProfiles[entry.safeAddress] = entry;
-          });
-          circlesProfiles = circlesProfiles;
-          console.log("Circles profiles:", circlesProfiles);
-        }
       });
     }
-
-    console.log("MyContacts:", contacts);
   }
 
   function mapToListItem(contact: Contact)
   {
-    const image = circlesProfiles[contact.safeAddress]?.avatarUrl
+    const image = contact.circlesProfile?.avatarUrl
       ?? "https://avatars.dicebear.com/api/avataaars/" + contact.safeAddress + ".svg";
 
-    const title = circlesProfiles[contact.safeAddress]?.username
+    const title = contact.circlesProfile?.username
       ??  contact.safeAddress.slice(0, 8);
 
     return {

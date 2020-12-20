@@ -28,8 +28,17 @@ import {initSafeAddress} from "./init/safeAddress";
 import {initMyToken} from "./init/myToken";
 import {initMyBalances} from "./init/circlesBalances";
 
+export interface CirclesProfile {
+  loaded: boolean,
+  avatarUrl?: string,
+  id?: number,
+  safeAddress: string,
+  username?: string
+}
+
 export interface Contact
 {
+  circlesProfile?: CirclesProfile,
   safeAddress: Address,
   lastBlockNo: number,
   trust: {
@@ -48,10 +57,10 @@ export interface Token
 
 export interface CirclesTransaction
 {
+  id: string,
   token: Address,
   tokenOwner: Address,
   blockNo: number,
-  key: string,
   timestamp: Date,
   direction: "in" | "out",
   subject: string,
@@ -111,23 +120,13 @@ const transactionPage = {
  */
 async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 {
-  console.log("safe manifest  -> initialize()")
-
-  console.log("safe manifest  -> initMyKey()")
   await initMyKey();
-  console.log("safe manifest  -> initSafeAddress()")
   await initSafeAddress();
-  console.log("safe manifest  -> initMyToken()")
   await initMyToken();
-  console.log("safe manifest  -> initXDaiBalances()")
   await initXDaiBalances();
-  console.log("safe manifest  -> initMyContacts()")
   await initMyContacts();
-  console.log("safe manifest  -> initMyKnownTokens()")
   await initMyKnownTokens();
-  console.log("safe manifest  -> initMyTransactions()")
   await initMyTransactions();
-
   await initMyBalances();
 
   const status = {

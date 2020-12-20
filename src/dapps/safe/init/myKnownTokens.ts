@@ -2,92 +2,51 @@ import {BehaviorSubject} from "rxjs";
 import {config} from "../../../libs/o-circles-protocol/config";
 import {CirclesHub} from "../../../libs/o-circles-protocol/circles/circlesHub";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {BN} from "ethereumjs-util";
 import {OmoSafeState, Token} from "../manifest";
+import {BlockIndex} from "./blockIndex";
+import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 
-export async function initMyKnownTokens ()
+const myKnownTokensSubject: BehaviorSubject<{ [safeAddress: string]: Token }> = new BehaviorSubject<{ [safeAddress: string]: Token }>({});
+const blockIndex = new BlockIndex();
+const myKnownTokens: { [safeAddress: string]: Token } = {};
+const updateTrigger = new DelayedTrigger(30, async () => {
+  myKnownTokensSubject.next(myKnownTokens);
+});
+
+export async function initMyKnownTokens()
 {
-  console.log("initMyKnownTokens()")
-
-  const myKnownTokensSubject: BehaviorSubject<{[safeAddress:string]:Token}> = new BehaviorSubject<{[safeAddress:string]:Token}>({});
-
-  const alreadySeenSafes:{[safeAddress:string]:boolean} = {};
-  const knownTokens:{[safeAddress:string]:Token} = {};
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
   const cfg = config.getCurrent();
   const web3 = config.getCurrent().web3();
   const hub = new CirclesHub(web3, cfg.HUB_ADDRESS);
 
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-
-  // Load the known tokens from the fission cache
-  const allTokens = await fissionAuthState.fission.tokens.listItems();
-  allTokens.forEach(cachedToken => {
-    knownTokens[cachedToken.circlesAddress] = {
-      createdInBlockNo: cachedToken.createdInBlockNo,
-      tokenAddress: cachedToken.tokenAddress,
-      ownerSafeAddress: cachedToken.circlesAddress,
-      balance: new BN("0")
-    };
-  });
-  console.log("Loaded " + allTokens.length + " tokens from the fission cache.");
-  myKnownTokensSubject.next(knownTokens);
-
-  // Update the token list whenever the contact list changes
+  // Update the token list whenever the contact list changes.
+  // Don't subscribe to the events since Signup events happen only one time per safe.
   safeState.myContacts.subscribe(async contactList =>
   {
-    // Only contacts for which we don't have the token already are relevant
-    const newContacts = contactList.filter(contact => {
-      const alreadySeen = alreadySeenSafes[contact.safeAddress];
-      if (!alreadySeen)
-      {
-        alreadySeenSafes[contact.safeAddress] = true;
-      }
+    const newContacts = contactList.filter(contact => !myKnownTokens[contact.safeAddress]);
+    const newContactsSignupEvents = await hub.queryEvents(
+      CirclesHub.queryPastSignups(newContacts.map(o => o.safeAddress))
+    ).toArray();
 
-      return !alreadySeen;
-    });
-
-    if (newContacts.length == 0)
+    newContactsSignupEvents.forEach(signupEvent =>
     {
-      return;
-    }
-
-    const newContactsSignupEvents = hub.queryEvents(CirclesHub.queryPastSignups(newContacts.map(o => o.safeAddress)));
-    const newContactsSignupArr = await newContactsSignupEvents.toArray();
-
-    const addedTokens = await Promise.all(newContactsSignupArr.map(async signupEvent =>
-    {
-      const t = {
+      blockIndex.addBlock(signupEvent.blockNumber.toNumber());
+      myKnownTokens[signupEvent.returnValues.user] = {
         tokenAddress: signupEvent.returnValues.token,
         createdInBlockNo: signupEvent.blockNumber.toNumber(),
         ownerSafeAddress: signupEvent.returnValues.user,
         balance: new BN("0")
       };
+    });
 
-      console.log(`Adding token to the list of knownTokens: `, t);
-      knownTokens[signupEvent.returnValues.user] = t;
-
-      await fissionAuthState.fission.tokens.addOrUpdate({
-        name: signupEvent.returnValues.user,
-        tokenAddress: signupEvent.returnValues.token,
-        circlesAddress: signupEvent.returnValues.user,
-        createdInBlockNo: signupEvent.blockNumber.toNumber()
-      }, false);
-
-      return 0;
-    }));
-
-    if (addedTokens.length > 0)
-    {
-      await fissionAuthState.fission.tokens.publish();
-    }
-
-    myKnownTokensSubject.next(knownTokens);
+    updateTrigger.trigger();
   });
 
-  setDappState<OmoSafeState>("omo.safe:1", existing => {
+  setDappState<OmoSafeState>("omo.safe:1", existing =>
+  {
     return {
       ...existing,
       myKnownTokens: myKnownTokensSubject

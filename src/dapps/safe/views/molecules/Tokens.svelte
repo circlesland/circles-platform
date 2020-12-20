@@ -7,13 +7,14 @@
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {OmoSafeState, Token} from "../../manifest";
+  import {Contact, OmoSafeState, Token} from "../../manifest";
   import {OmoSapienState} from "../../../omosapien/manifest";
 
 
-  let safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  let safeState:OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let balanceSubscriptions: Subscription;
   let balances: Token[] = [];
+  let contacts: {[safeAddress:string]:Contact} = {};
   let omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
 
   const web3 = config.getCurrent().web3();
@@ -76,16 +77,44 @@
 
     safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
+    contacts = {};
+    safeState.myContacts.subscribe(contactList =>
+    {
+      const newContacts = contactList.filter(contact => !contacts[contact.safeAddress]);
+      if (newContacts.length == 0)
+      {
+        return;
+      }
+
+      newContacts.forEach(contact => {
+        contacts[contact.safeAddress] = contact;
+      });
+
+      contacts = contacts;
+    });
+
     if (safeState.myBalances)
     {
-      const tokens:Token[] = Object.values(safeState.myKnownTokens.getValue());
       balanceSubscriptions = safeState.myBalances.subscribe(balanceList =>
       {
-        balances = balanceList.map(o => {
-          const token = tokens.find(t => t.tokenAddress == o.tokenAddress);
+        console.log("got safeState.myBalances");
+        const b = balanceList.map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
+        safeCirclesBalance = {
+          data: {
+            image: "symbols/o.svg",
+            title: "time in ⦿",
+            description: "Address: " + safeState.mySafeAddress,
+            balance: b,
+            subtitle: "hours in your safe account",
+          }
+        };
+
+        balances = balanceList.map(balanceEntry => {
+          const tokens:Token[] = Object.values(safeState.myKnownTokens.getValue());
+          const token = tokens.find(t => t.tokenAddress == balanceEntry.tokenAddress);
           if (token)
           {
-            token.balance = o.balance;
+            token.balance = balanceEntry.balance;
           }
           return token;
         }).filter(o => !!o);
@@ -104,18 +133,18 @@
 
   function mapToListItem(token:Token)
   {
+    const image = contacts[token.ownerSafeAddress]?.circlesProfile?.avatarUrl
+      ?? "https://avatars.dicebear.com/api/avataaars/" + token.ownerSafeAddress + ".svg";
+
+    const title = contacts[token.ownerSafeAddress]?.circlesProfile?.username
+      ??  token.tokenAddress.slice(0, 8);
+
     const balance = token.balance ? parseFloat(token.balance).toFixed(2) : "0";
     return {
       data: {
-        image:
-          (token.ownerSafeAddress == safeState.mySafeAddress
-            ? omosapienState.myProfile?.avatar
-            : null)
-          ?? `https://avatars.dicebear.com/api/avataaars/${token.ownerSafeAddress}.svg`,
+        image:image,
           balanceBN: new BN("0"),
-          title: token.ownerSafeAddress == safeState.mySafeAddress
-                  ? `${omosapienState.myProfile.firstName} ${omosapienState.myProfile.lastName}`
-                  : token.ownerSafeAddress.slice(0, 8),
+          title: title,
           description: token.ownerSafeAddress,
           balance: balance,
           subtitle: "time in ⦿",

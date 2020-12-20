@@ -26,9 +26,7 @@
     TransferCirclesContext,
   } from "../../../dapps/safe/processes/circles/transferCircles";
   import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
-  import { config } from "../../o-circles-protocol/config";
   import {tryGetDappState} from "../../o-os/loader";
-  import {OmoSapienState} from "../../../dapps/omosapien/manifest";
   import {OmoSafeState} from "../../../dapps/safe/manifest";
 
 

@@ -11,13 +11,14 @@
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {CirclesTransaction, OmoSafeState} from "../../manifest";
+  import {CirclesTransaction, Contact, OmoSafeState} from "../../manifest";
   import {BN} from "ethereumjs-util";
   import {config} from "../../../../libs/o-circles-protocol/config";
 
   let safeState: OmoSafeState = {};
   let transactionsSubscription: Subscription;
   let transactions: CirclesTransaction[] = [];
+  let contacts: {[safeAddress:string]:Contact} = {};
 
   const web3 = config.getCurrent().web3();
 
@@ -35,6 +36,23 @@
     }
 
     safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+
+    contacts = {};
+    safeState.myContacts.subscribe(contactList =>
+    {
+      const newContacts = contactList.filter(contact => !contacts[contact.safeAddress]);
+      if (newContacts.length == 0)
+      {
+        return;
+      }
+
+      newContacts.forEach(contact => {
+        contacts[contact.safeAddress] = contact;
+      });
+
+      contacts = contacts;
+    });
+
 
     if (safeState.myTransactions)
     {
@@ -94,14 +112,22 @@
                     {#if t.from !== '0x0000000000000000000000000000000000000000'}
                       from
                       <!-- <a href="#/safe/{t.from}/safe">-->
-                      {t.from.slice(0, 12)}...
+                      {#if contacts[t.from] && contacts[t.from].circlesProfile && contacts[t.from].circlesProfile.username}
+                        {contacts[t.from].circlesProfile.username}
+                      {:else}
+                        {t.from.slice(0, 12)}...
+                      {/if}
 
                       <!-- </a> -->
                     {:else}from MamaOmo{/if}
                   {:else}
                     to
                     <!-- <a href="#/safe/{t.to}/safe"> -->
-                    {t.to.slice(0, 12)}...
+                    {#if contacts[t.to] && contacts[t.to].circlesProfile && contacts[t.to].circlesProfile.username}
+                      {contacts[t.to].circlesProfile.username}
+                    {:else}
+                      {t.to.slice(0, 12)}...
+                    {/if}
 
                     <!-- </a> -->
                   {/if}
@@ -133,28 +159,53 @@
                       alt="profile"
                       class="w-10 h-10 mt-2 mr-1" />
                   {:else}
-                    <img
-                      src="https://avatars.dicebear.com/api/avataaars/{t.from}.svg"
-                      alt="profile"
-                      class="h-12" />
+                    {#if contacts[t.from] && contacts[t.from].circlesProfile && contacts[t.from].circlesProfile.avatarUrl}
+                      <img
+                        src="{contacts[t.from].circlesProfile.avatarUrl}"
+                        alt="profile"
+                        class="h-12" />
+                    {:else}
+                      <img
+                        src="https://avatars.dicebear.com/api/avataaars/{t.from}.svg"
+                        alt="profile"
+                        class="h-12" />
+                    {/if}
                   {/if}
                   <div class="py-4 text-xl">
                     <Icon icon={faArrowRight} />
                   </div>
-                  <img
-                    src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"
-                    alt="profile"
-                    class="h-12" />
+                  {#if contacts[t.to] && contacts[t.to].circlesProfile && contacts[t.to].circlesProfile.avatarUrl}
+                    <img
+                      src="{contacts[t.to].circlesProfile.avatarUrl}"
+                      alt="profile"
+                      class="h-12" />
+                  {:else}
+                    <img
+                      src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"
+                      alt="profile"
+                      class="h-12" />
+                  {/if}
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Date:
                   <span class=" text-primary">
                     {dayjs(t.timestamp).format('YYYY D. MMM HH:MM')}</span>
                 </div>
-                <div>Sender: <span class=" text-primary">{t.from}</span></div>
+                <div>Sender: <span class=" text-primary">
+                  {#if contacts[t.from] && contacts[t.from].circlesProfile && contacts[t.from].circlesProfile.username}
+                    {contacts[t.from].circlesProfile.username}
+                  {:else}
+                    {t.from}
+                  {/if}
+                </span></div>
                 <div class="max-w-full text-gray-500 ">
                   Receiver:
-                  <span class=" text-primary">{t.to}</span>
+                  <span class=" text-primary">
+                  {#if contacts[t.to] && contacts[t.to].circlesProfile && contacts[t.to].circlesProfile.username}
+                    {contacts[t.to].circlesProfile.username}
+                  {:else}
+                    {t.to}
+                  {/if}</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount in circles:

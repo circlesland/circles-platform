@@ -1,14 +1,18 @@
 import {BehaviorSubject} from "rxjs";
 import {CirclesBalance, OmoSafeState} from "../manifest";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {BN} from "ethereumjs-util";
 import {config} from "../../../libs/o-circles-protocol/config";
+import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
+
+const myCirclesBalancesSubject: BehaviorSubject<CirclesBalance[]> = new BehaviorSubject<CirclesBalance[]>([]);
+let circlesBalances: CirclesBalance[] = [];
+const updateTrigger = new DelayedTrigger(30, async () => {
+  myCirclesBalancesSubject.next(circlesBalances);
+});
 
 export async function initMyBalances()
 {
-  const myCirclesBalancesSubject: BehaviorSubject<CirclesBalance[]> = new BehaviorSubject<CirclesBalance[]>([]);
-
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const web3 = config.getCurrent().web3();
 
@@ -39,16 +43,15 @@ export async function initMyBalances()
       return p;
     }, {});
 
-    const circlesBalances = Object.keys(balances).map(key => {
+    circlesBalances = Object.keys(balances).map(key => {
       const balance = balances[key];
       return <CirclesBalance>{
         tokenAddress: key,
         balance: web3.utils.fromWei(balance.balance),
         lastBlockNo: balance.lastBlockNo
       }
-    })
-    console.log("My circles balances:", circlesBalances);
-    myCirclesBalancesSubject.next(circlesBalances);
+    });
+    updateTrigger.trigger();
   });
 
   setDappState<OmoSafeState>("omo.safe:1", existing =>

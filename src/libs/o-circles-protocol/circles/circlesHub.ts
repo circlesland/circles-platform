@@ -54,7 +54,7 @@ export class CirclesHub extends Web3Contract {
     };
   }
 
-  static queryPastTrusts(canSendTo?: Address, user?: Address, fromBlock?:number) {
+  static queryPastTrusts(canSendTo?: Address, user?: Address, fromBlock?:number, toBlock?:number) {
     if (!canSendTo && !user)
       throw new Error("At least one of the two parameters has to be set to a value.");
 
@@ -68,7 +68,7 @@ export class CirclesHub extends Web3Contract {
       event: CirclesHub.TrustEvent,
       filter: f,
       fromBlock: fromBlock ?? config.getCurrent().HUB_BLOCK,
-      toBlock: "latest"
+      toBlock: toBlock ?? "latest"
     };
   }
 
