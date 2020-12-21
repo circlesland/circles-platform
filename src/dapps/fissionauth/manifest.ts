@@ -1,10 +1,10 @@
-import {faCheckCircle} from "@fortawesome/free-solid-svg-icons";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Auth from "./pages/Auth.svelte";
 import Authenticate from "./pages/Authenticate.svelte";
-import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
-import {omoSapienDefaultActions, omoSapienOverflowActions} from "../omosapien/data/actions";
-import {FissionDrive} from "../../libs/o-fission/fissionDrive";
-import {tryGetDappState} from "../../libs/o-os/loader";
+import { DappManifest } from "../../libs/o-os/interfaces/dappManifest";
+import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/data/actions";
+import { FissionDrive } from "../../libs/o-fission/fissionDrive";
+import { tryGetDappState } from "../../libs/o-os/loader";
 
 export interface FissionAuthState {
   fission: FissionDrive
@@ -16,25 +16,20 @@ export interface FissionAuthState {
  * @param stack
  * @param runtimeDapp
  */
-async function initialize(stack, runtimeDapp)
-{
+async function initialize(stack, runtimeDapp) {
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (fissionAuthState?.fission)
-  {
+  if (fissionAuthState?.fission) {
     return {
       cancelDependencyLoading: false,
       initialPage: authPage
     };
   }
-  else
-  {
+  else {
     console.log("X - Cancel dependency loading")
-    if (stack.length == 0)
-    {
+    if (stack.length == 0) {
       window.o.redirectTo = runtimeDapp.route;
     }
-    else
-    {
+    else {
       window.o.redirectTo = stack[0].route;
     }
     return {
@@ -62,11 +57,11 @@ const authPage = {
   available: []
 };
 
-export const fissionauth : DappManifest<FissionAuthState,FissionAuthState> = {
+export const fissionauth: DappManifest<FissionAuthState, FissionAuthState> = {
   id: "omo.fission.auth:1",
   dependencies: [],
-  isHidden: false,
-  isEnabled: true,
+  isHidden: true,
+  isEnabled: false,
   icon: faCheckCircle,
   title: "Fission Auth",
   routeParts: ["fissionauth"],

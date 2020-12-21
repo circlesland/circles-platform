@@ -70,8 +70,8 @@
                       <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
                   </div>
-                  <span class="ml-3 text-lg text-gray-700">Sub cent transaction
-                    fees</span>
+                  <span class="ml-3 text-base text-gray-700">Sub cent
+                    transaction fees</span>
                 </li>
                 <li class="flex items-center">
                   <div class="p-2 text-green-500 rounded-full fill-current ">
@@ -87,7 +87,8 @@
                       <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
                   </div>
-                  <span class="ml-3 text-lg text-gray-700">Everything opensource</span>
+                  <span class="ml-3 text-base text-gray-700">Everything
+                    opensource</span>
                 </li>
                 <li class="flex items-center">
                   <div class="p-2 text-green-500 rounded-full fill-current ">
@@ -103,7 +104,7 @@
                       <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
                   </div>
-                  <span class="ml-3 text-lg text-gray-700">100% own all your
+                  <span class="ml-3 text-base text-gray-700">100% own all your
                     data</span>
                 </li>
               </ul>
@@ -111,8 +112,8 @@
             <div class="flex items-center block p-8 lowercase">
               <a
                 href="#/omoli/dapps"
-                class="block w-full px-6 py-3 mt-3 text-lg font-bold text-center shadow-sm text-secondary hover:bg-secondary-lighter hover:text-white rounded-xl bg-light-200">Get
-                started now</a>
+                class="block w-full px-6 py-3 mt-3 text-lg font-bold text-center shadow-sm text-secondary hover:bg-secondary-lighter hover:text-white rounded-xl bg-light-200">create
+                account</a>
             </div>
           </div>
         </div>
@@ -121,13 +122,13 @@
           class="relative z-10 w-full max-w-md my-8 bg-white rounded-lg shadow-lg lg:w-1/3 sm:my-5">
           <div
             class="py-4 text-sm font-semibold leading-none tracking-wide text-center text-white uppercase rounded-t bg-secondary">
-            Support Our Campaign
+            1 billion omo sapiens campaign
           </div>
           <div
             class="block max-w-sm px-8 mx-auto mt-5 text-sm text-left text-primary sm:text-md lg:px-6">
             <h3
               class="p-3 pb-1 text-lg font-bold tracking-wide text-center uppercase">
-              I AM OMO<span class="ml-2 font-light">Sapien</span>
+              Omo Sapien<span class="ml-2 font-light">verify</span>
             </h3>
             <h4
               class="flex items-center justify-center pb-6 text-5xl font-bold text-center text-primary">
@@ -136,12 +137,12 @@
                 class="ml-1 text-lg text-gray-700">/ one time</span>
             </h4>
             <p class="text-sm text-center text-gray-600">
-              Verifying your identity will unlock your time currency. You can
-              either pay this yourself, or it will be payed by your crowdfunding
-              project starter, which you helped to grow.
+              The first time you are making a purchase, this fee is there to
+              verify your identity and will get payed by your seller. You can of
+              course pay this yourself to unlock your personal money.
             </p>
           </div>
-          <div class="flex justify-start pl-12 mt-8 sm:justify-start">
+          <div class="flex justify-start pl-8 mt-8 sm:justify-start">
             <ul>
               <li class="flex items-center">
                 <div class="p-2 text-green-500 rounded-full fill-current">
@@ -157,7 +158,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Everything from FREE</span>
+                <span class="ml-3 text-base text-gray-700">Everything from FREE</span>
               </li>
               <li class="flex items-center">
                 <div class="p-2 text-green-500 rounded-full fill-current ">
@@ -173,7 +174,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Verify your identity</span>
+                <span class="ml-3 text-base text-gray-700">Verified identity</span>
               </li>
               <li class="flex items-center">
                 <div class="p-2 text-green-500 rounded-full fill-current ">
@@ -189,7 +190,7 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Vote for new apps</span>
+                <span class="ml-3 text-base text-gray-700">Money trusted by Omo</span>
               </li>
               <li class="flex items-center">
                 <div class="p-2 text-green-500 rounded-full fill-current ">
@@ -205,7 +206,8 @@
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
-                <span class="ml-3 text-lg text-gray-700">Empower open source</span>
+                <span class="ml-3 text-base text-gray-700">1000-2500 free
+                  transactions</span>
               </li>
             </ul>
           </div>
@@ -213,8 +215,8 @@
           <div class="flex items-center block p-8">
             <a
               href="https://discord.gg/Ac4dy9Army"
-              class="block w-full px-6 py-4 mt-3 text-lg font-semibold text-center text-white shadow-sm bg-secondary hover:bg-secondary-lighter rounded-xl">I
-              am Omo Sapien</a>
+              class="block w-full px-6 py-4 mt-3 text-lg font-semibold text-center text-white shadow-sm bg-secondary hover:bg-secondary-lighter rounded-xl">Verify
+              myself</a>
           </div>
         </div>
         <!-- Premium Pricing -->
@@ -253,7 +255,8 @@
                       <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
                   </div>
-                  <span class="ml-3 text-lg text-light-500">fullfillment service</span>
+                  <span class="ml-3 text-base text-light-500">fullfillment
+                    service</span>
                 </li>
                 <li class="flex items-center">
                   <div class="p-2 rounded-full fill-current text-light-500 ">
@@ -285,7 +288,7 @@
                       <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
                   </div>
-                  <span class="ml-3 text-lg text-light-500">customer care</span>
+                  <span class="ml-3 text-base text-light-500">customer care</span>
                 </li>
                 <li class="flex items-center">
                   <div class="p-2 rounded-full fill-current text-light-500 ">
@@ -301,7 +304,7 @@
                       <polyline points="22 4 12 14.01 9 11.01" />
                     </svg>
                   </div>
-                  <span class="ml-3 text-lg text-light-500">white labeling</span>
+                  <span class="ml-3 text-base text-light-500">white labeling</span>
                 </li>
               </ul>
             </div>
