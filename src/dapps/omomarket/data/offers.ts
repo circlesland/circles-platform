@@ -12,7 +12,7 @@ export let featured = [
       price: "80",
       state: "pre-order",
       quantity: "1 bottle",
-      delivery: "January 2021",
+      delivery: "delivery in february",
       city: "Munich",
       country: "Germany",
       offeredBy: {
@@ -34,7 +34,7 @@ export let featured = [
       price: "100",
       state: "pre-order",
       quantity: "6 pack",
-      delivery: "April 2021",
+      delivery: "delivery in march",
       city: "Bad Endorf",
       country: "Germany",
       offeredBy: {

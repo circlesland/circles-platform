@@ -19,8 +19,8 @@
       <p
         class="pr-0 mb-20 text-base text-light-500 sm:text-lg xl:text-xl lg:pr-20 ">
         Grow now your own personal money tightly interconnected to your time
-        alive and sustain your planet with a passionate economy with an
-        inclusive money design for every human.
+        alive and sustain your planet with a passionate economy and inclusive
+        money design for every human.
       </p>
       <!-- <div
         on:click={() => push('#/omoli/dapps')}
