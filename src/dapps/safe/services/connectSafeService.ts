@@ -97,7 +97,7 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
   }
 
   const existingKey = await fissionAuthState.fission.keys.tryGetMyKey();
-  if (existingKey.privateKey != privateKey)
+  if (existingKey && existingKey.privateKey != privateKey)
   {
     throw new Error("Trying to overwrite your existing private key. This is not allowed.");
   }

@@ -90,7 +90,7 @@ export class CirclesAccount
 
     if (this.safeAddress)
     {
-      balances.mySafeXDaiBalance = new BN(await this.web3.eth.getBalance())
+      balances.mySafeXDaiBalance = new BN(await this.web3.eth.getBalance(this.safeAddress))
     }
 
     if (safeOwner)
