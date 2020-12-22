@@ -15,6 +15,7 @@ import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {config} from "../../../libs/o-circles-protocol/config";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransactions";
+import {asyncWaterfall} from "webnative/common";
 
 function mapTransactionEvent(token:CirclesToken, transactionEvent: BlockchainEvent)
 {
@@ -81,6 +82,24 @@ const updateCacheTrigger = new DelayedTrigger(5000, async () =>
 
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   await fissionAuthState.fission.transactions.addOrUpdate(transactionBlocks);
+  const currentBlock = await config.getCurrent().web3().eth.getBlockNumber();
+
+  // Go trough all tokens and find the first block that contains a transactions
+  await Promise.all(Object.keys(tokenSubscriptions).map(async tokenAddress =>
+  {
+    const firstBlockWithEvents = Object.values(myTransactions[tokenAddress] ?? {})
+      .reduce((p,c) => c.blockNo < p ? c.blockNo : p, Number.MIN_SAFE_INTEGER);
+
+    if (firstBlockWithEvents == Number.MIN_SAFE_INTEGER)
+    {
+      // No events till now
+      const token = await fissionAuthState.fission.tokens.tryGetByName(tokenAddress);
+      token.noTransactionsUntilBlockNo = currentBlock;
+      await fissionAuthState.fission.tokens.addOrUpdate(token, false);
+    }
+  }));
+
+  await fissionAuthState.fission.tokens.publish();
 
   console.log("Wrote transactions to fission cache.");
 });
@@ -250,17 +269,19 @@ async function feedCachedTransactions()
       return;
     }
 
-    const tokenTransactionsSubject = subscribeToTokenTransactions(token, latestBlocks[token.tokenAddress]);
+    const fromBlock = latestBlocks[token.tokenAddress] ?? token.noTransactionsUntilBlockNo ?? token.createdInBlockNo;
+    const tokenTransactionsSubject = subscribeToTokenTransactions(token, fromBlock);
     tokenTransactionsSubject.next(new BeginSignal(token.tokenAddress));
   });
 }
 
-function subscribeToTokenTransactions(newToken, fromBlock?:number) : Subject<SystemEvent>
+function subscribeToTokenTransactions(newToken:CirclesToken, fromBlock?:number) : Subject<SystemEvent>
 {
   if (tokenSubscriptions[newToken.tokenAddress])
   {
     return;
   }
+  console.log("Subscribing to transaction history of token '" + newToken.tokenAddress + "' from block no. " + (fromBlock ?? 0) + ".");
 
   const tokenTransactions = newToken.subscribeToTransactions(fromBlock);
   tokenSubscriptions[newToken.tokenAddress] = tokenTransactions.subscribe(inTransactionEvent =>
@@ -298,7 +319,7 @@ export async function initMyTransactions()
 
     newTokens.forEach(newToken =>
     {
-      subscribeToTokenTransactions(newToken);
+      subscribeToTokenTransactions(newToken, newToken.noTransactionsUntilBlockNo);
     });
   });
 

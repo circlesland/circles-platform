@@ -57,6 +57,7 @@ export class CirclesAccount
     token.tokenAddress = signupEvent.returnValues.token;
     token.tokenOwner = signupEvent.returnValues.user;
     token.createdInBlockNo = signupEvent.blockNumber.toNumber()
+    token.noTransactionsUntilBlockNo = signupEvent.blockNumber.toNumber();
 
     return token;
   }
@@ -73,6 +74,7 @@ export class CirclesAccount
       token.tokenAddress = signupEvent.returnValues.token;
       token.tokenOwner = signupEvent.returnValues.user;
       token.createdInBlockNo = signupEvent.blockNumber.toNumber();
+      token.noTransactionsUntilBlockNo = signupEvent.blockNumber.toNumber();
 
       return token;
     });

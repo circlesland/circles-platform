@@ -22,7 +22,8 @@ export async function initMyToken()
         name: "me",
         tokenAddress: mySignup.tokenAddress,
         tokenOwner: mySignup.tokenOwner,
-        createdInBlockNo: mySignup.createdInBlockNo
+        createdInBlockNo: mySignup.createdInBlockNo,
+        noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo
       }
     }
   }
@@ -34,6 +35,7 @@ export async function initMyToken()
     t.tokenAddress = myToken.tokenAddress;
     t.balance = new BN("0");
     t.createdInBlockNo = myToken.createdInBlockNo;
+    t.noTransactionsUntilBlockNo = myToken.noTransactionsUntilBlockNo;
 
     return {
       ...currentState,

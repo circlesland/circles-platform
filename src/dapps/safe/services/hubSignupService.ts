@@ -34,7 +34,8 @@ export const hubSignupService = async (context: SignupAtCirclesContext) =>
     name: "me",
     tokenAddress: myToken.tokenAddress,
     createdInBlockNo: myToken.createdInBlockNo,
-    tokenOwner: myToken.tokenOwner
+    tokenOwner: myToken.tokenOwner,
+    noTransactionsUntilBlockNo: myToken.noTransactionsUntilBlockNo
   });
 
   setDappState<OmoSafeState>("omo.safe:1", existing => {

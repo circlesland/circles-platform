@@ -146,7 +146,8 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
     name: "me",
     tokenAddress: myToken.tokenAddress,
     tokenOwner: circlesAccount.safeAddress,
-    createdInBlockNo: myToken.createdInBlockNo
+    createdInBlockNo: myToken.createdInBlockNo,
+    noTransactionsUntilBlockNo: myToken.noTransactionsUntilBlockNo
   });
 
   setDappState<OmoSafeState>("omo.safe:1", current => {

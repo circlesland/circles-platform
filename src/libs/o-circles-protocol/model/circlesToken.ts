@@ -11,6 +11,7 @@ export class CirclesToken
   tokenAddress: Address;
   tokenOwner: Address;
   balance?: BN;
+  noTransactionsUntilBlockNo: number;
 
   private readonly web3 = config.getCurrent().web3();
   private readonly safeAddress:string;

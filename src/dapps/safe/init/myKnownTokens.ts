@@ -20,7 +20,8 @@ const storeToCacheTrigger = new DelayedTrigger(5000, async () =>
       name: knownToken.tokenAddress,
       tokenOwner: knownToken.tokenOwner,
       tokenAddress: knownToken.tokenAddress,
-      createdInBlockNo: knownToken.createdInBlockNo
+      createdInBlockNo: knownToken.createdInBlockNo,
+      noTransactionsUntilBlockNo: knownToken.noTransactionsUntilBlockNo
     }, false);
 
     await fissionAuthState.fission.tokens.publish();
@@ -47,6 +48,7 @@ export async function initMyKnownTokens()
       token.createdInBlockNo = cachedToken.createdInBlockNo;
       token.tokenAddress = cachedToken.tokenAddress;
       token.tokenOwner = cachedToken.tokenOwner;
+      token.noTransactionsUntilBlockNo = cachedToken.noTransactionsUntilBlockNo;
 
       myKnownTokens[token.tokenOwner] = token;
     });

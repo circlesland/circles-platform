@@ -15,4 +15,5 @@ export interface Token extends Entity {
   tokenAddress?: string;
 
   createdInBlockNo: number;
+  noTransactionsUntilBlockNo: number;
 }
