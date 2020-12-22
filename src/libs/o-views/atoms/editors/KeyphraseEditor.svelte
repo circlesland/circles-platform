@@ -85,6 +85,6 @@
       placeholder={processArtifact.placeholder ? processArtifact.placeholder : 'Word 1 Word 2 Wordd 3 ... Word 24'}
       class:border-action={processArtifact.isValid}
       class:border-danger={!processArtifact.isValid}
-      class="w-full h-24 p-2 text-xl bg-transparent border-2 border-gray-300 outline-none rounded-xl text-primary" />
+      class="w-full h-36 p-2 text-xl bg-transparent border-2 border-gray-300 outline-none rounded-xl text-primary" />
   </div>
 {/if}
