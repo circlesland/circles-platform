@@ -20,8 +20,7 @@
     </label>
     <h3
       class="m-4 mx-auto text-4xl font-black leading-normal text-white uppercase md:m8 md:text-6xl font-title">
-      Ready to lead earth
-      <br />into a new age of abundance?<br />
+      Ready to follow your dreams?<br />
       <span class="text-2xl">(video coming soon)</span>
     </h3>
   </div>

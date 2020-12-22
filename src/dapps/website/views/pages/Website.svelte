@@ -25,7 +25,7 @@
     <Video />
     <Hero />
     <Steps />
-    <div class="bg-gray-50">
+    <!-- <div class="bg-gray-50">
       <div class="flex flex-col items-center w-full px-5 py-24 mx-auto ">
         <h2
           class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
@@ -37,24 +37,18 @@
         </h3>
       </div>
       <Projects />
-    </div>
+    </div> -->
     <div
       class="flex flex-col items-center w-full px-5 py-24 mx-auto bg-light-100">
       <h2
         class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
-        The Omo Marketplace
+        Omo Marketplace
       </h2>
       <h3
         class="max-w-4xl px-5 pb-12 mt-2 text-3xl font-black leading-loose tracking-wide text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
         <div>Enjoy the growth<br />of your own economy</div>
       </h3>
       <Offers />
-      <a href="https://discord.gg/YedewwChD9">
-        <button
-          class="flex px-4 py-1 mx-auto mt-16 text-base font-bold lowercase bg-white border text-primary border-secondary rounded-xl focus:outline-none hover:text-white hover:bg-secondary-lighter">
-          create new offer
-        </button>
-      </a>
     </div>
     <Details />
     <Pricing />

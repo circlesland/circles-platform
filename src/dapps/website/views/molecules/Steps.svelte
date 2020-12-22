@@ -16,7 +16,7 @@
     </h2>
     <h3
       class="max-w-4xl px-5 mt-2 text-3xl font-black leading-loose tracking-wide text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
-      <div>Designed to empower<br /> your life</div>
+      <div>Only 3 steps<br /> towards your own money</div>
     </h3>
     <div
       class="flex flex-col w-full mt-0 lg:flex-row sm:mt-10 lg:mt-20 text-primary">
@@ -31,6 +31,7 @@
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
             Receive a 150⦿ welcome gift, when you first register your Omo Sapien
+            Identity
           </p>
         </div>
       </div>
@@ -42,11 +43,11 @@
 
           <h4
             class="relative mt-6 text-2xl font-black text-center uppercase font-title text-primary">
-            Support
+            Grow
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
-            Grow your future economy by supporting a crowdfunding project with
-            min 50⦿.
+            Grow your future economy by offering at least 1 product or service
+            for minimum 100⦿
           </p>
         </div>
       </div>
@@ -57,11 +58,11 @@
           <img src="illustrations/grow.svg" alt="grow" />
           <h4
             class="relative mt-6 text-2xl font-black text-center uppercase font-title text-primary">
-            Grow
+            Enjoy
           </h4>
           <p class="relative mt-2 text-lg font-bold text-center text-tertiary">
-            Get verified by your supported project omopreneuer and start growing
-            your ⦿ money at 1⦿ per hour
+            Make your first purchase in ⦿ to unlock your personal money at 1⦿
+            per hour
           </p>
         </div>
       </div>
