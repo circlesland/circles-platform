@@ -10,8 +10,8 @@ import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
 import {strings} from "../../data/strings";
 import {importCircles} from "../omo/importCircles";
-import {importPrivateKey} from "../omo/importPrivateKey";
 import {signupAtCircles} from "../omo/signupAtCircles";
+import {createPrivateKey} from "../omo/createPrivateKey";
 
 export interface InitialMenuContext extends ProcessContext {
   data: {
@@ -19,9 +19,6 @@ export interface InitialMenuContext extends ProcessContext {
   }
 }
 
-/**
- * Connect safe
- */
 const str = strings.safe.processes.intiialMenu;
 const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
   initial: "idle",
@@ -45,7 +42,6 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
           artifacts: {
             ...choice("menuChoice", undefined, [
               str.choice_alreadyGotCircles(),
-              str.choice_wantToReuseMyExistingPrivateKey(),
               str.choice_justWantToJoin()])
           }
         }
@@ -62,9 +58,6 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
         "process.triggerSelf": [{
           target: 'importCircles',
           cond: (context) => context.data.menuChoice.value === str.choice_alreadyGotCircles()
-        }, {
-          target: 'importPrivateKey',
-          cond: (context) => context.data.menuChoice.value === str.choice_wantToReuseMyExistingPrivateKey()
         }, {
           target: 'signupAtCircles',
           cond: (context) => context.data.menuChoice.value === str.choice_justWantToJoin()
@@ -83,20 +76,9 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
         "process.triggerSelf": "stop"
       }
     },
-    importPrivateKey: {
-      entry: [
-        sendShellEvent(new RunProcess(importPrivateKey)),
-        send({
-          type: "process.triggerSelf"
-        })
-      ],
-      on: {
-        "process.triggerSelf": "stop"
-      }
-    },
     signupAtCircles: {
       entry: [
-        sendShellEvent(new RunProcess(signupAtCircles)),
+        sendShellEvent(new RunProcess(createPrivateKey)),
         send({
           type: "process.triggerSelf"
         })

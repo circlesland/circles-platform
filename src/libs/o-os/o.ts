@@ -1,5 +1,4 @@
 import { stateMachine } from "./stateMachine";
-import * as webnative from "webnative";
 import { Shell } from "./interfaces/shell";
 import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
 import { GnosisSafeProxy } from "../o-circles-protocol/safe/gnosisSafeProxy";
@@ -14,6 +13,7 @@ import { ProcessContext } from "../o-processes/interfaces/processContext";
 import { Erc20Token } from "../o-circles-protocol/token/erc20Token";
 import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {config} from "../o-circles-protocol/config";
+import * as webnative from "webnative";
 
 export type Me = {
   myData?: FissionDrive,
@@ -68,6 +68,7 @@ export async function getProcessContext(): Promise<ProcessContext> {
   };
 }
 
+webnative.setup.debug({ enabled: true });
 export const o: Shell = {
   stateMachines: <any>stateMachine,
   wn: webnative

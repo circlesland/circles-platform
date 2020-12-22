@@ -15,8 +15,8 @@ export async function initXDaiBalances()
       .address
       : undefined;
 
-  const balances = await new CirclesAccount(safeState.mySafeAddress)
-    .tryGetXDaiBalance(ownerAddress);
+    const balances = await new CirclesAccount(safeState.mySafeAddress)
+      .tryGetXDaiBalance(ownerAddress);
 
   setDappState<OmoSafeState>("omo.safe:1", (current) => {
     return {

@@ -8,7 +8,7 @@ import {RunProcess} from "../../libs/o-events/runProcess";
 import {faCheck, faPiggyBank, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {ProcessArtifact} from "../../libs/o-processes/interfaces/processArtifact";
 import {CloseModal} from "../../libs/o-events/closeModal";
-import {push} from "svelte-spa-router";
+import {pop, push} from "svelte-spa-router";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 import {RuntimeDapp} from "../../libs/o-os/interfaces/runtimeDapp";
 import {tryGetDappState} from "../../libs/o-os/loader";
@@ -31,6 +31,9 @@ import {Contact} from "../../libs/o-circles-protocol/model/contact";
 import {CirclesTransaction} from "../../libs/o-circles-protocol/model/circlesTransaction";
 import {CirclesBalance} from "../../libs/o-circles-protocol/model/circlesBalance";
 import {initMyBalances} from "./init/myBalances";
+import {initialMenu} from "./processes/menus/initialMenu";
+import {fundAccountForSafeCreation} from "./processes/omo/fundAccountForSafeCreation";
+import {signupAtCircles} from "./processes/omo/signupAtCircles";
 
 export interface OmoSafeState
 {
@@ -77,15 +80,64 @@ const transactionPage = {
 async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 {
   await initMyKey();
+
+  let safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  if (!safeState.myKey)
+  {
+    // Safe not connected
+    window.o.publishEvent(new RunProcess(initialMenu));
+    return {
+      cancelDependencyLoading: true,
+      initialPage: null,
+      dappState: null
+    };
+  }
+
   await initSafeAddress();
-  await initMyToken();
   await initXDaiBalances();
+
+  safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  if (!safeState.mySafeAddress
+    && (safeState.myAccountXDaiBalance?.lt(new BN("100000")) ?? true))
+  {
+    // Got an account but no funding to deploy a safe
+    window.o.publishEvent(new RunProcess(fundAccountForSafeCreation));
+    return {
+      cancelDependencyLoading: true,
+      initialPage: null,
+      dappState: null
+    };
+  }
+  if (!safeState.mySafeAddress
+    && (safeState.myAccountXDaiBalance?.gte(new BN("100000")) ?? false))
+  {
+    // Got a funded account, ready to deploy the safe
+    window.o.publishEvent(new RunProcess(deploySafe));
+    return {
+      cancelDependencyLoading: true,
+      initialPage: null,
+      dappState: null
+    };
+  }
+
+  await initMyToken();
+
+  safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  if (safeState.mySafeAddress && !safeState.myToken)
+  {
+    // Not yet registered at the circles hub
+    runtimeDapp.shell.publishEvent(new RunProcess(signupAtCircles));
+    return {
+      cancelDependencyLoading: true,
+      initialPage: null
+    };
+  }
+
   await initMyContacts();
   await initMyKnownTokens();
   await initMyTransactions();
   await initMyBalances();
 
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   if (safeState.mySafeAddress && safeState.myToken)
   {
     // Everything is already set up
@@ -93,16 +145,6 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
       cancelDependencyLoading: false,
       initialPage: null
     }
-  }
-
-  if (safeState.mySafeAddress && !safeState.myToken)
-  {
-    // Not yet registered at the circles hub
-    runtimeDapp.shell.publishEvent(new RunProcess(deploySafe));
-    return {
-      cancelDependencyLoading: true,
-      initialPage: null
-    };
   }
 
   return {

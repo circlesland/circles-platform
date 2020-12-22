@@ -1,16 +1,20 @@
 import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {createMachine, send} from "xstate";
+import {createMachine} from "xstate";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {strings} from "../../data/strings";
 import {BN} from "ethereumjs-util";
-import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {CloseModal} from "../../../../libs/o-events/closeModal";
+import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
 import {tryGetDappState} from "../../../../libs/o-os/loader";
 import {OmoSafeState} from "../../manifest";
+import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
+import {setError} from "../../../../libs/o-processes/actions/setError";
+import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {deploySafeService} from "../../services/deploySafeService";
+import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 
 export interface DeploySafeContext extends ProcessContext {
   data: {
@@ -47,16 +51,41 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
             const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
             return safeState.myAccountXDaiBalance?.gte(new BN(context.environment.eth.web3.utils.toWei("0.02", "ether"))) === true;
           },
-          target: "success"
+          target: "deploySafe"
         }, {
-          target: "generateFundLink"
+          target: "success"
         }]
+      }
+    },
+    deploySafe: {
+      entry: sendInProgressPrompt(str.progressCreatePrivateKey),
+      invoke: {
+        id: 'deploySafe',
+        src: deploySafeService,
+        onError: {
+          actions: setError,
+          target: "error"
+        },
+        onDone: {
+          actions: setResult(str.successDeploySafe),
+          target: "success"
+        }
       }
     },
     success: {
       entry: [
-        sendShellEvent(new CloseModal())
+        sendSuccessPrompt
       ],
+      on: {
+        "process.continue": "stop",
+        "process.cancel": "stop"
+      },
+      after: {
+        2000: { target: 'stop' }
+      }
+    },
+    error: {
+      entry: sendErrorPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

@@ -3,11 +3,12 @@ import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
 import { AuthSucceeded, Continuation } from "webnative";
 import { Tokens } from "./directories/tokens";
-import {BlocksDir} from "./directories/blocks";
+import {CirclesTransactions} from "./directories/circlesTransactions";
 
-export class FissionDrive {
+export class FissionDrive
+{
   private readonly _fissionAuth: AuthSucceeded | Continuation;
-  private readonly _fs: FileSystem;
+  readonly _fs: FileSystem;
 
   get username(): string {
     return this._fissionAuth.username;
@@ -23,10 +24,10 @@ export class FissionDrive {
   }
   private readonly _keys: Keys;
 
-  get blocks(): BlocksDir {
-    return this._blocks;
+  get transactions(): CirclesTransactions {
+    return this._transactions;
   }
-  private readonly _blocks: BlocksDir;
+  private readonly _transactions: CirclesTransactions;
 
   get tokens(): Tokens {
     return this._tokens;
@@ -40,8 +41,7 @@ export class FissionDrive {
 
     this._profiles = new Profiles(this._fs);
     this._keys = new Keys(this._fs);
-    this._blocks = new BlocksDir(this._fs);
+    this._transactions = new CirclesTransactions(this._fs);
     this._tokens = new Tokens(this._fs);
-    // this._events = new EventStore(this._fs, ["eventStore"]);
   }
 }

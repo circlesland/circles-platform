@@ -83,83 +83,84 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
 
   const web3 = config.getCurrent().web3();
 
-  try
+  const privateKey = isValidHexKey(context.data.privateKey.value)
+    ?? isValidKeyPhrase(context.data.privateKey.value);
+
+  const ownerAddress = web3
+    .eth
+    .accounts
+    .privateKeyToAccount(privateKey)
+    .address;
+
+  if (!web3.utils.isAddress(ownerAddress)) {
+    throw new Error("The private key seems to be invalid because no address could be derived from it.");
+  }
+
+  const existingKey = await fissionAuthState.fission.keys.tryGetMyKey();
+  if (existingKey.privateKey != privateKey)
   {
-    const privateKey = isValidHexKey(context.data.privateKey.value)
-      ?? isValidKeyPhrase(context.data.privateKey.value);
-
-    const ownerAddress = web3
-      .eth
-      .accounts
-      .privateKeyToAccount(privateKey)
-      .address;
-
-    if (!web3.utils.isAddress(ownerAddress)) {
-      throw new Error("The private key seems to be invalid because no address could be derived from it.");
-    }
-
+    throw new Error("Trying to overwrite your existing private key. This is not allowed.");
+  }
+  if (!existingKey)
+  {
     await fissionAuthState.fission.keys.addMyKey({
       name: "me",
       privateKey: privateKey,
       publicKey: null
     });
-
-    console.log("Linking safe address to profile ..")
-
-    omosapienState.myProfile.circlesAddress = context.data.safeAddress.value;
-    await fissionAuthState.fission.profiles.addOrUpdateMyProfile(omosapienState.myProfile);
-
-    setDappState<OmoSapienState>("omo.sapien", current => {
-      return {
-        myProfile: omosapienState.myProfile
-      }
-    });
-
-    setDappState<OmoSafeState>("omo.safe:1", current => {
-      return {
-        ...current,
-        myKey: {
-          name: "me",
-          privateKey: privateKey,
-          publicKey: null
-        },
-        mySafeAddress: omosapienState.myProfile.circlesAddress
-      }
-    });
-
-    const myAccountXDaiBalance = new BN(await web3.eth.getBalance(ownerAddress));
-    const mySafeXDaiBalance = new BN(omosapienState.myProfile.circlesAddress
-      ? (await web3.eth.getBalance(omosapienState.myProfile.circlesAddress))
-      : "0");
-
-    console.log("Find token of safe ..")
-    const circlesAccount = new CirclesAccount(omosapienState.myProfile.circlesAddress);
-    const myToken = await circlesAccount.tryGetMyToken();
-
-    await fissionAuthState.fission.tokens.addMyToken({
-      name: "me",
-      tokenAddress: myToken.tokenAddress,
-      tokenOwner: circlesAccount.safeAddress,
-      createdInBlockNo: myToken.createdInBlockNo
-    });
-
-    setDappState<OmoSafeState>("omo.safe:1", current => {
-      return {
-        ...current,
-        myKey: {
-          name: "me",
-          privateKey: privateKey,
-          publicKey: null
-        },
-        mySafeAddress: omosapienState.myProfile.circlesAddress,
-        myToken: myToken,
-        myAccountXDaiBalance: myAccountXDaiBalance,
-        mySafeXDaiBalance: mySafeXDaiBalance
-      }
-    });
   }
-  catch (e)
-  {
-    console.error(e);
-  }
+
+  console.log("Linking safe address to profile ..")
+
+  omosapienState.myProfile.circlesAddress = context.data.safeAddress.value;
+  await fissionAuthState.fission.profiles.addOrUpdateMyProfile(omosapienState.myProfile);
+
+  setDappState<OmoSapienState>("omo.sapien", current => {
+    return {
+      myProfile: omosapienState.myProfile
+    }
+  });
+
+  setDappState<OmoSafeState>("omo.safe:1", current => {
+    return {
+      ...current,
+      myKey: {
+        name: "me",
+        privateKey: privateKey,
+        publicKey: null
+      },
+      mySafeAddress: omosapienState.myProfile.circlesAddress
+    }
+  });
+
+  const myAccountXDaiBalance = new BN(await web3.eth.getBalance(ownerAddress));
+  const mySafeXDaiBalance = new BN(omosapienState.myProfile.circlesAddress
+    ? (await web3.eth.getBalance(omosapienState.myProfile.circlesAddress))
+    : "0");
+
+  console.log("Find token of safe ..")
+  const circlesAccount = new CirclesAccount(omosapienState.myProfile.circlesAddress);
+  const myToken = await circlesAccount.tryGetMyToken();
+
+  await fissionAuthState.fission.tokens.addMyToken({
+    name: "me",
+    tokenAddress: myToken.tokenAddress,
+    tokenOwner: circlesAccount.safeAddress,
+    createdInBlockNo: myToken.createdInBlockNo
+  });
+
+  setDappState<OmoSafeState>("omo.safe:1", current => {
+    return {
+      ...current,
+      myKey: {
+        name: "me",
+        privateKey: privateKey,
+        publicKey: null
+      },
+      mySafeAddress: omosapienState.myProfile.circlesAddress,
+      myToken: myToken,
+      myAccountXDaiBalance: myAccountXDaiBalance,
+      mySafeXDaiBalance: mySafeXDaiBalance
+    }
+  });
 }

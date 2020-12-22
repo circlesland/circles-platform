@@ -7,7 +7,8 @@ import {FissionDrive} from "../../libs/o-fission/fissionDrive";
 import {tryGetDappState} from "../../libs/o-os/loader";
 
 export interface FissionAuthState {
-  fission: FissionDrive
+  fission: FissionDrive,
+  username: string
 }
 
 /**

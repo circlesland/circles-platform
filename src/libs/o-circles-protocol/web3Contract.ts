@@ -48,6 +48,7 @@ export abstract class Web3Contract implements Addressable {
    * Creates an executable query object from the passed options.
    * @param options
    */
+  // TODO: Add a timeout
   queryEvents(options: PastEventOptions & { event: string })
     : EventQuery<BlockchainEvent> {
     const filterPredicate = (event: BlockchainEvent): boolean => {

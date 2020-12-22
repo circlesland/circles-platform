@@ -79,16 +79,19 @@ export class CirclesAccount
   }
 
   async tryGetXDaiBalance(safeOwner?: Address): Promise<{
-    mySafeXDaiBalance: BN,
+    mySafeXDaiBalance?: BN,
     myAccountXDaiBalance?: BN
   }>
   {
     const balances: {
-      mySafeXDaiBalance: BN,
+      mySafeXDaiBalance?: BN,
       myAccountXDaiBalance?: BN
-    } = {
-      mySafeXDaiBalance: new BN(await this.web3.eth.getBalance(this.safeAddress)),
-    };
+    } = {};
+
+    if (this.safeAddress)
+    {
+      balances.mySafeXDaiBalance = new BN(await this.web3.eth.getBalance())
+    }
 
     if (safeOwner)
     {

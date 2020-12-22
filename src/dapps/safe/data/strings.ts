@@ -108,7 +108,6 @@ export const strings = {
 
           return "Send this link to a friend who invited your to get started or send 0.1 xDai to '" + ownerAddress + "'"
         },
-        progressDeploySafe: () => "Creating your safe",
         successDeploySafe: () => "Your new safe was successfully created",
         successConnectSafe: () => "Your existng safe was successfully connected to your Omosapien",
 
@@ -118,7 +117,8 @@ export const strings = {
         progressFundSafe: () => "Initilizing your safe...",
         successFundSafe: () => "Safe successfully created",
         successCreatePrivateKey: () => "Private key created...",
-        progressCreatePrivateKey: () => "Creating private key...",
+        progressCreatePrivateKey: () => "Creating private key ..",
+        progressDeploySafe: () => "Deploying your safe ..",
         fundLinkHeader: () => {
           const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
           return `Welcome ${omosapienState.myProfile.firstName} ${omosapienState.myProfile.lastName}`
@@ -143,7 +143,11 @@ export const strings = {
         successImportAccount: () => `Successfully imported your account.`
       },
       signupAtCircles: {
-
+        progressCreatePrivateKey: () => "Creating your key ..",
+        successCreatePrivateKey: () => "Your key was successfully created.",
+        titleBackupKey: () => "Safe your key",
+        buttonBackupKey: () => "I've made a backup",
+        bannerBackupKey: () => "Please keep a backup of this key in a safe place.",
       },
       signup: {}
 

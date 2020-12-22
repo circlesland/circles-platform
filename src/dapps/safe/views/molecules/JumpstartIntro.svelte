@@ -1,23 +1,12 @@
 <script lang="ts">
   import { Jumper } from "svelte-loading-spinners";
-  import { onMount } from "svelte";
-  import { ProcessEnvironment } from "../../../../libs/o-processes/interfaces/processEnvironment";
 
-  let environment: ProcessEnvironment;
   export let data:{
     header:string,
     subHeader:string,
     body:string
   }
 
-  async function init() {
-    environment = await getEnvironment();
-    reload();
-  }
-
-  async function reload() {}
-
-  onMount(() => init());
 </script>
 
 <div class="mb-6">

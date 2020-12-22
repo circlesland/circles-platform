@@ -14,7 +14,7 @@ import {CirclesTransaction} from "../../../libs/o-circles-protocol/model/circles
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {config} from "../../../libs/o-circles-protocol/config";
 import {FissionAuthState} from "../../fissionauth/manifest";
-import {Blocks} from "../../../libs/o-fission/entities/blocks";
+import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransactions";
 
 function mapTransactionEvent(token:CirclesToken, transactionEvent: BlockchainEvent)
 {
@@ -41,7 +41,7 @@ type TransactionList = {
 const myTransactionsSubject: BehaviorSubject<CirclesTransaction[]> = new BehaviorSubject<CirclesTransaction[]>([]);
 const blockIndex = new BlockIndex();
 const myTransactions: TransactionList = {};
-const myTransactionSubscriptions: {[tokenAddress:string]:Subscription} = {};
+const tokenSubscriptions: {[tokenAddress:string]:Subscription} = {};
 
 const updateCacheTrigger = new DelayedTrigger(5000, async () =>
 {
@@ -51,7 +51,7 @@ const updateCacheTrigger = new DelayedTrigger(5000, async () =>
 
   allTransactions.sort((a,b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
 
-  const transactionBlocks: Blocks = {
+  const transactionBlocks: CachedTransactions = {
     name: "transactions",
     entries: {}
   };
@@ -80,7 +80,7 @@ const updateCacheTrigger = new DelayedTrigger(5000, async () =>
   console.log("Writing transactions to fission cache ...");
 
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  await fissionAuthState.fission.blocks.addOrUpdate(transactionBlocks);
+  await fissionAuthState.fission.transactions.addOrUpdate(transactionBlocks);
 
   console.log("Wrote transactions to fission cache.");
 });
@@ -93,7 +93,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(5000, async () =>
   let lastTimestamp:number = null;
   let lastTimestampBlockNo:number = null;
 
-  const allTransactions = Object.values(myTransactions)
+  let allTransactions = Object.values(myTransactions)
     .map(transactionsById => Object.values(transactionsById))
     .reduce((p,c) => p.concat(c), []);
 
@@ -136,6 +136,11 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(5000, async () =>
     }
   }
 
+  allTransactions = Object.values(myTransactions)
+    .map(transactionsById => Object.values(transactionsById))
+    .reduce((p,c) => p.concat(c), []);
+
+  allTransactions.sort((a,b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
   myTransactionsSubject.next(allTransactions);
   updateCacheTrigger.trigger();
 });
@@ -199,7 +204,7 @@ async function feedCachedTransactions()
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
 
-  const cachedTransactions = await fissionAuthState.fission.blocks.tryGetByName("transactions");
+  const cachedTransactions = await fissionAuthState.fission.transactions.tryGetByName("transactions");
   if (!cachedTransactions)
   {
     return;
@@ -240,25 +245,25 @@ async function feedCachedTransactions()
   // Subscribe to the events of all cached tokens
   Object.values(knownTokens).forEach(token =>
   {
-    if (myTransactionSubscriptions[token.tokenAddress])
+    if (tokenSubscriptions[token.tokenAddress])
     {
       return;
     }
 
-    const tokenTransactionsSubject = subscribeToTokenTransactions(token);
+    const tokenTransactionsSubject = subscribeToTokenTransactions(token, latestBlocks[token.tokenAddress]);
     tokenTransactionsSubject.next(new BeginSignal(token.tokenAddress));
   });
 }
 
 function subscribeToTokenTransactions(newToken, fromBlock?:number) : Subject<SystemEvent>
 {
-  if (myTransactionSubscriptions[newToken.tokenAddress])
+  if (tokenSubscriptions[newToken.tokenAddress])
   {
     return;
   }
 
   const tokenTransactions = newToken.subscribeToTransactions(fromBlock);
-  myTransactionSubscriptions[newToken.tokenAddress] = tokenTransactions.subscribe(inTransactionEvent =>
+  tokenSubscriptions[newToken.tokenAddress] = tokenTransactions.subscribe(inTransactionEvent =>
   {
     if (inTransactionEvent instanceof BeginSignal)
     {
@@ -285,7 +290,7 @@ export async function initMyTransactions()
 
   safeState.myKnownTokens.subscribe(async tokenList =>
   {
-    const newTokens = Object.values(tokenList).filter(o => !myTransactions[o.tokenAddress]);
+    const newTokens = Object.values(tokenList).filter(o => !tokenSubscriptions[o.tokenAddress]);
     if (newTokens.length == 0)
     {
       return;

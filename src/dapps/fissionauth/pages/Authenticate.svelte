@@ -46,6 +46,7 @@
         // ☞ We can now interact with our file system (more on that later)
         setDappState<FissionAuthState>("omo.fission.auth:1", current => {
           return {
+            username: state.username,
             fission: new FissionDrive(state)
           };
         });

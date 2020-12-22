@@ -14,6 +14,7 @@ export async function initMyToken()
 
   if (!myToken)
   {
+    console.log("Couldn't find myToken. Querying from blockchain events ..");
     const mySignup = await new CirclesAccount(safeState.mySafeAddress).tryGetMyToken();
     if (mySignup)
     {

@@ -8,6 +8,7 @@ import {shellEvents} from "./libs/o-os/shellEvents";
 
 dayjs.extend(relativeTime)
 
+
 declare global {
   interface Window {
     o: Shell
