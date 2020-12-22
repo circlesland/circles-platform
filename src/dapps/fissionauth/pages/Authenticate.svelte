@@ -16,59 +16,76 @@
     await initAuth();
   });
 
-  async function initAuth() {
-    const state = await wn.initialise({
-      permissions: {
-        // Will ask the user permission to store
-        // your apps data in `private/Apps/{creator}}/{name}`
-        app: {
-          name: "OmoSapien",
-          creator: "MamaOmo",
+  async function initAuth()
+  {
+    try
+    {
+      const state = await wn.initialise({
+        permissions: {
+          // Will ask the user permission to store
+          // your apps data in `private/Apps/{creator}}/{name}`
+          app: {
+            name: "OmoSapien",
+            creator: "MamaOmo",
+          },
+          fs: {
+            publicPaths: ["omo.sapien"],
+          },
         },
-        fs: {
-          publicPaths: ["omo.sapien"],
-        },
-      },
-    });
+      });
 
-    switch (state.scenario) {
-      case wn.Scenario.AuthCancelled:
-        break;
+      switch (state.scenario)
+      {
+        case wn.Scenario.AuthCancelled:
+          break;
 
-      case wn.Scenario.AuthSucceeded:
-      case wn.Scenario.Continuation:
-        // State:
-        // state.authenticated    -  Will always be `true` in these scenarios
-        // state.newUser          -  If the user is new to Fission
-        // state.throughLobby     -  If the user authenticated through the lobby, or just came back.
-        // state.username         -  The user's username.
-        //
-        // ☞ We can now interact with our file system (more on that later)
-        setDappState<FissionAuthState>("omo.fission.auth:1", current => {
-          return {
-            username: state.username,
-            fission: new FissionDrive(state)
-          };
-        });
+        case wn.Scenario.AuthSucceeded:
+        case wn.Scenario.Continuation:
+          try
+          {
+            // State:
+            // state.authenticated    -  Will always be `true` in these scenarios
+            // state.newUser          -  If the user is new to Fission
+            // state.throughLobby     -  If the user authenticated through the lobby, or just came back.
+            // state.username         -  The user's username.
+            //
+            // ☞ We can now interact with our file system (more on that later)
+            setDappState<FissionAuthState>("omo.fission.auth:1", current =>
+            {
+              return {
+                username: state.username,
+                fission: new FissionDrive(state)
+              };
+            });
 
-        if (params && params.redirectTo)
-        {
-          window.o.redirectTo = params.redirectTo;
-        }
+            if (params && params.redirectTo)
+            {
+              window.o.redirectTo = params.redirectTo;
+            }
 
-        if (window.o.redirectTo)
-        {
-          push("#/waiting-area/please-wait");
-        }
-        else
-        {
-          push("#/omosapien/profile");
-        }
-        break;
+            if (window.o.redirectTo)
+            {
+              push("#/waiting-area/please-wait");
+            }
+            else
+            {
+              push("#/omosapien/profile");
+            }
+          }
+          catch (e)
+          {
+            console.error("Something went wrong during the authentication process: ", e);
+          }
+          break;
 
-      case wn.Scenario.NotAuthorised:
-        wn.redirectToLobby(state.permissions);
-        break;
+        case wn.Scenario.NotAuthorised:
+          wn.redirectToLobby(state.permissions);
+          break;
+      }
+    }
+    catch (e)
+    {
+      console.error("Something went wrong during the authentication process: ", e);
     }
   }
 </script>
