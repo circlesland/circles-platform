@@ -1,11 +1,11 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
-  import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
+  import ProfileField from "src/libs/o-views/molecules/ProfileField.svelte";
   import { OmoEvent } from "../../../../libs/o-events/omoEvent";
   import { RefreshView } from "../../../../libs/o-events/refreshView";
   import Mobile from "src/libs/o-views/templates/Mobile.svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {OmoSapienState} from "../../manifest";
+  import { tryGetDappState } from "../../../../libs/o-os/loader";
+  import { OmoSapienState } from "../../manifest";
 
   let omosapien = tryGetDappState<OmoSapienState>("omo.sapien:1");
 
@@ -43,10 +43,10 @@
           </div>
         </div>
         <div class="pt-2 space-y-2">
-          <ProfileItem
+          <ProfileField
             mapping={{ data: { title: omosapien.myProfile.firstName, subtitle: 'first name' } }} />
           {#if omosapien.myProfile.lastName}
-            <ProfileItem
+            <ProfileField
               mapping={{ data: { title: omosapien.myProfile.lastName, subtitle: 'last name' } }} />
           {/if}
           <!--<ProfileItem mapping={city} />-->

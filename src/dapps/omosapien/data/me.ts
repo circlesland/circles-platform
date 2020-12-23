@@ -1,5 +1,5 @@
 import { Avataaar } from "src/libs/o-views/interfaces/atoms";
-import { Header, ProfileItem } from "src/libs/o-views/interfaces/molecules";
+import { Header, ProfileField } from "src/libs/o-views/interfaces/molecules";
 
 export const title: Header = { data: { title: "Profile" } };
 
@@ -12,21 +12,21 @@ export let avataaar: Avataaar = {
   },
 };
 
-export let firstname: ProfileItem = {
+export let firstname: ProfileField = {
   data: {
     title: "Omo",
     subtitle: "my first name"
   }
 }
 
-export let lastname: ProfileItem = {
+export let lastname: ProfileField = {
   data: {
-    title: "Sapiens",
+    title: "Sapien",
     subtitle: "my last name"
   }
 }
 
-export let city: ProfileItem = {
+export let city: ProfileField = {
   data: {
     title: "Planet, Earth",
     subtitle: "my home town"
