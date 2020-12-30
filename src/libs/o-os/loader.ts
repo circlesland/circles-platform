@@ -107,7 +107,6 @@ async function getDappEntryPoint(dappManifest, pageManifest) {
     return pageManifest.component;
   }
   catch (e) {
-    console.error(e);
     window.o.lastError = e;
     return errorIndicator;
   }

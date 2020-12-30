@@ -1,6 +1,6 @@
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {createMachine} from "xstate";
+import {assign, createMachine} from "xstate";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import {strings} from "../../data/strings";
@@ -27,37 +27,36 @@ const processDefinition = () => createMachine<FundAccountContext, OmoEvent>({
       }
     },
     generateFundLink: {
-      entry: [
-        (context: FundAccountContext, event) => {
-          const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-          const web3 = config.getCurrent().web3();
-          const myAccount = web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey).address;
-          context.data.fundLink = {
-            type: "string",
-            key: "fundLink",
-            value: window.location.origin + "#/empowerMe/" + myAccount
-          };
-          return context;
-        },
-        sendPrompt((context: FundAccountContext) => {
-          return {
-            title: str.titleGenerateFundLink(),
-            nextButtonTitle: str.buttonGenerateFundLink(),
-            hideNextButton: true,
-            banner: {
-              component: JumpstartIntro,
-              data: {
-                header: str.fundLinkHeader(),
-                subHeader: str.fundLinkSubHeader(),
-                body: str.fundLinkBody()
-              }
-            },
-            artifacts: {
-              ...textLine("fundLink", undefined, true)
+      entry: [assign((context, event) =>
+      {
+        const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+        const web3 = config.getCurrent().web3();
+        const myAccount = web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey).address;
+        context.data.fundLink = {
+          type: "string",
+          key: "fundLink",
+          value: window.location.origin + "#/safe/empowerMe/" + myAccount
+        }
+        return context;
+      }),
+      sendPrompt((context: FundAccountContext) => {
+        return {
+          title: str.titleGenerateFundLink(),
+          nextButtonTitle: str.buttonGenerateFundLink(),
+          hideNextButton: true,
+          banner: {
+            component: JumpstartIntro,
+            data: {
+              header: str.fundLinkHeader(),
+              subHeader: str.fundLinkSubHeader(),
+              body: str.fundLinkBody()
             }
+          },
+          artifacts: {
+            ...textLine("fundLink", undefined, true)
           }
-        })
-      ],
+        }
+      })],
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
