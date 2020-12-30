@@ -14,6 +14,7 @@ import {text} from "../../../../libs/o-processes/artifacts/text";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {createPrivateKeyService} from "../../services/createPrivateKeyService";
 import {fundAccountForSafeCreation} from "../omo/fundAccountForSafeCreation";
+import {keyphrase} from "../../../../libs/o-processes/artifacts/keyphrase";
 
 export interface CreatePrivateKeyContext extends ProcessContext {
   data: {
@@ -58,7 +59,7 @@ const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>
             }
           },
           artifacts: {
-            ...text("privateKeyPhrase", undefined, true)
+            ...keyphrase("privateKeyPhrase", undefined, true)
           }
         }
       }),
