@@ -108,6 +108,7 @@ async function getDappEntryPoint(dappManifest, pageManifest) {
   }
   catch (e) {
     console.error(e);
+    window.o.lastError = e;
     return errorIndicator;
   }
 }

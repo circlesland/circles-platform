@@ -5,6 +5,7 @@ import {ProcessDefinition} from "../../o-processes/processManifest";
 import {ProcessContext} from "../../o-processes/interfaces/processContext";
 
 export interface Shell {
+  lastError?: any;
   redirectTo?: string;
   events?: Observable<any>,
   publishEvent?: (event: OmoEvent) => void,
