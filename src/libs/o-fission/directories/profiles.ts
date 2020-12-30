@@ -1,6 +1,7 @@
 import { Directory, DirectoryChangeType } from "./directory";
 import { Profile } from "../entities/profile";
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "libs/webnative/fs/filesystem";
+import {defaultTimeout} from "libs/webnative/logFormatted";
 
 export class Profiles extends Directory<Profile>
 {
@@ -25,6 +26,6 @@ export class Profiles extends Directory<Profile>
     }
 
     // Add or update a public version of 'me' to my public directory
-    await this.fs.root.publicTree.add("me", JSON.stringify(entity));
+    //await this.fs.root.publicTree.add("me", JSON.stringify(entity), null, defaultTimeout);
   }
 }

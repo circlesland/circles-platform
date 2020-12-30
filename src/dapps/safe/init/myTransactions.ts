@@ -15,7 +15,7 @@ import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {config} from "../../../libs/o-circles-protocol/config";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransactions";
-import {asyncWaterfall} from "webnative/common";
+import {asyncWaterfall} from "libs/webnative/common";
 
 function mapTransactionEvent(token:CirclesToken, transactionEvent: BlockchainEvent)
 {

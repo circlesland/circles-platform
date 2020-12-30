@@ -1,6 +1,7 @@
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "libs/webnative/fs/filesystem";
 import { Entity } from "../entities/entity";
-import { CID } from "webnative/ipfs";
+import { CID } from "libs/webnative/ipfs";
+import {defaultTimeout} from "libs/webnative/logFormatted";
 
 export type DirectoryChangeType = "add" | "update" | "remove";
 
@@ -32,13 +33,13 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async exists(pathParts?: string[]): Promise<boolean> {
-    return this.fs.exists(this.getPath(pathParts));
+    return this.fs.exists(this.getPath(pathParts), defaultTimeout);
   }
 
   async ensureDirectoryExists(pathParts?: string[]): Promise<void> {
     if (!await this.exists(pathParts)) {
-      await this.fs.mkdir(this.getPath(pathParts));
-      await this.fs.publish();
+      await this.fs.mkdir(this.getPath(pathParts), null, defaultTimeout);
+      await this.fs.publish(defaultTimeout);
     }
   }
 
@@ -47,7 +48,7 @@ export abstract class Directory<TEntity extends Entity>
       return [];
     }
 
-    const listing = await this.fs.ls(this.getPath());
+    const listing = await this.fs.ls(this.getPath(), defaultTimeout);
     const list = Object.entries(listing);
     return list.map(([name, _]) => name);
   }
@@ -55,7 +56,7 @@ export abstract class Directory<TEntity extends Entity>
   async listItems(): Promise<TEntity[]> {
     const names = await this.listNames();
     const items = await Promise.all(names.map(name => {
-      return this.fs.cat(this.getPath([name]));
+      return this.fs.cat(this.getPath([name]), defaultTimeout);
     }));
 
     if (this._entityFactory) {
@@ -73,7 +74,7 @@ export abstract class Directory<TEntity extends Entity>
     }
 
     console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
-    const contents = await this.fs.cat(this.getPath([entityName]));
+    const contents = await this.fs.cat(this.getPath([entityName]), defaultTimeout);
 
     if (this._entityFactory) {
       return <TSpecificEntity>this._entityFactory(contents.toString());
@@ -97,7 +98,7 @@ export abstract class Directory<TEntity extends Entity>
 
     await this.fs.add(
       this.getPath([entity.name]),
-      JSON.stringify(entity));
+      JSON.stringify(entity), null, defaultTimeout);
 
     await this.maintainIndexes(
       result.added ? "add" : "update",
@@ -105,7 +106,7 @@ export abstract class Directory<TEntity extends Entity>
       indexHint);
 
     result.cid = publish
-      ? await this.fs.publish()
+      ? await this.fs.publish(defaultTimeout)
       : null;
 
     return result;
@@ -120,18 +121,18 @@ export abstract class Directory<TEntity extends Entity>
       return null;
     }
 
-    await this.fs.rm(this.getPath([entityName]));
+    await this.fs.rm(this.getPath([entityName]), defaultTimeout);
     await this.maintainIndexes("remove", entity, indexHint);
 
     return {
       cid: publish
-        ? await this.fs.publish()
+        ? await this.fs.publish(defaultTimeout)
         : null,
       entity: entity
     };
   }
 
   async publish(): Promise<string> {
-    return await this.fs.publish();
+    return await this.fs.publish(defaultTimeout);
   }
 }

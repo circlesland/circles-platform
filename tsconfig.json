@@ -1,5 +1,5 @@
 {
-	"include": ["src/**/*"],
+	"include": ["src/**/*","libs/**/*"],
 	"exclude": ["node_modules/*", "public/*"],
 	"compilerOptions": {
 		"moduleResolution": "node",
@@ -12,6 +12,6 @@
 		"baseUrl": "./",
 		"paths": {
 			"src": ["src"]
-		},
+		}
 	}
 }

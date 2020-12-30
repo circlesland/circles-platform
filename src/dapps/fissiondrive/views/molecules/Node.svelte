@@ -6,8 +6,8 @@
   import {faFolder} from "@fortawesome/free-solid-svg-icons";
   import {faFile} from "@fortawesome/free-solid-svg-icons";
   import Menu from "./Menu.svelte";
-  import { Jumper } from "svelte-loading-spinners";
   import MenuOption from "./MenuOptions.svelte";
+  import { Jumper } from "svelte-loading-spinners";
   import {FsNode} from "../../nodes/fsNode";
   import {createEventDispatcher} from "svelte";
 

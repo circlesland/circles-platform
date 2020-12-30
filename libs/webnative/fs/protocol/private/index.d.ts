@@ -1,0 +1,13 @@
+import { Maybe } from "../../../common";
+import { CID } from "../../../ipfs";
+import MMPT from "./mmpt";
+import { DecryptedNode, PrivateAddResult, Revision } from './types';
+import { BareNameFilter, PrivateName } from './namefilter';
+export declare const addNode: (mmpt: MMPT, node: DecryptedNode, key: string, timeout: Maybe<number>) => Promise<PrivateAddResult>;
+export declare const readNode: (cid: CID, key: string, timeout: Maybe<number>) => Promise<DecryptedNode>;
+export declare const getByName: (mmpt: MMPT, name: PrivateName, key: string, timeout: Maybe<number>) => Promise<Maybe<DecryptedNode>>;
+export declare const getByCID: (cid: CID, key: string, timeout: Maybe<number>) => Promise<DecryptedNode>;
+export declare const getByLatestName: (mmpt: MMPT, name: PrivateName, key: string, timeout: Maybe<number>) => Promise<Maybe<DecryptedNode>>;
+export declare const getLatestByCID: (mmpt: MMPT, cid: CID, key: string, timeout: Maybe<number>) => Promise<DecryptedNode>;
+export declare const findLatestRevision: (mmpt: MMPT, bareName: BareNameFilter, key: string, lastKnownRevision: number, timeout: Maybe<number>) => Promise<Maybe<Revision>>;
+export declare const getRevision: (mmpt: MMPT, bareName: BareNameFilter, key: string, revision: number, timeout: Maybe<number>) => Promise<Maybe<Revision>>;

@@ -1,5 +1,5 @@
 import { Directory, DirectoryChangeType } from "./directory";
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "libs/webnative/fs/filesystem";
 import { Token } from "../entities/token";
 
 export class Tokens extends Directory<Token>

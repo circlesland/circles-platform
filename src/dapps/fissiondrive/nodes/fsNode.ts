@@ -1,6 +1,7 @@
 import {TreeNode} from "../interfaces/treeNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
+import {defaultTimeout} from "libs/webnative/logFormatted";
 
 export abstract class FsNode implements TreeNode
 {
@@ -46,7 +47,7 @@ export abstract class FsNode implements TreeNode
   async delete()
   {
     const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    await fissionAuthState.fission._fs.rm(this.path);
-    await fissionAuthState.fission._fs.publish();
+    await fissionAuthState.fission._fs.rm(this.path, defaultTimeout);
+    await fissionAuthState.fission._fs.publish(defaultTimeout);
   }
 }

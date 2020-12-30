@@ -41,6 +41,7 @@
 
         case wn.Scenario.AuthSucceeded:
         case wn.Scenario.Continuation:
+
           try
           {
             // State:
