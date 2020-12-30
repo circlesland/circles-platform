@@ -1,26 +1,24 @@
-import Profile from 'src/dapps/omosapien/views/pages/Profile.svelte'
-import Access from 'src/dapps/omosapien/views/pages/Access.svelte'
+import Me from 'src/dapps/omosapien/views/pages/Me.svelte'
+import Profiles from 'src/dapps/omosapien/views/pages/Profiles.svelte'
 import Keys from 'src/dapps/omosapien/views/pages/Keys.svelte'
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "./data/actions"
-import {faUserAstronaut} from "@fortawesome/free-solid-svg-icons";
-import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
-import {Profile as ProfileEntity} from "../../libs/o-fission/entities/profile";
-import {RunProcess} from "../../libs/o-events/runProcess";
-import {createOmoSapien} from "./processes/createOmoSapien/createOmoSapien";
-import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
-import {FissionAuthState} from "../fissionauth/manifest";
+import { faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
+import { DappManifest } from "../../libs/o-os/interfaces/dappManifest";
+import { Profile as ProfileEntity } from "../../libs/o-fission/entities/profile";
+import { RunProcess } from "../../libs/o-events/runProcess";
+import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
+import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
+import { FissionAuthState } from "../fissionauth/manifest";
 
 export interface OmoSapienState {
   myProfile?: ProfileEntity
 }
 
-async function tryInitMyProfile()
-{
+async function tryInitMyProfile() {
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const myProfile = await fissionAuthState.fission.profiles.tryGetMyProfile();
 
-  setDappState<OmoSapienState>("omo.sapien:1", currentState =>
-  {
+  setDappState<OmoSapienState>("omo.sapien:1", currentState => {
     return {
       ...currentState,
       myProfile: myProfile
@@ -34,13 +32,11 @@ async function tryInitMyProfile()
  * @param stack
  * @param runtimeDapp
  */
-async function initialize(stack, runtimeDapp)
-{
+async function initialize(stack, runtimeDapp) {
   await tryInitMyProfile();
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  if (!omosapienState.myProfile)
-  {
+  if (!omosapienState.myProfile) {
     runtimeDapp.shell.publishEvent(new RunProcess(createOmoSapien));
 
     return {
@@ -55,7 +51,7 @@ async function initialize(stack, runtimeDapp)
   }
 }
 
-export const omosapien : DappManifest<OmoSapienState,OmoSapienState> = {
+export const omosapien: DappManifest<OmoSapienState, OmoSapienState> = {
   id: "omo.sapien:1",
   dependencies: ["omo.fission.auth:1"],
   icon: faUserAstronaut,
@@ -66,8 +62,8 @@ export const omosapien : DappManifest<OmoSapienState,OmoSapienState> = {
   initialize: initialize,
   pages: [{
     isDefault: true,
-    routeParts: ["profile"],
-    component: Profile,
+    routeParts: ["me"],
+    component: Me,
     available: [
       (detail) => {
         console.log("routeGuard.detail:", detail);
@@ -83,8 +79,8 @@ export const omosapien : DappManifest<OmoSapienState,OmoSapienState> = {
       ]
     }
   }, {
-    routeParts: ["access"],
-    component: Access,
+    routeParts: ["profiles"],
+    component: Profiles,
     available: [
       (detail) => {
         console.log("routeGuard.detail:", detail);

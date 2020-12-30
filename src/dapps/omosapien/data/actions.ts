@@ -1,4 +1,4 @@
-import { faUserCircle, faUserAstronaut, faLock, faKey, faCoins } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle, faUserAstronaut, faKey, faCoins, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "../../../libs/o-events/runProcess";
 import { createOmoSapien } from "../processes/createOmoSapien/createOmoSapien";
 import { QuickAction } from "../../../libs/o-os/types/quickAction";
@@ -13,22 +13,22 @@ export const omoSapienDefaultActions: QuickAction[] = [
         icon: faUserAstronaut
       },
       data: {
-        label: "Profile"
+        label: "Me"
       }
     },
-    route: "#/omosapien/profile"
+    route: "#/omosapien/me"
   }, {
     type: "route",
     pos: "2",
     mapping: {
       design: {
-        icon: faLock,
+        icon: faUsers,
       },
       data: {
-        label: "Access"
+        label: "Profiles"
       }
     },
-    route: "#/omosapien/access"
+    route: "#/omosapien/profiles"
   }, {
     type: "route",
     pos: "3",

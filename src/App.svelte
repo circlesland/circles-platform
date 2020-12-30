@@ -125,7 +125,18 @@
 
 <ComposeApp tw="font-primary bg-light-100">
   <Compose tw="mx-auto bg-light-100 w-full">
-    <Compose columns="1fr" rows="1fr auto" tw="w-full">
+    <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
+      <div>
+        <div class="w-full p-2 text-sm text-yellow-800 bg-yellow-400 ">
+          We are in early alpha testing, please let us know about any bugs you
+          find or feedback you have via
+          <a
+            href="https://discord.gg/Rbhy4j9"
+            class="px-1 text-white cursor-pointer hover:text-yellow-800">chat</a>or<a
+            href="mailto:team@omo.earth"
+            class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
+        </div>
+      </div>
       <Compose rows="1fr" columns="1fr">
         <Router
           {routes}

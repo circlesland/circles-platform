@@ -1,4 +1,4 @@
-export interface AccessItem {
+export interface ProfileItem {
   data: {
     image: string;
     title: string;
@@ -20,7 +20,7 @@ export interface Announcement {
 export interface DappIcon {
   data: {
     title: string;
-    tag?: string|Promise<string>;
+    tag?: string | Promise<string>;
   };
   design: {
     type: string;
@@ -56,7 +56,7 @@ export interface ProfileHeader {
   };
 }
 
-export interface ProfileItem {
+export interface ProfileField {
   data: {
     title: string;
     subtitle: string;
