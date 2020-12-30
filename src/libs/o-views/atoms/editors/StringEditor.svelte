@@ -31,11 +31,18 @@
 
 {#if processArtifact}
   <div class="w-full">
-    {#if processArtifact.label}
+    <div class="flex items-center justify-between w-full">
       <p class="mb-1 text-xs text-gray-700 uppercase">
-        {processArtifact.label}
+        {#if processArtifact.label}
+          {processArtifact.label}
+        {/if}
       </p>
-    {/if}
+      {#if processArtifact.isReadonly}
+        <p class="mb-1 text-xs text-gray-700 uppercase cursor-pointer" on:click={() => {navigator.clipboard.writeText(!processArtifact.value ? "" : processArtifact.value)}}>
+          Copy to clipboard
+        </p>
+      {/if}
+    </div>
     <input
       type="text"
       readonly={processArtifact.isReadonly ? 'readonly' : ''}
