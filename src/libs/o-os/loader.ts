@@ -91,10 +91,8 @@ async function getDappEntryPoint(dappManifest, pageManifest) {
         console.log("A dependency requested the cancellation of the dependency loading process.")
 
         if (!freshRuntimeDapp.initialPage) {
-          // If the loading process was cancelled but the cancelling dapp hasn't provided
-          // a default page to go to, simply stay.
-          pop();
-          return;
+          // TODO: Every dapp needs a initial page for all conditions, else the generic loader error is displayed
+          throw new Error("The dapp '" + freshRuntimeDapp.runtimeDapp.id  + "' has no 'initialPage' attribute or its value is null.");
         }
 
         return freshRuntimeDapp.initialPage.component;

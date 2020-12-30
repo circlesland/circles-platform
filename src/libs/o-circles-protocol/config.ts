@@ -2,6 +2,7 @@ import Web3 from "web3";
 import Common from "ethereumjs-common";
 import { BN } from "ethereumjs-util";
 
+let web3Instance:Web3;
 export const config = {
   ganache: {
     GNOSIS_SAFE_ADDRESS: '0x2f866f565FB2E1B6C7686933127A7Fde69F12d66',
@@ -55,6 +56,9 @@ export const config = {
       }
     },
     web3: () => {
+      if (web3Instance)
+        return web3Instance;
+
       const provider = new Web3.providers.WebsocketProvider(
         "wss://xdai.poanetwork.dev/wss",
         {
@@ -62,7 +66,7 @@ export const config = {
           reconnect: {
             auto: true,
             delay: 5000,
-            maxAttempts: 5,
+            maxAttempts: 1,
             onTimeout: false
           },
           clientConfig: {
@@ -72,8 +76,13 @@ export const config = {
         }
       );
 
+      provider.on("error", <any>((e) => {
+        console.error("Web3 provider error:", e);
+      }));
+
       const web3 = new Web3();
       web3.setProvider(provider);
+      web3Instance = web3;
       return web3;
     }
   },

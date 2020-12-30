@@ -10,7 +10,6 @@ import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPro
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {text} from "../../../../libs/o-processes/artifacts/text";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {createPrivateKeyService} from "../../services/createPrivateKeyService";
 import {fundAccountForSafeCreation} from "../omo/fundAccountForSafeCreation";
