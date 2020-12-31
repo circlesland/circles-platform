@@ -3,6 +3,9 @@ export type OmoEventTypes =
   | "shell.showModal"
   | "shell.openModal"
   | "shell.refreshView"
+  | "shell.begin"
+  | "shell.progress"
+  | "shell.done"
   | "shell.authenticated"
   | "shell.gotProfile"
   | "shell.showNotification"
@@ -18,4 +21,5 @@ export type OmoEventTypes =
   | "process.error"
   | "process.success"
   | "process.repeat"
+  | "blockchain"
 

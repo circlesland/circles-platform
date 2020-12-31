@@ -1,5 +1,5 @@
 import { Directory, DirectoryChangeType } from "./directory";
-import FileSystem from "libs/webnative/fs/filesystem";
+import FileSystem from "webnative/fs/filesystem";
 import {CachedTransactions} from "../entities/cachedTransactions";
 
 export class CirclesTransactions extends Directory<CachedTransactions>

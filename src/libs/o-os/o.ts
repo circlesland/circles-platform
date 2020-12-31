@@ -13,7 +13,7 @@ import { ProcessContext } from "../o-processes/interfaces/processContext";
 import { Erc20Token } from "../o-circles-protocol/token/erc20Token";
 import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {config} from "../o-circles-protocol/config";
-import * as webnative from "libs/webnative";
+import * as webnative from "webnative";
 
 export type Me = {
   myData?: FissionDrive,

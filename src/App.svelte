@@ -18,6 +18,7 @@
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
+  import {ProgressSignal} from "./libs/o-circles-protocol/interfaces/blockchainEvent";
 
   let actions = [];
 
@@ -25,6 +26,11 @@
   let showActionBar = false;
 
   let runningProcess: Process = window.o.stateMachines.current();
+
+  let progressIndicator:{
+    message:string,
+    percent:number
+  };
 
   window.o.events.subscribe(async (event: OmoEvent) => {
     // runningProcess = window.o.stateMachines.current();
@@ -43,6 +49,18 @@
         (<RunProcess>event).contextModifier
       );
       isOpen = true;
+    }
+    if (event.type === "shell.begin") {
+    }
+    if (event.type === "shell.done") {
+      progressIndicator = null;
+    }
+    if (event.type === "shell.progress") {
+      const progressEvent:ProgressSignal = <ProgressSignal>event;
+      progressIndicator = {
+        message:progressEvent.message,
+        percent:progressEvent.percent
+      }
     }
   });
 
@@ -133,9 +151,14 @@
           <a
             href="https://discord.gg/Rbhy4j9"
             class="px-1 text-white cursor-pointer hover:text-yellow-800">chat</a>or<a
-            href="mailto:team@omo.earth"
-            class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
+          href="mailto:team@omo.earth"
+          class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
         </div>
+        {#if progressIndicator}
+        <div class="w-full p-2 text text-primary bg-transparent">
+          {progressIndicator.message} ({progressIndicator.percent} %)
+        </div>
+        {/if}
       </div>
       <Compose rows="1fr" columns="1fr">
         <Router

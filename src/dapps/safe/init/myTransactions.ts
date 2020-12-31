@@ -1,8 +1,7 @@
-import {BehaviorSubject, Subject, Subscription} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {
   BeginSignal,
-  BlockchainEvent,
   DoneSignal,
   SystemEvent
 } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
@@ -11,52 +10,59 @@ import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {OmoSafeState} from "../manifest";
 import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
 import {CirclesTransaction} from "../../../libs/o-circles-protocol/model/circlesTransaction";
-import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {config} from "../../../libs/o-circles-protocol/config";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransactions";
-
-function mapTransactionEvent(token:CirclesToken, transactionEvent: BlockchainEvent)
-{
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-
-  return <CirclesTransaction>{
-    token: token.tokenAddress,
-    tokenOwner: token.tokenOwner,
-    direction: transactionEvent.returnValues.from == safeState.mySafeAddress ? "out" : "in",
-    from: transactionEvent.returnValues.from,
-    to: transactionEvent.returnValues.to,
-    amount: new BN(transactionEvent.returnValues.value),
-    subject: "",
-    blockNo: transactionEvent.blockNumber.toNumber()
-  };
-}
+import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
 
 type TransactionList = {
-  [token:string]: {
-    [id:string]:CirclesTransaction
+  [token: string]: {
+    [id: string]: CirclesTransaction
   }
 }
 
+// The consumable output of this init step (deduplicated ordered list of transactions)
 const myTransactionsSubject: BehaviorSubject<CirclesTransaction[]> = new BehaviorSubject<CirclesTransaction[]>([]);
-const blockIndex = new BlockIndex();
-const myTransactions: TransactionList = {};
-const tokenSubscriptions: {[tokenAddress:string]:Subscription} = {};
 
-const updateCacheTrigger = new DelayedTrigger(5000, async () =>
+// In-memory cache of all transactions
+const myTransactions: TransactionList = {};
+
+// Contains all known tokens to which we've already subscribed
+const tokensByAddress: { [address: string]: CirclesToken } = {};
+
+// All incoming raw transactions are passed trough this stream.
+const transactionStream: Subject<CirclesTransaction> = new Subject<CirclesTransaction>();
+
+
+function indexTransaction(ct: CirclesTransaction)
+{
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  if (ct.to != safeState.mySafeAddress && ct.from != safeState.mySafeAddress)
+    return;
+
+  ct.cached = true;
+  const transactionsById = myTransactions[ct.token] ?? {};
+  transactionsById[CirclesToken.getTransactionId(ct)] = ct;
+  myTransactions[ct.token] = transactionsById;
+}
+
+/**
+ * Stores all known transactions to the fission cache.
+ */
+const updateCacheTrigger = new DelayedTrigger(1000, async () =>
 {
   const allTransactions = Object.values(myTransactions)
-  .map(transactionsById => Object.values(transactionsById))
-  .reduce((p,c) => p.concat(c), []);
+    .map(transactionsById => Object.values(transactionsById))
+    .reduce((p, c) => p.concat(c), []);
 
-  allTransactions.sort((a,b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
+  allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
 
   const transactionBlocks: CachedTransactions = {
     name: "transactions",
     entries: {}
   };
 
-  for(let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++)
+  for (let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++)
   {
     const transaction = allTransactions[transactionIndex];
 
@@ -84,12 +90,12 @@ const updateCacheTrigger = new DelayedTrigger(5000, async () =>
   const currentBlock = await config.getCurrent().web3().eth.getBlockNumber();
 
   // Go trough all tokens and find the first block that contains a transactions
-  await Promise.all(Object.keys(tokenSubscriptions).map(async tokenAddress =>
+  await Promise.all(Object.keys(tokensByAddress).map(async tokenAddress =>
   {
     const firstBlockWithEvents = Object.values(myTransactions[tokenAddress] ?? {})
-      .reduce((p,c) => c.blockNo < p ? c.blockNo : p, Number.MIN_SAFE_INTEGER);
+      .reduce((p, c) => c.blockNo < p ? c.blockNo : p, Number.MAX_SAFE_INTEGER);
 
-    if (firstBlockWithEvents == Number.MIN_SAFE_INTEGER)
+    if (firstBlockWithEvents == Number.MAX_SAFE_INTEGER)
     {
       // No events till now
       const token = await fissionAuthState.fission.tokens.tryGetByName(tokenAddress);
@@ -103,28 +109,41 @@ const updateCacheTrigger = new DelayedTrigger(5000, async () =>
   console.log("Wrote transactions to fission cache.");
 });
 
-const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(5000, async () =>
+/**
+ * Goes trough all transactions and looks for transactions without a timestamp.
+ *
+ * If missing timestamps are discovered then some of the transaction-blocks
+ * are loaded and the timestamp will be interpolated from there on over all
+ * following transactions with the assumption of a constant block time.
+ *
+ * When the missing timestamps were added then "myTransactionsSubject" will be
+ * updated with a new version of all transactions.
+ *
+ * TODO: Currently the timestamps for all blocks are set. While this is most likely more precise it costs more requests.. Not yet decided.
+ */
+const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(750, async () =>
 {
   const web3 = config.getCurrent().web3();
 
-  let avgBlockTime:number = 5;
-  let lastTimestamp:number = null;
-  let lastTimestampBlockNo:number = null;
+  let avgBlockTime: number = 5;
+  let sampleRate: number = 5000;
+  let lastTimestamp: number = null;
+  let lastTimestampBlockNo: number = null;
 
   let allTransactions = Object.values(myTransactions)
     .map(transactionsById => Object.values(transactionsById))
-    .reduce((p,c) => p.concat(c), []);
+    .reduce((p, c) => p.concat(c), []);
 
-  allTransactions.sort((a,b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
+  allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
   console.log("Determining time for " + allTransactions.length + " transactions:", allTransactions);
 
-  for(let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++)
+  for (let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++)
   {
     const transaction = allTransactions[transactionIndex];
 
     try
     {
-      if (!lastTimestamp || transactionIndex % 50 == 0)
+      if (!lastTimestamp || transactionIndex % sampleRate == 0)
       {
         if (transaction.timestamp)
         {
@@ -154,72 +173,15 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(5000, async () =>
     }
   }
 
-  allTransactions = Object.values(myTransactions)
-    .map(transactionsById => Object.values(transactionsById))
-    .reduce((p,c) => p.concat(c), []);
-
-  allTransactions.sort((a,b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-  myTransactionsSubject.next(allTransactions);
+  pushTransactions.trigger();
   updateCacheTrigger.trigger();
 });
 
-const updateTrigger = new DelayedTrigger(30, async () =>
+/**
+ * Loads the cached transactions from the fission drive and feeds them into the "transactions" stream.
+ */
+async function feedCachedTransactions(transactions: Subject<SystemEvent>, tokenAddresses: Address[])
 {
-  const allTransactions = Object.values(myTransactions)
-    .map(transactionsById => Object.values(transactionsById))
-    .reduce((p,c) => p.concat(c), []);
-
-  allTransactions.sort((a,b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-  myTransactionsSubject.next(allTransactions);
-
-  if (allTransactions.filter(o => !o.timestamp).length > 0)
-  {
-    annotateTimeAndStoreToCacheTrigger.trigger();
-  }
-});
-
-function indexTransaction(token:CirclesToken, transactionEvent?:BlockchainEvent, ct?:CirclesTransaction)
-{
-  if (transactionEvent)
-  {
-    blockIndex.addBlock(transactionEvent.blockNumber.toNumber());
-    const circlesTransaction = mapTransactionEvent(token, transactionEvent);
-    const transactionId = getTransactionId(circlesTransaction);
-
-    if(myTransactions[token.tokenAddress]
-      && myTransactions[token.tokenAddress][transactionId]
-      && myTransactions[token.tokenAddress][transactionId].cached)
-    {
-      return;
-    }
-
-    const transactionsById = myTransactions[token.tokenAddress] ?? {};
-    transactionsById[transactionId] = circlesTransaction;
-    myTransactions[token.tokenAddress] = transactionsById;
-  }
-  else if (ct)
-  {
-    try
-    {
-      ct.amount = new BN(ct.amount);
-    } catch {}
-
-    ct.cached = true;
-    blockIndex.addBlock(ct.blockNo);
-    const transactionsById = myTransactions[token.tokenAddress] ?? {};
-    transactionsById[getTransactionId(ct)] = ct;
-    myTransactions[token.tokenAddress] = transactionsById;
-  }
-}
-
-function getTransactionId(transaction:CirclesTransaction):string
-{
-  return `${transaction.blockNo}_${transaction.token}_${transaction.from}_${transaction.to}_${transaction.amount.toString()}`;
-}
-
-async function feedCachedTransactions()
-{
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
 
   const cachedTransactions = await fissionAuthState.fission.transactions.tryGetByName("transactions");
@@ -228,13 +190,10 @@ async function feedCachedTransactions()
     return;
   }
 
-  const knownTokens = safeState.myKnownTokens.getValue();
-  const latestBlocks:{
-    [tokenAddress:string]:number
-  } = {};
+  const requestedTokensByAddress = {};
+  tokenAddresses.forEach(ta => requestedTokensByAddress[ta] = true);
 
-  // Feed-in all transactions
-  Object.values(cachedTransactions).forEach((blockEntry:{transactions:CirclesTransaction[]}) =>
+  Object.values(cachedTransactions).forEach((blockEntry: { transactions: CirclesTransaction[] }) =>
   {
     if (!blockEntry.transactions)
     {
@@ -243,85 +202,142 @@ async function feedCachedTransactions()
 
     blockEntry.transactions.forEach(transaction =>
     {
-      const token = knownTokens[transaction.tokenOwner];
-      if (!token)
+      if (!requestedTokensByAddress[transaction.token])
       {
         return;
       }
 
-      if (!latestBlocks[token.tokenAddress] || latestBlocks[token.tokenAddress] < transaction.blockNo)
-      {
-        latestBlocks[token.tokenAddress] = transaction.blockNo;
-      }
-
-      indexTransaction(token, undefined, transaction);
+      transaction.cached = true;
+      transaction.amount = new BN(transaction.amount);
+      transactions.next(transaction)
     });
-
-    updateTrigger.trigger();
-  });
-
-  // Subscribe to the events of all cached tokens
-  Object.values(knownTokens).forEach(token =>
-  {
-    if (tokenSubscriptions[token.tokenAddress])
-    {
-      return;
-    }
-
-    const fromBlock = latestBlocks[token.tokenAddress] ?? token.noTransactionsUntilBlockNo ?? token.createdInBlockNo;
-    const tokenTransactionsSubject = subscribeToTokenTransactions(token, fromBlock);
-    tokenTransactionsSubject.next(new BeginSignal(token.tokenAddress));
   });
 }
 
-function subscribeToTokenTransactions(newToken:CirclesToken, fromBlock?:number) : Subject<SystemEvent>
+const pushTransactions = new DelayedTrigger(35, async () => {
+  const allTransactions = Object.values(myTransactions)
+    .map(transactionsById => Object.values(transactionsById))
+    .reduce((p, c) => p.concat(c), []);
+
+  allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
+  myTransactionsSubject.next(allTransactions);
+});
+
+/**
+ * Is triggered whenever the list of known tokens changed (after 500 ms delay).
+ *
+ * Filters the list of all known tokens for new ones, then subscribes
+ * to alle Transfer events of the new tokens and reads all history
+ * transactions regarding the new tokens.
+ *
+ * All events are fed into the "transactionStream" from which they
+ * are indexed with "indexTransaction()".
+ */
+const subscribeToTokenEvents = new DelayedTrigger(500, async () =>
 {
-  if (tokenSubscriptions[newToken.tokenAddress])
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+
+  // Get all known tokens and filter only the new (unsubscribed) ones
+  const tokenList = safeState.myKnownTokens.getValue();
+  const newTokens = Object.values(tokenList).filter(o => !tokensByAddress[o.tokenAddress]);
+  if (newTokens.length == 0)
   {
     return;
   }
-  console.log("Subscribing to transaction history of token '" + newToken.tokenAddress + "' from block no. " + (fromBlock ?? 0) + ".");
 
-  const tokenTransactions = newToken.subscribeToTransactions(fromBlock);
-  tokenSubscriptions[newToken.tokenAddress] = tokenTransactions.subscribe(inTransactionEvent =>
+  // Pick one of the tokens which will be used to create the subscription
+  const aToken = newTokens.length > 0 ? newTokens[0] : null;
+  if (!aToken)
   {
-    if (inTransactionEvent instanceof BeginSignal)
-    {
-      console.log("Start loading the complete transaction history of token " + inTransactionEvent.key);
-    }
-    else if (inTransactionEvent instanceof DoneSignal)
-    {
-      console.log("Finished loading of the complete transaction history of token " + inTransactionEvent.key);
-    }
-    else
-    {
-      indexTransaction(newToken, <BlockchainEvent>inTransactionEvent, undefined);
-    }
-    updateTrigger.trigger();
-  });
+    throw new Error("No known tokens");
+  }
 
-  return tokenTransactions;
-}
+  // Store the new token addresses in the "tokensByAddress" object
+  // so that we known that we've already subscribed to this addresses
+  newTokens.forEach(token => tokensByAddress[token.tokenAddress] = token);
+  const tokenAddresses = newTokens.map(token => token.tokenAddress);
 
-export async function initMyTransactions()
-{
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  await feedCachedTransactions();
+  // Subscribe to the live events of all "tokenAddresses"
+  aToken.subscribeToTransactions(transactionStream, tokensByAddress, tokenAddresses);
 
-  safeState.myKnownTokens.subscribe(async tokenList =>
+  // Get all cached events of all "tokenAddresses"
+  await feedCachedTransactions(transactionStream, tokenAddresses);
+
+  // Create a "map" of all tokens, their first appearance as well as block of first an last known transaction
+  const cachedBlockMap: {[tokenAddress:string]:{existsSince:number, emptyUntil:number, lastCachedBlock:number}} = {};
+  newTokens.forEach(token =>
   {
-    const newTokens = Object.values(tokenList).filter(o => !tokenSubscriptions[o.tokenAddress]);
-    if (newTokens.length == 0)
+    const transactionsById = myTransactions[token.tokenAddress];
+    if (!transactionsById)
     {
+      cachedBlockMap[token.tokenAddress] = {
+        lastCachedBlock: token.createdInBlockNo,
+        existsSince: token.createdInBlockNo,
+        emptyUntil: token.noTransactionsUntilBlockNo
+      }
       return;
     }
 
-    newTokens.forEach(newToken =>
-    {
-      subscribeToTokenTransactions(newToken, newToken.noTransactionsUntilBlockNo);
-    });
+    const cachedTokenTransactions = Object.values(transactionsById).filter(o => o.cached);
+    let lastCachedBlock = cachedTokenTransactions.reduce((p, c) => c.blockNo > p ? c.blockNo : p, token.createdInBlockNo);
+    cachedBlockMap[token.tokenAddress] = {
+      lastCachedBlock: lastCachedBlock,
+      existsSince: token.createdInBlockNo,
+      emptyUntil: token.noTransactionsUntilBlockNo
+    }
   });
 
+  Object.values(cachedBlockMap).forEach(o => o.lastCachedBlock = o.emptyUntil > o.lastCachedBlock ? o.emptyUntil : o.lastCachedBlock);
+
+  // Find the smallest of all "map"-values and use it as the first block to get historic events
+  const firstUnknownBlock = Object.values(cachedBlockMap).reduce((p,c) => c.lastCachedBlock < p ? c.lastCachedBlock : p,
+    Number.MAX_SAFE_INTEGER);
+
+  // Show the cached transactions right away then load all other transaction history ..
+  pushTransactions.trigger();
+
+  await aToken.feedTransactionHistory(transactionStream, tokensByAddress, tokenAddresses, firstUnknownBlock, "feedTransactionHistory");
+  annotateTimeAndStoreToCacheTrigger.trigger();
+});
+
+/**
+ * Sets the "myTransactions" property of the "OmoSafeState".
+ * 1. Reads all cached transactions
+ * 2. Subscribes to the Transfer events of all tokens
+ * 3. Queries the history of new and known tokens
+ */
+export async function initMyTransactions()
+{
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+  let counter = 0;
+  transactionStream.subscribe(event =>
+  {
+    counter++;
+    if (counter % 100 == 0)
+    {
+      console.log(`Indexed ${counter} transactions so far ...`);
+    }
+
+    if (event instanceof BeginSignal)
+    {
+    }
+    else if (event instanceof DoneSignal)
+    {
+    }
+    else
+    {
+      indexTransaction(event);
+    }
+    pushTransactions.trigger();
+  });
+
+  //
+  // Whenever the list of known tokens changes,
+  // trigger subscribe to the events of the new tokens.
+  //
+  safeState.myKnownTokens.subscribe(() => subscribeToTokenEvents.trigger());
+
+  // Set the subject on the safe state so that its available for all following init steps and the running dapp
   setDappState<OmoSafeState>("omo.safe:1", existing =>
   {
     return {

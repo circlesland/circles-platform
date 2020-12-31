@@ -2,8 +2,7 @@ import {FsNode} from "./fsNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {FileNode} from "./fileNode";
-import {Directory} from "../../../libs/o-fission/directories/directory";
-import {defaultTimeout} from "libs/webnative/logFormatted";
+//import {defaultTimeout} from "libs/webnative/logFormatted";
 
 export class DirectoryNode extends FsNode
 {
@@ -23,7 +22,7 @@ export class DirectoryNode extends FsNode
     const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
     const children: FsNode[] = [];
 
-    const childFsNodes = await fissionAuthState.fission._fs.ls(this.path, defaultTimeout);
+    const childFsNodes = await fissionAuthState.fission._fs.ls(this.path);
 
     for (let childFsNode of Object.values(childFsNodes))
     {
