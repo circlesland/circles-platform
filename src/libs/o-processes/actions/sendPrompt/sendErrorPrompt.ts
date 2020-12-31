@@ -10,7 +10,7 @@ export const sendErrorPrompt = send((context: ProcessContext) => {
     banner: {
       component: Error,
       data: {
-        text: JSON.stringify(context.result.error)
+        error: context.result.error
       }
     },
     data: {
