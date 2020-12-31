@@ -8,10 +8,10 @@ openIssueColumns:
   - TODAY
   - THIS WEEK
   - THIS MONTH
-  - THIS QUARTER
+  - NEXT MONTH
   - NEXT QUARTER
-  - THIS YEAR
   - "2021"
+  - "2022"
   - "2030"
   - "2050"
 
