@@ -318,16 +318,7 @@ export async function initMyTransactions()
       console.log(`Indexed ${counter} transactions so far ...`);
     }
 
-    if (event instanceof BeginSignal)
-    {
-    }
-    else if (event instanceof DoneSignal)
-    {
-    }
-    else
-    {
-      indexTransaction(event);
-    }
+    indexTransaction(event);
     pushTransactions.trigger();
   });
 

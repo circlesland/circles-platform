@@ -25,7 +25,6 @@ import ErrorIndicator from 'src/libs/o-views/atoms/ErrorIndicator.svelte'
 import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import wrap from "svelte-spa-router/wrap";
 import { waitingarea } from "../../dapps/waitingarea/manifest";
-import { pop } from "svelte-spa-router";
 
 const errorIndicator = ErrorIndicator;
 

@@ -154,11 +154,13 @@
           href="mailto:team@omo.earth"
           class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
         </div>
+        <!--
         {#if progressIndicator}
         <div class="w-full p-2 text text-primary bg-transparent">
           {progressIndicator.message} ({progressIndicator.percent} %)
         </div>
         {/if}
+        -->
       </div>
       <Compose rows="1fr" columns="1fr">
         <Router

@@ -8,7 +8,7 @@ import {RunProcess} from "../../libs/o-events/runProcess";
 import {faCheck, faPiggyBank, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {ProcessArtifact} from "../../libs/o-processes/interfaces/processArtifact";
 import {CloseModal} from "../../libs/o-events/closeModal";
-import {pop, push} from "svelte-spa-router";
+import {push} from "svelte-spa-router";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 import {RuntimeDapp} from "../../libs/o-os/interfaces/runtimeDapp";
 import {tryGetDappState} from "../../libs/o-os/loader";
@@ -34,6 +34,7 @@ import {initMyBalances} from "./init/myBalances";
 import {initialMenu} from "./processes/menus/initialMenu";
 import {fundAccountForSafeCreation} from "./processes/omo/fundAccountForSafeCreation";
 import {signupAtCircles} from "./processes/omo/signupAtCircles";
+import {BeginSignal, ProgressSignal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
 
 export interface OmoSafeState
 {
@@ -79,6 +80,8 @@ const transactionPage = {
  */
 async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 {
+  window.o.publishEvent(new BeginSignal("omo.safe:1:initialize"));
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your safe key ..", 0));
   await initMyKey();
 
   let safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
@@ -93,7 +96,10 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     };
   }
 
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your safe address ..", 0));
   await initSafeAddress();
+
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your xDai balances ..", 0));
   await initXDaiBalances();
 
   safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
@@ -120,6 +126,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     };
   }
 
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token ..", 0));
   await initMyToken();
 
   safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
@@ -133,9 +140,14 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     };
   }
 
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts ..", 0));
   await initMyContacts();
   await initMyKnownTokens();
+
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your transactions ..", 0));
   await initMyTransactions();
+
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your balances ..", 0));
   await initMyBalances();
 
   if (safeState.mySafeAddress && safeState.myToken)

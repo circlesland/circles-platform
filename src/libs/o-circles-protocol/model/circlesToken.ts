@@ -73,7 +73,7 @@ export class CirclesToken
             const percent = (partitionIdx + 1) * (100 / partitionCount)
 
             window.o.publishEvent(new ProgressSignal(
-              signalKey, `Loading your transansactions ..`, parseInt(percent.toFixed(0))));
+              signalKey, `Updating your transactions ..`, parseInt(percent.toFixed(0))));
           }
 
           const f = getFromBlock(partitionIdx);

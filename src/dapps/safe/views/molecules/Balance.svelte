@@ -6,6 +6,8 @@
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
+  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
+  import {ProgressSignal} from "../../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 
   let safeState: OmoSafeState = {};
   let balanceSubscriptions: Subscription;
@@ -29,9 +31,30 @@
         balance = balanceList.map(o => o.balance).reduce((p, c) => p.add(c), new BN("0"));
       });
     }
+
+    subscription = window.o.events.subscribe((event: OmoEvent) =>
+    {
+      if (event.type === "shell.begin")
+      {
+      }
+      if (event.type === "shell.done")
+      {
+        progressIndicator = null;
+      }
+      if (event.type === "shell.progress")
+      {
+        const progressEvent: ProgressSignal = <ProgressSignal>event;
+        progressIndicator = {
+          message: progressEvent.message,
+          percent: progressEvent.percent
+        }
+      }
+    });
   }
 
   onDestroy(() => {
+    if (subscription)
+      subscription.unsubscribe();
     if (!balanceSubscriptions) return;
 
     balanceSubscriptions.unsubscribe();
@@ -39,6 +62,10 @@
   });
 
   onMount(() => init());
+
+  let progressIndicator: { message: string, percent: number };
+  let subscription: Subscription;
+
 </script>
 
 <div
@@ -52,3 +79,8 @@
           alt="CRC" /></span>
     </div>
 </div>
+{#if progressIndicator}
+  <div class="text-sm text-center text-primary font-primary">
+    {progressIndicator.message} ({progressIndicator.percent} %)
+  </div>
+{/if}
