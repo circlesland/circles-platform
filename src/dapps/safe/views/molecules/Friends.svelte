@@ -71,9 +71,13 @@
 </script>
 
 <div class="h-full">
-  {#if contacts.length === 0}
+  {#if !contacts}
     <div class="flex items-center justify-center h-full">
       <Jumper size="150" color="#071D69" unit="px"/>
+    </div>
+  {:else if contacts.length == 0}
+    <div class="mb-4 space-y-2">
+      You don't have any contacts yet. <br/><u><a href="">Invite someone</a></u>
     </div>
   {:else}
     {#if contacts.filter(o => o.trust.in > 0 && !o.trust.out).length > 0}

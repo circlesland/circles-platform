@@ -121,7 +121,7 @@ const updateCacheTrigger = new DelayedTrigger(1000, async () =>
  *
  * TODO: Currently the timestamps for all blocks are set. While this is most likely more precise it costs more requests.. Not yet decided.
  */
-const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(750, async () =>
+const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, async () =>
 {
   const web3 = config.getCurrent().web3();
 

@@ -30,6 +30,9 @@ export async function initMyToken()
 
   setDappState<OmoSafeState>("omo.safe:1", currentState =>
   {
+    if (!myToken)
+      return currentState;
+    
     const t = new CirclesToken(safeState.mySafeAddress);
     t.tokenOwner = myToken.tokenOwner;
     t.tokenAddress = myToken.tokenAddress;

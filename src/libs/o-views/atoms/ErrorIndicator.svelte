@@ -1,6 +1,6 @@
 <div class="bg-danger p-5 overflow-y-scroll max-w-full">
   <span class="text-primary text-2xl">Can't load the dapp:</span><br/>
-  <a href="mailto:team@omo.earth?subject=⦿ Error report&body={encodeURIComponent(`Note: This is template. You can send it as is or add further information to it. Especially helpful are the steps you took until you got this error message (Steps to reproduce).
+  <a href="mailto:team@omo.earth?subject=⦿ Error report&body={encodeURIComponent(`Note: This is a template. You can send it as is or add further information to it. Especially helpful are the steps you took until you got this error message (Steps to reproduce).
 
 Hi!
 

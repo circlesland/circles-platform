@@ -14,22 +14,102 @@ import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {text} from "../../../../libs/o-processes/artifacts/text";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {fundAccountForSafeCreation} from "./fundAccountForSafeCreation";
+import {hubSignupService} from "../../services/hubSignupService";
+import {tryGetDappState} from "../../../../libs/o-os/loader";
+import {OmoSafeState} from "../../manifest";
+import {BN} from "ethereumjs-util";
+import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import {fundSafeService} from "../../services/fundSafeService";
 
 export interface SignupAtCirclesContext extends ProcessContext {
   data: {
-    privateKey?: ProcessArtifact
-    privateKeyPhrase?: ProcessArtifact
-    safeAddress?: ProcessArtifact,
-    fundLink?: ProcessArtifact,
-    safeChoice?: ProcessArtifact,
-    tokenAddress?: ProcessArtifact
   }
 }
 
-const str = strings.safe.processes.signupAtCircles;
-const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
+const str = strings.safe.processes.initializeApp;
+const processDefinition = () => createMachine<SignupAtCirclesContext, OmoEvent>({
   initial: "idle",
-  states: {}
+  states: {
+    idle: {
+      on: {
+        "process.continue": "introduction"
+      }
+    },
+    introduction: {
+      entry: sendPrompt((context) => {
+        return {
+          title: "Create a Circles account?",
+          nextButtonTitle: "Next",
+          banner: {
+            component: Banner,
+            data: {
+              text: `Clicking 'Next' will sign you up for Circles.
+A small amount of the credits you received from your invite will be used to do that.`
+            }
+          },
+          artifacts: {}
+        }
+      }),
+      on: {
+        "process.continue": [{
+          target: "fundSafe"
+        }]
+      }
+    },
+    fundSafe: {
+      entry: sendInProgressPrompt(str.progressFundSafe),
+      invoke: {
+        id: 'fundSafe',
+        src: fundSafeService,
+        onError: {
+          actions: setError,
+          target: "error"
+        },
+        onDone: {
+          actions: setResult(str.successFundSafe),
+          target: "hubSignup"
+        }
+      }
+    },
+    hubSignup: {
+      entry: sendInProgressPrompt(str.progressHubSignup),
+      invoke: {
+        id: 'hubSignup',
+        src: hubSignupService,
+        onError: {
+          actions: "setError",
+          target: "error"
+        },
+        onDone: {
+          actions: setResult(str.successHubSignup),
+          target: "success"
+        }
+      }
+    },
+    success: {
+      entry: [
+        sendSuccessPrompt
+      ],
+      on: {
+        "process.continue": "stop",
+        "process.cancel": "stop"
+      },
+      after: {
+        2000: { target: 'stop' }
+      }
+    },
+    error: {
+      entry: sendErrorPrompt,
+      on: {
+        "process.continue": "stop",
+        "process.cancel": "stop"
+      }
+    },
+    stop: {
+      type: "final"
+    }
+  }
 });
 
 export const signupAtCircles: ProcessDefinition = {
