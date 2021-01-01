@@ -1,8 +1,6 @@
 import {BehaviorSubject, Subject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {
-  BeginSignal,
-  DoneSignal,
   SystemEvent
 } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {BN} from "ethereumjs-util";

@@ -2,7 +2,6 @@ export type OmoEventTypes =
   "shell.runProcess"
   | "shell.showModal"
   | "shell.openModal"
-  | "shell.refreshView"
   | "shell.begin"
   | "shell.progress"
   | "shell.done"

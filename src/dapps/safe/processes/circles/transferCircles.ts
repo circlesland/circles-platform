@@ -13,7 +13,6 @@ import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendProm
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
 import { o } from "../../../../libs/o-processes/artifacts/o";
-import { RefreshView } from "../../../../libs/o-events/refreshView";
 import {strings} from "../../data/strings";
 import {transferCirclesService} from "../../services/transferCirclesService";
 
@@ -127,21 +126,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     success: {
-      entry: [
-        sendSuccessPrompt,
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.tokens")
-        }),
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.transactions")
-        }),
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.balance")
-        })
-      ],
+      entry: sendSuccessPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

@@ -13,7 +13,6 @@ import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPro
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {RefreshView} from "../../../../libs/o-events/refreshView";
 import {inviteCredits} from "../../../../libs/o-processes/artifacts/inviteCredits";
 import {sendInviteCreditsService} from "../../services/sendInviteCreditsService";
 
@@ -125,13 +124,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     success: {
-      entry: [
-        sendSuccessPrompt,
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.tokens")
-        })
-      ],
+      entry: sendSuccessPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

@@ -1,27 +1,11 @@
 <script lang="ts">
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import ProfileField from "src/libs/o-views/molecules/ProfileField.svelte";
-  import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-  import { RefreshView } from "../../../../libs/o-events/refreshView";
   import Mobile from "src/libs/o-views/templates/Mobile.svelte";
   import { tryGetDappState } from "../../../../libs/o-os/loader";
   import { OmoSapienState } from "../../manifest";
 
   let omosapien = tryGetDappState<OmoSapienState>("omo.sapien:1");
-
-  window.o.events.subscribe((event: OmoEvent) => {
-    if (
-      event.type === "shell.refreshView" &&
-      (<RefreshView>event).view == "omosapien.profile"
-    ) {
-      init();
-    }
-  });
-
-  async function init() {
-    omosapien = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  }
-
   let openDetail: boolean = false;
 
   function toggleExpand() {

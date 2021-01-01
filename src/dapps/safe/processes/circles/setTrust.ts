@@ -12,7 +12,6 @@ import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendP
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import { RefreshView } from "../../../../libs/o-events/refreshView";
 import {strings} from "../../data/strings";
 import {setTrustService} from "../../services/setTrustService";
 
@@ -75,13 +74,7 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       }
     },
     success: {
-      entry: [
-        sendSuccessPrompt,
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.friends")
-        })
-      ],
+      entry: sendSuccessPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

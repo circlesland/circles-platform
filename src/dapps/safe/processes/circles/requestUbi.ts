@@ -8,7 +8,6 @@ import { setResult } from "../../../../libs/o-processes/actions/setResult";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import { RefreshView } from "../../../../libs/o-events/refreshView";
 import {requestUbiService} from "../../services/requestUbiService";
 
 /**
@@ -39,17 +38,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     success: {
-      entry: [
-        sendSuccessPrompt,
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.balance")
-        }),
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.transactions")
-        })
-      ],
+      entry: sendSuccessPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

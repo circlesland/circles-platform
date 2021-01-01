@@ -13,7 +13,6 @@ import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPro
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setResult} from "../../../../libs/o-processes/actions/setResult";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {RefreshView} from "../../../../libs/o-events/refreshView";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {transferJumpstartXDaiService} from "../../services/transferJumpstartXDaiService";
 
@@ -101,13 +100,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     success: {
-      entry: [
-        sendSuccessPrompt,
-        send({
-          type: "process.shellEvent",
-          payload: new RefreshView("safe.tokens")
-        })
-      ],
+      entry: sendSuccessPrompt,
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

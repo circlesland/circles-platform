@@ -2,7 +2,6 @@ import { CreateOmoSapienContext } from "../createOmoSapien";
 import { Profile } from "../../../../../libs/o-fission/entities/profile";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
-import { RefreshView } from "../../../../../libs/o-events/refreshView";
 import {setDappState, tryGetDappState} from "../../../../../libs/o-os/loader";
 import {FissionAuthState} from "../../../../fissionauth/manifest";
 import {OmoSapienState} from "../../../manifest";
@@ -37,6 +36,4 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
     current.myProfile = profile;
     return current;
   });
-
-  window.o.publishEvent(new RefreshView("omosapien.profile"));
 }
