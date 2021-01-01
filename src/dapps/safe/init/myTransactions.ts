@@ -320,6 +320,7 @@ export async function initMyTransactions()
 
     indexTransaction(event);
     pushTransactions.trigger();
+    annotateTimeAndStoreToCacheTrigger.trigger();
   });
 
   //
