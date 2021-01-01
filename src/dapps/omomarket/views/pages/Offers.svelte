@@ -2,7 +2,7 @@
   import Offers from "../molecules/Offers.svelte";
 </script>
 
-<div class="overflow-y-scroll bg-gray-50">
+<div class="bg-gray-50">
   <section
     class="flex flex-col items-center justify-center w-full font-sans text-center bg-cover h-96"
     style="background:url('https://source.unsplash.com/-gOUx23DNks') no-repeat center center; background-size: cover; width: 100%">

@@ -77,12 +77,10 @@
   };
 </script>
 
-<div class="h-full">
-  <div class="mb-2">
-    <CategoryTitle mapping={labelTransactions} />
-  </div>
+<div>
+  <CategoryTitle mapping={labelTransactions} />
   {#if transactions}
-    <div class="space-y-2">
+    <div>
       {#each transactions as t}
         <div>
           <div
@@ -112,21 +110,15 @@
                   {#if t.direction === 'in'}
                     {#if t.from !== '0x0000000000000000000000000000000000000000'}
                       from
-                      <!-- <a href="#/safe/{t.from}/safe">-->
                       {#if contacts[t.from] && contacts[t.from].circlesProfile && contacts[t.from].circlesProfile.username}
                         {contacts[t.from].circlesProfile.username}
                       {:else}{t.from.slice(0, 12)}...{/if}
-
-                      <!-- </a> -->
                     {:else}from MamaOmo{/if}
                   {:else}
                     to
-                    <!-- <a href="#/safe/{t.to}/safe"> -->
                     {#if contacts[t.to] && contacts[t.to].circlesProfile && contacts[t.to].circlesProfile.username}
                       {contacts[t.to].circlesProfile.username}
                     {:else}{t.to.slice(0, 12)}...{/if}
-
-                    <!-- </a> -->
                   {/if}
                 </p>
               </div>
@@ -216,16 +208,6 @@
                     class=" text-primary">{t.amount.mul(new BN(3)).toString()}
                     ⦿</span>
                 </div>
-                <!-- <div
-                  class="justify-center my-2 text-xs uppercase text-secondary "
-                  on:click={() => (t.openDetailPayload = !t.openDetailPayload)}>
-                  Show Payload
-                </div>
-                {#if t.openDetailPayload}
-                  <pre
-                    class=" text-xxs">{JSON.stringify(t, null, 2)}
-                    </pre>
-                {/if} -->
               </div>
             </div>
           {/if}

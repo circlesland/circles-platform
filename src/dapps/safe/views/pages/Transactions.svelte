@@ -5,11 +5,7 @@
   import Transactions from "../molecules/Transactions.svelte";
 </script>
 
-<Mobile>
-  <Compose rows="200px 1fr" columns="1fr" tw="md:pt-2">
-    <Balance />
-    <Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 md:mx-0 md:mt-2" overflowY>
-      <Transactions />
-    </Compose>
-  </Compose>
-</Mobile>
+<div style="height:200px">
+  <Balance />
+</div>
+<Transactions />

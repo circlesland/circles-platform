@@ -13,29 +13,25 @@
   }
 </script>
 
-<Mobile>
-  <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
-    {#if omosapien}
+{#if omosapien}
+  <div>
+    <div
+      class="px-4 py-6 text-xl text-center bg-white border md:mt-4 md:py-10 rounded-xl text-primary border-light-200">
       <div>
-        <div
-          class="px-4 py-6 text-xl text-center bg-white border md:mt-4 md:py-10 rounded-xl text-primary border-light-200">
-          <div>
-            <img
-              src={omosapien.myProfile.avatar}
-              class="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300"
-              alt="img" />
-          </div>
-        </div>
-        <div class="pt-2 space-y-2">
-          <ProfileField
-            mapping={{ data: { title: omosapien.myProfile.firstName, subtitle: 'first name' } }} />
-          {#if omosapien.myProfile.lastName}
-            <ProfileField
-              mapping={{ data: { title: omosapien.myProfile.lastName, subtitle: 'last name' } }} />
-          {/if}
-          <!--<ProfileItem mapping={city} />-->
-        </div>
+        <img
+          src={omosapien.myProfile.avatar}
+          class="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300"
+          alt="img" />
       </div>
-    {/if}
-  </Compose>
-</Mobile>
+    </div>
+    <div class="pt-2 space-y-2">
+      <ProfileField
+        mapping={{ data: { title: omosapien.myProfile.firstName, subtitle: 'first name' } }} />
+      {#if omosapien.myProfile.lastName}
+        <ProfileField
+          mapping={{ data: { title: omosapien.myProfile.lastName, subtitle: 'last name' } }} />
+      {/if}
+      <!--<ProfileItem mapping={city} />-->
+    </div>
+  </div>
+{/if}

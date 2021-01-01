@@ -27,17 +27,13 @@
   onMount(() => getKeys());
 </script>
 
-<Mobile>
-  <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0">
-    <div>
-      <div class="mb-2">
-        <CategoryTitle mapping={labelKeys} />
-      </div>
-      <div class="space-y-2">
-        {#each keys as item}
-          <KeyItem mapping={item} />
-        {/each}
-      </div>
-    </div>
-  </Compose>
-</Mobile>
+<div>
+  <div class="mb-2">
+    <CategoryTitle mapping={labelKeys} />
+  </div>
+  <div class="space-y-2">
+    {#each keys as item}
+      <KeyItem mapping={item} />
+    {/each}
+  </div>
+</div>

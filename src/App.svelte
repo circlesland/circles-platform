@@ -19,8 +19,15 @@
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
   import {ProgressSignal} from "./libs/o-circles-protocol/interfaces/blockchainEvent";
+  import {onMount} from "svelte";
 
   let actions = [];
+
+  let headerElement: HTMLElement;
+  let contentElement: HTMLElement;
+  let footerElement: HTMLElement;
+  let windowInnerHeight:number;
+  let contentHeight:number = 0;
 
   let isOpen = false;
   let showActionBar = false;
@@ -110,6 +117,10 @@
           pos: item.pos,
         };
       });
+
+    const headerHeight = headerElement ? headerElement.clientHeight : 0;
+    const footerHeight = footerElement ? footerElement.clientHeight : 0;
+    contentHeight = windowInnerHeight - headerHeight - footerHeight;
   }
 
   function toggleOpen() {
@@ -141,59 +152,47 @@
   }
 </script>
 
-<ComposeApp tw="font-primary bg-light-100">
-  <Compose tw="mx-auto bg-light-100 w-full">
-    <Compose columns="1fr" rows="auto 1fr auto" tw="w-full">
-      <div>
-        <div class="w-full p-2 text-sm text-yellow-800 bg-yellow-400 ">
-          We are in early alpha testing, please let us know about any bugs you
-          find or feedback you have via
-          <a
-            href="https://discord.gg/Rbhy4j9"
-            class="px-1 text-white cursor-pointer hover:text-yellow-800">chat</a>or<a
-          href="mailto:team@omo.earth"
-          class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
-        </div>
-        <!--
-        {#if progressIndicator}
-        <div class="w-full p-2 text text-primary bg-transparent">
-          {progressIndicator.message} ({progressIndicator.percent} %)
-        </div>
-        {/if}
-        -->
-      </div>
-      <Compose rows="1fr" columns="1fr">
-        <Router
-          {routes}
-          on:conditionsFailed={conditionsFailed}
-          on:routeLoading={routeLoading} />
-      </Compose>
-      {#if showActionBar}
-        <Compose>
-          <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
-        </Compose>
-      {/if}
-      <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
-        {#if runningProcess}
-          <ProcessContainer
-            process={runningProcess}
-            on:stopped={() => {
+<svelte:window bind:innerHeight={windowInnerHeight} />
+<div class="appContainer">
+  <div bind:this={headerElement} class="w-full p-2 text-sm text-yellow-800 bg-yellow-400 ">
+    We are in early alpha testing, please let us know about any bugs you
+    find or feedback you have via
+    <a
+      href="https://discord.gg/Rbhy4j9"
+      class="px-1 text-white cursor-pointer hover:text-yellow-800">chat</a>or<a
+    href="mailto:team@omo.earth"
+    class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
+  </div>
+  <div bind:this={contentElement} style="height: {contentHeight}px; overflow: auto; margin-bottom: {showActionBar && footerElement ? footerElement.clientHeight : 0}px;">
+  <Router
+    {routes}
+    on:conditionsFailed={conditionsFailed}
+    on:routeLoading={routeLoading} />
+  </div>
+  {#if showActionBar}
+    <div bind:this={footerElement} style="position: fixed; bottom: 0; width:100%;">
+      <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
+    </div>
+  {/if}
+</div>
+<Modal bind:isOpen on:closeRequest={modalWantsToClose}>
+  {#if runningProcess}
+    <ProcessContainer
+      process={runningProcess}
+      on:stopped={() => {
               isOpen = false;
               runningProcess = null;
             }} />
-        {:else}
-          {#each overflowActions as action}
-            <div class="w-full">
-              <div class="space-y-2">
-                <div on:click={() => window.o.publishEvent(action.event())}>
-                  <OverflowAction mapping={action} />
-                </div>
-              </div>
-            </div>
-          {/each}
-          <ProcessNav bind:isOpen />
-        {/if}
-      </Modal>
-    </Compose>
-  </Compose>
-</ComposeApp>
+  {:else}
+    {#each overflowActions as action}
+      <div class="w-full">
+        <div class="space-y-2">
+          <div on:click={() => window.o.publishEvent(action.event())}>
+            <OverflowAction mapping={action} />
+          </div>
+        </div>
+      </div>
+    {/each}
+    <ProcessNav bind:isOpen />
+  {/if}
+</Modal>

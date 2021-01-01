@@ -11,25 +11,21 @@
   } from "../../data/profiles";
 </script>
 
-<Mobile>
-  <Compose rows="1fr" columns="1fr" tw="mx-4 mt-4 md:m-0" overflowY>
-    <div>
-      <div class="my-2">
-        <CategoryTitle mapping={labelOmoSapiens} />
-      </div>
-      <div class="space-y-2">
-        {#each omoSapiens as item}
-          <ProfileItem mapping={item} />
-        {/each}
-      </div>
-      <div class="my-2">
-        <CategoryTitle mapping={labelCoops} />
-      </div>
-      <div class="space-y-2">
-        {#each coops as item}
-          <ProfileItem mapping={item} />
-        {/each}
-      </div>
-    </div>
-  </Compose>
-</Mobile>
+<div>
+  <div class="my-2">
+    <CategoryTitle mapping={labelOmoSapiens} />
+  </div>
+  <div class="space-y-2">
+    {#each omoSapiens as item}
+      <ProfileItem mapping={item} />
+    {/each}
+  </div>
+  <div class="my-2">
+    <CategoryTitle mapping={labelCoops} />
+  </div>
+  <div class="space-y-2">
+    {#each coops as item}
+      <ProfileItem mapping={item} />
+    {/each}
+  </div>
+</div>

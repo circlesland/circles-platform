@@ -100,7 +100,8 @@ export abstract class Directory<TEntity extends Entity>
     entity: TEntity
   }>
   {
-    const result = await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () => {
+    const result = await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () =>
+    {
       await this.ensureDirectoryExists();
 
       const result = {
