@@ -5,12 +5,22 @@ import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAcco
 import {Token} from "../../../libs/o-fission/entities/token";
 import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
 import {BN} from "ethereumjs-util";
+import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 
 export async function initMyToken()
 {
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  let myToken:Token = await fissionAuthState.fission.tokens.tryGetMyToken();
+  let myToken:Token;
+
+  try
+  {
+    myToken = await fissionAuthState.fission.tokens.tryGetMyToken();
+  }
+  catch (e)
+  {
+    window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token (from the blockchain) ..", 0));
+  }
 
   if (!myToken)
   {
@@ -32,7 +42,7 @@ export async function initMyToken()
   {
     if (!myToken)
       return currentState;
-    
+
     const t = new CirclesToken(safeState.mySafeAddress);
     t.tokenOwner = myToken.tokenOwner;
     t.tokenAddress = myToken.tokenAddress;

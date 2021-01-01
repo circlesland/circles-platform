@@ -6,6 +6,8 @@ import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken"
 import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {FissionAuthState} from "../../fissionauth/manifest";
+import {Token} from "../../../libs/o-fission/entities/token";
+import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 
 const myKnownTokensSubject: BehaviorSubject<{ [safeAddress: string]: CirclesToken }> = new BehaviorSubject<{ [safeAddress: string]: CirclesToken }>({});
 const blockIndex = new BlockIndex();
@@ -39,21 +41,29 @@ export async function initMyKnownTokens()
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const circlesAccount = new CirclesAccount(safeState.mySafeAddress);
 
-  const cachedTokens = await fissionAuthState.fission.tokens.listItems();
-  if (cachedTokens && cachedTokens.length > 0)
+  let cachedTokens:Token[] = [];
+  try
   {
-    cachedTokens.forEach(cachedToken =>
+    cachedTokens = await fissionAuthState.fission.tokens.listItems();
+    if (cachedTokens && cachedTokens.length > 0)
     {
-      const token = new CirclesToken(safeState.mySafeAddress);
-      token.createdInBlockNo = cachedToken.createdInBlockNo;
-      token.tokenAddress = cachedToken.tokenAddress;
-      token.tokenOwner = cachedToken.tokenOwner;
-      token.noTransactionsUntilBlockNo = cachedToken.noTransactionsUntilBlockNo;
+      cachedTokens.forEach(cachedToken =>
+      {
+        const token = new CirclesToken(safeState.mySafeAddress);
+        token.createdInBlockNo = cachedToken.createdInBlockNo;
+        token.tokenAddress = cachedToken.tokenAddress;
+        token.tokenOwner = cachedToken.tokenOwner;
+        token.noTransactionsUntilBlockNo = cachedToken.noTransactionsUntilBlockNo;
 
-      myKnownTokens[token.tokenOwner] = token;
-    });
+        myKnownTokens[token.tokenOwner] = token;
+      });
 
-    myKnownTokensSubject.next(myKnownTokens);
+      myKnownTokensSubject.next(myKnownTokens);
+    }
+  }
+  catch (e)
+  {
+    window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts' tokens (failed) ..", 0));
   }
 
   // Update the token list whenever the contact list changes.

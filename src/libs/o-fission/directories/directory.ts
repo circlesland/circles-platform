@@ -1,6 +1,7 @@
 import FileSystem from "webnative/fs/filesystem";
 import { Entity } from "../entities/entity";
 import { CID } from "webnative/ipfs";
+import {withTimeout} from "../fissionDrive";
 
 export type DirectoryChangeType = "add" | "update" | "remove";
 
@@ -9,6 +10,8 @@ export abstract class Directory<TEntity extends Entity>
   private readonly _fs: FileSystem;
   private readonly _pathParts: string[];
   private readonly _entityFactory?:(data:string) => TEntity;
+
+  static readonly defaultTimeout = 10000;
 
   protected get fs(): FileSystem {
     return this._fs;
@@ -32,54 +35,62 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async exists(pathParts?: string[]): Promise<boolean> {
-    return this.fs.exists(this.getPath(pathParts));
+    return withTimeout(() => this.fs.exists(this.getPath(pathParts)), Directory.defaultTimeout);
   }
 
   async ensureDirectoryExists(pathParts?: string[]): Promise<void> {
-    if (!await this.exists(pathParts)) {
-      await this.fs.mkdir(this.getPath(pathParts));
-      await this.fs.publish();
-    }
+    return withTimeout(async () => {
+      if (!await this.exists(pathParts)) {
+        await this.fs.mkdir(this.getPath(pathParts));
+        await this.fs.publish();
+      }
+    }, Directory.defaultTimeout);
   }
 
   async listNames(): Promise<string[]> {
-    if (!await this.exists()) {
-      return [];
-    }
+    return withTimeout(async () => {
+      if (!await this.exists()) {
+        return [];
+      }
 
-    const listing = await this.fs.ls(this.getPath());
-    const list = Object.entries(listing);
-    return list.map(([name, _]) => name);
+      const listing = await this.fs.ls(this.getPath());
+      const list = Object.entries(listing);
+      return list.map(([name, _]) => name);
+    }, Directory.defaultTimeout);
   }
 
   async listItems(): Promise<TEntity[]> {
-    const names = await this.listNames();
-    const items = await Promise.all(names.map(name => {
-      return this.fs.cat(this.getPath([name]));
-    }));
+    return withTimeout(async () => {
+      const names = await this.listNames();
+      const items = await Promise.all(names.map(name => {
+        return this.fs.cat(this.getPath([name]));
+      }));
 
-    if (this._entityFactory) {
-      return items.map(o => this._entityFactory(o.toString()));
-    }
+      if (this._entityFactory) {
+        return items.map(o => this._entityFactory(o.toString()));
+      }
 
-    return items.map(item => <TEntity>JSON.parse(<string>item));
+      return items.map(item => <TEntity>JSON.parse(<string>item));
+    }, Directory.defaultTimeout);
   }
 
   async tryGetByName<TSpecificEntity extends TEntity>(entityName: string): Promise<TSpecificEntity> {
-    console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
-    if (!await this.exists([entityName])) {
-      console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Doesn't exist");
-      return null;
-    }
+    return withTimeout(async () => {
+      console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
+      if (!await this.exists([entityName])) {
+        console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Doesn't exist");
+        return null;
+      }
 
-    console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
-    const contents = await this.fs.cat(this.getPath([entityName]));
+      console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
+      const contents = await this.fs.cat(this.getPath([entityName]));
 
-    if (this._entityFactory) {
-      return <TSpecificEntity>this._entityFactory(contents.toString());
-    }
+      if (this._entityFactory) {
+        return <TSpecificEntity>this._entityFactory(contents.toString());
+      }
 
-    return <TSpecificEntity>JSON.parse(<string>contents);
+      return <TSpecificEntity>JSON.parse(<string>contents);
+    }, Directory.defaultTimeout);
   }
 
   async addOrUpdate(entity: TEntity, publish = true, indexHint?: string): Promise<{
@@ -87,51 +98,57 @@ export abstract class Directory<TEntity extends Entity>
     added: boolean,
     entity: TEntity
   }> {
-    await this.ensureDirectoryExists();
+    return withTimeout(async () => {
+      await this.ensureDirectoryExists();
 
-    const result = {
-      cid: "",
-      added: await this.exists([entity.name]),
-      entity: entity
-    };
+      const result = {
+        cid: "",
+        added: await this.exists([entity.name]),
+        entity: entity
+      };
 
-    await this.fs.add(
-      this.getPath([entity.name]),
-      JSON.stringify(entity));
+      await this.fs.add(
+        this.getPath([entity.name]),
+        JSON.stringify(entity));
 
-    await this.maintainIndexes(
-      result.added ? "add" : "update",
-      entity,
-      indexHint);
+      await this.maintainIndexes(
+        result.added ? "add" : "update",
+        entity,
+        indexHint);
 
-    result.cid = publish
-      ? await this.fs.publish()
-      : null;
+      result.cid = publish
+        ? await this.fs.publish()
+        : null;
 
-    return result;
+      return result;
+    }, Directory.defaultTimeout);
   }
 
   async tryRemove(entityName: string, publish = true, indexHint?: string): Promise<{
     cid: CID,
     entity: TEntity
   } | null> {
-    const entity = await this.tryGetByName(entityName);
-    if (!entity) {
-      return null;
-    }
+    return withTimeout(async () => {
+      const entity = await this.tryGetByName(entityName);
+      if (!entity) {
+        return null;
+      }
 
-    await this.fs.rm(this.getPath([entityName]));
-    await this.maintainIndexes("remove", entity, indexHint);
+      await this.fs.rm(this.getPath([entityName]));
+      await this.maintainIndexes("remove", entity, indexHint);
 
-    return {
-      cid: publish
-        ? await this.fs.publish()
-        : null,
-      entity: entity
-    };
+      return {
+        cid: publish
+          ? await this.fs.publish()
+          : null,
+        entity: entity
+      };
+    }, Directory.defaultTimeout);
   }
 
   async publish(): Promise<string> {
-    return await this.fs.publish();
+    return withTimeout(async () => {
+      return await this.fs.publish();
+    }, Directory.defaultTimeout);
   }
 }

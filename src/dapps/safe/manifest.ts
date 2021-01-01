@@ -142,6 +142,8 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 
   window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts ..", 0));
   await initMyContacts();
+
+  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts' tokens ..", 0));
   await initMyKnownTokens();
 
   window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your transactions ..", 0));

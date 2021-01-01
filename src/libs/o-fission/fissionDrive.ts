@@ -45,3 +45,35 @@ export class FissionDrive
     this._tokens = new Tokens(this._fs);
   }
 }
+
+export async function withTimeout<T>(func: () => Promise<T>, timeout?:number) : Promise<T>
+{
+  return new Promise((resolve, reject) =>
+  {
+    let resolved = false;
+    if (timeout)
+    {
+      setTimeout(() =>
+      {
+        if (resolved)
+        {
+          return;
+        }
+        reject(new Error(`The execution timed out after ${timeout / 1000} seconds.`));
+      }, timeout);
+    }
+
+    try {
+      func()
+        .then(result => {
+          resolved = true;
+          resolve(result);
+        })
+        .catch(error => reject(error));
+    }
+    catch (e)
+    {
+      reject(e);
+    }
+  });
+}
