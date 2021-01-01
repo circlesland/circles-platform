@@ -35,20 +35,21 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async exists(pathParts?: string[]): Promise<boolean> {
-    return withTimeout(() => this.fs.exists(this.getPath(pathParts)), Directory.defaultTimeout);
+    return withTimeout(`exists(${this.getPath(pathParts)})`, () => this.fs.exists(this.getPath(pathParts)), Directory.defaultTimeout);
   }
 
   async ensureDirectoryExists(pathParts?: string[]): Promise<void> {
-    return withTimeout(async () => {
+    await withTimeout(`ensureDirectoryExists(${this.getPath(pathParts)})`, async () => {
       if (!await this.exists(pathParts)) {
         await this.fs.mkdir(this.getPath(pathParts));
-        await this.fs.publish();
       }
     }, Directory.defaultTimeout);
+
+    await this.fs.publish();
   }
 
   async listNames(): Promise<string[]> {
-    return withTimeout(async () => {
+    return withTimeout(`listNames(${this.getPath()})`, async () => {
       if (!await this.exists()) {
         return [];
       }
@@ -60,7 +61,7 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async listItems(): Promise<TEntity[]> {
-    return withTimeout(async () => {
+    return withTimeout(`listItems(${this.getPath()})`, async () => {
       const names = await this.listNames();
       const items = await Promise.all(names.map(name => {
         return this.fs.cat(this.getPath([name]));
@@ -75,7 +76,7 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async tryGetByName<TSpecificEntity extends TEntity>(entityName: string): Promise<TSpecificEntity> {
-    return withTimeout(async () => {
+    return withTimeout(`tryGetByName(${this.getPath([entityName])})`, async () => {
       console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
       if (!await this.exists([entityName])) {
         console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Doesn't exist");
@@ -98,7 +99,7 @@ export abstract class Directory<TEntity extends Entity>
     added: boolean,
     entity: TEntity
   }> {
-    return withTimeout(async () => {
+    return withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () => {
       await this.ensureDirectoryExists();
 
       const result = {
@@ -121,14 +122,14 @@ export abstract class Directory<TEntity extends Entity>
         : null;
 
       return result;
-    }, Directory.defaultTimeout);
+    }, publish ? undefined : Directory.defaultTimeout);
   }
 
   async tryRemove(entityName: string, publish = true, indexHint?: string): Promise<{
     cid: CID,
     entity: TEntity
   } | null> {
-    return withTimeout(async () => {
+    return withTimeout(`tryRemove(${this.getPath([entityName])}, publish: ${publish})`, async () => {
       const entity = await this.tryGetByName(entityName);
       if (!entity) {
         return null;
@@ -143,12 +144,10 @@ export abstract class Directory<TEntity extends Entity>
           : null,
         entity: entity
       };
-    }, Directory.defaultTimeout);
+    }, publish ? undefined : Directory.defaultTimeout);
   }
 
   async publish(): Promise<string> {
-    return withTimeout(async () => {
-      return await this.fs.publish();
-    }, Directory.defaultTimeout);
+    return await this.fs.publish();
   }
 }

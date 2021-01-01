@@ -46,7 +46,7 @@ export class FissionDrive
   }
 }
 
-export async function withTimeout<T>(func: () => Promise<T>, timeout?:number) : Promise<T>
+export async function withTimeout<T>(operationName:string, func: () => Promise<T>, timeout?:number) : Promise<T>
 {
   return new Promise((resolve, reject) =>
   {
@@ -59,7 +59,7 @@ export async function withTimeout<T>(func: () => Promise<T>, timeout?:number) : 
         {
           return;
         }
-        reject(new Error(`The execution timed out after ${timeout / 1000} seconds.`));
+        reject(new Error(`The execution of ${operationName} timed out after ${timeout / 1000} seconds.`));
       }, timeout);
     }
 
