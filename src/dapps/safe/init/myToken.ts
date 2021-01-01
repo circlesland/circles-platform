@@ -35,6 +35,15 @@ export async function initMyToken()
         createdInBlockNo: mySignup.createdInBlockNo,
         noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo
       }
+
+      try
+      {
+        await fissionAuthState.fission.tokens.addMyToken(myToken);
+      }
+      catch (e)
+      {
+        console.log(e);
+      }
     }
   }
 

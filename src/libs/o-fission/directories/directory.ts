@@ -98,8 +98,9 @@ export abstract class Directory<TEntity extends Entity>
     cid: CID,
     added: boolean,
     entity: TEntity
-  }> {
-    return withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () => {
+  }>
+  {
+    const result = await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () => {
       await this.ensureDirectoryExists();
 
       const result = {
@@ -117,19 +118,21 @@ export abstract class Directory<TEntity extends Entity>
         entity,
         indexHint);
 
-      result.cid = publish
-        ? await this.fs.publish()
-        : null;
-
       return result;
-    }, publish ? undefined : Directory.defaultTimeout);
+    }, Directory.defaultTimeout);
+
+    result.cid = publish
+      ? await this.fs.publish()
+      : null;
+
+    return result;
   }
 
   async tryRemove(entityName: string, publish = true, indexHint?: string): Promise<{
     cid: CID,
     entity: TEntity
   } | null> {
-    return withTimeout(`tryRemove(${this.getPath([entityName])}, publish: ${publish})`, async () => {
+    const entity = await withTimeout(`tryRemove(${this.getPath([entityName])}, publish: ${publish})`, async () => {
       const entity = await this.tryGetByName(entityName);
       if (!entity) {
         return null;
@@ -138,13 +141,15 @@ export abstract class Directory<TEntity extends Entity>
       await this.fs.rm(this.getPath([entityName]));
       await this.maintainIndexes("remove", entity, indexHint);
 
-      return {
-        cid: publish
-          ? await this.fs.publish()
-          : null,
-        entity: entity
-      };
-    }, publish ? undefined : Directory.defaultTimeout);
+      return entity;
+    }, Directory.defaultTimeout);
+
+    return {
+      cid: publish
+        ? await this.fs.publish()
+        : null,
+      entity: entity
+    };
   }
 
   async publish(): Promise<string> {
