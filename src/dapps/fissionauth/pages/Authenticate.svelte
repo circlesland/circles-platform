@@ -91,15 +91,11 @@
   }
 </script>
 
-<Mobile>
-  <Compose rows="1fr" columns="1fr" tw="m-4 md:m-0" gap="10px" overflowY>
-    <div class="flex items-center justify-center">
-      <div>
-        <Jumper size="150" color="#071D69" unit="px" /><br />
-        <div class="text-sm text-center text-primary foont-primary">
-          authenticating ...
-        </div>
-      </div>
+<div class="flex items-center justify-center">
+  <div>
+    <Jumper size="150" color="#071D69" unit="px" /><br />
+    <div class="text-sm text-center text-primary foont-primary">
+      authenticating ...
     </div>
-  </Compose>
-</Mobile>
+  </div>
+</div>

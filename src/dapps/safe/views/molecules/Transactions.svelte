@@ -78,11 +78,10 @@
 </script>
 
 <div>
-  <CategoryTitle mapping={labelTransactions} />
   {#if transactions}
     <div>
       {#each transactions as t}
-        <div>
+        <div class="mb-1">
           <div
             class="flex items-center w-full bg-white border rounded-xl border-light-200"
             on:click={() => (t.openDetail = !t.openDetail)}>

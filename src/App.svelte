@@ -163,11 +163,11 @@
     href="mailto:team@omo.earth"
     class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
   </div>
-  <div bind:this={contentElement} style="height: {contentHeight}px; overflow: auto; margin-bottom: {showActionBar && footerElement ? footerElement.clientHeight : 0}px;">
-  <Router
-    {routes}
-    on:conditionsFailed={conditionsFailed}
-    on:routeLoading={routeLoading} />
+  <div bind:this={contentElement} style="margin:0 auto; max-width:1200px; height: {contentHeight}px; overflow: auto; margin-bottom: {showActionBar && footerElement ? footerElement.clientHeight : 0}px;">
+    <Router
+      {routes}
+      on:conditionsFailed={conditionsFailed}
+      on:routeLoading={routeLoading} />
   </div>
   {#if showActionBar}
     <div bind:this={footerElement} style="position: fixed; bottom: 0; width:100%;">
