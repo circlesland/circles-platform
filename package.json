@@ -3,7 +3,7 @@
 	"scripts": {
 		"clean:all": "npx shx rm -rf public/bundle.* && npx shx rm -rf node_modules",
 		"clean": "npx shx rm -rf public/bundle.*",
-		"dev": "webpack-dev-server --https --host=0.0.0.0 --config webpack.config.js --mode=development",
+		"dev": "webpack-dev-server --config webpack.config.js --mode=development",
 		"build": "cross-env NODE_ENV=production webpack",
 		"deploy": "npm run clean && npm i && npm run build && fission app publish --verbose"
 	},

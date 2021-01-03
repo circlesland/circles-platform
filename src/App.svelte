@@ -18,25 +18,25 @@
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
   import { Cancel } from "./libs/o-processes/events/cancel";
   import { Process } from "./libs/o-processes/interfaces/process";
-  import {ProgressSignal} from "./libs/o-circles-protocol/interfaces/blockchainEvent";
-  import {onMount} from "svelte";
+  import { ProgressSignal } from "./libs/o-circles-protocol/interfaces/blockchainEvent";
+  import { onMount } from "svelte";
 
   let actions = [];
 
   let headerElement: HTMLElement;
   let contentElement: HTMLElement;
   let footerElement: HTMLElement;
-  let windowInnerHeight:number;
-  let contentHeight:number = 0;
+  let windowInnerHeight: number;
+  let contentHeight: number = 0;
 
   let isOpen = false;
   let showActionBar = false;
 
   let runningProcess: Process = window.o.stateMachines.current();
 
-  let progressIndicator:{
-    message:string,
-    percent:number
+  let progressIndicator: {
+    message: string;
+    percent: number;
   };
 
   window.o.events.subscribe(async (event: OmoEvent) => {
@@ -63,11 +63,11 @@
       progressIndicator = null;
     }
     if (event.type === "shell.progress") {
-      const progressEvent:ProgressSignal = <ProgressSignal>event;
+      const progressEvent: ProgressSignal = <ProgressSignal>event;
       progressIndicator = {
-        message:progressEvent.message,
-        percent:progressEvent.percent
-      }
+        message: progressEvent.message,
+        percent: progressEvent.percent,
+      };
     }
   });
 
@@ -153,24 +153,30 @@
 </script>
 
 <svelte:window bind:innerHeight={windowInnerHeight} />
-<div class="appContainer">
-  <div bind:this={headerElement} class="w-full p-2 text-sm text-yellow-800 bg-yellow-400 ">
-    We are in early alpha testing, please let us know about any bugs you
-    find or feedback you have via
+<div class="appContainer font-primary bg-light-100">
+  <div
+    bind:this={headerElement}
+    class="w-full p-2 text-sm text-yellow-800 bg-yellow-400 ">
+    We are in early alpha testing, please let us know about any bugs you find or
+    feedback you have via
     <a
       href="https://discord.gg/Rbhy4j9"
       class="px-1 text-white cursor-pointer hover:text-yellow-800">chat</a>or<a
-    href="mailto:team@omo.earth"
-    class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
+      href="mailto:team@omo.earth"
+      class="px-1 text-white cursor-pointer hover:text-yellow-800">mail</a>
   </div>
-  <div bind:this={contentElement} style="margin:0 auto; max-width:1200px; height: {contentHeight}px; overflow: auto; margin-bottom: {showActionBar && footerElement ? footerElement.clientHeight : 0}px;">
+  <div
+    bind:this={contentElement}
+    style="margin:0 auto; max-width:1200px; height: {contentHeight}px; overflow: auto; margin-bottom: {showActionBar && footerElement ? footerElement.clientHeight : 0}px;">
     <Router
       {routes}
       on:conditionsFailed={conditionsFailed}
       on:routeLoading={routeLoading} />
   </div>
   {#if showActionBar}
-    <div bind:this={footerElement} style="position: fixed; bottom: 0; width:100%;">
+    <div
+      bind:this={footerElement}
+      style="position: fixed; bottom: 0; width:100%;">
       <ActionBar on:actionButtonClick={toggleOpen} {quickActions} />
     </div>
   {/if}
@@ -180,9 +186,9 @@
     <ProcessContainer
       process={runningProcess}
       on:stopped={() => {
-              isOpen = false;
-              runningProcess = null;
-            }} />
+        isOpen = false;
+        runningProcess = null;
+      }} />
   {:else}
     {#each overflowActions as action}
       <div class="w-full">
