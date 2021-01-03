@@ -114,13 +114,18 @@ export abstract class Directory<TEntity extends Entity>
         this.getPath([entity.name]),
         JSON.stringify(entity));
 
+      return result;
+    }, Directory.defaultTimeout);
+
+
+    await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () =>
+    {
       await this.maintainIndexes(
         result.added ? "add" : "update",
         entity,
         indexHint);
-
-      return result;
-    }, Directory.defaultTimeout);
+    }
+    , Directory.defaultTimeout);
 
     result.cid = publish
       ? await this.fs.publish()
