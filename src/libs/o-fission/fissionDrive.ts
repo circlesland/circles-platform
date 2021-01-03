@@ -4,6 +4,7 @@ import { Keys } from "./directories/keys";
 import { AuthSucceeded, Continuation } from "webnative";
 import { Tokens } from "./directories/tokens";
 import {CirclesTransactions} from "./directories/circlesTransactions";
+import {asyncWaterfall} from "webnative/common";
 
 export class FissionDrive
 {
