@@ -5,7 +5,7 @@ import {CachedTransactions} from "../entities/cachedTransactions";
 export class CirclesTransactions extends Directory<CachedTransactions>
 {
   constructor(fs: FileSystem) {
-    super(fs, ["blocks"]);
+    super(fs, ["transactions"]);
   }
 
   async maintainIndexes(change: DirectoryChangeType, entity: CachedTransactions, hint?: string): Promise<void> {

@@ -11,7 +11,7 @@ export abstract class Directory<TEntity extends Entity>
   private readonly _pathParts: string[];
   private readonly _entityFactory?:(data:string) => TEntity;
 
-  static readonly defaultTimeout = 10000;
+  static readonly defaultTimeout = 30000;
 
   protected get fs(): FileSystem {
     return this._fs;
@@ -39,13 +39,15 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async ensureDirectoryExists(pathParts?: string[]): Promise<void> {
-    await withTimeout(`ensureDirectoryExists(${this.getPath(pathParts)})`, async () => {
-      if (!await this.exists(pathParts)) {
-        await this.fs.mkdir(this.getPath(pathParts));
-      }
-    }, Directory.defaultTimeout);
+      await withTimeout(`ensureDirectoryExists(${this.getPath(pathParts)})`, async () =>
+      {
+        if (!await this.exists(pathParts))
+        {
+          await this.fs.mkdir(this.getPath(pathParts));
+        }
+      }, Directory.defaultTimeout);
 
-    await this.fs.publish();
+      await this.fs.publish();
   }
 
   async listNames(): Promise<string[]> {
@@ -100,7 +102,8 @@ export abstract class Directory<TEntity extends Entity>
     entity: TEntity
   }>
   {
-    const result = await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () => {
+    const result = await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () =>
+    {
       await this.ensureDirectoryExists();
 
       const result = {
@@ -113,13 +116,18 @@ export abstract class Directory<TEntity extends Entity>
         this.getPath([entity.name]),
         JSON.stringify(entity));
 
+      return result;
+    }, Directory.defaultTimeout);
+
+
+    await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () =>
+    {
       await this.maintainIndexes(
         result.added ? "add" : "update",
         entity,
         indexHint);
-
-      return result;
-    }, Directory.defaultTimeout);
+    }
+    , Directory.defaultTimeout);
 
     result.cid = publish
       ? await this.fs.publish()

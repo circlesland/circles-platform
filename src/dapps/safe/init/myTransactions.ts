@@ -12,6 +12,8 @@ import {config} from "../../../libs/o-circles-protocol/config";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransactions";
 import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
+import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
+import {Token} from "../../../libs/o-fission/entities/token";
 
 type TransactionList = {
   [token: string]: {
@@ -88,22 +90,31 @@ const updateCacheTrigger = new DelayedTrigger(1000, async () =>
   const currentBlock = await config.getCurrent().web3().eth.getBlockNumber();
 
   // Go trough all tokens and find the first block that contains a transactions
+  const existingKnownTokensList = (await fissionAuthState.fission.tokens.tryGetByName("tokens")) ?? <CachedTokens>{entries: {}};
   await Promise.all(Object.keys(tokensByAddress).map(async tokenAddress =>
   {
     const firstBlockWithEvents = Object.values(myTransactions[tokenAddress] ?? {})
       .reduce((p, c) => c.blockNo < p ? c.blockNo : p, Number.MAX_SAFE_INTEGER);
 
+    if (!existingKnownTokensList.entries[tokenAddress])
+    {
+      existingKnownTokensList.entries[tokenAddress] = <Token>{
+          name: "",
+          noTransactionsUntilBlockNo: tokensByAddress[tokenAddress].noTransactionsUntilBlockNo,
+          createdInBlockNo: tokensByAddress[tokenAddress].createdInBlockNo,
+          tokenAddress: tokensByAddress[tokenAddress].tokenAddress,
+          tokenOwner: tokensByAddress[tokenAddress].tokenOwner
+        };
+    }
+
     if (firstBlockWithEvents == Number.MAX_SAFE_INTEGER)
     {
       // No events till now
-      const token = await fissionAuthState.fission.tokens.tryGetByName(tokenAddress);
-      token.noTransactionsUntilBlockNo = currentBlock;
-      await fissionAuthState.fission.tokens.addOrUpdate(token, false);
+      existingKnownTokensList.entries[tokenAddress].noTransactionsUntilBlockNo = currentBlock;
     }
   }));
 
-  await fissionAuthState.fission.tokens.publish();
-
+  await fissionAuthState.fission.tokens.addOrUpdate(existingKnownTokensList);
   console.log("Wrote transactions to fission cache.");
 });
 
@@ -285,7 +296,9 @@ const subscribeToTokenEvents = new DelayedTrigger(500, async () =>
     }
   });
 
-  Object.values(cachedBlockMap).forEach(o => o.lastCachedBlock = o.emptyUntil > o.lastCachedBlock ? o.emptyUntil : o.lastCachedBlock);
+  Object.values(cachedBlockMap).forEach(o => o.lastCachedBlock = o.emptyUntil > o.lastCachedBlock
+    ? o.emptyUntil
+    : o.lastCachedBlock);
 
   // Find the smallest of all "map"-values and use it as the first block to get historic events
   const firstUnknownBlock = Object.values(cachedBlockMap).reduce((p,c) => c.lastCachedBlock < p ? c.lastCachedBlock : p,

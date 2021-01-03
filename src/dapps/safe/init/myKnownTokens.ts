@@ -8,27 +8,38 @@ import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {Token} from "../../../libs/o-fission/entities/token";
 import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
 
 const myKnownTokensSubject: BehaviorSubject<{ [safeAddress: string]: CirclesToken }> = new BehaviorSubject<{ [safeAddress: string]: CirclesToken }>({});
 const blockIndex = new BlockIndex();
 const myKnownTokens: { [safeAddress: string]: CirclesToken } = {};
 
-const storeToCacheTrigger = new DelayedTrigger(5000, async () =>
+const storeToCacheTrigger = new DelayedTrigger(500, async () =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  await Promise.all(Object.values(myKnownTokens).map(async knownToken =>
-  {
-    await fissionAuthState.fission.tokens.addOrUpdate({
-      name: knownToken.tokenAddress,
-      tokenOwner: knownToken.tokenOwner,
-      tokenAddress: knownToken.tokenAddress,
-      createdInBlockNo: knownToken.createdInBlockNo,
-      noTransactionsUntilBlockNo: knownToken.noTransactionsUntilBlockNo
-    }, false);
 
-    await fissionAuthState.fission.tokens.publish();
-  }));
+
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  const existingKnownTokensList = (await fissionAuthState.fission.tokens.tryGetByName("tokens")) ?? <CachedTokens>{
+    name: "tokens",
+    entries: {}
+  };
+  const existingKnownTokens = existingKnownTokensList.entries;
+
+  Object.values(myKnownTokens).forEach(token =>
+  {
+    existingKnownTokens[token.tokenAddress] = <Token>{
+      name: token.tokenAddress,
+      noTransactionsUntilBlockNo: token.noTransactionsUntilBlockNo,
+      createdInBlockNo: token.createdInBlockNo,
+      tokenAddress: token.tokenAddress,
+      tokenOwner: token.tokenOwner
+    };
+  });
+
+  existingKnownTokensList.entries = existingKnownTokens;
+  await fissionAuthState.fission.tokens.addOrUpdate(existingKnownTokensList);
 });
+
 const updateTrigger = new DelayedTrigger(30, async () =>
 {
   myKnownTokensSubject.next(myKnownTokens);
@@ -41,13 +52,13 @@ export async function initMyKnownTokens()
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const circlesAccount = new CirclesAccount(safeState.mySafeAddress);
 
-  let cachedTokens:Token[] = [];
   try
   {
-    cachedTokens = await fissionAuthState.fission.tokens.listItems();
-    if (cachedTokens && cachedTokens.length > 0)
+    const existingKnownTokensList = await fissionAuthState.fission.tokens.tryGetByName("tokens");
+    if (existingKnownTokensList)
     {
-      cachedTokens.forEach(cachedToken =>
+      const existingKnownTokens = existingKnownTokensList.entries;
+      Object.values(existingKnownTokens).forEach(cachedToken =>
       {
         const token = new CirclesToken(safeState.mySafeAddress);
         token.createdInBlockNo = cachedToken.createdInBlockNo;
@@ -57,7 +68,6 @@ export async function initMyKnownTokens()
 
         myKnownTokens[token.tokenOwner] = token;
       });
-
       myKnownTokensSubject.next(myKnownTokens);
     }
   }
