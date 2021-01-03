@@ -11,7 +11,7 @@ export abstract class Directory<TEntity extends Entity>
   private readonly _pathParts: string[];
   private readonly _entityFactory?:(data:string) => TEntity;
 
-  static readonly defaultTimeout = 10000;
+  static readonly defaultTimeout = 30000;
 
   protected get fs(): FileSystem {
     return this._fs;
