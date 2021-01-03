@@ -8,7 +8,7 @@ import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {createPrivateKeyService} from "../../services/createPrivateKeyService";
 import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {text} from "../../../../libs/o-processes/artifacts/text";
@@ -67,7 +67,7 @@ A small amount of the credits you received from your invite will be used to do t
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successFundSafe),
+          actions: setProcessResult(str.successFundSafe),
           target: "hubSignup"
         }
       }
@@ -82,7 +82,7 @@ A small amount of the credits you received from your invite will be used to do t
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successHubSignup),
+          actions: setProcessResult(str.successHubSignup),
           target: "success"
         }
       }

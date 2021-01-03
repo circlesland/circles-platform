@@ -6,7 +6,7 @@ import { ProcessContext } from "../../../../libs/o-processes/interfaces/processC
 import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
 import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
 import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
 import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
@@ -125,7 +125,7 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent |
         },
         onDone: {
           actions: [
-            setResult(str.successMessage)
+            setProcessResult(str.successMessage)
           ],
           target: "stop"
         }

@@ -9,7 +9,7 @@ import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
@@ -101,7 +101,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successConnectSafe),
+          actions: setProcessResult(str.successConnectSafe),
           target: "success"
         }
       }

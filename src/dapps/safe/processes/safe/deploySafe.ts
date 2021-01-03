@@ -11,7 +11,7 @@ import {tryGetDappState} from "../../../../libs/o-os/loader";
 import {OmoSafeState} from "../../manifest";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {deploySafeService} from "../../services/deploySafeService";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
@@ -67,7 +67,7 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successDeploySafe),
+          actions: setProcessResult(str.successDeploySafe),
           target: "success"
         }
       }

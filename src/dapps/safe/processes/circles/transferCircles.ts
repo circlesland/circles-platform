@@ -6,7 +6,7 @@ import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/process
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
 import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
 import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
@@ -120,7 +120,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successMessage),
+          actions: setProcessResult(str.successMessage),
           target: "success"
         }
       }

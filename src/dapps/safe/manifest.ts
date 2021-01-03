@@ -178,7 +178,7 @@ export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {
   isEnabled: true,
   initialize: initialize,
   pages: [{
-    routeParts: ["empowerMe", ":from"],
+    routeParts: ["empowerMe", ":from", ":name"],
     component: AnswerInviteRequest,
     available: [
       (detail) =>

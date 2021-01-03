@@ -6,7 +6,7 @@ import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/process
 import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
 import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
@@ -64,7 +64,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successMessage),
+          actions: setProcessResult(str.successMessage),
           target: "success"
         }
       }

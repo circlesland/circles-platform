@@ -1,4 +1,4 @@
-import { createMachine, send } from "xstate";
+import {assign, createMachine, send} from "xstate";
 import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
@@ -11,13 +11,17 @@ import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAd
 import {inviteCredits} from "../../../../libs/o-processes/artifacts/inviteCredits";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {transferJumpstartXDaiService} from "../../services/transferJumpstartXDaiService";
+import {getForeignProfileService} from "../../services/getForeignProfile";
+import {Profile} from "../../../../libs/o-fission/entities/profile";
 
 export interface JumpstartContext extends ProcessContext {
   data: {
+    foreignProfileFissionName?: ProcessArtifact,
+    foreignProfile?: ProcessArtifact,
     recipient?: ProcessArtifact,
     value?: ProcessArtifact
   }
@@ -35,6 +39,28 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
     idle: {
       on: {
         "process.continue": {
+          target: "getForeignProfile"
+        }
+      }
+    },
+    getForeignProfile: {
+      entry: sendInProgressPrompt(str.loadingForeignProfile),
+      invoke: {
+        id: 'getForeignProfile',
+        src: getForeignProfileService,
+        onError: {
+          actions: setError,
+          target: "error"
+        },
+        onDone: {
+          actions: assign((context, event) => {
+            context.data.foreignProfile  = {
+                key: "foreignProfile",
+                type: "omo.sapien:1:profile",
+                value: <Profile>event.data
+            };
+            return context;
+          }),
           target: "intro"
         }
       }
@@ -43,7 +69,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       entry: sendPrompt((context: JumpstartContext) => {
         return {
           title: str.titleIntro(),
-          nextButtonTitle: "Empower " + context.data.recipient.value.substring(0, 8),
+          nextButtonTitle: `Empower ${context.data.foreignProfile.value.firstName} ${context.data.foreignProfile.value.lastName}`,
           banner: {
             component: JumpstartIntro,
             data: {
@@ -94,7 +120,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successMessage),
+          actions: setProcessResult(str.successMessage),
           target: "success"
         }
       }

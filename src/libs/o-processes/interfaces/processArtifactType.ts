@@ -13,3 +13,4 @@ export type ProcessArtifactType =
   | "ether"
   | "file"
   | "byteString"
+  | "omo.sapien:1:profile"

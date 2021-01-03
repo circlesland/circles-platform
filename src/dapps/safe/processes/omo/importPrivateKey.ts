@@ -11,7 +11,7 @@ import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {importPrivateKeyService} from "../../services/importPrivateKeyService";
 import {fundAccountForSafeCreation} from "./fundAccountForSafeCreation";
 
@@ -69,7 +69,7 @@ const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successImportAccount),
+          actions: setProcessResult(str.successImportAccount),
           target: "success"
         }
       }

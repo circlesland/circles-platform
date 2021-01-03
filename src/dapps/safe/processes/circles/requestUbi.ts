@@ -4,7 +4,7 @@ import { strings } from "../../data/strings";
 import { OmoEvent } from "../../../../libs/o-events/omoEvent";
 import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
 import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setResult } from "../../../../libs/o-processes/actions/setResult";
+import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
@@ -32,7 +32,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successMessage),
+          actions: setProcessResult(str.successMessage),
           target: "success"
         }
       }

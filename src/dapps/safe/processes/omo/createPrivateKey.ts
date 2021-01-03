@@ -8,7 +8,7 @@ import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/s
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setResult} from "../../../../libs/o-processes/actions/setResult";
+import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {RunProcess} from "../../../../libs/o-events/runProcess";
 import {createPrivateKeyService} from "../../services/createPrivateKeyService";
@@ -41,7 +41,7 @@ const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>
           target: "error"
         },
         onDone: {
-          actions: setResult(str.successCreatePrivateKey),
+          actions: setProcessResult(str.successCreatePrivateKey),
           target: "exportPassphrase"
         }
       }

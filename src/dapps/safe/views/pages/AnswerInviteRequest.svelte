@@ -9,6 +9,7 @@
 
   export let params: {
     from?:string
+    name?:string
   } = {};
 
   onMount(() => {
@@ -22,6 +23,7 @@
       push("#/omosapien/profile");
     }
 
+// https://0.0.0.0:5000/#/safe/empowerMe/1234/hansi1599
     window.o.publishEvent(new CloseModal());
     setTimeout(() => {
       window.o.publishEvent(new RunProcess(jumpstart, async (context:JumpstartContext) => {
@@ -36,6 +38,12 @@
           type: "inviteCredits",
           isReadonly: true,
           value: 1
+        };
+        context.data.foreignProfileFissionName =  {
+          key: "foreignProfileFissionName",
+          type: "string",
+          isReadonly: true,
+          value: params.name
         };
         return context;
       }));
