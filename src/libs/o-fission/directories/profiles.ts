@@ -25,6 +25,9 @@ export class Profiles extends Directory<Profile>
     }
 
     // Add or update a public version of 'me' to my public directory
-    await this.fs.add("public/Apps/MamaOmo/OmoSapien/profiles/me", JSON.stringify(entity));
+    if (entity.name === "me")
+    {
+      await this.fs.add("public/Apps/MamaOmo/OmoSapien/profiles/me", JSON.stringify(entity));
+    }
   }
 }
