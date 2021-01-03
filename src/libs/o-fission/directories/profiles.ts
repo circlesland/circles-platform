@@ -9,10 +9,6 @@ export class Profiles extends Directory<Profile>
   }
 
   async tryGetMyProfile(): Promise<Profile | null> {
-    /*
-    const samuel = await this.fs.get("/hansi1599/public/Apps/MamaOmo/OmoSapien/profiles");
-    console.log("samuel:", samuel);
-    */
     return await this.tryGetByName("me");
   }
 

@@ -39,13 +39,15 @@ export abstract class Directory<TEntity extends Entity>
   }
 
   async ensureDirectoryExists(pathParts?: string[]): Promise<void> {
-    await withTimeout(`ensureDirectoryExists(${this.getPath(pathParts)})`, async () => {
-      if (!await this.exists(pathParts)) {
-        await this.fs.mkdir(this.getPath(pathParts));
-      }
-    }, Directory.defaultTimeout);
+      await withTimeout(`ensureDirectoryExists(${this.getPath(pathParts)})`, async () =>
+      {
+        if (!await this.exists(pathParts))
+        {
+          await this.fs.mkdir(this.getPath(pathParts));
+        }
+      }, Directory.defaultTimeout);
 
-    await this.fs.publish();
+      await this.fs.publish();
   }
 
   async listNames(): Promise<string[]> {

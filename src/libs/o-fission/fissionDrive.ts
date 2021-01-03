@@ -2,9 +2,8 @@ import FileSystem from "webnative/fs/filesystem";
 import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
 import { AuthSucceeded, Continuation } from "webnative";
-import { Tokens } from "./directories/tokens";
 import {CirclesTransactions} from "./directories/circlesTransactions";
-import {asyncWaterfall} from "webnative/common";
+import {CirclesTokens} from "./directories/circlesTokens";
 
 export class FissionDrive
 {
@@ -30,10 +29,10 @@ export class FissionDrive
   }
   private readonly _transactions: CirclesTransactions;
 
-  get tokens(): Tokens {
+  get tokens(): CirclesTokens {
     return this._tokens;
   }
-  private readonly _tokens: Tokens;
+  private readonly _tokens: CirclesTokens;
 
 
   constructor(fissionAuth: AuthSucceeded | Continuation) {
@@ -43,7 +42,7 @@ export class FissionDrive
     this._profiles = new Profiles(this._fs);
     this._keys = new Keys(this._fs);
     this._transactions = new CirclesTransactions(this._fs);
-    this._tokens = new Tokens(this._fs);
+    this._tokens = new CirclesTokens(this._fs);
   }
 }
 
