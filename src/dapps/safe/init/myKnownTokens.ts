@@ -16,6 +16,8 @@ const myKnownTokens: { [safeAddress: string]: CirclesToken } = {};
 
 const storeToCacheTrigger = new DelayedTrigger(500, async () =>
 {
+
+
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const existingKnownTokensList = (await fissionAuthState.fission.tokens.tryGetByName("tokens")) ?? <CachedTokens>{
     name: "tokens",
