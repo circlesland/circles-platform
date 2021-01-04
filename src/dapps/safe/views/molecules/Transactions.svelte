@@ -11,7 +11,7 @@
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import { tryGetDappState } from "../../../../libs/o-os/loader";
-  import { BN } from "ethereumjs-util";
+  import {BN, bnToHex} from "ethereumjs-util";
   import { config } from "../../../../libs/o-circles-protocol/config";
   import { OmoSafeState } from "../../manifest";
   import { CirclesTransaction } from "../../../../libs/o-circles-protocol/model/circlesTransaction";
@@ -26,6 +26,13 @@
 
   function formatBN(bn: BN) {
     return parseFloat(web3.utils.fromWei(bn)).toFixed(2);
+  }
+
+  function formatBN2(bn: BN)
+  {
+    const digits = parseFloat(web3.utils.fromWei(bn)).toFixed(0).length;
+    const bnStr = bn.toString();
+    return bnStr.substring(0, digits) + "." + bnStr.substring(digits);
   }
 
   function init() {
@@ -75,6 +82,8 @@
       label: "Your Safe Transactions",
     },
   };
+
+
 </script>
 
 <div>
@@ -180,7 +189,7 @@
                 <div class="max-w-full text-gray-500 ">
                   Date:
                   <span class=" text-primary">
-                    {dayjs(t.timestamp).format('YYYY D. MMM HH:MM')}</span>
+                    {dayjs(new Date(t.timestamp * 1000)).format('YYYY D. MMM HH:MM')}</span>
                 </div>
                 <div>
                   Sender:
@@ -199,12 +208,12 @@
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount in circles:
-                  <span class=" text-primary">{t.amount.toString()} CRC</span>
+                  <span class=" text-primary">{formatBN2(t.amount)} CRC</span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount in ⦿:
                   <span
-                    class=" text-primary">{t.amount.mul(new BN(3)).toString()}
+                    class=" text-primary">{formatBN2(t.amount.mul(new BN(3)))}
                     ⦿</span>
                 </div>
               </div>
