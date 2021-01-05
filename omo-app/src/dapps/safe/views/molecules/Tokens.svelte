@@ -174,6 +174,11 @@
       listItem.data.title = token.tokenOwner.slice(0, 8);
     }
 
+    if (!listItem.data.image)
+    {
+      listItem.data.image = "https://avatars.dicebear.com/api/avataaars/" + token.tokenOwner + ".svg"
+    }
+
     return listItem;
   }
 

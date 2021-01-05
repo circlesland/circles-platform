@@ -1,4 +1,36 @@
 import {Profile} from "../entities/profile";
+import {tryGetDappState} from "../../o-os/loader";
+import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
+import {IPFS} from "webnative/ipfs";
+
+export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
+{
+  console.log("ipfsCat:", cid)
+  const chunks = []
+  for await (const chunk of ipfs.cat(cid)) {
+    console.log("ipfsCat chunk no.:", chunks.length)
+    if (Buffer.isBuffer(chunk))
+      chunks.push(chunk)
+    else
+      chunks.push(Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks);
+}
+
+export const ipfsGetFile = async (ipfs:IPFS, cid:string): Promise<Buffer> =>
+{
+  console.log("ipfsGetFile", cid);
+  const fileContentCid = ipfs.ls(cid);
+
+  for await (const fileCid of fileContentCid)
+  {
+    if (fileCid.name === "userland")
+    {
+      return await ipfsCat(ipfs, fileCid.cid.toString())
+    }
+  }
+  return null;
+}
 
 export class ForeignProfile
 {
@@ -10,6 +42,8 @@ export class ForeignProfile
     // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
     try
     {
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+
       const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUsername}.fission.name`;
       const dnsLinkResult = await fetch(dnsLink);
       const dnsLinkResultObj = await dnsLinkResult.json();
@@ -19,47 +53,30 @@ export class ForeignProfile
         return;
       }
 
-      const otherProfilePath = `https://ipfs.io/${dnsLinkResultObj.Path}/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland/me/userland`;
-      const otherProfileData = await fetch(otherProfilePath);
-      const otherProfileObj = await otherProfileData.json();
-      if (!otherProfileObj)
-        return null;
+      let ipfsCid = dnsLinkResultObj.Path;
+      ipfsCid = ipfsCid.replace("/ipfs/", "");
+      ipfsCid = ipfsCid.replace("/public", "");
+      ipfsCid = ipfsCid + "/public/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland";
 
-      if (loadAvatar)
+      const ipfs = await fissionAuthState.fission._fs.getIpfs();
+      const dir = await ipfs.ls(ipfsCid);
+
+      let otherProfileObj;
+      let otherProfileAvatar;
+
+      for await (const element of dir)
       {
-        const otherProfileAvatarUrl = `https://ipfs.io/${dnsLinkResultObj.Path}/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland/me.png/userland`;
-        try
+        if (element.name === "me")
         {
-          const otherProfileAvatarData = await fetch(otherProfileAvatarUrl);
-          if (otherProfileAvatarData.status == 404)
-          {
-            return {
-              profile: {
-                name: "",
-                ...otherProfileObj
-              },
-              avatar: null
-            };
-          }
-          if (otherProfileAvatarData.status != 200)
-          {
-            throw new Error("Got a non 200 response for url " + otherProfileAvatarUrl)
-          }
-
-          const blob = await otherProfileAvatarData.blob();
-          const buffer = Buffer.from(blob);
-
-          return {
-            profile: {
-              name: "",
-              ...otherProfileObj
-            },
-            avatar: `data:image/png;base64,${buffer.toString('base64')}`
-          };
+          const profileBuffer = await ipfsGetFile(ipfs, element.cid.toString());
+          otherProfileObj = JSON.parse(profileBuffer.toString());
+          //console.log("otherProfileObj", otherProfileObj)
         }
-        catch (e)
+        if (element.name === "me.png")
         {
-          console.warn("Couldn't load the avatar of '" + fissionUsername + "'");
+          const avatarBuffer = await ipfsGetFile(ipfs, element.cid.toString());
+          otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
+          //console.log("otherProfileAvatar", otherProfileAvatar)
         }
       }
 
@@ -68,8 +85,9 @@ export class ForeignProfile
           name: "",
           ...otherProfileObj
         },
-        avatar: null
+        avatar: otherProfileAvatar
       };
+
     }
     catch (e)
     {
