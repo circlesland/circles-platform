@@ -37,7 +37,6 @@ const augmentCirclesProfiles = new DelayedTrigger(30, () => __awaiter(void 0, vo
         });
     }
     myContactsSubject.next(Object.values(myContacts));
-    augmentOmoProfiles.trigger();
 }));
 const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
@@ -66,6 +65,7 @@ const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0
 }));
 const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
     augmentCirclesProfiles.trigger();
+    augmentOmoProfiles.trigger();
     myContactsSubject.next(Object.values(myContacts));
 }));
 export function initMyContacts() {

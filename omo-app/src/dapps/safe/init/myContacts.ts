@@ -42,7 +42,6 @@ const augmentCirclesProfiles = new DelayedTrigger(30, async () =>
   }
 
   myContactsSubject.next(Object.values(myContacts));
-  augmentOmoProfiles.trigger();
 });
 
 const augmentOmoProfiles = new DelayedTrigger(30, async () =>
@@ -79,6 +78,7 @@ const augmentOmoProfiles = new DelayedTrigger(30, async () =>
 const updateTrigger = new DelayedTrigger(30, async () =>
 {
   augmentCirclesProfiles.trigger();
+  augmentOmoProfiles.trigger();
   myContactsSubject.next(Object.values(myContacts));
 });
 
