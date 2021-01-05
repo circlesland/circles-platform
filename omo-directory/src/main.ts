@@ -66,52 +66,54 @@ router.post('/signup/:fissionName', async (request:Request,response:Response) =>
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "X-Requested-With");
     // 1. Request the fission dns link
-    try
-    {
-        const dnsLink = `https://ipfs.io/api/v0/dns?arg=${request.params.fissionName}.fission.name`;
-        console.log("loading", dnsLink);
-        const dnsLinkResult = await fetch(dnsLink);
-        const dnsLinkResultObj = await dnsLinkResult.json();
-
-        if (!dnsLinkResultObj || !dnsLinkResultObj.Path)
+    new Promise(async () => {
+        try
         {
-            return;
+            const dnsLink = `https://ipfs.io/api/v0/dns?arg=${request.params.fissionName}.fission.name`;
+            console.log("loading", dnsLink);
+            const dnsLinkResult = await fetch(dnsLink);
+            const dnsLinkResultObj = await dnsLinkResult.json();
+
+            if (!dnsLinkResultObj || !dnsLinkResultObj.Path)
+            {
+                return;
+            }
+
+            const otherProfilePath = `https://ipfs.io/${dnsLinkResultObj.Path}/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland/me/userland`;
+            console.log("loading", otherProfilePath);
+            const otherProfileData = await fetch(otherProfilePath);
+            const otherProfileObj = await otherProfileData.json();
+
+            const avatar = otherProfileObj.avatar && otherProfileObj.avatar.length > 512
+                ? null
+                : otherProfileObj.avatar
+
+            directory[request.params.fissionName] = {
+                firstName: otherProfileObj.firstName,
+                lastName: otherProfileObj.lastName,
+                avatarUrl: avatar,
+                circlesSafe: otherProfileObj.circlesAddress,
+                fissionName: request.params.fissionName
+            };
+
+            const cid = await ipfs.add(JSON.stringify(directory));
+            await ipfs.pin.add(cid.cid);
+
+            await fs.writeFile('lastCid.cid', cid.cid.toString(), () => {
+                console.log("Wrote last cid:", cid.cid.toString());
+            });
+
+            lastCid = cid.cid;
         }
+        catch (e)
+        {
+            console.warn("Couldn't load a foreign profile:");
+            console.warn(e);
+            return null;
+        }
+    });
 
-        const otherProfilePath = `https://ipfs.io/${dnsLinkResultObj.Path}/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland/me/userland`;
-        console.log("loading", otherProfilePath);
-        const otherProfileData = await fetch(otherProfilePath);
-        const otherProfileObj = await otherProfileData.json();
-
-        const avatar = otherProfileObj.avatar && otherProfileObj.avatar.length > 512
-            ? null
-            : otherProfileObj.avatar
-
-        directory[request.params.fissionName] = {
-            firstName: otherProfileObj.firstName,
-            lastName: otherProfileObj.lastName,
-            avatarUrl: avatar,
-            circlesSafe: otherProfileObj.circlesAddress,
-            fissionName: request.params.fissionName
-        };
-
-        const cid = await ipfs.add(JSON.stringify(directory));
-        await ipfs.pin.add(cid.cid);
-
-        await fs.writeFile('lastCid.cid', cid.cid.toString(), () => {
-            console.log("Wrote last cid:", cid.cid.toString());
-        });
-
-        lastCid = cid.cid;
-    }
-    catch (e)
-    {
-        console.warn("Couldn't load a foreign profile:");
-        console.warn(e);
-        return null;
-    }
-
-    response.send(lastCid)
+    response.send("Pending");
 });
 
 // add router in the Express app.
