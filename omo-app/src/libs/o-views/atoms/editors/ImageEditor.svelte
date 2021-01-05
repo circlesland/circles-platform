@@ -31,19 +31,27 @@
   let cropper;
 
   onMount(() => {
-    cropper = new Cropper({
-      onChange: function(crop) {
-        croppedImageData = cropper.getCroppedImage();
-        processArtifact.value = croppedImageData;
-        processArtifact.isValid = true;
-        dispatch("validated", processArtifact.isValid);
-      }
-    });
-    cropper.render("#crop");
-    cropper.setWidth(512);
-    cropper.setHeight(512);
+    if (!processArtifact.isReadonly)
+    {
+      cropper = new Cropper({
+        onChange: function (crop)
+        {
+          croppedImageData = cropper.getCroppedImage();
+          processArtifact.value = croppedImageData;
+          processArtifact.isValid = true;
+          dispatch("validated", processArtifact.isValid);
+        }
+      });
+      cropper.render("#crop");
+      cropper.setWidth(512);
+      cropper.setHeight(512);
+    }
   });
 
 </script>
+{#if !processArtifact.isReadonly}
 <div id="crop" ></div>
-<input bind:files type="file" accept="image/*" />
+  <input bind:files type="file" accept="image/*" />
+{:else}
+  <img src={processArtifact.value} />
+{/if}
