@@ -31,6 +31,8 @@ export class Profiles extends Directory<Profile>
   async addOrUpdateMyAvatar(imageData:Buffer, publish:boolean)
   {
     await this.fs.add(this.getPath(["me.png"]), imageData);
+    await this.fs.add("public/Apps/MamaOmo/OmoSapien/profiles/me.png", imageData);
+
     if (publish)
     {
       await this.fs.publish();

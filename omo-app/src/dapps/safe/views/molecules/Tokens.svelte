@@ -134,23 +134,48 @@
 
   function mapToListItem(token:CirclesToken)
   {
-    const image = contacts[token.tokenOwner]?.circlesProfile?.avatarUrl
-      ?? "https://avatars.dicebear.com/api/avataaars/" + token.tokenOwner + ".svg";
-
-    const title = contacts[token.tokenOwner]?.circlesProfile?.username
-      ??  token.tokenAddress.slice(0, 8);
-
     const balance = token.balance ? parseFloat(web3.utils.fromWei(token.balance)).toFixed(2) : "0";
-    return {
+    const listItem:{
       data: {
-        image:image,
-          balanceBN: new BN("0"),
-          title: title,
-          description: token.tokenOwner,
-          balance: balance,
-          subtitle: "time in ⦿",
+        image:string,
+        balanceBN: BN,
+        title: string,
+        description: string,
+        balance: string,
+        subtitle: "time in ⦿",
+      }
+    } = {
+      data: {
+        image: "",
+        balanceBN: new BN("0"),
+        title: "",
+        description: token.tokenOwner,
+        balance: balance,
+        subtitle: "time in ⦿",
       },
+    };
+
+    const contact = contacts[token.tokenOwner];
+    console.log(contact);
+    if (contact && contact.omoProfile)
+    {
+      if (contact.omoProfile.avatar)
+      {
+        listItem.data.image = contact.omoProfile.avatar;
+      }
+      listItem.data.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`
     }
+    else if (contact && contact.circlesProfile)
+    {
+      listItem.data.image = contact.circlesProfile?.avatarUrl;
+      listItem.data.title = contact.circlesProfile.username;
+    }
+    else
+    {
+      listItem.data.title = token.tokenOwner.slice(0, 8);
+    }
+
+    return listItem;
   }
 
   onDestroy(() => {

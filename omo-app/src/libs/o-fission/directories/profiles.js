@@ -35,6 +35,7 @@ export class Profiles extends Directory {
     addOrUpdateMyAvatar(imageData, publish) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.fs.add(this.getPath(["me.png"]), imageData);
+            yield this.fs.add("public/Apps/MamaOmo/OmoSapien/profiles/me.png", imageData);
             if (publish) {
                 yield this.fs.publish();
             }

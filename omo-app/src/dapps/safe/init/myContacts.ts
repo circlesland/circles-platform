@@ -8,9 +8,8 @@ import {CirclesProfile} from "../../../libs/o-circles-protocol/model/circlesProf
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {OmoSapienState} from "../../omosapien/manifest";
-import {Profile} from "../../../libs/o-fission/entities/profile";
 import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
-import {cat} from "webnative/ipfs";
+import {FissionAuthState} from "../../fissionauth/manifest";
 
 const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
 const blockIndex = new BlockIndex();
@@ -19,6 +18,7 @@ const circlesProfiles:{[safeAddress:string]:CirclesProfile} = {};
 
 const updateTrigger = new DelayedTrigger(30, async () =>
 {
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
@@ -33,13 +33,22 @@ const updateTrigger = new DelayedTrigger(30, async () =>
     }).join("&");
 
   await Promise.all(Object.values(myContacts)
-    .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress]
-         && o.safeAddress != safeState.mySafeAddress)
+    .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
     .map(async o => {
       const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
       try
       {
-        o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+        if (o.safeAddress == safeState.mySafeAddress)
+        {
+          o.omoProfile = {
+            profile: omosapienState.myProfile,
+            avatar: await fissionAuthState.fission.profiles.tryGetMyAvatar()
+          };
+        }
+        else
+        {
+          o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+        }
       } catch (e)
       {
         console.warn("An error occurred while loading the fission contacts:", e);

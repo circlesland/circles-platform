@@ -18,6 +18,7 @@ const blockIndex = new BlockIndex();
 const myContacts = {};
 const circlesProfiles = {};
 const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
+    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
     const omosapienState = tryGetDappState("omo.sapien:1");
     const safeState = tryGetDappState("omo.safe:1");
     const circlesApiUrls = Object.values(myContacts)
@@ -30,12 +31,19 @@ const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, voi
         return "address[]=" + o.safeAddress;
     }).join("&");
     yield Promise.all(Object.values(myContacts)
-        .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress]
-        && o.safeAddress != safeState.mySafeAddress)
+        .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
         .map((o) => __awaiter(void 0, void 0, void 0, function* () {
         const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
         try {
-            o.omoProfile = yield ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+            if (o.safeAddress == safeState.mySafeAddress) {
+                o.omoProfile = {
+                    profile: omosapienState.myProfile,
+                    avatar: yield fissionAuthState.fission.profiles.tryGetMyAvatar()
+                };
+            }
+            else {
+                o.omoProfile = yield ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+            }
         }
         catch (e) {
             console.warn("An error occurred while loading the fission contacts:", e);

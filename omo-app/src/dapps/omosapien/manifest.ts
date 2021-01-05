@@ -53,23 +53,31 @@ async function tryInitMyProfile() {
 async function tryInitOmoDirectory()
 {
   const cid = await fetch("https://directory.omo.earth/directory");
-  const directory:Directory = await (await fetch("https://ipfs.io/ipfs/" + (await cid.text()))).json();
-  const lookupDirectory:LookupDirectory = {
-    byFissionName: directory,
-    byCirclesSafe: {}
-  };
+  try
+  {
+    const directory: Directory = await (await fetch("https://ipfs.io/ipfs/" + (await cid.text()))).json();
+    const lookupDirectory: LookupDirectory = {
+      byFissionName: directory,
+      byCirclesSafe: {}
+    };
 
-  Object.values(directory).forEach((o:Entry) => {
-    if (!o.circlesSafe)
+    Object.values(directory).forEach((o: Entry) =>
     {
-      return;
-    }
+      if (!o.circlesSafe)
+      {
+        return;
+      }
 
-    lookupDirectory.byCirclesSafe[o.circlesSafe] = o;
-  });
+      lookupDirectory.byCirclesSafe[o.circlesSafe] = o;
+    });
 
-  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  omosapienState.directory = lookupDirectory;
+    const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+    omosapienState.directory = lookupDirectory;
+  }
+  catch (e)
+  {
+    console.warn(e);
+  }
 }
 
 /**

@@ -42,4 +42,10 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
     current.myProfile = profile;
     return current;
   });
+
+  const response = await fetch("https://directory.omo.earth/signup/" + fissionUsername, {
+    method: "POST"
+  });
+
+  console.log(response);
 }

@@ -27,19 +27,24 @@ function tryInitMyProfile() {
 function tryInitOmoDirectory() {
     return __awaiter(this, void 0, void 0, function* () {
         const cid = yield fetch("https://directory.omo.earth/directory");
-        const directory = yield (yield fetch("https://ipfs.io/ipfs/" + (yield cid.text()))).json();
-        const lookupDirectory = {
-            byFissionName: directory,
-            byCirclesSafe: {}
-        };
-        Object.values(directory).forEach((o) => {
-            if (!o.circlesSafe) {
-                return;
-            }
-            lookupDirectory.byCirclesSafe[o.circlesSafe] = o;
-        });
-        const omosapienState = tryGetDappState("omo.sapien:1");
-        omosapienState.directory = lookupDirectory;
+        try {
+            const directory = yield (yield fetch("https://ipfs.io/ipfs/" + (yield cid.text()))).json();
+            const lookupDirectory = {
+                byFissionName: directory,
+                byCirclesSafe: {}
+            };
+            Object.values(directory).forEach((o) => {
+                if (!o.circlesSafe) {
+                    return;
+                }
+                lookupDirectory.byCirclesSafe[o.circlesSafe] = o;
+            });
+            const omosapienState = tryGetDappState("omo.sapien:1");
+            omosapienState.directory = lookupDirectory;
+        }
+        catch (e) {
+            console.warn(e);
+        }
     });
 }
 /**

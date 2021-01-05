@@ -38,4 +38,8 @@ export const addOrUpdateMyProfileService = (context) => __awaiter(void 0, void 0
         current.myProfile = profile;
         return current;
     });
+    const response = yield fetch("https://directory.omo.earth/signup/" + fissionUsername, {
+        method: "POST"
+    });
+    console.log(response);
 });
