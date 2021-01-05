@@ -38,7 +38,7 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
+*/**/node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -105,16 +105,17 @@ dist
 .tern-port
 
 # Svelte build
-/public/build
-/public/index.css
+omo-app/public/build
+omo-app/public/index.css
 
 .history
 .DS_Store
 
-/build/
+omo-app/build/
 
 bundle.js
 bundle.css
 bundle.js.LICENSE.txt
 
 fission.yaml
+/omo-directory/node_modules/

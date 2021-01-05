@@ -1,0 +1,22 @@
+{
+  "name": "@omo/directory",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "omo.earth",
+  "license": "LGPL-3.0-or-later",
+  "scripts": {
+    "run": "node -r dist/main.js"
+  },
+  "devDependencies": {
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.2"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.9",
+    "cors": "^2.8.5",
+    "cross-fetch": "^3.0.6",
+    "express": "^4.17.1",
+    "ipfs": "^0.52.3"
+  }
+}
