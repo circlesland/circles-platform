@@ -29,7 +29,7 @@
   import {tryGetDappState} from "../../o-os/loader";
   import {OmoSafeState} from "../../../dapps/safe/manifest";
 
-
+  export let showActions:boolean = true;
   export let data = {
     image: "",
     title: "",
@@ -44,7 +44,7 @@
   };
 
   $:{
-    if (data)
+    if (data && showActions)
     {
       if (data.detail.trust.in > 0 && data.detail.trust.out === null)
         data.actions = ["trust", "send"];
@@ -55,6 +55,10 @@
       if (data.detail.trust.out == 0)
         data.actions = ["trust"];
     }
+    if (data && !showActions)
+    {
+      data.actions = [];
+    }
   }
 
   let openDetail: boolean = false;
@@ -63,8 +67,8 @@
     openDetail = !openDetail;
   }
 
-  async function runTransferCircles(recipientAddress: Address) {
-
+  async function runTransferCircles(recipientAddress: Address)
+  {
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
     const myBalance = safeState.myBalances.getValue().map(o => parseFloat(o.balance)).reduce((p,c) => p + c, 0).toFixed(2);
 

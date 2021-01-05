@@ -6,6 +6,7 @@
   import {OmoSafeState} from "../../../../dapps/safe/manifest";
   import {Contact} from "../../../o-circles-protocol/model/contact";
   import Typeahead from "../svelte-typeahead/Typeahead.svelte";
+  import FriendItem from "../../molecules/FriendItem.svelte";
 
   export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();
@@ -44,7 +45,7 @@
 
   let lookupContacts: Contact[] = [];
   let contactsBySafeAddress: {
-    [safeAddress:string]: Contact
+    [safeAddress: string]: Contact
   };
 
   onMount(() =>
@@ -53,7 +54,8 @@
     safeState.myContacts.subscribe(contacts =>
     {
       lookupContacts = contacts;
-      contacts.forEach(contact => {
+      contacts.forEach(contact =>
+      {
         if (!contact.safeAddress)
         {
           return;
@@ -68,35 +70,6 @@
 
     validate();
   });
-
-  function getDisplayName(itemOrAddress: Contact|string)
-  {
-    let item:Contact = null;
-
-    if (typeof itemOrAddress === "string")
-    {
-      item = contactsBySafeAddress[itemOrAddress];
-      if (!item)
-      {
-        return itemOrAddress;
-      }
-    }
-    else
-    {
-      item = itemOrAddress;
-    }
-
-    if (item.omoProfile && item.omoProfile.profile)
-    {
-      return item.omoProfile.profile.firstName + " " + item.omoProfile.profile.lastName;
-    }
-    if (item.circlesProfile && item.circlesProfile.username)
-    {
-      return item.circlesProfile.username;
-    }
-
-    return item.safeAddress;
-  }
 
   function extractSearchKey(item: Contact)
   {
@@ -114,6 +87,71 @@
     searchKey += item.safeAddress;
 
     return searchKey;
+  }
+
+  function mapToFriendItem(contactOrAddress: Contact | string)
+  {
+    let contact: Contact = null;
+
+    if (typeof contactOrAddress === "string")
+    {
+      contact = contactsBySafeAddress[contactOrAddress];
+      if (!contact)
+      {
+        return contactOrAddress;
+      }
+    }
+    else
+    {
+      contact = contactOrAddress;
+    }
+
+    const listItem:{
+      image: string,
+      title: string,
+      detail: {
+        address: string,
+        trust: {
+          in: number
+          out: number
+        },
+      },
+      actions: string[]
+    } = {};
+
+    if (contact.omoProfile)
+    {
+      if (contact.omoProfile.avatar)
+      {
+        listItem.image = contact.omoProfile.avatar;
+      }
+      listItem.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`
+    }
+    else if (contact.circlesProfile)
+    {
+      listItem.image = contact.circlesProfile?.avatarUrl;
+      listItem.title = contact.circlesProfile.username;
+    }
+    else
+    {
+      listItem.title = contact.safeAddress.slice(0, 8);
+    }
+
+    if (!listItem.image)
+    {
+      listItem.image = "https://avatars.dicebear.com/api/avataaars/" + contact.safeAddress + ".svg"
+    }
+
+    listItem.detail = {
+      address: contact.safeAddress,
+      trust: {
+        in: contact.trust.in,
+        out: contact.trust.out
+      }
+    };
+
+    listItem.actions = [];
+    return listItem;
   }
 </script>
 
@@ -140,7 +178,7 @@
           hideLabel
           data={lookupContacts}
           extract={extractSearchKey}
-          format={getDisplayName}
+          format={(original) => mapToFriendItem(original).detail.address}
           let:result
           let:index
           bind:value={processArtifact.value}
@@ -158,36 +196,13 @@
             validate();
           }}">
           <div>
-            {getDisplayName(result.original)}<br/>
+            {mapToFriendItem(result.original).title}<br/>
             ({result.original.safeAddress})
           </div>
         </Typeahead>
       </div>
     {:else}
-      {#if getDisplayName(processArtifact.value) != processArtifact.value}
-        Address: {processArtifact.value}<br/> <!-- @Samuel: Kannst Du dann stylen ;) -->
-        <input
-          readonly={processArtifact.isReadonly ? 'readonly' : ''}
-          class:border-action={processArtifact.isValid}
-          class:border-danger={!processArtifact.isValid}
-          placeholder={processArtifact.placeholder ? processArtifact.placeholder : '0x123XMaMaXOm0...'}
-          type="text"
-          minlength="42"
-          maxlength="42"
-          value={getDisplayName(processArtifact.value)}
-          class="w-full p-3 mb-2 text-xl bg-transparent border-2 border-gray-300 rounded-lg outline-none text-primary" />
-      {:else}
-        <input
-          readonly={processArtifact.isReadonly ? 'readonly' : ''}
-          class:border-action={processArtifact.isValid}
-          class:border-danger={!processArtifact.isValid}
-          placeholder={processArtifact.placeholder ? processArtifact.placeholder : '0x123XMaMaXOm0...'}
-          type="text"
-          minlength="42"
-          maxlength="42"
-          value={processArtifact.value}
-          class="w-full p-3 mb-2 {getDisplayName(processArtifact.value) == processArtifact.value ? 'text-xl' : 'text'} bg-transparent border-2 border-gray-300 rounded-lg outline-none text-primary" />
-      {/if}
+      <FriendItem showActions={false} data={mapToFriendItem(processArtifact.value)} />
     {/if}
   </div>
 {/if}
