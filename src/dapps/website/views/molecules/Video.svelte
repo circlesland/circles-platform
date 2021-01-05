@@ -4,11 +4,10 @@
 </script>
 
 <section
-  class="flex flex-col items-center justify-center w-full h-full font-sans text-center bg-cover"
-  style="background:url(./images/video.jpg) no-repeat
-  center;">
+  class="flex flex-col items-center justify-center w-full font-sans text-center bg-cover"
+  style="background:url(./images/video.jpg) no-repeat center;">
   <div
-    class="flex flex-col items-center justify-center w-full h-full text-center bg-cover opacity-50 bg-dark">
+    class="flex flex-col items-center justify-center w-full h-full py-32 text-center bg-cover opacity-50 bg-dark">
     <div
       class="flex items-center justify-center w-24 h-24 mb-8 bg-white rounded-full text-primary hover:bg-gray-200">
       <Icon icon={faPlay} class="text-xl" />

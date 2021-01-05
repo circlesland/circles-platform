@@ -167,7 +167,7 @@
   </div>
   <div
     bind:this={contentElement}
-    style="margin:0 auto; max-width:1200px; height: {contentHeight}px; overflow: auto; margin-bottom: {showActionBar && footerElement ? footerElement.clientHeight : 0}px;">
+    style="margin:0 auto; height: {contentHeight}px; overflow: auto; margin-bottom: {showActionBar && footerElement ? footerElement.clientHeight : 0}px;">
     <Router
       {routes}
       on:conditionsFailed={conditionsFailed}
