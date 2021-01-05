@@ -145,8 +145,12 @@
           let:index
           bind:value={processArtifact.value}
           on:select="{(e) => {
-            console.log(e);
-            processArtifact.value = e.detail.selected.safeAddress;
+            if (e.detail.selected.safeAddress)
+            {
+              processArtifact.value = e.detail.selected.safeAddress;
+            } else {
+              processArtifact.value = e.detail.selected;
+            }
             validate();
           }}"
           on:clear="{() => {

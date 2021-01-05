@@ -40,7 +40,7 @@
   });
 
   afterUpdate(() => {
-    if (value.length > 0 && value !== prevValue) {
+    if (value && value.length > 0 && value !== prevValue) {
       if (debounce > 0) {
         debounced(() => dispatch("type", value));
       } else {
@@ -48,7 +48,7 @@
       }
     }
 
-    if (value.length === 0 && prevValue.length > 0) dispatch("clear");
+    if (value && value.length === 0 && prevValue.length > 0) dispatch("clear");
     prevValue = value;
   });
 </script>

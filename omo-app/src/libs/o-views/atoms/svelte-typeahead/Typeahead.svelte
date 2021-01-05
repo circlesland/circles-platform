@@ -2,6 +2,8 @@
   /**
    * Original by: https://github.com/metonym/svelte-typeahead
    */
+  import Search from "../svelte-search/Search.svelte";
+
   /**
    * @typedef {string | number | Record<string, any>} Item
    * @typedef {{ original: Item; index: number; score: number; string: string; }} FuzzyResult
@@ -30,8 +32,7 @@
   export let focusAfterSelect = false;
 
   import fuzzy from "fuzzy";
-  import Search from "svelte-search";
-  import { tick, createEventDispatcher, afterUpdate } from "svelte";
+  import {tick, createEventDispatcher, afterUpdate} from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -54,18 +55,25 @@
   });
 
   async function select() {
-    value = format(results[selectedIndex].original);
-    dispatch("select", { selectedIndex, selected: results[selectedIndex].original });
+    if (results.length > 0) {
+      value = format(results[selectedIndex].original);
+      dispatch("select", {selectedIndex, selected: results[selectedIndex].original});
+    } else {
+      dispatch("select", {selectedIndex, selected: value});
+    }
     await tick();
     if (focusAfterSelect) searchRef.focus();
     hideDropdown = true;
   }
 
-  $: options = { pre: "<mark>", post: "</mark>", extract };
+  $: options = {pre: "<mark>", post: "</mark>", extract};
   $: results = fuzzy
     .filter(value, data, options)
-    .filter(({ score }) => score > 0);
+    .filter(({score}) => score > 0);
   $: resultsId = results.map((result) => extract(result.original)).join("");
+  $: {
+    console.log("value: ", value);
+  }
 </script>
 
 <style>
