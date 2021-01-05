@@ -6,7 +6,7 @@ import { faPeopleCarry } from "@fortawesome/free-solid-svg-icons";
 import { tryGetDappState } from "../../libs/o-os/loader";
 export const omomarket = {
     id: "omo.market:1",
-    dependencies: [],
+    dependencies: ["omo.sapien:1"],
     icon: faPeopleCarry,
     title: "OmoMarket",
     routeParts: ["omomarket"],

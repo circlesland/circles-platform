@@ -4,6 +4,7 @@ import { Keys } from "./directories/keys";
 import { AuthSucceeded, Continuation } from "libs/webnative";
 import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
+import { Offers } from "./directories/offers";
 
 export class FissionDrive
 {
@@ -34,8 +35,13 @@ export class FissionDrive
   }
   private readonly _tokens: CirclesTokens;
 
+  get offers(): Offers {
+    return this._offers;
+  }
+  private readonly _offers: Offers;
 
-  constructor(fissionAuth: AuthSucceeded | Continuation) {
+  constructor(fissionAuth: AuthSucceeded | Continuation)
+  {
     this._fissionAuth = fissionAuth;
     this._fs = fissionAuth.fs;
 
@@ -43,6 +49,7 @@ export class FissionDrive
     this._keys = new Keys(this._fs);
     this._transactions = new CirclesTransactions(this._fs);
     this._tokens = new CirclesTokens(this._fs);
+    this._offers = new Offers(this._fs);
   }
 }
 

@@ -11,7 +11,7 @@ import {FissionAuthState} from "../fissionauth/manifest";
 export interface OmoMarketState {}
 export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
   id: "omo.market:1",
-  dependencies: [],
+  dependencies: ["omo.sapien:1"],
   icon: faPeopleCarry,
   title: "OmoMarket",
   routeParts: ["omomarket"],

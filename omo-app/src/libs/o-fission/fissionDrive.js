@@ -11,6 +11,7 @@ import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
 import { CirclesTransactions } from "./directories/circlesTransactions";
 import { CirclesTokens } from "./directories/circlesTokens";
+import { Offers } from "./directories/offers";
 export class FissionDrive {
     constructor(fissionAuth) {
         this._fissionAuth = fissionAuth;
@@ -19,6 +20,7 @@ export class FissionDrive {
         this._keys = new Keys(this._fs);
         this._transactions = new CirclesTransactions(this._fs);
         this._tokens = new CirclesTokens(this._fs);
+        this._offers = new Offers(this._fs);
     }
     get username() {
         return this._fissionAuth.username;
@@ -34,6 +36,9 @@ export class FissionDrive {
     }
     get tokens() {
         return this._tokens;
+    }
+    get offers() {
+        return this._offers;
     }
 }
 export function withTimeout(operationName, func, timeout) {
