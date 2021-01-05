@@ -7,9 +7,18 @@
   import {Contact} from "../../../o-circles-protocol/model/contact";
   import Typeahead from "../svelte-typeahead/Typeahead.svelte";
   import FriendItem from "../../molecules/FriendItem.svelte";
+  import {OmoSapienState} from "../../../../dapps/omosapien/manifest";
 
   export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();
+
+  interface Entry {
+    fissionName: string;
+    circlesSafe: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string;
+  }
 
   function validate()
   {
@@ -51,6 +60,8 @@
   onMount(() =>
   {
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+    const omoSapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+
     safeState.myContacts.subscribe(contacts =>
     {
       lookupContacts = contacts;
@@ -65,7 +76,32 @@
           contactsBySafeAddress = {};
         }
         contactsBySafeAddress[contact.safeAddress] = contact;
-      })
+      });
+      Object.values(omoSapienState.directory.byCirclesSafe).forEach((omo:Entry) => {
+        if (!contactsBySafeAddress[omo.circlesSafe])
+        {
+          contactsBySafeAddress[omo.circlesSafe] = {
+            safeAddress: omo.circlesSafe,
+            circlesProfile: null,
+            trust: {
+              out: 0,
+              in: 0
+            },
+            lastBlockNo: 0,
+            omoProfile: {
+              profile: {
+                firstName: omo.firstName,
+                lastName: omo.lastName,
+                fissionName: omo.fissionName,
+                avatar: omo.avatarUrl,
+                name: "",
+                circlesAddress: omo.circlesSafe
+              },
+              avatar: ""
+            }
+          }
+        }
+      });
     });
 
     validate();
