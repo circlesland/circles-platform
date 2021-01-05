@@ -3,7 +3,7 @@ import {CirclesProfile} from "./circlesProfile";
 import {Profile} from "../../o-fission/entities/profile";
 import {Entity} from "../../o-fission/entities/entity";
 
-export interface Contact extends Entity
+export interface Contact
 {
   circlesProfile?: CirclesProfile,
   omoProfile: {

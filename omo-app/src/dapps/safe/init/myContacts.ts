@@ -16,12 +16,8 @@ const blockIndex = new BlockIndex();
 const myContacts:{[safeAddress:string]:Contact} = {};
 const circlesProfiles:{[safeAddress:string]:CirclesProfile} = {};
 
-const updateTrigger = new DelayedTrigger(30, async () =>
+const augmentCirclesProfiles = new DelayedTrigger(30, async () =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-
   const circlesApiUrls = Object.values(myContacts)
     .filter(o => !circlesProfiles[o.safeAddress])
     .map(o => {
@@ -32,6 +28,28 @@ const updateTrigger = new DelayedTrigger(30, async () =>
       return "address[]=" + o.safeAddress;
     }).join("&");
 
+  if (circlesApiUrls !== "")
+  {
+    const url = "https://api.circles.garden/api/users/?" + circlesApiUrls;
+    const response = await fetch(url);
+    const responseJson = await response.json();
+
+    responseJson.data.forEach(entry =>
+    {
+      circlesProfiles[entry.safeAddress] = entry;
+      myContacts[entry.safeAddress].circlesProfile = entry;
+    });
+  }
+
+  myContactsSubject.next(Object.values(myContacts));
+  augmentOmoProfiles.trigger();
+});
+
+const augmentOmoProfiles = new DelayedTrigger(30, async () =>
+{
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   await Promise.all(Object.values(myContacts)
     .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
     .map(async o => {
@@ -55,19 +73,12 @@ const updateTrigger = new DelayedTrigger(30, async () =>
       }
     }));
 
-  if (circlesApiUrls !== "")
-  {
-    const url = "https://api.circles.garden/api/users/?" + circlesApiUrls;
-    const response = await fetch(url);
-    const responseJson = await response.json();
+  myContactsSubject.next(Object.values(myContacts));
+});
 
-    responseJson.data.forEach(entry =>
-    {
-      circlesProfiles[entry.safeAddress] = entry;
-      myContacts[entry.safeAddress].circlesProfile = entry;
-    });
-  }
-
+const updateTrigger = new DelayedTrigger(30, async () =>
+{
+  augmentCirclesProfiles.trigger();
   myContactsSubject.next(Object.values(myContacts));
 });
 

@@ -17,10 +17,7 @@ const myContactsSubject = new BehaviorSubject([]);
 const blockIndex = new BlockIndex();
 const myContacts = {};
 const circlesProfiles = {};
-const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    const omosapienState = tryGetDappState("omo.sapien:1");
-    const safeState = tryGetDappState("omo.safe:1");
+const augmentCirclesProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
     const circlesApiUrls = Object.values(myContacts)
         .filter(o => !circlesProfiles[o.safeAddress])
         .map(o => {
@@ -30,6 +27,22 @@ const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, voi
         };
         return "address[]=" + o.safeAddress;
     }).join("&");
+    if (circlesApiUrls !== "") {
+        const url = "https://api.circles.garden/api/users/?" + circlesApiUrls;
+        const response = yield fetch(url);
+        const responseJson = yield response.json();
+        responseJson.data.forEach(entry => {
+            circlesProfiles[entry.safeAddress] = entry;
+            myContacts[entry.safeAddress].circlesProfile = entry;
+        });
+    }
+    myContactsSubject.next(Object.values(myContacts));
+    augmentOmoProfiles.trigger();
+}));
+const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
+    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+    const omosapienState = tryGetDappState("omo.sapien:1");
+    const safeState = tryGetDappState("omo.safe:1");
     yield Promise.all(Object.values(myContacts)
         .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
         .map((o) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,15 +62,10 @@ const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, voi
             console.warn("An error occurred while loading the fission contacts:", e);
         }
     })));
-    if (circlesApiUrls !== "") {
-        const url = "https://api.circles.garden/api/users/?" + circlesApiUrls;
-        const response = yield fetch(url);
-        const responseJson = yield response.json();
-        responseJson.data.forEach(entry => {
-            circlesProfiles[entry.safeAddress] = entry;
-            myContacts[entry.safeAddress].circlesProfile = entry;
-        });
-    }
+    myContactsSubject.next(Object.values(myContacts));
+}));
+const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
+    augmentCirclesProfiles.trigger();
     myContactsSubject.next(Object.values(myContacts));
 }));
 export function initMyContacts() {
