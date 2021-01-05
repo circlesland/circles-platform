@@ -196,10 +196,17 @@
                     <Icon icon={faArrowRight} />
                   </div>
                   <div class="flex items-center justify-center">
+                    {#if !getProfile(t.to).image}
+                    <img
+                      src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"
+                      alt="profile"
+                      class="h-12 rounded-xl" />
+                    {:else}
                     <img
                       src={getProfile(t.to).image}
                       alt="profile"
                       class="h-12 rounded-xl" />
+                    {/if}
                   </div>
                 </div>
                 <div class="max-w-full text-gray-500 ">
