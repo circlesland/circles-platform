@@ -43,6 +43,9 @@
   }
 
   let lookupContacts: Contact[] = [];
+  let contactsBySafeAddress: {
+    [safeAddress:string]: Contact
+  };
 
   onMount(() =>
   {
@@ -50,13 +53,39 @@
     safeState.myContacts.subscribe(contacts =>
     {
       lookupContacts = contacts;
+      contacts.forEach(contact => {
+        if (!contact.safeAddress)
+        {
+          return;
+        }
+        if (!contactsBySafeAddress)
+        {
+          contactsBySafeAddress = {};
+        }
+        contactsBySafeAddress[contact.safeAddress] = contact;
+      })
     });
 
     validate();
   });
 
-  function getDisplayName(item: Contact)
+  function getDisplayName(itemOrAddress: Contact|string)
   {
+    let item:Contact = null;
+
+    if (typeof itemOrAddress === "string")
+    {
+      item = contactsBySafeAddress[itemOrAddress];
+      if (!item)
+      {
+        return itemOrAddress;
+      }
+    }
+    else
+    {
+      item = itemOrAddress;
+    }
+
     if (item.omoProfile && item.omoProfile.profile)
     {
       return item.omoProfile.profile.firstName + " " + item.omoProfile.profile.lastName;
@@ -88,7 +117,7 @@
   }
 </script>
 
-{#if processArtifact}
+{#if processArtifact && contactsBySafeAddress}
   <div class="w-full">
     <div class="flex items-center justify-between w-full">
       <p class="mb-1 text-xs text-gray-700 uppercase">
@@ -131,16 +160,30 @@
         </Typeahead>
       </div>
     {:else}
-      <input
-        readonly={processArtifact.isReadonly ? 'readonly' : ''}
-        class:border-action={processArtifact.isValid}
-        class:border-danger={!processArtifact.isValid}
-        placeholder={processArtifact.placeholder ? processArtifact.placeholder : '0x123XMaMaXOm0...'}
-        type="text"
-        minlength="42"
-        maxlength="42"
-        bind:value={processArtifact.value}
-        class="w-full p-3 mb-2 text-xl bg-transparent border-2 border-gray-300 rounded-lg outline-none text-primary" />
+      {#if getDisplayName(processArtifact.value) != processArtifact.value}
+        Address: {processArtifact.value}<br/> <!-- @Samuel: Kannst Du dann stylen ;) -->
+        <input
+          readonly={processArtifact.isReadonly ? 'readonly' : ''}
+          class:border-action={processArtifact.isValid}
+          class:border-danger={!processArtifact.isValid}
+          placeholder={processArtifact.placeholder ? processArtifact.placeholder : '0x123XMaMaXOm0...'}
+          type="text"
+          minlength="42"
+          maxlength="42"
+          value={getDisplayName(processArtifact.value)}
+          class="w-full p-3 mb-2 text-xl bg-transparent border-2 border-gray-300 rounded-lg outline-none text-primary" />
+      {:else}
+        <input
+          readonly={processArtifact.isReadonly ? 'readonly' : ''}
+          class:border-action={processArtifact.isValid}
+          class:border-danger={!processArtifact.isValid}
+          placeholder={processArtifact.placeholder ? processArtifact.placeholder : '0x123XMaMaXOm0...'}
+          type="text"
+          minlength="42"
+          maxlength="42"
+          value={processArtifact.value}
+          class="w-full p-3 mb-2 {getDisplayName(processArtifact.value) == processArtifact.value ? 'text-xl' : 'text'} bg-transparent border-2 border-gray-300 rounded-lg outline-none text-primary" />
+      {/if}
     {/if}
   </div>
 {/if}
