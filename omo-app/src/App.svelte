@@ -182,23 +182,23 @@
   {/if}
 </div>
 <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
-  {#if runningProcess}
-    <ProcessContainer
-      process={runningProcess}
-      on:stopped={() => {
-        isOpen = false;
-        runningProcess = null;
-      }} />
-  {:else}
-    {#each overflowActions as action}
-      <div class="w-full">
-        <div class="space-y-2">
+  <div class="font-primary">
+    {#if runningProcess}
+      <ProcessContainer
+        process={runningProcess}
+        on:stopped={() => {
+          isOpen = false;
+          runningProcess = null;
+        }} />
+    {:else}
+      {#each overflowActions as action}
+        <div class="w-full my-2">
           <div on:click={() => window.o.publishEvent(action.event())}>
             <OverflowAction mapping={action} />
           </div>
         </div>
-      </div>
-    {/each}
-    <ProcessNav bind:isOpen />
-  {/if}
+      {/each}
+      <ProcessNav bind:isOpen />
+    {/if}
+  </div>
 </Modal>
