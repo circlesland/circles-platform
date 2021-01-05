@@ -156,7 +156,6 @@
     };
 
     const contact = contacts[token.tokenOwner];
-    console.log(contact);
     if (contact && contact.omoProfile)
     {
       if (contact.omoProfile.avatar)

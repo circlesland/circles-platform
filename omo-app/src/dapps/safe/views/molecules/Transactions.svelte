@@ -7,15 +7,16 @@
     faPlus,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
-  import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import { tryGetDappState } from "../../../../libs/o-os/loader";
-  import {BN, bnToHex} from "ethereumjs-util";
+  import {BN} from "ethereumjs-util";
   import { config } from "../../../../libs/o-circles-protocol/config";
   import { OmoSafeState } from "../../manifest";
   import { CirclesTransaction } from "../../../../libs/o-circles-protocol/model/circlesTransaction";
   import { Contact } from "../../../../libs/o-circles-protocol/model/contact";
+  import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
+  import {OmoSapienState} from "../../../omosapien/manifest";
 
   let safeState: OmoSafeState = {};
   let transactionsSubscription: Subscription;
@@ -33,6 +34,35 @@
     const digits = parseFloat(web3.utils.fromWei(bn)).toFixed(0).length;
     const bnStr = bn.toString();
     return bnStr.substring(0, digits) + "." + bnStr.substring(digits);
+  }
+
+  function getProfile(safeAddress:Address)
+  {
+    const contact = contacts[safeAddress];
+    const profile = {
+      title: "",
+      image: ""
+    }
+
+    if (contact && contact.omoProfile)
+    {
+      if (contact.omoProfile.avatar)
+      {
+        profile.image = contact.omoProfile.avatar;
+      }
+      profile.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`
+    }
+    else if (contact && contact.circlesProfile)
+    {
+      profile.image = contact.circlesProfile?.avatarUrl;
+      profile.title = contact.circlesProfile.username;
+    }
+    else
+    {
+      profile.title = safeAddress.slice(0, 8);
+    }
+
+    return profile;
   }
 
   function init() {
@@ -118,15 +148,13 @@
                   {#if t.direction === 'in'}
                     {#if t.from !== '0x0000000000000000000000000000000000000000'}
                       from
-                      {#if contacts[t.from] && contacts[t.from].circlesProfile && contacts[t.from].circlesProfile.username}
-                        {contacts[t.from].circlesProfile.username}
-                      {:else}{t.from.slice(0, 12)}...{/if}
-                    {:else}from MamaOmo{/if}
+                      {getProfile(t.from).title}
+                    {:else}
+                      from MamaOmo
+                    {/if}
                   {:else}
                     to
-                    {#if contacts[t.to] && contacts[t.to].circlesProfile && contacts[t.to].circlesProfile.username}
-                      {contacts[t.to].circlesProfile.username}
-                    {:else}{t.to.slice(0, 12)}...{/if}
+                    {getProfile(t.to).title}
                   {/if}
                 </p>
               </div>
@@ -156,14 +184,9 @@
                         src="symbols/o.svg"
                         alt="profile"
                         class="h-12 rounded-xl" />
-                    {:else if contacts[t.from] && contacts[t.from].circlesProfile && contacts[t.from].circlesProfile.avatarUrl}
-                      <img
-                        src={contacts[t.from].circlesProfile.avatarUrl}
-                        alt="profile"
-                        class="h-12 rounded-xl" />
                     {:else}
                       <img
-                        src="https://avatars.dicebear.com/api/avataaars/{t.from}.svg"
+                        src={getProfile(t.from).image}
                         alt="profile"
                         class="h-12 rounded-xl" />
                     {/if}
@@ -173,17 +196,10 @@
                     <Icon icon={faArrowRight} />
                   </div>
                   <div class="flex items-center justify-center">
-                    {#if contacts[t.to] && contacts[t.to].circlesProfile && contacts[t.to].circlesProfile.avatarUrl}
-                      <img
-                        src={contacts[t.to].circlesProfile.avatarUrl}
-                        alt="profile"
-                        class="h-12 rounded-xl" />
-                    {:else}
-                      <img
-                        src="https://avatars.dicebear.com/api/avataaars/{t.to}.svg"
-                        alt="profile"
-                        class="h-12 rounded-xl" />
-                    {/if}
+                    <img
+                      src={getProfile(t.to).image}
+                      alt="profile"
+                      class="h-12 rounded-xl" />
                   </div>
                 </div>
                 <div class="max-w-full text-gray-500 ">
@@ -194,17 +210,14 @@
                 <div>
                   Sender:
                   <span class=" text-primary">
-                    {#if contacts[t.from] && contacts[t.from].circlesProfile && contacts[t.from].circlesProfile.username}
-                      {contacts[t.from].circlesProfile.username}
-                    {:else}{t.from}{/if}
+                    {getProfile(t.from).title}
                   </span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Receiver:
                   <span class=" text-primary">
-                    {#if contacts[t.to] && contacts[t.to].circlesProfile && contacts[t.to].circlesProfile.username}
-                      {contacts[t.to].circlesProfile.username}
-                    {:else}{t.to}{/if}</span>
+                    {getProfile(t.to).title}
+                  </span>
                 </div>
                 <div class="max-w-full text-gray-500 ">
                   Amount in circles:
