@@ -1,7 +1,7 @@
 import {TreeNode} from "../interfaces/treeNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
-//import {defaultTimeout} from "webnative/logFormatted";
+//import {defaultTimeout} from "libs/webnative/logFormatted";
 
 export abstract class FsNode implements TreeNode
 {

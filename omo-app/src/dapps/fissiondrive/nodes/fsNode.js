@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { tryGetDappState } from "../../../libs/o-os/loader";
-//import {defaultTimeout} from "webnative/logFormatted";
+//import {defaultTimeout} from "libs/webnative/logFormatted";
 export class FsNode {
     constructor(parent, name) {
         this.childNodes = [];

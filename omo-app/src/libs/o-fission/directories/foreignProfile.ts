@@ -1,7 +1,7 @@
 import {Profile} from "../entities/profile";
 import {tryGetDappState} from "../../o-os/loader";
 import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
-import {IPFS} from "webnative/ipfs";
+import {IPFS} from "libs/webnative/ipfs";
 
 export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
 {
