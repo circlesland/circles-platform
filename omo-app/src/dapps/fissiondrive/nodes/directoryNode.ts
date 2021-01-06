@@ -2,6 +2,7 @@ import {FsNode} from "./fsNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {FileNode} from "./fileNode";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 
 export class DirectoryNode extends FsNode
 {
@@ -18,23 +19,25 @@ export class DirectoryNode extends FsNode
 
   async onExpand(): Promise<void>
   {
-    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    const children: FsNode[] = [];
-
-    const childFsNodes = await fissionAuthState.fission.fs.ls(this.path);
-
-    for (let childFsNode of Object.values(childFsNodes))
+    await runWithDrive(async fissionDrive =>
     {
-      if (childFsNode.isFile)
-      {
-        children.push(new FileNode(this, childFsNode.name));
-      }
-      else
-      {
-        children.push(new DirectoryNode(this, childFsNode.name));
-      }
-    }
+      const children: FsNode[] = [];
 
-    this.childNodes = children;
+      const childFsNodes = await fissionDrive.fs.ls(this.path);
+
+      for (let childFsNode of Object.values(childFsNodes))
+      {
+        if (childFsNode.isFile)
+        {
+          children.push(new FileNode(this, childFsNode.name));
+        }
+        else
+        {
+          children.push(new DirectoryNode(this, childFsNode.name));
+        }
+      }
+
+      this.childNodes = children;
+    });
   }
 }

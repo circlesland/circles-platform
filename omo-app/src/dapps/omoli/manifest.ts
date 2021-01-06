@@ -1,6 +1,5 @@
 import Dapps from 'src/dapps/omoli/views/pages/Dapps.svelte'
 import {faBoxes, faCoins} from "@fortawesome/free-solid-svg-icons";
-import { RunProcess } from 'src/libs/o-events/runProcess';
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 import {tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
@@ -8,7 +7,7 @@ import {FissionAuthState} from "../fissionauth/manifest";
 export interface OmoLiState {}
 export const omoli : DappManifest<OmoLiState,OmoLiState> = {
   id: "omo.li:1",
-  dependencies: [],
+  dependencies: ["omo.sapien:1"],
   isHidden: true,
   icon: faBoxes,
   title: "Dapps",

@@ -15,19 +15,23 @@ import { faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "../../libs/o-events/runProcess";
 import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
 import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
+import { runWithDrive } from "../../libs/o-fission/initFission";
 function tryInitMyFs() {
     return __awaiter(this, void 0, void 0, function* () {
         const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        fissionAuthState.fission;
+        const fs = fissionAuthState.fission.getValue();
+        if (!fs) {
+        }
     });
 }
 function tryInitMyProfile() {
     return __awaiter(this, void 0, void 0, function* () {
-        const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        const myProfile = yield fissionAuthState.fission.profiles.tryGetMyProfile();
-        setDappState("omo.sapien:1", currentState => {
-            return Object.assign(Object.assign({}, currentState), { myProfile: myProfile });
-        });
+        yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+            const myProfile = yield fissionDrive.profiles.tryGetMyProfile();
+            setDappState("omo.sapien:1", currentState => {
+                return Object.assign(Object.assign({}, currentState), { myProfile: myProfile });
+            });
+        }));
     });
 }
 function tryInitOmoDirectory() {

@@ -5,9 +5,11 @@ import { DappManifest } from "../../libs/o-os/interfaces/dappManifest";
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/data/actions";
 import { FissionDrive } from "../../libs/o-fission/fissionDrive";
 import { tryGetDappState } from "../../libs/o-os/loader";
+import {BehaviorSubject} from "rxjs";
 
 export interface FissionAuthState {
-  fission: FissionDrive,
+  fissionState: any,
+  fission: BehaviorSubject<FissionDrive>,
   username: string
 }
 
@@ -20,7 +22,7 @@ export interface FissionAuthState {
 async function initialize(stack, runtimeDapp)
 {
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (fissionAuthState?.fission) {
+  if (fissionAuthState?.fissionState) {
     return {
       cancelDependencyLoading: false,
       initialPage: authPage

@@ -5,6 +5,11 @@
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
   import {FissionAuthState} from "../../../fissionauth/manifest";
   import {onMount} from "svelte";
+  import {initAuth} from "../../../../libs/o-fission/initFission";
+
+  onMount(async () => {
+    await initAuth();
+  });
 
   let availableDapps = dapps.filter(o => !o.isHidden).map(dapp =>
   {

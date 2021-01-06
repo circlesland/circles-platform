@@ -8,6 +8,7 @@ import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
 import {FissionDrive} from "../../libs/o-fission/fissionDrive";
+import {runWithDrive} from "../../libs/o-fission/initFission";
 
 const homepage = {
   isDefault: true,
@@ -29,31 +30,6 @@ export const omowebsite : DappManifest<OmoWebsiteState,OmoWebsiteState> = {
   routeParts: [],
   tag: Promise.resolve(null),
   isEnabled: true,
-  initialize: async (stack, runtimeDapp) =>
-  {
-    const loggedOnUser = localStorage.getItem("fissionAuth");
-    if (loggedOnUser)
-    {
-      const auth = JSON.parse(loggedOnUser);
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-
-      if (!fissionAuthState || !fissionAuthState.fission)
-      {
-        setDappState<FissionAuthState>("omo.fission.auth:1", current =>
-        {
-          return {
-            username: auth.username,
-            fission: new FissionDrive(auth)
-          };
-        });
-      }
-    }
-
-    return {
-      cancelDependencyLoading: false,
-      initialPage: homepage
-    }
-  },
   pages: [homepage, {
     routeParts: ["privacy"],
     component: Privacy,

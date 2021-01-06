@@ -10,6 +10,7 @@ import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/block
 import {OmoSapienState} from "../../omosapien/manifest";
 import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
 import {FissionAuthState} from "../../fissionauth/manifest";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 
 const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
 const blockIndex = new BlockIndex();
@@ -46,33 +47,35 @@ const augmentCirclesProfiles = new DelayedTrigger(30, async () =>
 
 const augmentOmoProfiles = new DelayedTrigger(30, async () =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  await Promise.all(Object.values(myContacts)
-    .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
-    .map(async o => {
-      const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
-      try
-      {
-        if (o.safeAddress == safeState.mySafeAddress)
+  await runWithDrive(async fissionDrive =>
+  {
+    const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+    const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+    await Promise.all(Object.values(myContacts)
+      .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
+      .map(async o => {
+        const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
+        try
         {
-          o.omoProfile = {
-            profile: omosapienState.myProfile,
-            avatar: await fissionAuthState.fission.profiles.tryGetMyAvatar()
-          };
-        }
-        else
+          if (o.safeAddress == safeState.mySafeAddress)
+          {
+            o.omoProfile = {
+              profile: omosapienState.myProfile,
+              avatar: await fissionDrive.profiles.tryGetMyAvatar()
+            };
+          }
+          else
+          {
+            o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+          }
+        } catch (e)
         {
-          o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+          console.warn("An error occurred while loading the fission contacts:", e);
         }
-      } catch (e)
-      {
-        console.warn("An error occurred while loading the fission contacts:", e);
-      }
-    }));
+      }));
 
-  myContactsSubject.next(Object.values(myContacts));
+    myContactsSubject.next(Object.values(myContacts));
+  });
 });
 
 const updateTrigger = new DelayedTrigger(30, async () =>

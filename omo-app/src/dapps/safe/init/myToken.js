@@ -12,46 +12,48 @@ import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAc
 import { CirclesToken } from "../../../libs/o-circles-protocol/model/circlesToken";
 import { BN } from "ethereumjs-util";
 import { ProgressSignal } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
 export function initMyToken() {
     return __awaiter(this, void 0, void 0, function* () {
-        const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        const safeState = tryGetDappState("omo.safe:1");
-        let myToken;
-        try {
-            myToken = yield fissionAuthState.fission.tokens.tryGetMyToken();
-        }
-        catch (e) {
-            window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token (from the blockchain) ..", 0));
-        }
-        if (!myToken) {
-            console.log("Couldn't find myToken. Querying from blockchain events ..");
-            const mySignup = yield new CirclesAccount(safeState.mySafeAddress).tryGetMyToken();
-            if (mySignup) {
-                myToken = {
-                    name: "me",
-                    tokenAddress: mySignup.tokenAddress,
-                    tokenOwner: mySignup.tokenOwner,
-                    createdInBlockNo: mySignup.createdInBlockNo,
-                    noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo
-                };
-                try {
-                    yield fissionAuthState.fission.tokens.addMyToken(myToken);
-                }
-                catch (e) {
-                    console.log(e);
+        yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+            const safeState = tryGetDappState("omo.safe:1");
+            let myToken;
+            try {
+                myToken = yield fissionDrive.tokens.tryGetMyToken();
+            }
+            catch (e) {
+                window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token (from the blockchain) ..", 0));
+            }
+            if (!myToken) {
+                console.log("Couldn't find myToken. Querying from blockchain events ..");
+                const mySignup = yield new CirclesAccount(safeState.mySafeAddress).tryGetMyToken();
+                if (mySignup) {
+                    myToken = {
+                        name: "me",
+                        tokenAddress: mySignup.tokenAddress,
+                        tokenOwner: mySignup.tokenOwner,
+                        createdInBlockNo: mySignup.createdInBlockNo,
+                        noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo
+                    };
+                    try {
+                        yield fissionDrive.tokens.addMyToken(myToken);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
                 }
             }
-        }
-        setDappState("omo.safe:1", currentState => {
-            if (!myToken)
-                return currentState;
-            const t = new CirclesToken(safeState.mySafeAddress);
-            t.tokenOwner = myToken.tokenOwner;
-            t.tokenAddress = myToken.tokenAddress;
-            t.balance = new BN("0");
-            t.createdInBlockNo = myToken.createdInBlockNo;
-            t.noTransactionsUntilBlockNo = myToken.noTransactionsUntilBlockNo;
-            return Object.assign(Object.assign({}, currentState), { myToken: t });
-        });
+            setDappState("omo.safe:1", currentState => {
+                if (!myToken)
+                    return currentState;
+                const t = new CirclesToken(safeState.mySafeAddress);
+                t.tokenOwner = myToken.tokenOwner;
+                t.tokenAddress = myToken.tokenAddress;
+                t.balance = new BN("0");
+                t.createdInBlockNo = myToken.createdInBlockNo;
+                t.noTransactionsUntilBlockNo = myToken.noTransactionsUntilBlockNo;
+                return Object.assign(Object.assign({}, currentState), { myToken: t });
+            });
+        }));
     });
 }

@@ -1,22 +1,22 @@
 import {CreateOfferContext} from "../createOffer";
-import {tryGetDappState} from "../../../../../libs/o-os/loader";
-import {FissionAuthState} from "../../../../fissionauth/manifest";
+import {runWithDrive} from "../../../../../libs/o-fission/initFission";
 
 export const createOfferService = async (context: CreateOfferContext) =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  await runWithDrive(async fissionDrive =>
+  {
+    var idData = new Uint8Array(16);
+    window.crypto.getRandomValues(idData);
+    const idBuffer = Buffer.from(idData);
 
-  var idData = new Uint8Array(16);
-  window.crypto.getRandomValues(idData);
-  const idBuffer = Buffer.from(idData);
-
-  await fissionAuthState.fission.offers.addOrUpdate({
-    offeredByFissionName: fissionAuthState.username,
-    name: idBuffer.toString("hex"),
-    productDescription: context.data.productDescription.value,
-    productName: context.data.productName.value,
-    productPicture: context.data.productPicture.value,
-    productPrice: context.data.productPrice.value,
-    productLocation: context.data.productLocation.value,
+    await fissionDrive.offers.addOrUpdate({
+      offeredByFissionName: fissionDrive.username,
+      name: idBuffer.toString("hex"),
+      productDescription: context.data.productDescription.value,
+      productName: context.data.productName.value,
+      productPicture: context.data.productPicture.value,
+      productPrice: context.data.productPrice.value,
+      productLocation: context.data.productLocation.value,
+    });
   });
 }

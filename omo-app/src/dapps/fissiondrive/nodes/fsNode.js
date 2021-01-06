@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { tryGetDappState } from "../../../libs/o-os/loader";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
 //import {defaultTimeout} from "webnative/logFormatted";
 export class FsNode {
     constructor(parent, name) {
@@ -24,7 +25,8 @@ export class FsNode {
             path.unshift(current.name);
             current = current.parent;
         }
-        return fissionAuthState.fission.fs.appPath(path);
+        throw new Error("Deine Mudda!");
+        // return fissionAuthState.fission.fs.appPath(path);
     }
     onCollapse() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,9 +35,10 @@ export class FsNode {
     }
     delete() {
         return __awaiter(this, void 0, void 0, function* () {
-            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-            yield fissionAuthState.fission.fs.rm(this.path);
-            yield fissionAuthState.fission.fs.publish();
+            yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+                yield fissionDrive.fs.rm(this.path);
+                yield fissionDrive.fs.publish();
+            }));
         });
     }
 }

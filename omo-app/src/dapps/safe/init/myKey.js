@@ -7,13 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { setDappState, tryGetDappState } from "../../../libs/o-os/loader";
+import { setDappState } from "../../../libs/o-os/loader";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
 export function initMyKey() {
     return __awaiter(this, void 0, void 0, function* () {
-        const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        const myKey = yield fissionAuthState.fission.keys.tryGetMyKey();
-        setDappState("omo.safe:1", currentState => {
-            return Object.assign(Object.assign({}, currentState), { myKey: myKey });
-        });
+        yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+            const myKey = yield fissionDrive.keys.tryGetMyKey();
+            setDappState("omo.safe:1", currentState => {
+                return Object.assign(Object.assign({}, currentState), { myKey: myKey });
+            });
+        }));
     });
 }

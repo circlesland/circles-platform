@@ -3,7 +3,7 @@ import { faBoxes, faCoins } from "@fortawesome/free-solid-svg-icons";
 import { tryGetDappState } from "../../libs/o-os/loader";
 export const omoli = {
     id: "omo.li:1",
-    dependencies: [],
+    dependencies: ["omo.sapien:1"],
     isHidden: true,
     icon: faBoxes,
     title: "Dapps",

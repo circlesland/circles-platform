@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { entropyToMnemonic, mnemonicToEntropy } from "bip39";
 import { config } from "../../../libs/o-circles-protocol/config";
-import { tryGetDappState } from "../../../libs/o-os/loader";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
 function isValidKeyPhrase(value) {
     try {
         const privateKey = mnemonicToEntropy(value);
@@ -62,35 +62,33 @@ function isValidHexKey(value) {
     }
 }
 export const importPrivateKeyService = (context) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    if (!fissionAuthState.fission) {
-        throw new Error("You're not authenticated");
-    }
-    console.log("Importing an exising account");
-    const privateKey = (_a = isValidHexKey(context.data.privateKey.value)) !== null && _a !== void 0 ? _a : isValidKeyPhrase(context.data.privateKey.value);
-    const ownerAddress = config.getCurrent().web3()
-        .eth
-        .accounts
-        .privateKeyToAccount(privateKey)
-        .address;
-    if (!context.environment.eth.web3.utils.isAddress(ownerAddress)) {
-        throw new Error("The private key seems to be invalid because no address could be derived from it.");
-    }
-    yield fissionAuthState.fission.keys.addMyKey({
-        name: "me",
-        privateKey: privateKey
-    });
-    context.data.privateKey = {
-        key: "privateKey",
-        type: "string",
-        value: privateKey,
-        isReadonly: true
-    };
-    context.data.privateKeyPhrase = {
-        key: "privateKeyPhrase",
-        type: "string",
-        value: entropyToMnemonic(privateKey.replace("0x", "")),
-        isReadonly: true
-    };
+    yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        console.log("Importing an exising account");
+        const privateKey = (_a = isValidHexKey(context.data.privateKey.value)) !== null && _a !== void 0 ? _a : isValidKeyPhrase(context.data.privateKey.value);
+        const ownerAddress = config.getCurrent().web3()
+            .eth
+            .accounts
+            .privateKeyToAccount(privateKey)
+            .address;
+        if (!context.environment.eth.web3.utils.isAddress(ownerAddress)) {
+            throw new Error("The private key seems to be invalid because no address could be derived from it.");
+        }
+        yield fissionDrive.keys.addMyKey({
+            name: "me",
+            privateKey: privateKey
+        });
+        context.data.privateKey = {
+            key: "privateKey",
+            type: "string",
+            value: privateKey,
+            isReadonly: true
+        };
+        context.data.privateKeyPhrase = {
+            key: "privateKeyPhrase",
+            type: "string",
+            value: entropyToMnemonic(privateKey.replace("0x", "")),
+            isReadonly: true
+        };
+    }));
 });

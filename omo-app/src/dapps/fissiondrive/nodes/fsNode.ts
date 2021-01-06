@@ -1,6 +1,9 @@
 import {TreeNode} from "../interfaces/treeNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
+import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
+import {Subscription} from "rxjs";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 //import {defaultTimeout} from "webnative/logFormatted";
 
 export abstract class FsNode implements TreeNode
@@ -27,7 +30,9 @@ export abstract class FsNode implements TreeNode
       current = current.parent;
     }
 
-    return fissionAuthState.fission.fs.appPath(path);
+
+    throw new Error("Deine Mudda!")
+    // return fissionAuthState.fission.fs.appPath(path);
   }
 
   constructor(parent: FsNode, name: string)
@@ -46,8 +51,10 @@ export abstract class FsNode implements TreeNode
 
   async delete()
   {
-    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    await fissionAuthState.fission.fs.rm(this.path);
-    await fissionAuthState.fission.fs.publish();
+    await runWithDrive(async fissionDrive =>
+    {
+      await fissionDrive.fs.rm(this.path);
+      await fissionDrive.fs.publish();
+    });
   }
 }

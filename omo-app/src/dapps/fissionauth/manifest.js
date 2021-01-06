@@ -21,7 +21,7 @@ import { tryGetDappState } from "../../libs/o-os/loader";
 function initialize(stack, runtimeDapp) {
     return __awaiter(this, void 0, void 0, function* () {
         const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        if (fissionAuthState === null || fissionAuthState === void 0 ? void 0 : fissionAuthState.fission) {
+        if (fissionAuthState === null || fissionAuthState === void 0 ? void 0 : fissionAuthState.fissionState) {
             return {
                 cancelDependencyLoading: false,
                 initialPage: authPage

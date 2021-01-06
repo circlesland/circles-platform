@@ -13,6 +13,7 @@ import { DelayedTrigger } from "../../../libs/o-os/delayedTrigger";
 import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAccount";
 import { BlockIndex } from "../../../libs/o-os/blockIndex";
 import { ForeignProfile } from "../../../libs/o-fission/directories/foreignProfile";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
 const myContactsSubject = new BehaviorSubject([]);
 const blockIndex = new BlockIndex();
 const myContacts = {};
@@ -39,29 +40,30 @@ const augmentCirclesProfiles = new DelayedTrigger(30, () => __awaiter(void 0, vo
     myContactsSubject.next(Object.values(myContacts));
 }));
 const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    const omosapienState = tryGetDappState("omo.sapien:1");
-    const safeState = tryGetDappState("omo.safe:1");
-    yield Promise.all(Object.values(myContacts)
-        .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
-        .map((o) => __awaiter(void 0, void 0, void 0, function* () {
-        const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
-        try {
-            if (o.safeAddress == safeState.mySafeAddress) {
-                o.omoProfile = {
-                    profile: omosapienState.myProfile,
-                    avatar: yield fissionAuthState.fission.profiles.tryGetMyAvatar()
-                };
+    yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
+        const omosapienState = tryGetDappState("omo.sapien:1");
+        const safeState = tryGetDappState("omo.safe:1");
+        yield Promise.all(Object.values(myContacts)
+            .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
+            .map((o) => __awaiter(void 0, void 0, void 0, function* () {
+            const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
+            try {
+                if (o.safeAddress == safeState.mySafeAddress) {
+                    o.omoProfile = {
+                        profile: omosapienState.myProfile,
+                        avatar: yield fissionDrive.profiles.tryGetMyAvatar()
+                    };
+                }
+                else {
+                    o.omoProfile = yield ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+                }
             }
-            else {
-                o.omoProfile = yield ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+            catch (e) {
+                console.warn("An error occurred while loading the fission contacts:", e);
             }
-        }
-        catch (e) {
-            console.warn("An error occurred while loading the fission contacts:", e);
-        }
-    })));
-    myContactsSubject.next(Object.values(myContacts));
+        })));
+        myContactsSubject.next(Object.values(myContacts));
+    }));
 }));
 const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
     augmentCirclesProfiles.trigger();

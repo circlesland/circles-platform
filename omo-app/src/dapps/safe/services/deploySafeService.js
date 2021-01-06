@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { BN } from "ethereumjs-util";
 import { setDappState, tryGetDappState } from "../../../libs/o-os/loader";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
 export const deploySafeService = (context) => __awaiter(void 0, void 0, void 0, function* () {
     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
     if (!fissionAuthState.fission) {
@@ -27,8 +28,10 @@ export const deploySafeService = (context) => __awaiter(void 0, void 0, void 0, 
         return Object.assign(Object.assign({}, current), { mySafeAddress: safeProxy.address, myAccountXDaiBalance: newAccountXDaiBalance });
     });
     const myProfile = Object.assign(Object.assign({}, omosapienState.myProfile), { circlesAddress: safeProxy.address });
-    yield fissionAuthState.fission.profiles.addOrUpdateMyProfile(myProfile);
-    setDappState("omo.sapien:1", current => {
-        return Object.assign(Object.assign({}, current), { myProfile: myProfile });
-    });
+    yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
+        yield fissionDrive.profiles.addOrUpdateMyProfile(myProfile);
+        setDappState("omo.sapien:1", current => {
+            return Object.assign(Object.assign({}, current), { myProfile: myProfile });
+        });
+    }));
 });

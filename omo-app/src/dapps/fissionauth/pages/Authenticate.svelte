@@ -60,7 +60,8 @@
             {
               return {
                 username: state.username,
-                fission: new FissionDrive(state)
+                fissionState: state,
+                fission: null
               };
             });
 

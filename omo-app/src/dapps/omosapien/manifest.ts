@@ -9,6 +9,7 @@ import { RunProcess } from "../../libs/o-events/runProcess";
 import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
 import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
 import { FissionAuthState } from "../fissionauth/manifest";
+import {runWithDrive} from "../../libs/o-fission/initFission";
 
 export interface Entry {
   fissionName: string;
@@ -40,19 +41,25 @@ export interface OmoSapienState {
 async function tryInitMyFs()
 {
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  fissionAuthState.fission
+  const fs = fissionAuthState.fission.getValue();
+  if (!fs)
+  {
+
+  }
 }
 
 async function tryInitMyProfile()
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const myProfile = await fissionAuthState.fission.profiles.tryGetMyProfile();
+  await runWithDrive(async fissionDrive =>
+  {
+    const myProfile = await fissionDrive.profiles.tryGetMyProfile();
 
-  setDappState<OmoSapienState>("omo.sapien:1", currentState => {
-    return {
-      ...currentState,
-      myProfile: myProfile
-    };
+    setDappState<OmoSapienState>("omo.sapien:1", currentState => {
+      return {
+        ...currentState,
+        myProfile: myProfile
+      };
+    });
   });
 }
 

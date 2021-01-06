@@ -4,6 +4,7 @@ import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
 import {OmoSapienState} from "../../omosapien/manifest";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 
 export const deploySafeService = async (context: DeploySafeContext) =>
 {
@@ -41,12 +42,14 @@ export const deploySafeService = async (context: DeploySafeContext) =>
     circlesAddress: safeProxy.address
   };
 
-  await fissionAuthState.fission.profiles.addOrUpdateMyProfile(myProfile);
-
-  setDappState<OmoSapienState>("omo.sapien:1", current => {
-    return {
-      ...current,
-      myProfile: myProfile
-    }
+  await runWithDrive(async fissionDrive =>
+  {
+    await fissionDrive.profiles.addOrUpdateMyProfile(myProfile);
+    setDappState<OmoSapienState>("omo.sapien:1", current => {
+      return {
+        ...current,
+        myProfile: myProfile
+      }
+    });
   });
 }
