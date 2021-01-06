@@ -46,8 +46,10 @@ export class Profiles extends Directory<Profile>
     return await this.addOrUpdate(myProfile, true, "addOrUpdateMyProfile");
   }
 
-  async maintainIndexes(change: DirectoryChangeType, entity: Profile, hint?: string): Promise<void> {
-    if (entity.name === "me" && hint !== "addOrUpdateMyProfile") {
+  async maintainIndexes(change: DirectoryChangeType, entity: Profile, hint?: string): Promise<void>
+  {
+    if (entity.name === "me" && hint !== "addOrUpdateMyProfile")
+    {
       throw new Error(`The 'me' entity is a system entity in '${this.getPath()}' and should not be used directly.`);
     }
 

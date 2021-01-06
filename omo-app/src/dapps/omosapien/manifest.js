@@ -41,6 +41,22 @@ function tryInitOmoDirectory() {
             });
             const omosapienState = tryGetDappState("omo.sapien:1");
             omosapienState.directory = lookupDirectory;
+            // Check if the directory includes myself and, if not add me.
+            // This is necessary because at the time of the profile creation or update
+            // the DNSLink still updates.
+            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+            const myDirectoryEntry = omosapienState.directory.byFissionName[fissionAuthState.username];
+            const isRegistrationCorrect = myDirectoryEntry
+                && myDirectoryEntry.firstName == omosapienState.myProfile.firstName
+                && myDirectoryEntry.lastName == omosapienState.myProfile.lastName
+                && myDirectoryEntry.circlesSafe == omosapienState.myProfile.circlesAddress;
+            if (!isRegistrationCorrect) {
+                console.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ...");
+                yield fetch("https://directory.omo.earth/signup/" + fissionAuthState.username, {
+                    method: "POST"
+                });
+                console.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ... Done");
+            }
         }
         catch (e) {
             console.warn(e);

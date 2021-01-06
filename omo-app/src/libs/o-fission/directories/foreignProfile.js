@@ -60,7 +60,7 @@ export const ipfsGetFile = (ipfs, cid) => __awaiter(void 0, void 0, void 0, func
     return null;
 });
 export class ForeignProfile {
-    static findByFissionUsername(fissionUsername, loadAvatar = true) {
+    static findByFissionUsername(fissionUsername) {
         var e_3, _a;
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup

@@ -3,7 +3,7 @@ export interface Entry {
     circlesSafe: string;
     firstName: string;
     lastName: string;
-    avatarUrl: string;
+    //avatarUrl: string;
 }
 
 export interface Directory

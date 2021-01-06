@@ -11,6 +11,7 @@ export const createOfferService = async (context: CreateOfferContext) =>
   const idBuffer = Buffer.from(idData);
 
   await fissionAuthState.fission.offers.addOrUpdate({
+    offeredByFissionName: fissionAuthState.username,
     name: idBuffer.toString("hex"),
     productDescription: context.data.productDescription.value,
     productName: context.data.productName.value,

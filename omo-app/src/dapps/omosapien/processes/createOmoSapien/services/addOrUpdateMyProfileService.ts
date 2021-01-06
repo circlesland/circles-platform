@@ -19,11 +19,11 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
   profile.name = "me";
   profile.firstName = context.data.firstName.value;
   profile.lastName = context.data.lastName ? context.data.lastName.value : null;
-  profile.avatar = fissionAuthState.fission.profiles.getPath(["me.png"]);
+  // profile.avatar = fissionAuthState.fission.profiles.getPath(["me.png"]);
 
   const fissionUsername = fissionAuthState.fission.username;
 
-  const hasAvatar = await fissionAuthState.fission._fs.exists(profile.avatar);
+  const hasAvatar = await fissionAuthState.fission._fs.exists(fissionAuthState.fission.profiles.getPath(["me.png"]));
   let avatarDataUrl = context.data.avatar ? context.data.avatar.value : null
 
   if (!hasAvatar && !avatarDataUrl) {

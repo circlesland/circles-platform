@@ -6,6 +6,49 @@
 
   import Icon from "fa-svelte";
   import { featured, offers } from "../../data/offers";
+  import {Offer} from "../../../../libs/o-fission/entities/offer";
+  import {of} from "rxjs";
+  import {tryGetDappState} from "../../../../libs/o-os/loader";
+  import {FissionAuthState} from "../../../fissionauth/manifest";
+  import {OmoSapienState} from "../../../omosapien/manifest";
+
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+
+  let myOffers:Offer[] = [];
+
+
+  async function init() {
+    myOffers = await fissionAuthState.fission.offers.listItems();
+  }
+
+  init();
+
+  function mapToListItem(offer:Offer) {
+    // const locationParts = offer.productLocation.display_name.split(",");
+    // const country = locationParts[locationParts.length - 1];
+    const offeredBy = omosapienState.directory.byFissionName[offer.offeredByFissionName];
+    return {
+      data: {
+        title: offer.productName,
+          image: offer.productPicture,
+          description: offer.productDescription,
+          price: offer.productPrice,
+          state: "active",
+          category: "mobility",
+          // quantity: "",
+          city: offer.productLocation.display_name,
+          country:  "" /*country*/,
+          delivery: "pickup or delivery",
+          offeredBy: {
+            image: offeredBy.DeineMuddaOida,
+              firstName: offeredBy.firstName,
+              lastName: offeredBy.lastName,
+              email: ""
+          },
+      },
+    }
+  }
 </script>
 
 <section class="w-full p-4 mx-auto md:p-8">
@@ -98,7 +141,7 @@
     {/each}
   </div>
   <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-    {#each offers as item}
+    {#each myOffers.map(o => mapToListItem(o)).concat(offers) as item}
       <div
         class="flex flex-col overflow-hidden bg-white border hover:shadow-xl rounded-xl border-light-200">
         <div class="relative flex-shrink-0">

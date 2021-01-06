@@ -21,8 +21,4 @@ export interface Profile extends Entity {
    * The user's last name
    */
   lastName?: string;
-  /**
-   * A URL encoded user picture // TODO: only keep a reference and move the data to somewhere else
-   */
-  avatar?: string;
 }

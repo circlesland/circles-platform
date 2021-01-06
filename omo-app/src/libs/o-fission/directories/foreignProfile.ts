@@ -34,7 +34,7 @@ export const ipfsGetFile = async (ipfs:IPFS, cid:string): Promise<Buffer> =>
 
 export class ForeignProfile
 {
-  static async findByFissionUsername(fissionUsername:string, loadAvatar:boolean = true) : Promise<{
+  static async findByFissionUsername(fissionUsername:string) : Promise<{
     profile:Profile,
     avatar?: string
   }| null>
