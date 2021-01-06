@@ -26,11 +26,15 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
   const existingDrive = fissionAuthState.fission.getValue();
   if (!existingDrive && !initializingDrive)
   {
+    const initFsBegin = Date.now();
     initializingDrive = true;
     // FS is not loaded yet. Load it.
     const drive = new FissionDrive(fissionAuthState.fissionState)
     drive.init().then(() => {
       fissionAuthState.fission.next(drive);
+      const initFsEnd = Date.now();
+      const initFsDuration = (initFsEnd - initFsBegin) / 1000
+      console.log("initFsDuration", initFsDuration)
       initializingDrive = false;
     });
   }
