@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { FsNode } from "./fsNode";
 import { tryGetDappState } from "../../../libs/o-os/loader";
 import { FileNode } from "./fileNode";
-//import {defaultTimeout} from "libs/webnative/logFormatted";
 export class DirectoryNode extends FsNode {
     constructor() {
         super(...arguments);
@@ -28,7 +27,7 @@ export class DirectoryNode extends FsNode {
         return __awaiter(this, void 0, void 0, function* () {
             const fissionAuthState = tryGetDappState("omo.fission.auth:1");
             const children = [];
-            const childFsNodes = yield fissionAuthState.fission._fs.ls(this.path);
+            const childFsNodes = yield fissionAuthState.fission.fs.ls(this.path);
             for (let childFsNode of Object.values(childFsNodes)) {
                 if (childFsNode.isFile) {
                     children.push(new FileNode(this, childFsNode.name));

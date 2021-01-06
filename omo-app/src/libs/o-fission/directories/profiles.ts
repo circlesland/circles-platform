@@ -1,6 +1,6 @@
 import { Directory, DirectoryChangeType } from "./directory";
 import { Profile } from "../entities/profile";
-import FileSystem from "libs/webnative/fs/filesystem";
+import FileSystem from "webnative/fs/filesystem";
 
 export class Profiles extends Directory<Profile>
 {

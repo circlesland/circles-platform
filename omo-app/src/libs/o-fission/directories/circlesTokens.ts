@@ -1,5 +1,5 @@
 import { Directory, DirectoryChangeType } from "./directory";
-import FileSystem from "libs/webnative/fs/filesystem";
+import FileSystem from "webnative/fs/filesystem";
 import {CachedTokens} from "../entities/cachedTokens";
 import {Token} from "../entities/token";
 

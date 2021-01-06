@@ -1,7 +1,6 @@
 import {Profile} from "../entities/profile";
-import {tryGetDappState} from "../../o-os/loader";
-import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
-import {IPFS} from "libs/webnative/ipfs";
+import * as ipfs from 'webnative/ipfs'
+import {IPFS} from "webnative/ipfs";
 
 export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
 {
@@ -42,8 +41,6 @@ export class ForeignProfile
     // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
     try
     {
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-
       const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUsername}.fission.name`;
       const dnsLinkResult = await fetch(dnsLink);
       const dnsLinkResultObj = await dnsLinkResult.json();
@@ -58,8 +55,8 @@ export class ForeignProfile
       ipfsCid = ipfsCid.replace("/public", "");
       ipfsCid = ipfsCid + "/public/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland";
 
-      const ipfs = await fissionAuthState.fission._fs.getIpfs();
-      const dir = await ipfs.ls(ipfsCid);
+      const ipfsInstance = await ipfs.get()
+      const dir = await ipfsInstance.ls(ipfsCid);
 
       let otherProfileObj;
       let otherProfileAvatar;
@@ -68,15 +65,13 @@ export class ForeignProfile
       {
         if (element.name === "me")
         {
-          const profileBuffer = await ipfsGetFile(ipfs, element.cid.toString());
+          const profileBuffer = await ipfsGetFile(ipfsInstance, element.cid.toString());
           otherProfileObj = JSON.parse(profileBuffer.toString());
-          //console.log("otherProfileObj", otherProfileObj)
         }
         if (element.name === "me.png")
         {
-          const avatarBuffer = await ipfsGetFile(ipfs, element.cid.toString());
+          const avatarBuffer = await ipfsGetFile(ipfsInstance, element.cid.toString());
           otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
-          //console.log("otherProfileAvatar", otherProfileAvatar)
         }
       }
 

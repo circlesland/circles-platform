@@ -7,6 +7,10 @@
   import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
   import {setDappState} from "../../../libs/o-os/loader";
   import {FissionAuthState} from "../manifest";
+  import {Maybe} from "webnative/common";
+  import {Permissions} from "webnative/ucan/permissions";
+  import FileSystem from "webnative/fs";
+  import {Scenario} from "webnative";
 
   const wn = window.o.wn;
 
@@ -32,6 +36,7 @@
             publicPaths: ["omo.sapien"],
           },
         },
+        loadFileSystem: false
       });
 
       switch (state.scenario)
@@ -58,6 +63,11 @@
                 fission: new FissionDrive(state)
               };
             });
+
+            // set a marker in the local storage that indicates whether we've already logged-in
+            localStorage.setItem("fissionAuth", JSON.stringify({
+              username: state.username
+            }));
 
             if (params && params.redirectTo)
             {

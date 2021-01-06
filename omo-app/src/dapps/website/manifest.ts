@@ -5,6 +5,19 @@ import TOS from 'src/dapps/website/views/pages/TOS.svelte'
 import Attributions from 'src/dapps/website/views/pages/Attributions.svelte'
 import {faGlobe} from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
+import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
+import {FissionAuthState} from "../fissionauth/manifest";
+import {FissionDrive} from "../../libs/o-fission/fissionDrive";
+
+const homepage = {
+  isDefault: true,
+  routeParts: [],
+  component: Website,
+  userData: {
+    showActionBar: false,
+    actions: []
+  }
+};
 
 export interface OmoWebsiteState {}
 export const omowebsite : DappManifest<OmoWebsiteState,OmoWebsiteState> = {
@@ -16,15 +29,32 @@ export const omowebsite : DappManifest<OmoWebsiteState,OmoWebsiteState> = {
   routeParts: [],
   tag: Promise.resolve(null),
   isEnabled: true,
-  pages: [{
-    isDefault: true,
-    routeParts: [],
-    component: Website,
-    userData: {
-      showActionBar: false,
-      actions: []
+  initialize: async (stack, runtimeDapp) =>
+  {
+    const loggedOnUser = localStorage.getItem("fissionAuth");
+    if (loggedOnUser)
+    {
+      const auth = JSON.parse(loggedOnUser);
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+
+      if (!fissionAuthState || !fissionAuthState.fission)
+      {
+        setDappState<FissionAuthState>("omo.fission.auth:1", current =>
+        {
+          return {
+            username: auth.username,
+            fission: new FissionDrive(auth)
+          };
+        });
+      }
     }
-  }, {
+
+    return {
+      cancelDependencyLoading: false,
+      initialPage: homepage
+    }
+  },
+  pages: [homepage, {
     routeParts: ["privacy"],
     component: Privacy,
     userData: {

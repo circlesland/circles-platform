@@ -1,7 +1,7 @@
-import FileSystem from "libs/webnative/fs/filesystem";
+import FileSystem from "webnative/fs/filesystem";
 import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
-import { AuthSucceeded, Continuation } from "libs/webnative";
+import {AuthSucceeded, Continuation, loadFileSystem} from "webnative";
 import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
 import { Offers } from "./directories/offers";
@@ -9,7 +9,12 @@ import { Offers } from "./directories/offers";
 export class FissionDrive
 {
   private readonly _fissionAuth: AuthSucceeded | Continuation;
-  readonly _fs: FileSystem;
+
+  get fs() : FileSystem
+  {
+    return this._fs;
+  }
+  private _fs: FileSystem;
 
   get username(): string {
     return this._fissionAuth.username;
@@ -18,33 +23,37 @@ export class FissionDrive
   get profiles(): Profiles {
     return this._profiles;
   }
-  private readonly _profiles: Profiles;
+  private _profiles: Profiles;
 
   get keys(): Keys {
     return this._keys;
   }
-  private readonly _keys: Keys;
+  private _keys: Keys;
 
   get transactions(): CirclesTransactions {
     return this._transactions;
   }
-  private readonly _transactions: CirclesTransactions;
+  private _transactions: CirclesTransactions;
 
   get tokens(): CirclesTokens {
     return this._tokens;
   }
-  private readonly _tokens: CirclesTokens;
+  private _tokens: CirclesTokens;
 
   get offers(): Offers {
     return this._offers;
   }
-  private readonly _offers: Offers;
+  private _offers: Offers;
 
   constructor(fissionAuth: AuthSucceeded | Continuation)
   {
     this._fissionAuth = fissionAuth;
-    this._fs = fissionAuth.fs;
+    this.init();
+  }
 
+  async init()
+  {
+    this._fs = await loadFileSystem(this._fissionAuth.permissions, this._fissionAuth.username);
     this._profiles = new Profiles(this._fs);
     this._keys = new Keys(this._fs);
     this._transactions = new CirclesTransactions(this._fs);

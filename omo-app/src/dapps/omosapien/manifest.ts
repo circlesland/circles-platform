@@ -37,7 +37,14 @@ export interface OmoSapienState {
   directory?: LookupDirectory
 }
 
-async function tryInitMyProfile() {
+async function tryInitMyFs()
+{
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  fissionAuthState.fission
+}
+
+async function tryInitMyProfile()
+{
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const myProfile = await fissionAuthState.fission.profiles.tryGetMyProfile();
 

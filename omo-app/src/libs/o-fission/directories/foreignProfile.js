@@ -14,7 +14,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
-import { tryGetDappState } from "../../o-os/loader";
+import * as ipfs from 'webnative/ipfs';
 export const ipfsCat = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function* () {
     var e_1, _a;
     console.log("ipfsCat:", cid);
@@ -65,7 +65,6 @@ export class ForeignProfile {
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
             try {
-                const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                 const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUsername}.fission.name`;
                 const dnsLinkResult = yield fetch(dnsLink);
                 const dnsLinkResultObj = yield dnsLinkResult.json();
@@ -76,22 +75,20 @@ export class ForeignProfile {
                 ipfsCid = ipfsCid.replace("/ipfs/", "");
                 ipfsCid = ipfsCid.replace("/public", "");
                 ipfsCid = ipfsCid + "/public/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland";
-                const ipfs = yield fissionAuthState.fission._fs.getIpfs();
-                const dir = yield ipfs.ls(ipfsCid);
+                const ipfsInstance = yield ipfs.get();
+                const dir = yield ipfsInstance.ls(ipfsCid);
                 let otherProfileObj;
                 let otherProfileAvatar;
                 try {
                     for (var dir_1 = __asyncValues(dir), dir_1_1; dir_1_1 = yield dir_1.next(), !dir_1_1.done;) {
                         const element = dir_1_1.value;
                         if (element.name === "me") {
-                            const profileBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
+                            const profileBuffer = yield ipfsGetFile(ipfsInstance, element.cid.toString());
                             otherProfileObj = JSON.parse(profileBuffer.toString());
-                            //console.log("otherProfileObj", otherProfileObj)
                         }
                         if (element.name === "me.png") {
-                            const avatarBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
+                            const avatarBuffer = yield ipfsGetFile(ipfsInstance, element.cid.toString());
                             otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
-                            //console.log("otherProfileAvatar", otherProfileAvatar)
                         }
                     }
                 }

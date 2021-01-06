@@ -17,7 +17,8 @@ export interface FissionAuthState {
  * @param stack
  * @param runtimeDapp
  */
-async function initialize(stack, runtimeDapp) {
+async function initialize(stack, runtimeDapp)
+{
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (fissionAuthState?.fission) {
     return {

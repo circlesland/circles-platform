@@ -11,7 +11,7 @@ import { stateMachine } from "./stateMachine";
 import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
 import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 import { config } from "../o-circles-protocol/config";
-import * as webnative from "libs/webnative";
+import * as webnative from "webnative";
 /**
  * Gets all environment properties like the currently logged-on account, token and profile.
  */

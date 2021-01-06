@@ -15,6 +15,12 @@ import { faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "../../libs/o-events/runProcess";
 import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
 import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
+function tryInitMyFs() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+        fissionAuthState.fission;
+    });
+}
 function tryInitMyProfile() {
     return __awaiter(this, void 0, void 0, function* () {
         const fissionAuthState = tryGetDappState("omo.fission.auth:1");

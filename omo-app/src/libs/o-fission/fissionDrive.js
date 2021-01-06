@@ -9,18 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
+import { loadFileSystem } from "webnative";
 import { CirclesTransactions } from "./directories/circlesTransactions";
 import { CirclesTokens } from "./directories/circlesTokens";
 import { Offers } from "./directories/offers";
 export class FissionDrive {
     constructor(fissionAuth) {
         this._fissionAuth = fissionAuth;
-        this._fs = fissionAuth.fs;
-        this._profiles = new Profiles(this._fs);
-        this._keys = new Keys(this._fs);
-        this._transactions = new CirclesTransactions(this._fs);
-        this._tokens = new CirclesTokens(this._fs);
-        this._offers = new Offers(this._fs);
+        this.init();
+    }
+    get fs() {
+        return this._fs;
     }
     get username() {
         return this._fissionAuth.username;
@@ -39,6 +38,16 @@ export class FissionDrive {
     }
     get offers() {
         return this._offers;
+    }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this._fs = yield loadFileSystem(this._fissionAuth.permissions, this._fissionAuth.username);
+            this._profiles = new Profiles(this._fs);
+            this._keys = new Keys(this._fs);
+            this._transactions = new CirclesTransactions(this._fs);
+            this._tokens = new CirclesTokens(this._fs);
+            this._offers = new Offers(this._fs);
+        });
     }
 }
 export function withTimeout(operationName, func, timeout) {
