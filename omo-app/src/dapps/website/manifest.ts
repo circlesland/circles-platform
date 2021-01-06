@@ -5,10 +5,6 @@ import TOS from 'src/dapps/website/views/pages/TOS.svelte'
 import Attributions from 'src/dapps/website/views/pages/Attributions.svelte'
 import {faGlobe} from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
-import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
-import {FissionAuthState} from "../fissionauth/manifest";
-import {FissionDrive} from "../../libs/o-fission/fissionDrive";
-import {runWithDrive} from "../../libs/o-fission/initFission";
 
 const homepage = {
   isDefault: true,

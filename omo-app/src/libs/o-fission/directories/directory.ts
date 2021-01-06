@@ -1,6 +1,6 @@
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "libs/webnative/fs/filesystem";
 import { Entity } from "../entities/entity";
-import { CID } from "webnative/ipfs";
+import { CID } from "libs/webnative/ipfs";
 import {withTimeout} from "../fissionDrive";
 
 export type DirectoryChangeType = "add" | "update" | "remove";

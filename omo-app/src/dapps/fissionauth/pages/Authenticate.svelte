@@ -1,16 +1,9 @@
 <script lang="ts">
-  import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import { onMount } from "svelte";
   import {push} from "svelte-spa-router";
   import { Jumper } from "svelte-loading-spinners";
-  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
-  import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
   import {setDappState} from "../../../libs/o-os/loader";
   import {FissionAuthState} from "../manifest";
-  import {Maybe} from "webnative/common";
-  import {Permissions} from "webnative/ucan/permissions";
-  import FileSystem from "webnative/fs";
-  import {Scenario} from "webnative";
 
   const wn = window.o.wn;
 

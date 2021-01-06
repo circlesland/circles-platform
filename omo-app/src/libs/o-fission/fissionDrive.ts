@@ -1,7 +1,7 @@
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "libs/webnative/fs/filesystem";
 import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
-import {AuthSucceeded, Continuation, loadFileSystem} from "webnative";
+import {AuthSucceeded, Continuation, loadFileSystem} from "libs/webnative";
 import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
 import { Offers } from "./directories/offers";

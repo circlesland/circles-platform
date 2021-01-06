@@ -1,6 +1,6 @@
 import {Profile} from "../entities/profile";
 import * as ipfs from 'webnative/ipfs'
-import {IPFS} from "webnative/ipfs";
+import {IPFS} from "libs/webnative/ipfs";
 
 export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
 {

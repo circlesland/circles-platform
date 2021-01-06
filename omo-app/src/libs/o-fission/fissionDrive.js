@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
-import { loadFileSystem } from "webnative";
+import { loadFileSystem } from "libs/webnative";
 import { CirclesTransactions } from "./directories/circlesTransactions";
 import { CirclesTokens } from "./directories/circlesTokens";
 import { Offers } from "./directories/offers";

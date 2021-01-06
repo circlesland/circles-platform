@@ -4,7 +4,7 @@ import {FissionAuthState} from "../../fissionauth/manifest";
 import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
 import {Subscription} from "rxjs";
 import {runWithDrive} from "../../../libs/o-fission/initFission";
-//import {defaultTimeout} from "webnative/logFormatted";
+//import {defaultTimeout} from "libs/webnative/logFormatted";
 
 export abstract class FsNode implements TreeNode
 {

@@ -1,6 +1,6 @@
 import { Directory, DirectoryChangeType } from "./directory";
 import { KeyPair } from "../entities/keyPair";
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "libs/webnative/fs/filesystem";
 
 export class Keys extends Directory<KeyPair>
 {
