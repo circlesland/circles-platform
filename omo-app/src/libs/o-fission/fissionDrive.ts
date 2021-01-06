@@ -48,7 +48,6 @@ export class FissionDrive
   constructor(fissionAuth: AuthSucceeded | Continuation)
   {
     this._fissionAuth = fissionAuth;
-    this.init();
   }
 
   async init()

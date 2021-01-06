@@ -33,10 +33,6 @@ function sendMessage(message) {
     });
 }
 export const transferCirclesService = (context) => __awaiter(void 0, void 0, void 0, function* () {
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    if (!fissionAuthState.fission) {
-        throw new Error("You're not authenticated");
-    }
     const web3 = context.environment.eth.web3;
     const safeState = tryGetDappState("omo.safe:1");
     const ownerAddress = context.environment.eth.web3

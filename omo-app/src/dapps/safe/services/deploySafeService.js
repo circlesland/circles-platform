@@ -11,10 +11,6 @@ import { BN } from "ethereumjs-util";
 import { setDappState, tryGetDappState } from "../../../libs/o-os/loader";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
 export const deploySafeService = (context) => __awaiter(void 0, void 0, void 0, function* () {
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    if (!fissionAuthState.fission) {
-        throw new Error("You're not authenticated");
-    }
     const omosapienState = tryGetDappState("omo.sapien:1");
     const safeState = tryGetDappState("omo.safe:1");
     const safeProxy = yield context.environment.eth.contracts.safeProxyFactory.deployNewSafeProxy(safeState.myKey.privateKey);

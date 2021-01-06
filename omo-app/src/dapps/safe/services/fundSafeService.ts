@@ -7,11 +7,6 @@ import {OmoSafeState} from "../manifest";
 
 export const fundSafeService = async (context: FundSafeContext) =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState.fission) {
-    throw new Error("You're not authenticated.");
-  }
-
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
   const myAccount = await context.environment.eth.web3.eth.accounts.privateKeyToAccount(

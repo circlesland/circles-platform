@@ -7,20 +7,23 @@
   import Mobile from "src/libs/o-views/templates/Mobile.svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {FissionAuthState} from "../../../fissionauth/manifest";
+  import {runWithDrive} from "../../../../libs/o-fission/initFission";
+  import {fissiondrive} from "../../../fissiondrive/manifest";
 
   let keys: any[] = [];
 
   async function getKeys() {
-    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    keys = (await fissionAuthState.fission.keys.listItems()).map((o) => {
-      return {
-        data: {
-          image: "/icons/paperWallet.svg",
-          title: o.name,
-          subtitle: "PrivateKey",
-          privatekey: o.privateKey,
-        },
-      };
+    await runWithDrive(async fissiondrive => {
+      keys = (await fissiondrive.keys.listItems()).map((o) => {
+        return {
+          data: {
+            image: "/icons/paperWallet.svg",
+            title: o.name,
+            subtitle: "PrivateKey",
+            privatekey: o.privateKey,
+          },
+        };
+      });
     });
   }
 

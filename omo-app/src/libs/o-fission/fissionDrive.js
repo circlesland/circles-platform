@@ -16,7 +16,6 @@ import { Offers } from "./directories/offers";
 export class FissionDrive {
     constructor(fissionAuth) {
         this._fissionAuth = fissionAuth;
-        this.init();
     }
     get fs() {
         return this._fs;

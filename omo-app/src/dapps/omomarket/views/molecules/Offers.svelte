@@ -11,6 +11,7 @@
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {FissionAuthState} from "../../../fissionauth/manifest";
   import {OmoSapienState} from "../../../omosapien/manifest";
+  import {runWithDrive} from "../../../../libs/o-fission/initFission";
 
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
@@ -19,7 +20,10 @@
 
 
   async function init() {
-    myOffers = await fissionAuthState.fission.offers.listItems();
+    await runWithDrive(async fissiondrive =>
+    {
+      myOffers = await fissiondrive.offers.listItems();
+    });
   }
 
   init();

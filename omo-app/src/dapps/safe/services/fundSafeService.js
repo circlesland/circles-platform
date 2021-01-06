@@ -11,10 +11,6 @@ import { BN } from "ethereumjs-util";
 import { Web3Contract } from "../../../libs/o-circles-protocol/web3Contract";
 import { tryGetDappState } from "../../../libs/o-os/loader";
 export const fundSafeService = (context) => __awaiter(void 0, void 0, void 0, function* () {
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    if (!fissionAuthState.fission) {
-        throw new Error("You're not authenticated.");
-    }
     const safeState = tryGetDappState("omo.safe:1");
     const myAccount = yield context.environment.eth.web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey);
     const nonce = yield context.environment.eth.web3.eth.getTransactionCount(myAccount.address);

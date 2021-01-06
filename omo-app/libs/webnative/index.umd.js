@@ -56620,9 +56620,11 @@ message PBNode {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
-                                return tree.mkdir(relPath);
-                            })];
+                        case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.mkdir(" + path + ") ...");
+                            return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
+                                    return tree.mkdir(relPath);
+                                })];
                         case 1:
                             _a.sent();
                             if (!options.publish) return [3 /*break*/, 3];
@@ -56630,17 +56632,28 @@ message PBNode {
                         case 2:
                             _a.sent();
                             _a.label = 3;
-                        case 3: return [2 /*return*/, this];
+                        case 3:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.mkdir(" + path + ") -> DONE");
+                            return [2 /*return*/, this];
                     }
                 });
             });
         };
         FileSystem.prototype.ls = function (path) {
             return __awaiter(this, void 0, void 0, function () {
+                var result;
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                            return tree.ls(relPath);
-                        })];
+                    switch (_a.label) {
+                        case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.ls(" + path + ") ...");
+                            return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                    return tree.ls(relPath);
+                                })];
+                        case 1:
+                            result = _a.sent();
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.ls(" + path + ") -> DONE");
+                            return [2 /*return*/, result];
+                    }
                 });
             });
         };
@@ -56649,9 +56662,11 @@ message PBNode {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
-                                return tree.add(relPath, content);
-                            })];
+                        case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.add(" + path + ") ...");
+                            return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
+                                    return tree.add(relPath, content);
+                                })];
                         case 1:
                             _a.sent();
                             if (!options.publish) return [3 /*break*/, 3];
@@ -56659,26 +56674,46 @@ message PBNode {
                         case 2:
                             _a.sent();
                             _a.label = 3;
-                        case 3: return [2 /*return*/, this];
+                        case 3:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.add(" + path + ") -> DONE");
+                            return [2 /*return*/, this];
                     }
                 });
             });
         };
         FileSystem.prototype.cat = function (path) {
             return __awaiter(this, void 0, void 0, function () {
+                var result;
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                            return tree.cat(relPath);
-                        })];
+                    switch (_a.label) {
+                        case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.cat(" + path + ") ...");
+                            return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                    return tree.cat(relPath);
+                                })];
+                        case 1:
+                            result = _a.sent();
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.cat(" + path + ") -> DONE");
+                            return [2 /*return*/, result];
+                    }
                 });
             });
         };
         FileSystem.prototype.exists = function (path) {
             return __awaiter(this, void 0, void 0, function () {
+                var result;
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                            return tree.exists(relPath);
-                        })];
+                    switch (_a.label) {
+                        case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.exists(" + path + ") ...");
+                            return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                    return tree.exists(relPath);
+                                })];
+                        case 1:
+                            result = _a.sent();
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.exists(" + path + ") -> DONE");
+                            return [2 /*return*/, result];
+                    }
                 });
             });
         };
@@ -56686,11 +56721,14 @@ message PBNode {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
-                                return tree.rm(relPath);
-                            })];
+                        case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.rm(" + path + ") ...");
+                            return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
+                                    return tree.rm(relPath);
+                                })];
                         case 1:
                             _a.sent();
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.rm(" + path + ") -> DONE");
                             return [2 /*return*/, this];
                     }
                 });
@@ -56698,10 +56736,19 @@ message PBNode {
         };
         FileSystem.prototype.get = function (path) {
             return __awaiter(this, void 0, void 0, function () {
+                var result;
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                            return tree.get(relPath);
-                        })];
+                    switch (_a.label) {
+                        case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.get(" + path + ") ...");
+                            return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                    return tree.get(relPath);
+                                })];
+                        case 1:
+                            result = _a.sent();
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.get(" + path + ") -> DONE");
+                            return [2 /*return*/, result];
+                    }
                 });
             });
         };
@@ -56712,6 +56759,7 @@ message PBNode {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.mv(from:" + from + ", to:" + to + ") ...");
                             sameTree = sameParent(from, to);
                             if (!sameTree) {
                                 throw new Error("`mv` is only supported on the same tree for now");
@@ -56722,6 +56770,7 @@ message PBNode {
                                 })];
                         case 1:
                             _a.sent();
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.mv(from:" + from + ", to:" + to + ") -> DONE");
                             return [2 /*return*/, this];
                     }
                 });
@@ -56755,6 +56804,7 @@ message PBNode {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.publish() ...");
                             proofs = Array.from(Object.entries(this.proofs));
                             this.proofs = {};
                             return [4 /*yield*/, this.root.put()];
@@ -56765,6 +56815,7 @@ message PBNode {
                                 var encodedProof = encode(proof);
                                 _this.publishHooks.forEach(function (hook) { return hook(cid, encodedProof); });
                             });
+                            console.log("MuddaOida - " + Date.now() + ":  FileSystem.publish() -> DONE");
                             return [2 /*return*/, cid];
                     }
                 });
