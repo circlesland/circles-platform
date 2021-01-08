@@ -65,6 +65,8 @@ var FileSystem = /** @class */ (function () {
         this.publishHooks = [];
         this.publishWhenOnline = [];
         this.root = root;
+        var logger = debug.newLogger("Filesystem.ctor()");
+        logger.log("begin");
         if (permissions &&
             permissions.app &&
             permissions.app.creator &&
@@ -75,7 +77,7 @@ var FileSystem = /** @class */ (function () {
         // (reverse list, newest cid first)
         var logCid = function (cid) {
             cidLog.add(cid);
-            debug.log("📓 Adding to the CID ledger:", cid);
+            logger.log("📓 Adding to the CID ledger:", cid);
         };
         // Update the user's data root when making changes
         var updateDataRootWhenOnline = throttle(3000, false, function (cid, proof) {
@@ -87,6 +89,7 @@ var FileSystem = /** @class */ (function () {
         this.publishHooks.push(updateDataRootWhenOnline);
         // Publish when coming back online
         globalThis.addEventListener('online', function () { return _this._whenOnline(); });
+        logger.log("end");
     }
     FileSystem.prototype.getIpfs = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -133,26 +136,27 @@ var FileSystem = /** @class */ (function () {
     FileSystem.fromCID = function (cid, opts) {
         if (opts === void 0) { opts = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var _a, keyName, permissions, localOnly, key, root, fs;
+            var logger, _a, keyName, permissions, localOnly, key, root, fs;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.fromCID(" + cid.toString() + ") ...");
+                        logger = debug.newLogger("FileSystem.fromCID(FileSystem.fromCID(" + cid.toString() + ")");
+                        logger.log("begin");
                         _a = opts.keyName, keyName = _a === void 0 ? 'filesystem-root' : _a, permissions = opts.permissions, localOnly = opts.localOnly;
                         return [4 /*yield*/, keystore.getKeyByName(keyName)];
                     case 1:
                         key = _b.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.fromCID(" + cid.toString() + ") -> await RootTree.fromCID({ cid, key }) ...");
+                        logger.log("await RootTree.fromCID({ cid, key }) ...");
                         return [4 /*yield*/, RootTree.fromCID({ cid: cid, key: key })];
                     case 2:
                         root = _b.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.fromCID(" + cid.toString() + ") -> new FileSystem ...");
+                        logger.log("new FileSystem() ...");
                         fs = new FileSystem({
                             root: root,
                             permissions: permissions,
                             localOnly: localOnly
                         });
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.fromCID(" + cid.toString() + ") -> FINISHED");
+                        logger.log("end");
                         return [2 /*return*/, fs];
                 }
             });
@@ -174,10 +178,12 @@ var FileSystem = /** @class */ (function () {
     FileSystem.prototype.mkdir = function (path, options) {
         if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
+            var logger;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.mkdir(" + path + ") ...");
+                        logger = debug.newLogger("FileSystem.mkdir(path:" + path + ")");
+                        logger.log("begin");
                         return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
                                 return tree.mkdir(relPath);
                             })];
@@ -189,7 +195,7 @@ var FileSystem = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.mkdir(" + path + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, this];
                 }
             });
@@ -197,17 +203,18 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.ls = function (path) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var logger, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.ls(" + path + ") ...");
+                        logger = debug.newLogger("FileSystem.ls(path:" + path + ")");
+                        logger.log("begin");
                         return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
                                 return tree.ls(relPath);
                             })];
                     case 1:
                         result = _a.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.ls(" + path + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, result];
                 }
             });
@@ -216,10 +223,12 @@ var FileSystem = /** @class */ (function () {
     FileSystem.prototype.add = function (path, content, options) {
         if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
+            var logger;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.add(" + path + ") ...");
+                        logger = debug.newLogger("FileSystem.add(path:" + path + ")");
+                        logger.log("begin");
                         return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
                                 return tree.add(relPath, content);
                             })];
@@ -231,7 +240,7 @@ var FileSystem = /** @class */ (function () {
                         _a.sent();
                         _a.label = 3;
                     case 3:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.add(" + path + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, this];
                 }
             });
@@ -239,17 +248,18 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.cat = function (path) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var logger, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.cat(" + path + ") ...");
+                        logger = debug.newLogger("FileSystem.cat(path:" + path + ")");
+                        logger.log("begin");
                         return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
                                 return tree.cat(relPath);
                             })];
                     case 1:
                         result = _a.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.cat(" + path + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, result];
                 }
             });
@@ -257,17 +267,18 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.exists = function (path) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var logger, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.exists(" + path + ") ...");
+                        logger = debug.newLogger("FileSystem.exists(path:" + path + ")");
+                        logger.log("begin");
                         return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
                                 return tree.exists(relPath);
                             })];
                     case 1:
                         result = _a.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.exists(" + path + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, result];
                 }
             });
@@ -275,16 +286,18 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.rm = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.rm(" + path + ") ...");
+                        logger = debug.newLogger("FileSystem.rm(path:" + path + ")");
+                        logger.log("begin");
                         return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
                                 return tree.rm(relPath);
                             })];
                     case 1:
                         _a.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.rm(" + path + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, this];
                 }
             });
@@ -292,17 +305,18 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.get = function (path) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var logger, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.get(" + path + ") ...");
+                        logger = debug.newLogger("FileSystem.get(path:" + path + ")");
+                        logger.log("begin");
                         return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
                                 return tree.get(relPath);
                             })];
                     case 1:
                         result = _a.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.get(" + path + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, result];
                 }
             });
@@ -311,11 +325,12 @@ var FileSystem = /** @class */ (function () {
     // This is only implemented on the same tree for now and will error otherwise
     FileSystem.prototype.mv = function (from, to) {
         return __awaiter(this, void 0, void 0, function () {
-            var sameTree;
+            var logger, sameTree;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.mv(from:" + from + ", to:" + to + ") ...");
+                        logger = debug.newLogger("FileSystem.mv(from:" + from + ", to:" + to + ")");
+                        logger.log("begin");
                         sameTree = pathUtil.sameParent(from, to);
                         if (!sameTree) {
                             throw new Error("`mv` is only supported on the same tree for now");
@@ -326,7 +341,7 @@ var FileSystem = /** @class */ (function () {
                             })];
                     case 1:
                         _a.sent();
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.mv(from:" + from + ", to:" + to + ") -> DONE");
+                        logger.log("end");
                         return [2 /*return*/, this];
                 }
             });
@@ -334,16 +349,36 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.read = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.cat(path)];
+                switch (_a.label) {
+                    case 0:
+                        logger = debug.newLogger("FileSystem.read(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.cat(path)];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
     FileSystem.prototype.write = function (path, content, options) {
         if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.add(path, content, options)];
+                switch (_a.label) {
+                    case 0:
+                        logger = debug.newLogger("FileSystem.write(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.add(path, content, options)];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
@@ -355,12 +390,13 @@ var FileSystem = /** @class */ (function () {
      */
     FileSystem.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var proofs, cid;
+            var logger, proofs, cid;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.publish() ...");
+                        logger = debug.newLogger("FileSystem.publish()");
+                        logger.log("FileSystem.publish() ...");
                         proofs = Array.from(Object.entries(this.proofs));
                         this.proofs = {};
                         return [4 /*yield*/, this.root.put()];
@@ -371,7 +407,7 @@ var FileSystem = /** @class */ (function () {
                             var encodedProof = ucan.encode(proof);
                             _this.publishHooks.forEach(function (hook) { return hook(cid, encodedProof); });
                         });
-                        console.log("MuddaOida - " + Date.now() + ":  FileSystem.publish() -> DONE");
+                        logger.log("FileSystem.publish() -> DONE");
                         return [2 /*return*/, cid];
                 }
             });
