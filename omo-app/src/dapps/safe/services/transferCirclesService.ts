@@ -57,7 +57,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
       }
     });
 
-    console.log(pathResult);
+    window.o.logger.log(pathResult);
 */
     const tokenOwners = [safeState.mySafeAddress];
     const sources = [safeState.mySafeAddress];
@@ -81,7 +81,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
       values
     );
 
-    console.log(transferTroughResult);
+    window.o.logger.log(transferTroughResult);
   } catch (e) {
     console.error(e);
     throw e;

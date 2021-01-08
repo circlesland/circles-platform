@@ -18,7 +18,7 @@ export const omomarket = {
             component: Offers,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -35,7 +35,7 @@ export const omomarket = {
             component: Requests,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -52,7 +52,7 @@ export const omomarket = {
             component: Favorites,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }

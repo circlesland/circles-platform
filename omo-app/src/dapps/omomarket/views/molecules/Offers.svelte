@@ -7,17 +7,12 @@
   import Icon from "fa-svelte";
   import { featured, offers } from "../../data/offers";
   import {Offer} from "../../../../libs/o-fission/entities/offer";
-  import {of} from "rxjs";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {FissionAuthState} from "../../../fissionauth/manifest";
   import {OmoSapienState} from "../../../omosapien/manifest";
   import {runWithDrive} from "../../../../libs/o-fission/initFission";
 
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-
   let myOffers:Offer[] = [];
-
 
   async function init() {
     await runWithDrive(async fissiondrive =>
@@ -46,9 +41,9 @@
           delivery: "pickup or delivery",
           offeredBy: {
             image: offeredBy.DeineMuddaOida,
-              firstName: offeredBy.firstName,
-              lastName: offeredBy.lastName,
-              email: ""
+            firstName: offeredBy.firstName,
+            lastName: offeredBy.lastName,
+            email: ""
           },
       },
     }

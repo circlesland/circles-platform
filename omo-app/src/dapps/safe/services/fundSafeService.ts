@@ -26,9 +26,9 @@ export const fundSafeService = async (context: FundSafeContext) =>
     nonce: nonce
   }));
 
-  console.log("Sending 0.01 xDai to ", safeState.mySafeAddress);
-  console.log("GasPrice:", gasPrice.toString());
-  console.log("GasEstimate:", gasEstimate.toString());
+  window.o.logger.log("Sending 0.01 xDai to ", safeState.mySafeAddress);
+  window.o.logger.log("GasPrice:", gasPrice.toString());
+  window.o.logger.log("GasEstimate:", gasEstimate.toString());
 
   const signedRawTransaction = await Web3Contract.signRawTransaction(
     myAccount.address,
@@ -39,5 +39,5 @@ export const fundSafeService = async (context: FundSafeContext) =>
     value);
 
   const minedReceipt = await Web3Contract.sendSignedRawTransaction(signedRawTransaction);
-  console.log(minedReceipt);
+  window.o.logger.log(minedReceipt);
 }

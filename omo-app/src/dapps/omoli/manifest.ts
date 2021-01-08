@@ -20,7 +20,7 @@ export const omoli : DappManifest<OmoLiState,OmoLiState> = {
     component: Dapps,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }

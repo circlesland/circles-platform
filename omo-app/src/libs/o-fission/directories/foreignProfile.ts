@@ -5,10 +5,10 @@ import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
 
 export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
 {
-  console.log("ipfsCat:", cid)
+  window.o.logger.log("ipfsCat:", cid)
   const chunks = []
   for await (const chunk of ipfs.cat(cid)) {
-    console.log("ipfsCat chunk no.:", chunks.length)
+    window.o.logger.log("ipfsCat chunk no.:", chunks.length)
     if (Buffer.isBuffer(chunk))
       chunks.push(chunk)
     else
@@ -19,7 +19,7 @@ export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
 
 export const ipfsGetFile = async (ipfs:IPFS, cid:string): Promise<Buffer> =>
 {
-  console.log("ipfsGetFile", cid);
+  window.o.logger.log("ipfsGetFile", cid);
   const fileContentCid = ipfs.ls(cid);
 
   for await (const fileCid of fileContentCid)

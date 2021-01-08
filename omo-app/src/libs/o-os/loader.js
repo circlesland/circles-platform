@@ -75,7 +75,7 @@ function getDappEntryPoint(dappManifest, pageManifest) {
                 // The dapp isn't yet loaded
                 const freshRuntimeDapp = yield loadDapp([], dappManifest);
                 if (freshRuntimeDapp.cancelDependencyLoading) {
-                    console.log("A dependency requested the cancellation of the dependency loading process.");
+                    window.o.logger.log("A dependency requested the cancellation of the dependency loading process.");
                     if (!freshRuntimeDapp.initialPage) {
                         // TODO: Every dapp needs a initial page for all conditions, else the generic loader error is displayed
                         throw new Error("The dapp '" + freshRuntimeDapp.runtimeDapp.id + "' has no 'initialPage' attribute or its value is null.");
@@ -126,15 +126,15 @@ function initializeDapp(stack, runtimeDapp) {
         let defaultPage = null;
         // first check if all dependencies are fulfilled
         if (runtimeDapp.dependencies) {
-            console.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
+            window.o.logger.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
             const missingDependencies = runtimeDapp.dependencies.filter(dep => !loadedDapps.find(o => o.id == dep));
             if (missingDependencies.length == 0) {
                 // All dependencies are already loaded
-                console.log(logPrefix + "All dependencies are already loaded");
+                window.o.logger.log(logPrefix + "All dependencies are already loaded");
             }
             else {
                 // Some or all dependencies need to be loaded
-                console.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
+                window.o.logger.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
                 const nextStack = [...stack, runtimeDapp];
                 yield Promise.all(missingDependencies.map((dep) => __awaiter(this, void 0, void 0, function* () {
                     if (cancelled) {
@@ -146,7 +146,7 @@ function initializeDapp(stack, runtimeDapp) {
                     }
                     const loadDappResult = yield loadDapp(nextStack, dappManifest);
                     if (loadDappResult.cancelDependencyLoading) {
-                        console.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
+                        window.o.logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
                         cancelled = true;
                         if (loadDappResult.initialPage) {
                             defaultPage = loadDappResult.initialPage;
@@ -154,7 +154,7 @@ function initializeDapp(stack, runtimeDapp) {
                     }
                 })));
                 if (cancelled) {
-                    console.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
+                    window.o.logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
                     return {
                         runtimeDapp,
                         cancelDependencyLoading: true,
@@ -162,7 +162,7 @@ function initializeDapp(stack, runtimeDapp) {
                     };
                 }
                 else {
-                    console.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
+                    window.o.logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
                 }
             }
         }
@@ -175,7 +175,7 @@ function initializeDapp(stack, runtimeDapp) {
         };
         if (runtimeDapp.initialize) {
             initializationResult = yield runtimeDapp.initialize(stack, runtimeDapp);
-            console.log("initializedDappState", initializationResult);
+            window.o.logger.log("initializedDappState", initializationResult);
         }
         return {
             runtimeDapp,

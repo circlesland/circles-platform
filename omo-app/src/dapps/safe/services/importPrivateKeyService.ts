@@ -28,7 +28,7 @@ function isValidKeyPhrase(value: string): string | null {
     }
 
   } catch (e) {
-    console.log("connect safe with private key phrase failed.")
+    window.o.logger.log("connect safe with private key phrase failed.")
     return null;
   }
 }
@@ -61,7 +61,7 @@ function isValidHexKey(value: string): string | null {
       return null;
   }
   catch (e) {
-    console.log("connect safe with hex private key failed.")
+    window.o.logger.log("connect safe with hex private key failed.")
     return null;
   }
 }
@@ -71,7 +71,7 @@ export const importPrivateKeyService = async (context: ImportPrivateKeyContext) 
 {
   await runWithDrive(async fissionDrive =>
   {
-    console.log("Importing an exising account");
+    window.o.logger.log("Importing an exising account");
 
     const privateKey = isValidHexKey(context.data.privateKey.value)
       ?? isValidKeyPhrase(context.data.privateKey.value);

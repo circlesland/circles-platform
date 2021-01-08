@@ -17,12 +17,12 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 import { tryGetDappState } from "../../o-os/loader";
 export const ipfsCat = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function* () {
     var e_1, _a;
-    console.log("ipfsCat:", cid);
+    window.o.logger.log("ipfsCat:", cid);
     const chunks = [];
     try {
         for (var _b = __asyncValues(ipfs.cat(cid)), _c; _c = yield _b.next(), !_c.done;) {
             const chunk = _c.value;
-            console.log("ipfsCat chunk no.:", chunks.length);
+            window.o.logger.log("ipfsCat chunk no.:", chunks.length);
             if (Buffer.isBuffer(chunk))
                 chunks.push(chunk);
             else
@@ -40,7 +40,7 @@ export const ipfsCat = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function
 });
 export const ipfsGetFile = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function* () {
     var e_2, _d;
-    console.log("ipfsGetFile", cid);
+    window.o.logger.log("ipfsGetFile", cid);
     const fileContentCid = ipfs.ls(cid);
     try {
         for (var fileContentCid_1 = __asyncValues(fileContentCid), fileContentCid_1_1; fileContentCid_1_1 = yield fileContentCid_1.next(), !fileContentCid_1_1.done;) {

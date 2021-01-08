@@ -137,20 +137,20 @@ export abstract class Web3Contract implements Addressable {
     return new Promise<TransactionReceipt>((resolve, reject) => {
       web3.eth.sendSignedTransaction(serializedTx)
         .once('transactionHash', (hash) => {
-          console.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);
+          window.o.logger.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);
         })
         .once('receipt', (receipt) => {
-          console.log("web3.eth.sendSignedTransaction | Got receipt:", receipt);
+          window.o.logger.log("web3.eth.sendSignedTransaction | Got receipt:", receipt);
         })
         .once('confirmation', (confNumber) => {
-          console.log("web3.eth.sendSignedTransaction | Got confirmation. Conf No.: " + confNumber);
+          window.o.logger.log("web3.eth.sendSignedTransaction | Got confirmation. Conf No.: " + confNumber);
         })
         .once('error', (error) => {
-          console.log("web3.eth.sendSignedTransaction | Got error:", error);
+          window.o.logger.log("web3.eth.sendSignedTransaction | Got error:", error);
           reject(error);
         })
         .then(function (receipt) {
-          console.log("web3.eth.sendSignedTransaction | Transaction was mined.");
+          window.o.logger.log("web3.eth.sendSignedTransaction | Transaction was mined.");
           resolve(receipt);
         });
     });

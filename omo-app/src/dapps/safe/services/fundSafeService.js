@@ -24,10 +24,10 @@ export const fundSafeService = (context) => __awaiter(void 0, void 0, void 0, fu
         data: "0x",
         nonce: nonce
     }));
-    console.log("Sending 0.01 xDai to ", safeState.mySafeAddress);
-    console.log("GasPrice:", gasPrice.toString());
-    console.log("GasEstimate:", gasEstimate.toString());
+    window.o.logger.log("Sending 0.01 xDai to ", safeState.mySafeAddress);
+    window.o.logger.log("GasPrice:", gasPrice.toString());
+    window.o.logger.log("GasEstimate:", gasEstimate.toString());
     const signedRawTransaction = yield Web3Contract.signRawTransaction(myAccount.address, myAccount.privateKey, safeState.mySafeAddress, "0x", gasEstimate, value);
     const minedReceipt = yield Web3Contract.sendSignedRawTransaction(signedRawTransaction);
-    console.log(minedReceipt);
+    window.o.logger.log(minedReceipt);
 });

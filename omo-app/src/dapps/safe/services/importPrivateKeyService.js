@@ -29,7 +29,7 @@ function isValidKeyPhrase(value) {
         }
     }
     catch (e) {
-        console.log("connect safe with private key phrase failed.");
+        window.o.logger.log("connect safe with private key phrase failed.");
         return null;
     }
 }
@@ -57,14 +57,14 @@ function isValidHexKey(value) {
             return null;
     }
     catch (e) {
-        console.log("connect safe with hex private key failed.");
+        window.o.logger.log("connect safe with hex private key failed.");
         return null;
     }
 }
 export const importPrivateKeyService = (context) => __awaiter(void 0, void 0, void 0, function* () {
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
-        console.log("Importing an exising account");
+        window.o.logger.log("Importing an exising account");
         const privateKey = (_a = isValidHexKey(context.data.privateKey.value)) !== null && _a !== void 0 ? _a : isValidKeyPhrase(context.data.privateKey.value);
         const ownerAddress = config.getCurrent().web3()
             .eth

@@ -23,7 +23,7 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     component: Offers,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }
@@ -40,7 +40,7 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     component: Requests,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }
@@ -57,7 +57,7 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     component: Favorites,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }

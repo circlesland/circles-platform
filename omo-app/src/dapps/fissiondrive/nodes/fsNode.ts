@@ -21,6 +21,10 @@ export abstract class FsNode implements TreeNode
   get path() :string
   {
     const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+    const fission = fissionAuthState.fission.getValue();
+    if (!fission)
+      throw new Error("Your fission drive is not available.")
+
     let current: FsNode = this;
     let path = [];
 
@@ -30,9 +34,7 @@ export abstract class FsNode implements TreeNode
       current = current.parent;
     }
 
-
-    throw new Error("Deine Mudda!")
-    // return fissionAuthState.fission.fs.appPath(path);
+    return fission.fs.appPath(path);
   }
 
   constructor(parent: FsNode, name: string)

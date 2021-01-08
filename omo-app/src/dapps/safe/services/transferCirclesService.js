@@ -55,7 +55,7 @@ export const transferCirclesService = (context) => __awaiter(void 0, void 0, voi
           }
         });
     
-        console.log(pathResult);
+        window.o.logger.log(pathResult);
     */
         const tokenOwners = [safeState.mySafeAddress];
         const sources = [safeState.mySafeAddress];
@@ -71,7 +71,7 @@ export const transferCirclesService = (context) => __awaiter(void 0, void 0, voi
             });
         */
         const transferTroughResult = yield context.environment.eth.contracts.hub.transferTrough(safeState.myKey.privateKey, gnosisSafeProxy, tokenOwners, sources, destinations, values);
-        console.log(transferTroughResult);
+        window.o.logger.log(transferTroughResult);
     }
     catch (e) {
         console.error(e);

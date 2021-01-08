@@ -85,7 +85,7 @@ export class CirclesToken
             topics: topics
           });
 
-          console.log(`Received ${pastLogs.length} events from block ${f} to ${t} (partition ${partitionIdx + 1} of ${partitionCount}).`)
+          window.o.logger.log(`Received ${pastLogs.length} events from block ${f} to ${t} (partition ${partitionIdx + 1} of ${partitionCount}).`)
 
           pastLogs.forEach(event =>
           {

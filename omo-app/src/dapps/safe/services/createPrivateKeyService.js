@@ -12,7 +12,7 @@ import { setDappState } from "../../../libs/o-os/loader";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
 export const createPrivateKeyService = (context) => __awaiter(void 0, void 0, void 0, function* () {
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("Creating a new account");
+        window.o.logger.log("Creating a new account");
         const web3 = context.environment.eth.web3;
         const newKey = web3.eth.accounts.create();
         yield fissionDrive.keys.addMyKey({

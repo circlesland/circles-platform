@@ -84,7 +84,7 @@ const updateCacheTrigger = new DelayedTrigger(1000, async () =>
     }
   }
 
-  console.log("Writing transactions to fission cache ...");
+  window.o.logger.log("Writing transactions to fission cache ...");
   await runWithDrive(async fissionDrive =>
   {
     await fissionDrive.transactions.addOrUpdate(transactionBlocks);
@@ -116,7 +116,7 @@ const updateCacheTrigger = new DelayedTrigger(1000, async () =>
     }));
 
     await fissionDrive.tokens.addOrUpdate(existingKnownTokensList);
-    console.log("Wrote transactions to fission cache.");
+    window.o.logger.log("Wrote transactions to fission cache.");
   });
 });
 
@@ -146,7 +146,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, async () =>
     .reduce((p, c) => p.concat(c), []);
 
   allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-  console.log("Determining time for " + allTransactions.length + " transactions:", allTransactions);
+  window.o.logger.log("Determining time for " + allTransactions.length + " transactions:", allTransactions);
 
   for (let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++)
   {
@@ -329,7 +329,7 @@ export async function initMyTransactions()
     counter++;
     if (counter % 100 == 0)
     {
-      console.log(`Indexed ${counter} transactions so far ...`);
+      window.o.logger.log(`Indexed ${counter} transactions so far ...`);
     }
 
     indexTransaction(event);

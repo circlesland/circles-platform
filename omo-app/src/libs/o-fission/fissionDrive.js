@@ -13,6 +13,7 @@ import { loadFileSystem } from "libs/webnative";
 import { CirclesTransactions } from "./directories/circlesTransactions";
 import { CirclesTokens } from "./directories/circlesTokens";
 import { Offers } from "./directories/offers";
+import { SessionLogs } from "./directories/logs";
 export class FissionDrive {
     constructor(fissionAuth) {
         this._fissionAuth = fissionAuth;
@@ -38,9 +39,13 @@ export class FissionDrive {
     get offers() {
         return this._offers;
     }
+    get sessionLogs() {
+        return this._sessionLogs;
+    }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this._fs = yield loadFileSystem(this._fissionAuth.permissions, this._fissionAuth.username);
+            this._sessionLogs = new SessionLogs(this._fs);
             this._profiles = new Profiles(this._fs);
             this._keys = new Keys(this._fs);
             this._transactions = new CirclesTransactions(this._fs);

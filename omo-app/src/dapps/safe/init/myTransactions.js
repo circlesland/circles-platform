@@ -57,7 +57,7 @@ const updateCacheTrigger = new DelayedTrigger(1000, () => __awaiter(void 0, void
             transactionBlocks[transaction.blockNo].transactions.push(serializableTransaction);
         }
     }
-    console.log("Writing transactions to fission cache ...");
+    window.o.logger.log("Writing transactions to fission cache ...");
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
         yield fissionDrive.transactions.addOrUpdate(transactionBlocks);
@@ -83,7 +83,7 @@ const updateCacheTrigger = new DelayedTrigger(1000, () => __awaiter(void 0, void
             }
         })));
         yield fissionDrive.tokens.addOrUpdate(existingKnownTokensList);
-        console.log("Wrote transactions to fission cache.");
+        window.o.logger.log("Wrote transactions to fission cache.");
     }));
 }));
 /**
@@ -108,7 +108,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, () => __awai
         .map(transactionsById => Object.values(transactionsById))
         .reduce((p, c) => p.concat(c), []);
     allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-    console.log("Determining time for " + allTransactions.length + " transactions:", allTransactions);
+    window.o.logger.log("Determining time for " + allTransactions.length + " transactions:", allTransactions);
     for (let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++) {
         const transaction = allTransactions[transactionIndex];
         try {
@@ -246,7 +246,7 @@ export function initMyTransactions() {
         transactionStream.subscribe(event => {
             counter++;
             if (counter % 100 == 0) {
-                console.log(`Indexed ${counter} transactions so far ...`);
+                window.o.logger.log(`Indexed ${counter} transactions so far ...`);
             }
             indexTransaction(event);
             pushTransactions.trigger();

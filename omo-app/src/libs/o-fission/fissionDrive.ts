@@ -5,6 +5,7 @@ import {AuthSucceeded, Continuation, loadFileSystem} from "libs/webnative";
 import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
 import { Offers } from "./directories/offers";
+import {SessionLogs} from "./directories/logs";
 
 export class FissionDrive
 {
@@ -45,6 +46,11 @@ export class FissionDrive
   }
   private _offers: Offers;
 
+  get sessionLogs(): SessionLogs {
+    return this._sessionLogs;
+  }
+  private _sessionLogs: SessionLogs;
+
   constructor(fissionAuth: AuthSucceeded | Continuation)
   {
     this._fissionAuth = fissionAuth;
@@ -53,6 +59,7 @@ export class FissionDrive
   async init()
   {
     this._fs = await loadFileSystem(this._fissionAuth.permissions, this._fissionAuth.username);
+    this._sessionLogs = new SessionLogs(this._fs);
     this._profiles = new Profiles(this._fs);
     this._keys = new Keys(this._fs);
     this._transactions = new CirclesTransactions(this._fs);

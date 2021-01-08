@@ -19,7 +19,7 @@ export const stateMachine = {
   },
   async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>)
   {
-    console.log("run", definition.name);
+    window.o.logger.log("run", definition.name);
     const {service, state, send} = useMachine(
       (<any>definition).stateMachine(),
       {
@@ -32,7 +32,7 @@ export const stateMachine = {
 
     service.onTransition((state1, event) =>
     {
-      console.log(event);
+      window.o.logger.log(event);
       /*
       if (event.type === "process.shellEvent")
       {

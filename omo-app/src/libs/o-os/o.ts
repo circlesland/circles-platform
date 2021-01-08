@@ -1,31 +1,14 @@
 import { stateMachine } from "./stateMachine";
 import { Shell } from "./interfaces/shell";
 import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
-import { GnosisSafeProxy } from "../o-circles-protocol/safe/gnosisSafeProxy";
-import { BN } from "ethereumjs-util";
-import { FissionDrive } from "../o-fission/fissionDrive";
-import { Profile } from "../o-fission/entities/profile";
-import { KeyPair } from "../o-fission/entities/keyPair";
-import { Address } from "../o-circles-protocol/interfaces/address";
 import Web3 from "web3";
 import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 import { ProcessContext } from "../o-processes/interfaces/processContext";
-import { Erc20Token } from "../o-circles-protocol/token/erc20Token";
 import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {config} from "../o-circles-protocol/config";
 import * as webnative from "libs/webnative";
-
-export type Me = {
-  myData?: FissionDrive,
-  myProfile?: Profile,
-  myKey?: KeyPair,
-  myAddress?: Address,
-  mySafe?: GnosisSafeProxy,
-  myToken?: Erc20Token,
-  myAddressXDaiBalance?: BN,
-  mySafeXDaiBalance?: BN
-  myDisplayName():string;
-};
+import {SessionLog} from "../o-fission/entities/sessionLog";
+import {runWithDrive} from "../o-fission/initFission";
 
 export type Ethereum = {
   web3: Web3,
@@ -68,8 +51,99 @@ export async function getProcessContext(): Promise<ProcessContext> {
   };
 }
 
-webnative.setup.debug({ enabled: true });
+const sessionLog:SessionLog = {
+  name: Date.now().toString(),
+  messages: []
+};
+
+export function newLogger(name:string, parent?:any)
+{
+  return {
+    name,
+    parent,
+    log: (...args: unknown[]) =>
+    {
+      if (args?.length)
+      {
+        const remainingArgs = args.splice(1);
+        if (remainingArgs.length)
+        {
+            console.log(`${Date.now()} [${name}]: ${args[0]}`, remainingArgs);
+            sessionLog.messages.push({
+              message: `${Date.now()} [${name}]: ${args[0]}`,
+              args: remainingArgs
+            });
+        }
+        else
+        {
+          console.log(`${Date.now()} [${name}]: ${args[0]}`);
+          sessionLog.messages.push({
+            message: `${Date.now()} [${name}]: ${args[0]}`,
+            args: undefined
+          });
+        }
+      }
+    },
+    newLogger: (name:string) => newLogger(name, parent)
+  }
+}
+
+window.addEventListener('error', async function(event)
+{
+  try
+  {
+    logger.log("An error occurred:", {
+      error: event.error,
+      file: event.filename,
+      line: event.lineno,
+      message: event.message
+    });
+    await runWithDrive(async drive =>
+    {
+      await drive.sessionLogs.addOrUpdate(sessionLog, true);
+    });
+  } catch (e)
+  {
+    console.error(`Couldn't write the error log to the fission drive:`, e);
+  }
+})
+
+
+setInterval(async () => {
+  try
+  {
+    await runWithDrive(async drive =>
+    {
+      await drive.sessionLogs.addOrUpdate(sessionLog, false);
+    });
+  }
+  catch (e)
+  {
+    console.error(`Couldn't perform the periodic log-flush to the fission drive:`, e);
+  }
+}, 30000);
+
+setInterval(async () => {
+  try
+  {
+    await runWithDrive(async drive =>
+    {
+      await drive.sessionLogs.addOrUpdate(sessionLog, true);
+    });
+  }
+  catch (e)
+  {
+    console.error(`Couldn't perform the periodic log-publishing to the fission drive:`, e);
+  }
+}, 240000);
+
+const logger = newLogger("o");
+webnative.setup.debug({
+  enabled: true,
+  logger: logger.log
+});
 export const o: Shell = {
   stateMachines: <any>stateMachine,
-  wn: webnative
+  wn: webnative,
+  logger: logger
 }
