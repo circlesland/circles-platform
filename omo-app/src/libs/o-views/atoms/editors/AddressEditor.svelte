@@ -251,8 +251,11 @@
             validate();
           }}">
           <div>
-            {mapToFriendItem(result.original).title}<br/>
-            ({result.original.safeAddress})
+            {#if typeof mapToFriendItem(result.original.safeAddress) !== "string"}
+              <FriendItem showActions={false} data={mapToFriendItem(result.original.safeAddress)} />
+            {:else}
+              {result.original.safeAddress}
+            {/if}
           </div>
         </Typeahead>
       </div>
