@@ -51,7 +51,7 @@ export async function getProcessContext(): Promise<ProcessContext> {
   };
 }
 
-const sessionLog:SessionLog = {
+let sessionLog:SessionLog = {
   name: Date.now().toString(),
   messages: []
 };
@@ -115,6 +115,12 @@ setInterval(async () => {
     await runWithDrive(async drive =>
     {
       await drive.sessionLogs.addOrUpdate(sessionLog, false);
+      if (sessionLog.messages.length > 10000) {
+        sessionLog = {
+          name: sessionLog.name + "_" + Date.now(),
+          messages: []
+        };
+      }
     });
   }
   catch (e)
@@ -129,6 +135,12 @@ setInterval(async () => {
     await runWithDrive(async drive =>
     {
       await drive.sessionLogs.addOrUpdate(sessionLog, true);
+      if (sessionLog.messages.length > 10000) {
+        sessionLog = {
+          name: sessionLog.name + "_" + Date.now(),
+          messages: []
+        };
+      }
     });
   }
   catch (e)

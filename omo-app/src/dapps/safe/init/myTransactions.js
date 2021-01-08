@@ -108,7 +108,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, () => __awai
         .map(transactionsById => Object.values(transactionsById))
         .reduce((p, c) => p.concat(c), []);
     allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-    window.o.logger.log("Determining time for " + allTransactions.length + " transactions:", allTransactions);
+    window.o.logger.log("Determining time for " + allTransactions.length + " transactions ..");
     for (let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++) {
         const transaction = allTransactions[transactionIndex];
         try {
@@ -134,6 +134,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, () => __awai
             console.warn("Couldn't determine the time of block " + transaction.blockNo + ": " + e.toString());
         }
     }
+    window.o.logger.log("Determining time for " + allTransactions.length + " transactions .. Done.");
     pushTransactions.trigger();
     updateCacheTrigger.trigger();
 }));

@@ -6,7 +6,7 @@
   let error:Error;
 
   $: {
-    console.log("data:", data);
+    window.o.logger.log(`An error occurred during the execution of a workflow:`, data);
     if (data)
     {
       error = data.error;

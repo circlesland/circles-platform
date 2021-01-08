@@ -16,6 +16,7 @@ import { runWithDrive } from "../../../libs/o-fission/initFission";
 export function initMyToken() {
     return __awaiter(this, void 0, void 0, function* () {
         yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const safeState = tryGetDappState("omo.safe:1");
             let myToken;
             try {
@@ -39,7 +40,7 @@ export function initMyToken() {
                         yield fissionDrive.tokens.addMyToken(myToken);
                     }
                     catch (e) {
-                        window.o.logger.log(e);
+                        window.o.logger.log((_a = e.message) !== null && _a !== void 0 ? _a : "no message - see args for details", e);
                     }
                 }
             }

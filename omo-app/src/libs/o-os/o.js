@@ -41,7 +41,7 @@ export function getProcessContext() {
         };
     });
 }
-const sessionLog = {
+let sessionLog = {
     name: Date.now().toString(),
     messages: []
 };
@@ -93,6 +93,12 @@ setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
             yield drive.sessionLogs.addOrUpdate(sessionLog, false);
+            if (sessionLog.messages.length > 10000) {
+                sessionLog = {
+                    name: sessionLog.name + "_" + Date.now(),
+                    messages: []
+                };
+            }
         }));
     }
     catch (e) {
@@ -103,6 +109,12 @@ setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
             yield drive.sessionLogs.addOrUpdate(sessionLog, true);
+            if (sessionLog.messages.length > 10000) {
+                sessionLog = {
+                    name: sessionLog.name + "_" + Date.now(),
+                    messages: []
+                };
+            }
         }));
     }
     catch (e) {

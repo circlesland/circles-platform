@@ -44,7 +44,7 @@ export async function initMyToken()
         }
         catch (e)
         {
-          window.o.logger.log(e);
+          window.o.logger.log(e.message ?? "no message - see args for details", e);
         }
       }
     }

@@ -32,13 +32,10 @@ export const stateMachine = {
 
     service.onTransition((state1, event) =>
     {
-      window.o.logger.log(event);
-      /*
-      if (event.type === "process.shellEvent")
+      if (event.type == 'error.platform')
       {
-        window.o.publishEvent((<ShellEvent>event).payload);
+        window.o.logger.log(`An error occurred during the execution of a workflow:`, event);
       }
-       */
 
       processEvents.next(<any>{
         stopped: false,

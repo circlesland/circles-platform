@@ -28,13 +28,9 @@ export const stateMachine = {
             });
             const processEvents = new Subject();
             service.onTransition((state1, event) => {
-                window.o.logger.log(event);
-                /*
-                if (event.type === "process.shellEvent")
-                {
-                  window.o.publishEvent((<ShellEvent>event).payload);
+                if (event.type == 'error.platform') {
+                    window.o.logger.log(`An error occurred during the execution of a workflow:`, event);
                 }
-                 */
                 processEvents.next({
                     stopped: false,
                     currentState: state1,
