@@ -31,7 +31,7 @@ const processDefinition = (maxBalance) => createMachine({
                             text: str.bannerRecipient()
                         }
                     },
-                    artifacts: Object.assign({}, ethereumAddress("recipient"))
+                    artifacts: Object.assign({}, ethereumAddress("recipient", null, false, true))
                 };
             }),
             on: {

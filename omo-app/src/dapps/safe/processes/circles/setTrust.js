@@ -33,7 +33,7 @@ const processDefinition = () => createMachine({
                             text: str.bannerTrustRecipient()
                         }
                     },
-                    artifacts: Object.assign({}, ethereumAddress("trustReceiver"))
+                    artifacts: Object.assign({}, ethereumAddress("trustReceiver", null, false, true))
                 };
             }),
             on: {

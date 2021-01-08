@@ -38,7 +38,7 @@
 
   let comboboxRef = null;
   let searchRef = null;
-  let hideDropdown = false;
+  export let hideDropdown = false;
   let selectedIndex = -1;
   let prevResults = "";
 

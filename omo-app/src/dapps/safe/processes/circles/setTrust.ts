@@ -46,7 +46,7 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
             }
           },
           artifacts: {
-            ...ethereumAddress("trustReceiver")
+            ...ethereumAddress("trustReceiver", null, false, true)
           }
         }
       }),

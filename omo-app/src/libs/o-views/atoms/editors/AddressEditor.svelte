@@ -52,6 +52,7 @@
     }
   }
 
+  let hideDropdown = true;
   let lookupContacts: Contact[] = [];
   let contactsBySafeAddress: {
     [safeAddress: string]: Contact
@@ -118,6 +119,10 @@
 
     loadDirectoryContacts();
     validate();
+    if (processArtifact && processArtifact.isValid)
+    {
+      hideDropdown = true;
+    }
   });
 
   function extractSearchKey(item: Contact)
@@ -225,7 +230,8 @@
         <Typeahead
           placeholder={`Search for contacts or enter an address`}
           hideLabel
-          data={lookupContacts}
+          hideDropdown={hideDropdown}
+          data={processArtifact.enableAutocomplete ? lookupContacts : []}
           extract={extractSearchKey}
           format={(original) => mapToFriendItem(original).detail.address}
           let:result

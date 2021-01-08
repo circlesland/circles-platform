@@ -42,7 +42,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
             }
           },
           artifacts: {
-            ...ethereumAddress("trustReceiver")
+            ...ethereumAddress("trustReceiver", null, false, true)
           }
         }
       }),

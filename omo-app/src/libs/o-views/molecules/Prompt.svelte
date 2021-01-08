@@ -53,6 +53,12 @@
 
   function sendAnswer()
   {
+    if (!isValid)
+    {
+      console.warn("The data in the current prompt is not valid. Cannot send the answer.")
+      return;
+    }
+
     processArtifacts.forEach((changedArtifact) =>
     {
       prompt.data[changedArtifact.key] = changedArtifact;

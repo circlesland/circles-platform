@@ -6,7 +6,8 @@ export const choice = (key: string, label: string | undefined, choices: any[]) =
     type: "choice",
     isReadonly: false,
     label: label,
-    choices: choices
+    choices: choices,
+    isValid: true
   };
   const part = {};
   part[key] = artifact;

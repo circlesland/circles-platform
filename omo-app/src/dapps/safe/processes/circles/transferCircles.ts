@@ -44,7 +44,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
             }
           },
           artifacts: {
-            ...ethereumAddress("recipient")
+            ...ethereumAddress("recipient", null, false, true)
           }
         }
       }),
