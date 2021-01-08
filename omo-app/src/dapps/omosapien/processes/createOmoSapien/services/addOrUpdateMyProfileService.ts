@@ -3,7 +3,6 @@ import { Profile } from "../../../../../libs/o-fission/entities/profile";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
 import {setDappState, tryGetDappState} from "../../../../../libs/o-os/loader";
-import {FissionAuthState} from "../../../../fissionauth/manifest";
 import {OmoSapienState} from "../../../manifest";
 import {runWithDrive} from "../../../../../libs/o-fission/initFission";
 
@@ -31,9 +30,12 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
       avatarDataUrl = dataUri;
     }
 
-    const avatarBuffer = Buffer.from(avatarDataUrl.split(",")[1], 'base64');
+    if (avatarDataUrl)
+    {
+      const avatarBuffer = Buffer.from(avatarDataUrl.split(",")[1], 'base64');
+      await fissionDrive.profiles.addOrUpdateMyAvatar(avatarBuffer, false);
+    }
 
-    await fissionDrive.profiles.addOrUpdateMyAvatar(avatarBuffer, false);
     await fissionDrive.profiles.addOrUpdateMyProfile(profile);
 
     setDappState<OmoSapienState>("omo.sapien:1", current => {

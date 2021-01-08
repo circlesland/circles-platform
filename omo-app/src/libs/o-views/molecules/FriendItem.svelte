@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { Address } from "../../o-circles-protocol/interfaces/address";
+  import type {Address} from "../../o-circles-protocol/interfaces/address";
   import {
     setTrust,
     SetTrustContext,
   } from "../../../dapps/safe/processes/circles/setTrust";
   import ButtonIcon from "../atoms/ButtonIcon.svelte";
-  import { RunProcess } from "../../o-events/runProcess";
+  import {RunProcess} from "../../o-events/runProcess";
 
   import Icon from "fa-svelte";
   import {
@@ -25,15 +25,17 @@
     transferCircles,
     TransferCirclesContext,
   } from "../../../dapps/safe/processes/circles/transferCircles";
-  import { ProcessArtifact } from "../../o-processes/interfaces/processArtifact";
+  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
   import {tryGetDappState} from "../../o-os/loader";
   import {OmoSafeState} from "../../../dapps/safe/manifest";
+  import OmosapienAvatar from "../atoms/OmosapienAvatar.svelte";
 
-  export let showActions:boolean = true;
+  export let showActions: boolean = true;
   export let data = {
     image: "",
     title: "",
     detail: {
+      fissionUsername: "",
       address: "",
       trust: {
         in: 0,
@@ -63,16 +65,18 @@
 
   let openDetail: boolean = false;
 
-  function toggleExpand() {
+  function toggleExpand()
+  {
     openDetail = !openDetail;
   }
 
   async function runTransferCircles(recipientAddress: Address)
   {
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-    const myBalance = safeState.myBalances.getValue().map(o => parseFloat(o.balance)).reduce((p,c) => p + c, 0).toFixed(2);
+    const myBalance = safeState.myBalances.getValue().map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
 
-    const contextInitializer = async (context: TransferCirclesContext) => {
+    const contextInitializer = async (context: TransferCirclesContext) =>
+    {
       context.data.recipient = <ProcessArtifact>{
         key: "recipient",
         type: "ethereumAddress",
@@ -86,7 +90,8 @@
         {
           id: transferCircles.id,
           name: transferCircles.name,
-          stateMachine: () => {
+          stateMachine: () =>
+          {
             return transferCircles.stateMachine(myBalance);
           },
         },
@@ -95,8 +100,10 @@
     );
   }
 
-  function runTrust(recipientAddress: Address) {
-    const contextInitializer = async (context: SetTrustContext) => {
+  function runTrust(recipientAddress: Address)
+  {
+    const contextInitializer = async (context: SetTrustContext) =>
+    {
       context.data.trustReceiver = {
         type: "ethereumAddress",
         isReadonly: true,
@@ -108,8 +115,10 @@
     window.o.publishEvent(new RunProcess(setTrust, contextInitializer));
   }
 
-  function runUntrust(recipientAddress: Address) {
-    const contextInitializer = async (context: UnTrustContext) => {
+  function runUntrust(recipientAddress: Address)
+  {
+    const contextInitializer = async (context: UnTrustContext) =>
+    {
       context.data.trustReceiver = {
         type: "ethereumAddress",
         isReadonly: true,
@@ -156,7 +165,11 @@
     on:click={() => toggleExpand()}
     class="w-full bg-white border rounded-xl card border-light-200">
     <div class="flex items-center justify-center p-2">
-      <img src={data.image} alt="CRC" class="rounded-xl" />
+      {#if data.detail && data.detail.fissionUsername}
+        <OmosapienAvatar fissionUsername={data.detail.fissionUsername}></OmosapienAvatar>
+      {:else}
+        <img src={data.image} alt="CRC" class="rounded-xl" />
+      {/if}
     </div>
     <div class="flex items-center">
       <div class="p-2">

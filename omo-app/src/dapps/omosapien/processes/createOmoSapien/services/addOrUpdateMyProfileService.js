@@ -29,8 +29,10 @@ export const addOrUpdateMyProfileService = (context) => __awaiter(void 0, void 0
             let dataUri = `data:image/svg+xml;base64,${btoa(svg)}`;
             avatarDataUrl = dataUri;
         }
-        const avatarBuffer = Buffer.from(avatarDataUrl.split(",")[1], 'base64');
-        yield fissionDrive.profiles.addOrUpdateMyAvatar(avatarBuffer, false);
+        if (avatarDataUrl) {
+            const avatarBuffer = Buffer.from(avatarDataUrl.split(",")[1], 'base64');
+            yield fissionDrive.profiles.addOrUpdateMyAvatar(avatarBuffer, false);
+        }
         yield fissionDrive.profiles.addOrUpdateMyProfile(profile);
         setDappState("omo.sapien:1", current => {
             current.myProfile = profile;

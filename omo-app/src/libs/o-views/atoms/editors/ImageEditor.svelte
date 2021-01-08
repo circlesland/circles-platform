@@ -26,6 +26,10 @@
 
   function loadImageIntoCanvas(imageDataUrl:string)
   {
+    processArtifact.value = imageDataUrl;
+    processArtifact.isValid = true;
+    dispatch("validated", processArtifact.isValid);
+
     const canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('cropCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -54,7 +58,7 @@
  */
 
 </script>
-<div style="width:600px; height:450px; background:#f00; position: absolute; left:200px; top:150px;">
+<div style="width:100%; height:100%;">
 <!--<input bind:files type="file" accept="image/*" />-->
 <canvas style="visibility: hidden; position:absolute; left:-8096px; top:-8096px;" id="cropCanvas" width="300" height="300"></canvas>
 {#if imageData}

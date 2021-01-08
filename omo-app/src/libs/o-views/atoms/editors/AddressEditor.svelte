@@ -165,6 +165,7 @@
       title: string,
       detail: {
         address: string,
+        fissionUsername: string,
         trust: {
           in: number
           out: number
@@ -173,6 +174,7 @@
       actions: string[]
     } = {};
 
+    let fissionUsername:string = null;
     if (contact.omoProfile)
     {
       if (contact.omoProfile.avatar)
@@ -180,6 +182,7 @@
         listItem.image = contact.omoProfile.avatar;
       }
       listItem.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`
+      fissionUsername = contact.omoProfile.profile.fissionName;
     }
     else if (contact.circlesProfile)
     {
@@ -198,6 +201,7 @@
 
     listItem.detail = {
       address: contact.safeAddress,
+      fissionUsername: fissionUsername,
       trust: {
         in: contact.trust.in,
         out: contact.trust.out
