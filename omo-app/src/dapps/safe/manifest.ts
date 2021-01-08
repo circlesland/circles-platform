@@ -38,7 +38,8 @@ import {initMyBalances} from "./init/myBalances";
 import {initialMenu} from "./processes/menus/initialMenu";
 import {fundAccountForSafeCreation} from "./processes/omo/fundAccountForSafeCreation";
 import {signupAtCircles} from "./processes/omo/signupAtCircles";
-import {BeginSignal, ProgressSignal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {BeginSignal, ProgressSignal, Signal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {Envelope} from "../../libs/o-os/interfaces/envelope";
 
 export interface OmoSafeState
 {
@@ -47,10 +48,10 @@ export interface OmoSafeState
   myToken?: CirclesToken,
   myAccountXDaiBalance?: BN,
   mySafeXDaiBalance?: BN,
-  myContacts?: BehaviorSubject<Contact[]>,
-  myKnownTokens?: BehaviorSubject<{ [safeAddress: string]: CirclesToken }>,
-  myTransactions?: BehaviorSubject<CirclesTransaction[]>,
-  myBalances?: BehaviorSubject<CirclesBalance[]>
+  myContacts?: BehaviorSubject<Envelope<Contact[]>>,
+  myKnownTokens?: BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>>,
+  myTransactions?: BehaviorSubject<Envelope<CirclesTransaction[]>>,
+  myBalances?: BehaviorSubject<Envelope<CirclesBalance[]>>
 }
 
 const transactionPage = {

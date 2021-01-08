@@ -15,6 +15,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 import { tryGetDappState } from "../../o-os/loader";
+import { runWithDrive } from "../initFission";
 export const ipfsCat = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function* () {
     var e_1, _a;
     window.o.logger.log("ipfsCat:", cid);
@@ -61,7 +62,6 @@ export const ipfsGetFile = (ipfs, cid) => __awaiter(void 0, void 0, void 0, func
 });
 export class ForeignProfile {
     static findByFissionUsername(fissionUsername) {
-        var e_3, _a;
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
             try {
@@ -76,34 +76,37 @@ export class ForeignProfile {
                 ipfsCid = ipfsCid.replace("/ipfs/", "");
                 ipfsCid = ipfsCid.replace("/public", "");
                 ipfsCid = ipfsCid + "/public/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland";
-                const ipfs = yield fissionAuthState.fission.getValue().fs.getIpfs();
-                const dir = yield ipfs.ls(ipfsCid);
-                let otherProfileObj;
-                let otherProfileAvatar;
-                try {
-                    for (var dir_1 = __asyncValues(dir), dir_1_1; dir_1_1 = yield dir_1.next(), !dir_1_1.done;) {
-                        const element = dir_1_1.value;
-                        if (element.name === "me") {
-                            const profileBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
-                            otherProfileObj = JSON.parse(profileBuffer.toString());
-                        }
-                        if (element.name === "me.png") {
-                            const avatarBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
-                            otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
-                        }
-                    }
-                }
-                catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                finally {
+                return yield runWithDrive((fission) => __awaiter(this, void 0, void 0, function* () {
+                    var e_3, _a;
+                    const ipfs = yield fission.fs.getIpfs();
+                    const dir = yield ipfs.ls(ipfsCid);
+                    let otherProfileObj;
+                    let otherProfileAvatar;
                     try {
-                        if (dir_1_1 && !dir_1_1.done && (_a = dir_1.return)) yield _a.call(dir_1);
+                        for (var dir_1 = __asyncValues(dir), dir_1_1; dir_1_1 = yield dir_1.next(), !dir_1_1.done;) {
+                            const element = dir_1_1.value;
+                            if (element.name === "me") {
+                                const profileBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
+                                otherProfileObj = JSON.parse(profileBuffer.toString());
+                            }
+                            if (element.name === "me.png") {
+                                const avatarBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
+                                otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
+                            }
+                        }
                     }
-                    finally { if (e_3) throw e_3.error; }
-                }
-                return {
-                    profile: Object.assign({ name: "" }, otherProfileObj),
-                    avatar: otherProfileAvatar
-                };
+                    catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                    finally {
+                        try {
+                            if (dir_1_1 && !dir_1_1.done && (_a = dir_1.return)) yield _a.call(dir_1);
+                        }
+                        finally { if (e_3) throw e_3.error; }
+                    }
+                    return {
+                        profile: Object.assign({ name: "" }, otherProfileObj),
+                        avatar: otherProfileAvatar
+                    };
+                }));
             }
             catch (e) {
                 console.warn("Couldn't load a foreign profile:");

@@ -80,7 +80,7 @@
 
     contacts = {};
     safeState.myContacts.subscribe((contactList) => {
-      const newContacts = contactList.filter(
+      const newContacts = contactList.payload.filter(
         (contact) => !contacts[contact.safeAddress]
       );
       if (newContacts.length == 0) {
@@ -97,7 +97,7 @@
     if (safeState.myTransactions) {
       transactionsSubscription = safeState.myTransactions.subscribe(
         (transactionList) => {
-          transactions = transactionList;
+          transactions = transactionList.payload;
         }
       );
     }

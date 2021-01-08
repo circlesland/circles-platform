@@ -15,7 +15,9 @@ import { CirclesToken } from "../../../libs/o-circles-protocol/model/circlesToke
 import { config } from "../../../libs/o-circles-protocol/config";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
 // The consumable output of this init step (deduplicated ordered list of transactions)
-const myTransactionsSubject = new BehaviorSubject([]);
+const myTransactionsSubject = new BehaviorSubject({
+    payload: []
+});
 // In-memory cache of all transactions
 const myTransactions = {};
 // Contains all known tokens to which we've already subscribed
@@ -171,7 +173,11 @@ const pushTransactions = new DelayedTrigger(35, () => __awaiter(void 0, void 0, 
         .map(transactionsById => Object.values(transactionsById))
         .reduce((p, c) => p.concat(c), []);
     allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-    myTransactionsSubject.next(allTransactions);
+    const current = myTransactionsSubject.getValue();
+    myTransactionsSubject.next({
+        signal: current === null || current === void 0 ? void 0 : current.signal,
+        payload: allTransactions
+    });
 }));
 /**
  * Is triggered whenever the list of known tokens changed (after 500 ms delay).
@@ -186,7 +192,7 @@ const pushTransactions = new DelayedTrigger(35, () => __awaiter(void 0, void 0, 
 const subscribeToTokenEvents = new DelayedTrigger(500, () => __awaiter(void 0, void 0, void 0, function* () {
     const safeState = tryGetDappState("omo.safe:1");
     // Get all known tokens and filter only the new (unsubscribed) ones
-    const tokenList = safeState.myKnownTokens.getValue();
+    const tokenList = safeState.myKnownTokens.getValue().payload;
     const newTokens = Object.values(tokenList).filter(o => !tokensByAddress[o.tokenAddress]);
     if (newTokens.length == 0) {
         return;

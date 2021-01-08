@@ -4,11 +4,19 @@ import {BN} from "ethereumjs-util";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {OmoSafeState} from "../manifest";
 import {CirclesBalance} from "../../../libs/o-circles-protocol/model/circlesBalance";
+import {Signal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 
-const myCirclesBalancesSubject: BehaviorSubject<CirclesBalance[]> = new BehaviorSubject<CirclesBalance[]>([]);
+const myCirclesBalancesSubject: BehaviorSubject<Envelope<CirclesBalance[]>> = new BehaviorSubject<Envelope<CirclesBalance[]>>({
+  payload: []
+});
 let myBalances: CirclesBalance[] = [];
 const updateTrigger = new DelayedTrigger(30, async () => {
-  myCirclesBalancesSubject.next(myBalances);
+  const current = myCirclesBalancesSubject.getValue();
+  myCirclesBalancesSubject.next({
+    signal: current?.signal,
+    payload: myBalances
+  });
 });
 
 export async function initMyBalances()
@@ -17,7 +25,7 @@ export async function initMyBalances()
 
   safeState.myTransactions.subscribe(transactions =>
   {
-    const amounts = transactions.map(o => {
+    const amounts = transactions.payload.map(o => {
       return {
         token: o.token,
         amount: o.direction == "out" ? o.amount.neg() : o.amount,

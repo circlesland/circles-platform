@@ -28,7 +28,7 @@
     if (safeState.myBalances)
     {
       balanceSubscriptions = safeState.myBalances.subscribe(balanceList => {
-        balance = balanceList.map(o => o.balance).reduce((p, c) => p.add(c), new BN("0"));
+        balance = balanceList.payload.map(o => o.balance).reduce((p, c) => p.add(c), new BN("0"));
       });
     }
 

@@ -32,7 +32,7 @@
     {
       contactsSubscription = safeState.myContacts.subscribe(async contactList =>
       {
-        contacts = contactList.filter(o => o.safeAddress !== safeState.mySafeAddress);
+        contacts = contactList.payload.filter(o => o.safeAddress !== safeState.mySafeAddress);
       });
     }
   }

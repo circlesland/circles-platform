@@ -67,15 +67,18 @@ function constructPageUrl(appBaseUrl, pageManifest) {
         pageUrl = "/";
     return pageUrl;
 }
+let logger;
 function getDappEntryPoint(dappManifest, pageManifest) {
     return __awaiter(this, void 0, void 0, function* () {
+        logger = window.o.logger.newLogger("loader");
+        const subLogger = logger.newLogger(`getDappEntryPoint(dappManifest: ${dappManifest.id}, pageManifest: ${pageManifest.routeParts.join("/")})`);
         try {
             let runtimeDapp = loadedDapps.find(o => o.id == dappManifest.id);
             if (!runtimeDapp) {
                 // The dapp isn't yet loaded
                 const freshRuntimeDapp = yield loadDapp([], dappManifest);
                 if (freshRuntimeDapp.cancelDependencyLoading) {
-                    window.o.logger.log("A dependency requested the cancellation of the dependency loading process.");
+                    subLogger.log("A dependency requested the cancellation of the dependency loading process.");
                     if (!freshRuntimeDapp.initialPage) {
                         // TODO: Every dapp needs a initial page for all conditions, else the generic loader error is displayed
                         throw new Error("The dapp '" + freshRuntimeDapp.runtimeDapp.id + "' has no 'initialPage' attribute or its value is null.");
@@ -126,15 +129,15 @@ function initializeDapp(stack, runtimeDapp) {
         let defaultPage = null;
         // first check if all dependencies are fulfilled
         if (runtimeDapp.dependencies) {
-            window.o.logger.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
+            logger.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
             const missingDependencies = runtimeDapp.dependencies.filter(dep => !loadedDapps.find(o => o.id == dep));
             if (missingDependencies.length == 0) {
                 // All dependencies are already loaded
-                window.o.logger.log(logPrefix + "All dependencies are already loaded");
+                logger.log(logPrefix + "All dependencies are already loaded");
             }
             else {
                 // Some or all dependencies need to be loaded
-                window.o.logger.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
+                logger.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
                 const nextStack = [...stack, runtimeDapp];
                 yield Promise.all(missingDependencies.map((dep) => __awaiter(this, void 0, void 0, function* () {
                     if (cancelled) {
@@ -146,7 +149,7 @@ function initializeDapp(stack, runtimeDapp) {
                     }
                     const loadDappResult = yield loadDapp(nextStack, dappManifest);
                     if (loadDappResult.cancelDependencyLoading) {
-                        window.o.logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
+                        logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
                         cancelled = true;
                         if (loadDappResult.initialPage) {
                             defaultPage = loadDappResult.initialPage;
@@ -154,7 +157,7 @@ function initializeDapp(stack, runtimeDapp) {
                     }
                 })));
                 if (cancelled) {
-                    window.o.logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
+                    logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
                     return {
                         runtimeDapp,
                         cancelDependencyLoading: true,
@@ -162,7 +165,7 @@ function initializeDapp(stack, runtimeDapp) {
                     };
                 }
                 else {
-                    window.o.logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
+                    logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
                 }
             }
         }
@@ -175,7 +178,7 @@ function initializeDapp(stack, runtimeDapp) {
         };
         if (runtimeDapp.initialize) {
             initializationResult = yield runtimeDapp.initialize(stack, runtimeDapp);
-            window.o.logger.log("initializedDappState", initializationResult);
+            logger.log("initializedDappState", initializationResult);
         }
         return {
             runtimeDapp,

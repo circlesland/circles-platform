@@ -73,7 +73,7 @@
   async function runTransferCircles(recipientAddress: Address)
   {
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-    const myBalance = safeState.myBalances.getValue().map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
+    const myBalance = safeState.myBalances.getValue().payload.map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
 
     const contextInitializer = async (context: TransferCirclesContext) =>
     {

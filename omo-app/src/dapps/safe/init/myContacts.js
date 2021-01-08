@@ -14,7 +14,9 @@ import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAc
 import { BlockIndex } from "../../../libs/o-os/blockIndex";
 import { ForeignProfile } from "../../../libs/o-fission/directories/foreignProfile";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
-const myContactsSubject = new BehaviorSubject([]);
+const myContactsSubject = new BehaviorSubject({
+    payload: []
+});
 const blockIndex = new BlockIndex();
 const myContacts = {};
 const circlesProfiles = {};
@@ -37,16 +39,22 @@ const augmentCirclesProfiles = new DelayedTrigger(30, () => __awaiter(void 0, vo
             myContacts[entry.safeAddress].circlesProfile = entry;
         });
     }
-    myContactsSubject.next(Object.values(myContacts));
+    const current = myContactsSubject.getValue();
+    myContactsSubject.next({
+        signal: current === null || current === void 0 ? void 0 : current.signal,
+        payload: Object.values(myContacts)
+    });
 }));
 const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
         const omosapienState = tryGetDappState("omo.sapien:1");
         const safeState = tryGetDappState("omo.safe:1");
         yield Promise.all(Object.values(myContacts)
-            .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
+            .filter(o => {
+            omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
+        })
             .map((o) => __awaiter(void 0, void 0, void 0, function* () {
-            const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
+            const directoryEntry = omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
             try {
                 if (o.safeAddress == safeState.mySafeAddress) {
                     o.omoProfile = {
@@ -62,13 +70,21 @@ const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0
                 console.warn("An error occurred while loading the fission contacts:", e);
             }
         })));
-        myContactsSubject.next(Object.values(myContacts));
+        const current = myContactsSubject.getValue();
+        myContactsSubject.next({
+            signal: current === null || current === void 0 ? void 0 : current.signal,
+            payload: Object.values(myContacts)
+        });
     }));
 }));
 const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
     augmentCirclesProfiles.trigger();
     augmentOmoProfiles.trigger();
-    myContactsSubject.next(Object.values(myContacts));
+    const current = myContactsSubject.getValue();
+    myContactsSubject.next({
+        signal: current === null || current === void 0 ? void 0 : current.signal,
+        payload: Object.values(myContacts)
+    });
 }));
 export function initMyContacts() {
     return __awaiter(this, void 0, void 0, function* () {

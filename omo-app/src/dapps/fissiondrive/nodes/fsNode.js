@@ -19,7 +19,7 @@ export class FsNode {
     }
     get path() {
         const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        const fission = fissionAuthState.fission.getValue();
+        const fission = fissionAuthState.fission.getValue().payload;
         if (!fission)
             throw new Error("Your fission drive is not available.");
         let current = this;

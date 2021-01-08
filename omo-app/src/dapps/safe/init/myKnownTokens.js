@@ -15,7 +15,9 @@ import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAc
 import { BlockIndex } from "../../../libs/o-os/blockIndex";
 import { ProgressSignal } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
-const myKnownTokensSubject = new BehaviorSubject({});
+const myKnownTokensSubject = new BehaviorSubject({
+    payload: {}
+});
 const blockIndex = new BlockIndex();
 const myKnownTokens = {};
 const storeToCacheTrigger = new DelayedTrigger(500, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -40,7 +42,11 @@ const storeToCacheTrigger = new DelayedTrigger(500, () => __awaiter(void 0, void
     }));
 }));
 const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
-    myKnownTokensSubject.next(myKnownTokens);
+    const current = myKnownTokensSubject.getValue();
+    myKnownTokensSubject.next({
+        payload: myKnownTokens,
+        signal: current.signal
+    });
     storeToCacheTrigger.trigger();
 }));
 export function initMyKnownTokens() {
@@ -60,7 +66,11 @@ export function initMyKnownTokens() {
                         token.noTransactionsUntilBlockNo = cachedToken.noTransactionsUntilBlockNo;
                         myKnownTokens[token.tokenOwner] = token;
                     });
-                    myKnownTokensSubject.next(myKnownTokens);
+                    const current = myKnownTokensSubject.getValue();
+                    myKnownTokensSubject.next({
+                        payload: myKnownTokens,
+                        signal: current === null || current === void 0 ? void 0 : current.signal
+                    });
                 }
             }
             catch (e) {
@@ -69,7 +79,7 @@ export function initMyKnownTokens() {
             // Update the token list whenever the contact list changes.
             // Don't subscribe to the events since Signup events happen only one time per safe.
             safeState.myContacts.subscribe((contactList) => __awaiter(this, void 0, void 0, function* () {
-                const newContacts = contactList.filter(contact => !myKnownTokens[contact.safeAddress]);
+                const newContacts = contactList.payload.filter(contact => !myKnownTokens[contact.safeAddress]);
                 const newTokens = yield circlesAccount.tryGetTokensBySafeAddress(newContacts.map(o => o.safeAddress));
                 newTokens.forEach(token => {
                     blockIndex.addBlock(token.createdInBlockNo);

@@ -7,11 +7,14 @@ import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAcco
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {Token} from "../../../libs/o-fission/entities/token";
-import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {ProgressSignal, Signal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
 import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 
-const myKnownTokensSubject: BehaviorSubject<{ [safeAddress: string]: CirclesToken }> = new BehaviorSubject<{ [safeAddress: string]: CirclesToken }>({});
+const myKnownTokensSubject: BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>> = new BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>>({
+  payload: {}
+});
 const blockIndex = new BlockIndex();
 const myKnownTokens: { [safeAddress: string]: CirclesToken } = {};
 
@@ -43,7 +46,11 @@ const storeToCacheTrigger = new DelayedTrigger(500, async () =>
 
 const updateTrigger = new DelayedTrigger(30, async () =>
 {
-  myKnownTokensSubject.next(myKnownTokens);
+  const current = myKnownTokensSubject.getValue();
+  myKnownTokensSubject.next({
+    payload:myKnownTokens,
+    signal: current.signal
+  });
   storeToCacheTrigger.trigger();
 });
 
@@ -70,7 +77,11 @@ export async function initMyKnownTokens()
 
           myKnownTokens[token.tokenOwner] = token;
         });
-        myKnownTokensSubject.next(myKnownTokens);
+        const current = myKnownTokensSubject.getValue();
+        myKnownTokensSubject.next({
+          payload: myKnownTokens,
+          signal: current?.signal
+        });
       }
     }
     catch (e)
@@ -82,7 +93,7 @@ export async function initMyKnownTokens()
     // Don't subscribe to the events since Signup events happen only one time per safe.
     safeState.myContacts.subscribe(async contactList =>
     {
-      const newContacts = contactList.filter(contact => !myKnownTokens[contact.safeAddress]);
+      const newContacts = contactList.payload.filter(contact => !myKnownTokens[contact.safeAddress]);
       const newTokens = await circlesAccount.tryGetTokensBySafeAddress(newContacts.map(o => o.safeAddress));
 
       newTokens.forEach(token =>

@@ -6,13 +6,16 @@ import {OmoSafeState} from "../manifest";
 import {Contact} from "../../../libs/o-circles-protocol/model/contact";
 import {CirclesProfile} from "../../../libs/o-circles-protocol/model/circlesProfile";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
-import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {BlockchainEvent, Signal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 
-const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
+const myContactsSubject: BehaviorSubject<Envelope<Contact[]>> = new BehaviorSubject<Envelope<Contact[]>>({
+  payload: []
+});
 const blockIndex = new BlockIndex();
 const myContacts:{[safeAddress:string]:Contact} = {};
 const circlesProfiles:{[safeAddress:string]:CirclesProfile} = {};
@@ -42,7 +45,11 @@ const augmentCirclesProfiles = new DelayedTrigger(30, async () =>
     });
   }
 
-  myContactsSubject.next(Object.values(myContacts));
+  const current = myContactsSubject.getValue();
+  myContactsSubject.next({
+    signal: current?.signal,
+    payload: Object.values(myContacts)
+  });
 });
 
 const augmentOmoProfiles = new DelayedTrigger(30, async () =>
@@ -52,9 +59,11 @@ const augmentOmoProfiles = new DelayedTrigger(30, async () =>
     const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
     await Promise.all(Object.values(myContacts)
-      .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
+      .filter(o => {
+        omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress]
+      })
       .map(async o => {
-        const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
+        const directoryEntry = omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
         try
         {
           if (o.safeAddress == safeState.mySafeAddress)
@@ -74,7 +83,11 @@ const augmentOmoProfiles = new DelayedTrigger(30, async () =>
         }
       }));
 
-    myContactsSubject.next(Object.values(myContacts));
+    const current = myContactsSubject.getValue();
+    myContactsSubject.next({
+      signal: current?.signal,
+      payload: Object.values(myContacts)
+    });
   });
 });
 
@@ -82,7 +95,11 @@ const updateTrigger = new DelayedTrigger(30, async () =>
 {
   augmentCirclesProfiles.trigger();
   augmentOmoProfiles.trigger();
-  myContactsSubject.next(Object.values(myContacts));
+  const current = myContactsSubject.getValue();
+  myContactsSubject.next({
+    signal: current?.signal,
+    payload: Object.values(myContacts)
+  });
 });
 
 export async function initMyContacts()

@@ -6,12 +6,17 @@ import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/
 import { FissionDrive } from "../../libs/o-fission/fissionDrive";
 import { tryGetDappState } from "../../libs/o-os/loader";
 import {BehaviorSubject} from "rxjs";
+import {RuntimeDapp} from "../../libs/o-os/interfaces/runtimeDapp";
+import {Signal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {Envelope} from "../../libs/o-os/interfaces/envelope";
 
 export interface FissionAuthState {
   fissionState: any,
-  fission: BehaviorSubject<FissionDrive>,
+  fission: BehaviorSubject<Envelope<FissionDrive>>,
   username: string
 }
+
+let fissionAuthLogger;
 
 /**
  * Checks if the user is authenticated and redirects him to the 'Authentication' page if not.
@@ -19,10 +24,15 @@ export interface FissionAuthState {
  * @param stack
  * @param runtimeDapp
  */
-async function initialize(stack, runtimeDapp)
+async function initialize(stack, runtimeDapp:RuntimeDapp<any, any>)
 {
+  fissionAuthLogger = window.o.logger.newLogger(runtimeDapp.id);
+  const initLogger = fissionAuthLogger.newLogger(`initialize(stack:[${stack.length}], runtimeDapp:${runtimeDapp.id})`)
+  initLogger.log("begin");
+
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (fissionAuthState?.fissionState) {
+    initLogger.log("end");
     return {
       cancelDependencyLoading: false,
       initialPage: authPage
@@ -30,18 +40,24 @@ async function initialize(stack, runtimeDapp)
   }
   else
   {
-    window.o.logger.log("X - Cancel dependency loading")
+    initLogger.log("Cancel dependency loading. The user is not authenticated.")
     if (stack.length == 0) {
+      initLogger.log("Redirecting to runtime dapp route (after authentication): '" + runtimeDapp.route + "'")
       window.o.redirectTo = runtimeDapp.route;
     }
-    else {
+    else
+    {
+      initLogger.log("Redirecting to last route from stack (after authentication): '" + stack[0].route + "'")
       window.o.redirectTo = stack[0].route;
     }
+
+    initLogger.log("end");
     return {
       cancelDependencyLoading: true,
       initialPage: authenticate
     }
   }
+
 }
 
 const authenticate = {

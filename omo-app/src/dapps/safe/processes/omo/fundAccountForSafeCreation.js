@@ -17,7 +17,7 @@ const processDefinition = () => createMachine({
         generateFundLink: {
             entry: [assign((context, event) => {
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-                    const fissionName = fissionAuthState.fission.getValue().username;
+                    const fissionName = fissionAuthState.fission.getValue().payload.username;
                     const safeState = tryGetDappState("omo.safe:1");
                     const web3 = config.getCurrent().web3();
                     const myAccount = web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey).address;

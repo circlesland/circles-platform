@@ -65,7 +65,7 @@
       contactsBySafeAddress = {};
     }
     const omoSapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-    Object.values(omoSapienState.directory.byFissionName).forEach((omo:Entry) =>
+    Object.values(omoSapienState.directory.getValue().payload.byFissionName).forEach((omo:Entry) =>
     {
       if (omo.circlesSafe && !contactsBySafeAddress[omo.circlesSafe])
       {
@@ -101,7 +101,7 @@
     {
       safeState.myContacts.subscribe(contacts =>
       {
-        contacts.forEach(contact =>
+        contacts.payload.forEach(contact =>
         {
           if (!contact.safeAddress)
           {

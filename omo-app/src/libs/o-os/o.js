@@ -12,7 +12,6 @@ import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
 import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 import { config } from "../o-circles-protocol/config";
 import * as webnative from "libs/webnative";
-import { runWithDrive } from "../o-fission/initFission";
 /**
  * Gets all environment properties like the currently logged-on account, token and profile.
  */
@@ -46,31 +45,44 @@ let sessionLog = {
     messages: []
 };
 export function newLogger(name, parent) {
-    return {
+    const l = {
         name,
         parent,
-        log: (...args) => {
-            if (args === null || args === void 0 ? void 0 : args.length) {
-                const remainingArgs = args.splice(1);
-                if (remainingArgs.length) {
-                    console.log(`${Date.now()} [${name}]: ${args[0]}`, remainingArgs);
-                    sessionLog.messages.push({
-                        message: `${Date.now()} [${name}]: ${args[0]}`,
-                        args: remainingArgs
-                    });
-                }
-                else {
-                    console.log(`${Date.now()} [${name}]: ${args[0]}`);
-                    sessionLog.messages.push({
-                        message: `${Date.now()} [${name}]: ${args[0]}`,
-                        args: undefined
-                    });
-                }
-            }
-        },
-        newLogger: (name) => newLogger(name, parent)
+        log: null,
+        newLogger: null
     };
+    l.newLogger = (name) => {
+        return newLogger(name, l);
+    };
+    l.log = (...args) => {
+        if (args === null || args === void 0 ? void 0 : args.length) {
+            let current = l;
+            const pathParts = [];
+            while (current) {
+                pathParts.unshift(current.name);
+                current = current.parent;
+            }
+            const path = pathParts.join("/");
+            const remainingArgs = args.splice(1);
+            if (remainingArgs.length) {
+                console.log(`${Date.now()} [${path}]: ${args[0]}`, remainingArgs);
+                sessionLog.messages.push({
+                    message: `${Date.now()} [${path}]: ${args[0]}`,
+                    args: remainingArgs
+                });
+            }
+            else {
+                console.log(`${Date.now()} [${path}]: ${args[0]}`);
+                sessionLog.messages.push({
+                    message: `${Date.now()} [${path}]: ${args[0]}`,
+                    args: undefined
+                });
+            }
+        }
+    };
+    return l;
 }
+import { runWithDrive } from "../o-fission/initFission";
 window.addEventListener('error', function (event) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

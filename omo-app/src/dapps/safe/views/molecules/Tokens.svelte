@@ -82,7 +82,7 @@
     contacts = {};
     safeState.myContacts.subscribe(contactList =>
     {
-      const newContacts = contactList.filter(contact => !contacts[contact.safeAddress]);
+      const newContacts = contactList.payload.filter(contact => !contacts[contact.safeAddress]);
       if (newContacts.length == 0)
       {
         return;
@@ -99,7 +99,7 @@
     {
       balanceSubscriptions = safeState.myBalances.subscribe(balanceList =>
       {
-        const weiBalance = balanceList.map(o => o.balance.mul(new BN(3))).reduce((p, c) => p.add(c), new BN("0"));
+        const weiBalance = balanceList.payload.map(o => o.balance.mul(new BN(3))).reduce((p, c) => p.add(c), new BN("0"));
         safeCirclesBalance = {
           data: {
             image: "symbols/o.svg",
@@ -110,8 +110,8 @@
           }
         };
 
-        balances = balanceList.map(balanceEntry => {
-          const tokens:CirclesToken[] = Object.values(safeState.myKnownTokens.getValue());
+        balances = balanceList.payload.map(balanceEntry => {
+          const tokens:CirclesToken[] = Object.values(safeState.myKnownTokens.getValue().payload);
           const token = tokens.find(t => t.tokenAddress == balanceEntry.tokenAddress);
           if (token)
           {

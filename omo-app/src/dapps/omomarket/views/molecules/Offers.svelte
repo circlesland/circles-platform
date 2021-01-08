@@ -26,7 +26,7 @@
   function mapToListItem(offer:Offer) {
     // const locationParts = offer.productLocation.display_name.split(",");
     // const country = locationParts[locationParts.length - 1];
-    const offeredBy = omosapienState.directory.byFissionName[offer.offeredByFissionName];
+    const offeredBy = omosapienState.directory.getValue().payload.byFissionName[offer.offeredByFissionName];
     return {
       data: {
         title: offer.productName,

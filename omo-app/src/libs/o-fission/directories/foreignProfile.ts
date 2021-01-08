@@ -2,6 +2,7 @@ import {Profile} from "../entities/profile";
 import {IPFS} from "libs/webnative/ipfs";
 import {tryGetDappState} from "../../o-os/loader";
 import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
+import {runWithDrive} from "../initFission";
 
 export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
 {
@@ -32,12 +33,14 @@ export const ipfsGetFile = async (ipfs:IPFS, cid:string): Promise<Buffer> =>
   return null;
 }
 
+export type TForeignProfile = {
+  profile:Profile,
+  avatar?: string
+}| null;
+
 export class ForeignProfile
 {
-  static async findByFissionUsername(fissionUsername:string) : Promise<{
-    profile:Profile,
-    avatar?: string
-  }| null>
+  static async findByFissionUsername(fissionUsername:string) : Promise<TForeignProfile>
   {
     // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
     try
@@ -58,34 +61,36 @@ export class ForeignProfile
       ipfsCid = ipfsCid.replace("/public", "");
       ipfsCid = ipfsCid + "/public/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland";
 
-      const ipfs = await fissionAuthState.fission.getValue().fs.getIpfs();
-      const dir = await ipfs.ls(ipfsCid);
-
-      let otherProfileObj;
-      let otherProfileAvatar;
-
-      for await (const element of dir)
+      return await runWithDrive(async fission =>
       {
-        if (element.name === "me")
-        {
-          const profileBuffer = await ipfsGetFile(ipfs, element.cid.toString());
-          otherProfileObj = JSON.parse(profileBuffer.toString());
-        }
-        if (element.name === "me.png")
-        {
-          const avatarBuffer = await ipfsGetFile(ipfs, element.cid.toString());
-          otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
-        }
-      }
+        const ipfs = await fission.fs.getIpfs();
+        const dir = await ipfs.ls(ipfsCid);
 
-      return {
-        profile: {
-          name: "",
-          ...otherProfileObj
-        },
-        avatar: otherProfileAvatar
-      };
+        let otherProfileObj;
+        let otherProfileAvatar;
 
+        for await (const element of dir)
+        {
+          if (element.name === "me")
+          {
+            const profileBuffer = await ipfsGetFile(ipfs, element.cid.toString());
+            otherProfileObj = JSON.parse(profileBuffer.toString());
+          }
+          if (element.name === "me.png")
+          {
+            const avatarBuffer = await ipfsGetFile(ipfs, element.cid.toString());
+            otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
+          }
+        }
+
+        return <TForeignProfile>{
+          profile: {
+            name: "",
+            ...otherProfileObj
+          },
+          avatar: otherProfileAvatar
+        };
+      });
     }
     catch (e)
     {

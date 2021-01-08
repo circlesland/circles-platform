@@ -2,10 +2,11 @@ import {setDappState, tryGetDappState} from "../o-os/loader";
 import {FissionAuthState} from "../../dapps/fissionauth/manifest";
 import {FissionDrive} from "./fissionDrive";
 import {BehaviorSubject} from "rxjs";
+import {Envelope} from "../o-os/interfaces/envelope";
 
 export let initializingDrive:boolean = false;
 
-export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>)
+export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>) : Promise<TOut>
 {
   let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (!fissionAuthState)
@@ -20,10 +21,10 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
   fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (!fissionAuthState.fission)
   {
-    fissionAuthState.fission = new BehaviorSubject<FissionDrive>(null);
+    fissionAuthState.fission = new BehaviorSubject<Envelope<FissionDrive>>(null);
   }
 
-  const existingDrive = fissionAuthState.fission.getValue();
+  const existingDrive = fissionAuthState.fission.getValue()?.payload;
   if (!existingDrive && !initializingDrive)
   {
     const initFsBegin = Date.now();
@@ -31,7 +32,11 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
     // FS is not loaded yet. Load it.
     const drive = new FissionDrive(fissionAuthState.fissionState)
     drive.init().then(() => {
-      fissionAuthState.fission.next(drive);
+      const current = fissionAuthState.fission.getValue();
+      fissionAuthState.fission.next({
+        signal: current?.signal,
+        payload: drive
+      });
       const initFsEnd = Date.now();
       const initFsDuration = (initFsEnd - initFsBegin) / 1000
       window.o.logger.log("initFsDuration", initFsDuration)
@@ -43,19 +48,18 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
   {
     const sub = fissionAuthState.fission.subscribe(async fissionDrive =>
     {
-      if (!fissionDrive)
+      if (!fissionDrive || !(fissionDrive.payload instanceof FissionDrive))
         return;
 
-      func(fissionDrive)
+      func(fissionDrive.payload)
         .then(result => {
-          resolve(result);
+          resolve(<TOut>result);
           sub.unsubscribe();
         })
         .catch(error => {
           reject(error);
           sub.unsubscribe();
         });
-
     });
   });
 }

@@ -8,7 +8,6 @@ import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {config} from "../o-circles-protocol/config";
 import * as webnative from "libs/webnative";
 import {SessionLog} from "../o-fission/entities/sessionLog";
-import {runWithDrive} from "../o-fission/initFission";
 
 export type Ethereum = {
   web3: Web3,
@@ -58,36 +57,52 @@ let sessionLog:SessionLog = {
 
 export function newLogger(name:string, parent?:any)
 {
-  return {
+  const l = {
     name,
     parent,
-    log: (...args: unknown[]) =>
+    log: null,
+    newLogger: null
+  };
+
+  l.newLogger = (name:string) => {
+    return newLogger(name, l);
+  };
+  l.log = (...args: unknown[]) =>
+  {
+    if (args?.length)
     {
-      if (args?.length)
+      let current = l;
+      const pathParts = [];
+      while (current)
       {
-        const remainingArgs = args.splice(1);
-        if (remainingArgs.length)
-        {
-            console.log(`${Date.now()} [${name}]: ${args[0]}`, remainingArgs);
-            sessionLog.messages.push({
-              message: `${Date.now()} [${name}]: ${args[0]}`,
-              args: remainingArgs
-            });
-        }
-        else
-        {
-          console.log(`${Date.now()} [${name}]: ${args[0]}`);
-          sessionLog.messages.push({
-            message: `${Date.now()} [${name}]: ${args[0]}`,
-            args: undefined
-          });
-        }
+        pathParts.unshift(current.name);
+        current = current.parent;
       }
-    },
-    newLogger: (name:string) => newLogger(name, parent)
-  }
+      const path = pathParts.join("/");
+      const remainingArgs = args.splice(1);
+      if (remainingArgs.length)
+      {
+        console.log(`${Date.now()} [${path}]: ${args[0]}`, remainingArgs);
+        sessionLog.messages.push({
+          message: `${Date.now()} [${path}]: ${args[0]}`,
+          args: remainingArgs
+        });
+      }
+      else
+      {
+        console.log(`${Date.now()} [${path}]: ${args[0]}`);
+        sessionLog.messages.push({
+          message: `${Date.now()} [${path}]: ${args[0]}`,
+          args: undefined
+        });
+      }
+    }
+  };
+
+  return l;
 }
 
+import {runWithDrive} from "../o-fission/initFission";
 window.addEventListener('error', async function(event)
 {
   try

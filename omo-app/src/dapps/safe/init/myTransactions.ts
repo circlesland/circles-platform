@@ -1,6 +1,7 @@
 import {BehaviorSubject, Subject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {
+  Signal,
   SystemEvent
 } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {BN} from "ethereumjs-util";
@@ -15,6 +16,7 @@ import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
 import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
 import {Token} from "../../../libs/o-fission/entities/token";
 import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 
 type TransactionList = {
   [token: string]: {
@@ -23,7 +25,9 @@ type TransactionList = {
 }
 
 // The consumable output of this init step (deduplicated ordered list of transactions)
-const myTransactionsSubject: BehaviorSubject<CirclesTransaction[]> = new BehaviorSubject<CirclesTransaction[]>([]);
+const myTransactionsSubject: BehaviorSubject<Envelope<CirclesTransaction[]>> = new BehaviorSubject<Envelope<CirclesTransaction[]>>({
+  payload: []
+});
 
 // In-memory cache of all transactions
 const myTransactions: TransactionList = {};
@@ -221,7 +225,9 @@ async function feedCachedTransactions(transactions: Subject<SystemEvent>, tokenA
 
         transaction.cached = true;
         transaction.amount = new BN(transaction.amount);
-        transactions.next(transaction)
+        transactions.next(
+           transaction
+        )
       });
     });
   });
@@ -233,7 +239,12 @@ const pushTransactions = new DelayedTrigger(35, async () => {
     .reduce((p, c) => p.concat(c), []);
 
   allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-  myTransactionsSubject.next(allTransactions);
+
+  const current = myTransactionsSubject.getValue();
+  myTransactionsSubject.next({
+    signal: current?.signal,
+    payload: allTransactions
+  });
 });
 
 /**
@@ -251,7 +262,7 @@ const subscribeToTokenEvents = new DelayedTrigger(500, async () =>
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
   // Get all known tokens and filter only the new (unsubscribed) ones
-  const tokenList = safeState.myKnownTokens.getValue();
+  const tokenList = safeState.myKnownTokens.getValue().payload;
   const newTokens = Object.values(tokenList).filter(o => !tokensByAddress[o.tokenAddress]);
   if (newTokens.length == 0)
   {

@@ -1,6 +1,7 @@
 import { RuntimeDapp } from "./interfaces/runtimeDapp";
 import { RuntimePageManifest } from "./interfaces/runtimePageManifest";
 
+
 import { omosafe } from "../../dapps/safe/manifest";
 import { omoli } from "../../dapps/omoli/manifest";
 import { omosapien } from "../../dapps/omosapien/manifest";
@@ -78,8 +79,11 @@ function constructPageUrl(appBaseUrl: string, pageManifest: PageManifest): strin
   return pageUrl;
 }
 
+let logger;
 
-async function getDappEntryPoint(dappManifest, pageManifest) {
+async function getDappEntryPoint(dappManifest:DappManifest<any, any>, pageManifest:PageManifest) {
+  logger = window.o.logger.newLogger("loader");
+  const subLogger = logger.newLogger(`getDappEntryPoint(dappManifest: ${dappManifest.id}, pageManifest: ${pageManifest.routeParts.join("/")})`);
   try {
     let runtimeDapp = loadedDapps.find(o => o.id == dappManifest.id);
     if (!runtimeDapp) {
@@ -87,7 +91,7 @@ async function getDappEntryPoint(dappManifest, pageManifest) {
       const freshRuntimeDapp = await loadDapp([], dappManifest);
 
       if (freshRuntimeDapp.cancelDependencyLoading) {
-        window.o.logger.log("A dependency requested the cancellation of the dependency loading process.")
+        subLogger.log("A dependency requested the cancellation of the dependency loading process.")
 
         if (!freshRuntimeDapp.initialPage) {
           // TODO: Every dapp needs a initial page for all conditions, else the generic loader error is displayed
@@ -157,14 +161,14 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
 
   // first check if all dependencies are fulfilled
   if (runtimeDapp.dependencies) {
-    window.o.logger.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
+    logger.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
     const missingDependencies = runtimeDapp.dependencies.filter(dep => !loadedDapps.find(o => o.id == dep));
     if (missingDependencies.length == 0) {
       // All dependencies are already loaded
-      window.o.logger.log(logPrefix + "All dependencies are already loaded");
+      logger.log(logPrefix + "All dependencies are already loaded");
     } else {
       // Some or all dependencies need to be loaded
-      window.o.logger.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
+      logger.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
 
       const nextStack = [...stack, runtimeDapp];
       await Promise.all(missingDependencies.map(async dep => {
@@ -178,7 +182,7 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
         }
         const loadDappResult = await loadDapp(nextStack, dappManifest);
         if (loadDappResult.cancelDependencyLoading) {
-          window.o.logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
+          logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
           cancelled = true;
           if (loadDappResult.initialPage) {
             defaultPage = loadDappResult.initialPage;
@@ -187,14 +191,14 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
       }));
 
       if (cancelled) {
-        window.o.logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
+        logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
         return {
           runtimeDapp,
           cancelDependencyLoading: true,
           initialPage: defaultPage
         };
       } else {
-        window.o.logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
+        logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
       }
     }
   }
@@ -213,7 +217,7 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
 
   if (runtimeDapp.initialize) {
     initializationResult = await runtimeDapp.initialize(stack, runtimeDapp);
-    window.o.logger.log("initializedDappState", initializationResult);
+    logger.log("initializedDappState", initializationResult);
   }
 
   return {
