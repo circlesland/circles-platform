@@ -33,10 +33,6 @@ function sendMessage(message) {
     });
 }
 export const transferCirclesService = (context) => __awaiter(void 0, void 0, void 0, function* () {
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    if (!fissionAuthState.fission) {
-        throw new Error("You're not authenticated");
-    }
     const web3 = context.environment.eth.web3;
     const safeState = tryGetDappState("omo.safe:1");
     const ownerAddress = context.environment.eth.web3
@@ -59,7 +55,7 @@ export const transferCirclesService = (context) => __awaiter(void 0, void 0, voi
           }
         });
     
-        console.log(pathResult);
+        window.o.logger.log(pathResult);
     */
         const tokenOwners = [safeState.mySafeAddress];
         const sources = [safeState.mySafeAddress];
@@ -75,7 +71,7 @@ export const transferCirclesService = (context) => __awaiter(void 0, void 0, voi
             });
         */
         const transferTroughResult = yield context.environment.eth.contracts.hub.transferTrough(safeState.myKey.privateKey, gnosisSafeProxy, tokenOwners, sources, destinations, values);
-        console.log(transferTroughResult);
+        window.o.logger.log(transferTroughResult);
     }
     catch (e) {
         console.error(e);

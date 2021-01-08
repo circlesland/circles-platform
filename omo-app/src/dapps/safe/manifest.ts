@@ -56,7 +56,7 @@ const transactionPage = {
   available: [
     (detail) =>
     {
-      console.log("routeGuard.detail:", detail);
+      window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
       return fissionAuthState.fission !== undefined
     }
@@ -183,7 +183,7 @@ export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {
     available: [
       (detail) =>
       {
-        console.log("Starting answer invite process ..", detail);
+        window.o.logger.log("Starting answer invite process ..", detail);
         return true;
       }
     ],
@@ -238,7 +238,7 @@ export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {
       available: [
         (detail) =>
         {
-          console.log("routeGuard.detail:", detail);
+          window.o.logger.log("routeGuard.detail:", detail);
           const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
           return fissionAuthState.fission !== undefined
         }
@@ -256,7 +256,7 @@ export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {
       available: [
         (detail) =>
         {
-          console.log("routeGuard.detail:", detail);
+          window.o.logger.log("routeGuard.detail:", detail);
           const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
           return fissionAuthState.fission !== undefined
         }

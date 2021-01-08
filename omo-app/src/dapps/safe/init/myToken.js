@@ -25,7 +25,7 @@ export function initMyToken() {
                 window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token (from the blockchain) ..", 0));
             }
             if (!myToken) {
-                console.log("Couldn't find myToken. Querying from blockchain events ..");
+                window.o.logger.log("Couldn't find myToken. Querying from blockchain events ..");
                 const mySignup = yield new CirclesAccount(safeState.mySafeAddress).tryGetMyToken();
                 if (mySignup) {
                     myToken = {
@@ -39,7 +39,7 @@ export function initMyToken() {
                         yield fissionDrive.tokens.addMyToken(myToken);
                     }
                     catch (e) {
-                        console.log(e);
+                        window.o.logger.log(e);
                     }
                 }
             }

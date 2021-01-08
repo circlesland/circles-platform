@@ -32,7 +32,7 @@ function isValidKeyPhrase(value: string): string | null {
     }
 
   } catch (e) {
-    console.log("connect safe with private key phrase failed.")
+    window.o.logger.log("connect safe with private key phrase failed.")
     return null;
   }
 }
@@ -65,7 +65,7 @@ function isValidHexKey(value: string): string | null {
       return null;
   }
   catch (e) {
-    console.log("connect safe with hex private key failed.")
+    window.o.logger.log("connect safe with hex private key failed.")
     return null;
   }
 }
@@ -110,7 +110,7 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
       });
     }
 
-    console.log("Linking safe address to profile ..")
+    window.o.logger.log("Linking safe address to profile ..")
 
     omosapienState.myProfile.circlesAddress = context.data.safeAddress.value;
     await fissionDrive.profiles.addOrUpdateMyProfile(omosapienState.myProfile);
@@ -140,7 +140,7 @@ export const connectSafeService = async (context: ConnectSafeContext) =>
       ? (await web3.eth.getBalance(omosapienState.myProfile.circlesAddress))
       : "0");
 
-    console.log("Find token of safe ..")
+    window.o.logger.log("Find token of safe ..")
     const circlesAccount = new CirclesAccount(omosapienState.myProfile.circlesAddress);
     const myToken = await circlesAccount.tryGetMyToken();
 

@@ -8,15 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { entropyToMnemonic } from "bip39";
-import { setDappState, tryGetDappState } from "../../../libs/o-os/loader";
+import { setDappState } from "../../../libs/o-os/loader";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
 export const createPrivateKeyService = (context) => __awaiter(void 0, void 0, void 0, function* () {
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("Creating a new account");
-        const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        if (!fissionAuthState.fission) {
-            throw new Error("You're not authenticated.");
-        }
+        window.o.logger.log("Creating a new account");
         const web3 = context.environment.eth.web3;
         const newKey = web3.eth.accounts.create();
         yield fissionDrive.keys.addMyKey({

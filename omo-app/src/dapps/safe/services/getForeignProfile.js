@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { ForeignProfile } from "../../../libs/o-fission/directories/foreignProfile";
 export const getForeignProfileService = (context) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("loading foreign profile by fission name:", context.data.foreignProfileFissionName.value);
+    window.o.logger.log("loading foreign profile by fission name:", context.data.foreignProfileFissionName.value);
     const foreignProfile = yield ForeignProfile.findByFissionUsername(context.data.foreignProfileFissionName.value);
-    console.log("got foreign profile:", foreignProfile);
+    window.o.logger.log("got foreign profile:", foreignProfile);
     return foreignProfile;
 });

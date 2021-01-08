@@ -1,6 +1,6 @@
 import { send } from "xstate";
 export const sendPrompt = (generateSpec) => {
-    console.log("Send prompt");
+    window.o.logger.log("Send prompt");
     const action = send((context) => {
         const spec = generateSpec(context);
         Object.keys(spec.artifacts)
@@ -20,7 +20,7 @@ export const sendPrompt = (generateSpec) => {
 };
 export const sendShellEvent = (shellEvent) => {
     const action = send((context) => {
-        console.log("Send shell event");
+        window.o.logger.log("Send shell event");
         return {
             type: "process.shellEvent",
             payload: shellEvent

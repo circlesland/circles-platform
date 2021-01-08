@@ -34,7 +34,7 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
       fissionAuthState.fission.next(drive);
       const initFsEnd = Date.now();
       const initFsDuration = (initFsEnd - initFsBegin) / 1000
-      console.log("initFsDuration", initFsDuration)
+      window.o.logger.log("initFsDuration", initFsDuration)
       initializingDrive = false;
     });
   }

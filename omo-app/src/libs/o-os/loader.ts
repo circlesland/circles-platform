@@ -87,7 +87,7 @@ async function getDappEntryPoint(dappManifest, pageManifest) {
       const freshRuntimeDapp = await loadDapp([], dappManifest);
 
       if (freshRuntimeDapp.cancelDependencyLoading) {
-        console.log("A dependency requested the cancellation of the dependency loading process.")
+        window.o.logger.log("A dependency requested the cancellation of the dependency loading process.")
 
         if (!freshRuntimeDapp.initialPage) {
           // TODO: Every dapp needs a initial page for all conditions, else the generic loader error is displayed
@@ -157,14 +157,14 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
 
   // first check if all dependencies are fulfilled
   if (runtimeDapp.dependencies) {
-    console.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
+    window.o.logger.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
     const missingDependencies = runtimeDapp.dependencies.filter(dep => !loadedDapps.find(o => o.id == dep));
     if (missingDependencies.length == 0) {
       // All dependencies are already loaded
-      console.log(logPrefix + "All dependencies are already loaded");
+      window.o.logger.log(logPrefix + "All dependencies are already loaded");
     } else {
       // Some or all dependencies need to be loaded
-      console.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
+      window.o.logger.log(logPrefix + "Some or all dependencies must be loaded before proceeding");
 
       const nextStack = [...stack, runtimeDapp];
       await Promise.all(missingDependencies.map(async dep => {
@@ -178,7 +178,7 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
         }
         const loadDappResult = await loadDapp(nextStack, dappManifest);
         if (loadDappResult.cancelDependencyLoading) {
-          console.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
+          window.o.logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
           cancelled = true;
           if (loadDappResult.initialPage) {
             defaultPage = loadDappResult.initialPage;
@@ -187,14 +187,14 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
       }));
 
       if (cancelled) {
-        console.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
+        window.o.logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
         return {
           runtimeDapp,
           cancelDependencyLoading: true,
           initialPage: defaultPage
         };
       } else {
-        console.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
+        window.o.logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
       }
     }
   }
@@ -213,7 +213,7 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
 
   if (runtimeDapp.initialize) {
     initializationResult = await runtimeDapp.initialize(stack, runtimeDapp);
-    console.log("initializedDappState", initializationResult);
+    window.o.logger.log("initializedDappState", initializationResult);
   }
 
   return {

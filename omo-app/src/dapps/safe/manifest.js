@@ -38,7 +38,7 @@ const transactionPage = {
     component: Transactions,
     available: [
         (detail) => {
-            console.log("routeGuard.detail:", detail);
+            window.o.logger.log("routeGuard.detail:", detail);
             const fissionAuthState = tryGetDappState("omo.fission.auth:1");
             return fissionAuthState.fission !== undefined;
         }
@@ -146,7 +146,7 @@ export const omosafe = {
             component: AnswerInviteRequest,
             available: [
                 (detail) => {
-                    console.log("Starting answer invite process ..", detail);
+                    window.o.logger.log("Starting answer invite process ..", detail);
                     return true;
                 }
             ],
@@ -196,7 +196,7 @@ export const omosafe = {
             component: Friends,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -213,7 +213,7 @@ export const omosafe = {
             component: Tokens,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }

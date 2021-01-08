@@ -101,27 +101,30 @@ export function lookup(username) {
  */
 export function lookupOnFisson(username) {
     return __awaiter(this, void 0, void 0, function () {
-        var resp, cid, err_2;
+        var logger, resp, cid, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
+                    logger = debug.newLogger("lookupOnFisson()");
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
                     return [4 /*yield*/, fetch(setup.endpoints.api + "/user/data/" + username, { cache: 'reload' } // don't use cache
                         )];
-                case 1:
+                case 2:
                     resp = _a.sent();
                     return [4 /*yield*/, resp.json()];
-                case 2:
+                case 3:
                     cid = _a.sent();
                     if (!check.isCID(cid)) {
                         throw new Error("Did not receive a CID");
                     }
                     return [2 /*return*/, cid];
-                case 3:
+                case 4:
                     err_2 = _a.sent();
-                    debug.log('Could not locate user root on Fission server: ', err_2.toString());
+                    logger.log('Could not locate user root on Fission server: ', err_2.toString());
                     return [2 /*return*/, null];
-                case 4: return [2 /*return*/];
+                case 5: return [2 /*return*/];
             }
         });
     });
@@ -134,14 +137,16 @@ export function lookupOnFisson(username) {
  */
 export function update(cid, proof) {
     return __awaiter(this, void 0, void 0, function () {
-        var apiEndpoint;
+        var logger, apiEndpoint;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    logger = debug.newLogger("DataRoot.update(cid: " + cid.toString() + ")");
+                    logger.log("begin");
                     apiEndpoint = setup.endpoints.api;
                     // Debug
-                    debug.log("🚀 Updating your DNSLink:", cid);
+                    logger.log("🚀 Updating your DNSLink:", cid);
                     // Cancel previous updates
                     if (fetchController)
                         fetchController.abort();
@@ -193,7 +198,8 @@ export function update(cid, proof) {
                     // Make API call
                     _a.sent();
                     // Debug
-                    debug.log("🚀 DNSLink updated:", cid);
+                    logger.log("🚀 DNSLink updated:", cid);
+                    logger.log("end");
                     return [2 /*return*/];
             }
         });

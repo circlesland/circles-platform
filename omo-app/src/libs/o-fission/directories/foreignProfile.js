@@ -14,15 +14,15 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
-import * as ipfs from 'webnative/ipfs';
+import { tryGetDappState } from "../../o-os/loader";
 export const ipfsCat = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function* () {
     var e_1, _a;
-    console.log("ipfsCat:", cid);
+    window.o.logger.log("ipfsCat:", cid);
     const chunks = [];
     try {
         for (var _b = __asyncValues(ipfs.cat(cid)), _c; _c = yield _b.next(), !_c.done;) {
             const chunk = _c.value;
-            console.log("ipfsCat chunk no.:", chunks.length);
+            window.o.logger.log("ipfsCat chunk no.:", chunks.length);
             if (Buffer.isBuffer(chunk))
                 chunks.push(chunk);
             else
@@ -40,7 +40,7 @@ export const ipfsCat = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function
 });
 export const ipfsGetFile = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function* () {
     var e_2, _d;
-    console.log("ipfsGetFile", cid);
+    window.o.logger.log("ipfsGetFile", cid);
     const fileContentCid = ipfs.ls(cid);
     try {
         for (var fileContentCid_1 = __asyncValues(fileContentCid), fileContentCid_1_1; fileContentCid_1_1 = yield fileContentCid_1.next(), !fileContentCid_1_1.done;) {
@@ -65,6 +65,7 @@ export class ForeignProfile {
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
             try {
+                const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                 const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUsername}.fission.name`;
                 const dnsLinkResult = yield fetch(dnsLink);
                 const dnsLinkResultObj = yield dnsLinkResult.json();
@@ -75,19 +76,19 @@ export class ForeignProfile {
                 ipfsCid = ipfsCid.replace("/ipfs/", "");
                 ipfsCid = ipfsCid.replace("/public", "");
                 ipfsCid = ipfsCid + "/public/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland";
-                const ipfsInstance = yield ipfs.get();
-                const dir = yield ipfsInstance.ls(ipfsCid);
+                const ipfs = yield fissionAuthState.fission.getValue().fs.getIpfs();
+                const dir = yield ipfs.ls(ipfsCid);
                 let otherProfileObj;
                 let otherProfileAvatar;
                 try {
                     for (var dir_1 = __asyncValues(dir), dir_1_1; dir_1_1 = yield dir_1.next(), !dir_1_1.done;) {
                         const element = dir_1_1.value;
                         if (element.name === "me") {
-                            const profileBuffer = yield ipfsGetFile(ipfsInstance, element.cid.toString());
+                            const profileBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
                             otherProfileObj = JSON.parse(profileBuffer.toString());
                         }
                         if (element.name === "me.png") {
-                            const avatarBuffer = yield ipfsGetFile(ipfsInstance, element.cid.toString());
+                            const avatarBuffer = yield ipfsGetFile(ipfs, element.cid.toString());
                             otherProfileAvatar = `data:image/png;base64,${avatarBuffer.toString('base64')}`;
                         }
                     }

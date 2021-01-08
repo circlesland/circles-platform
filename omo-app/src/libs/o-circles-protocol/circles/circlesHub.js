@@ -111,7 +111,7 @@ export class CirclesHub extends Web3Contract {
             */
             const txData = yield this.contract.methods.transferThrough(transfer.tokenOwners, transfer.sources, transfer.destinations, transfer.values)
                 .encodeABI();
-            console.log("transferTroughAbi:", txData);
+            window.o.logger.log("transferTroughAbi:", txData);
             return yield safeProxy.execTransaction(privateKey, {
                 to: this.address,
                 data: txData,

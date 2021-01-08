@@ -16,8 +16,9 @@ import { setup as internalSetup } from './setup/internal';
  * Only adds a few `console.log`s at this moment.
  */
 export function debug(_a) {
-    var enabled = _a.enabled;
+    var enabled = _a.enabled, logger = _a.logger;
     internalSetup.debug = enabled;
+    internalSetup.logger = logger;
     return internalSetup.debug;
 }
 /**

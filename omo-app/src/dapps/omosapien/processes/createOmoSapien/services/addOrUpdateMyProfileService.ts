@@ -45,6 +45,6 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
       method: "POST"
     });
 
-    console.log(response);
+    window.o.logger.log(response);
   });
 }

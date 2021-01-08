@@ -19,14 +19,16 @@ export class FsNode {
     }
     get path() {
         const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+        const fission = fissionAuthState.fission.getValue();
+        if (!fission)
+            throw new Error("Your fission drive is not available.");
         let current = this;
         let path = [];
         while (current) {
             path.unshift(current.name);
             current = current.parent;
         }
-        throw new Error("Deine Mudda!");
-        // return fissionAuthState.fission.fs.appPath(path);
+        return fission.fs.appPath(path);
     }
     onCollapse() {
         return __awaiter(this, void 0, void 0, function* () {

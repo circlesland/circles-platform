@@ -61,11 +61,11 @@ function tryInitOmoDirectory() {
                 && myDirectoryEntry.lastName == omosapienState.myProfile.lastName
                 && myDirectoryEntry.circlesSafe == omosapienState.myProfile.circlesAddress;
             if (!isRegistrationCorrect) {
-                console.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ...");
+                window.o.logger.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ...");
                 yield fetch("https://directory.omo.earth/signup/" + fissionAuthState.username, {
                     method: "POST"
                 });
-                console.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ... Done");
+                window.o.logger.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ... Done");
             }
         }
         catch (e) {
@@ -112,7 +112,7 @@ export const omosapien = {
             component: Me,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -129,7 +129,7 @@ export const omosapien = {
             component: Profiles,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -146,7 +146,7 @@ export const omosapien = {
             component: Keys,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }

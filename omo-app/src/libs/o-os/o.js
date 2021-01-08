@@ -12,6 +12,7 @@ import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
 import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 import { config } from "../o-circles-protocol/config";
 import * as webnative from "libs/webnative";
+import { runWithDrive } from "../o-fission/initFission";
 /**
  * Gets all environment properties like the currently logged-on account, token and profile.
  */
@@ -40,8 +41,81 @@ export function getProcessContext() {
         };
     });
 }
-webnative.setup.debug({ enabled: true });
+const sessionLog = {
+    name: Date.now().toString(),
+    messages: []
+};
+export function newLogger(name, parent) {
+    return {
+        name,
+        parent,
+        log: (...args) => {
+            if (args === null || args === void 0 ? void 0 : args.length) {
+                const remainingArgs = args.splice(1);
+                if (remainingArgs.length) {
+                    console.log(`${Date.now()} [${name}]: ${args[0]}`, remainingArgs);
+                    sessionLog.messages.push({
+                        message: `${Date.now()} [${name}]: ${args[0]}`,
+                        args: remainingArgs
+                    });
+                }
+                else {
+                    console.log(`${Date.now()} [${name}]: ${args[0]}`);
+                    sessionLog.messages.push({
+                        message: `${Date.now()} [${name}]: ${args[0]}`,
+                        args: undefined
+                    });
+                }
+            }
+        },
+        newLogger: (name) => newLogger(name, parent)
+    };
+}
+window.addEventListener('error', function (event) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            logger.log("An error occurred:", {
+                error: event.error,
+                file: event.filename,
+                line: event.lineno,
+                message: event.message
+            });
+            yield runWithDrive((drive) => __awaiter(this, void 0, void 0, function* () {
+                yield drive.sessionLogs.addOrUpdate(sessionLog, true);
+            }));
+        }
+        catch (e) {
+            console.error(`Couldn't write the error log to the fission drive:`, e);
+        }
+    });
+});
+setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
+            yield drive.sessionLogs.addOrUpdate(sessionLog, false);
+        }));
+    }
+    catch (e) {
+        console.error(`Couldn't perform the periodic log-flush to the fission drive:`, e);
+    }
+}), 30000);
+setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
+            yield drive.sessionLogs.addOrUpdate(sessionLog, true);
+        }));
+    }
+    catch (e) {
+        console.error(`Couldn't perform the periodic log-publishing to the fission drive:`, e);
+    }
+}), 240000);
+const logger = newLogger("o");
+webnative.setup.debug({
+    enabled: true,
+    logger: logger.log
+});
 export const o = {
     stateMachines: stateMachine,
-    wn: webnative
+    wn: webnative,
+    logger: logger
 };

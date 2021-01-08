@@ -10,13 +10,7 @@ export const createPrivateKeyService = async (context: CreatePrivateKeyContext) 
 {
   await runWithDrive(async fissionDrive =>
   {
-    console.log("Creating a new account");
-
-    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    if (!fissionAuthState.fission)
-    {
-      throw new Error("You're not authenticated.");
-    }
+    window.o.logger.log("Creating a new account");
 
     const web3 = context.environment.eth.web3;
     const newKey = web3.eth.accounts.create();

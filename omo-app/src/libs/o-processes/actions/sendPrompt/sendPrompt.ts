@@ -20,7 +20,7 @@ export type PromptSpec = {
 };
 
 export const sendPrompt = (generateSpec?: (context: ProcessContext) => PromptSpec) => {
-  console.log("Send prompt");
+  window.o.logger.log("Send prompt");
   const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
     const spec = generateSpec(context);
     Object.keys(spec.artifacts)
@@ -43,7 +43,7 @@ export const sendPrompt = (generateSpec?: (context: ProcessContext) => PromptSpe
 
 export const sendShellEvent = (shellEvent: OmoEvent) => {
   const action: SendAction<ProcessContext, EventObject, OmoEvent> = send((context) => {
-    console.log("Send shell event")
+    window.o.logger.log("Send shell event")
 
     return <ShellEvent>{
       type: "process.shellEvent",

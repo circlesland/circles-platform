@@ -29,7 +29,7 @@ async function initialize(stack, runtimeDapp)
     };
   }
   else {
-    console.log("X - Cancel dependency loading")
+    window.o.logger.log("X - Cancel dependency loading")
     if (stack.length == 0) {
       window.o.redirectTo = runtimeDapp.route;
     }

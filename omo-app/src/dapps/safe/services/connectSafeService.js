@@ -32,7 +32,7 @@ function isValidKeyPhrase(value) {
         }
     }
     catch (e) {
-        console.log("connect safe with private key phrase failed.");
+        window.o.logger.log("connect safe with private key phrase failed.");
         return null;
     }
 }
@@ -60,7 +60,7 @@ function isValidHexKey(value) {
             return null;
     }
     catch (e) {
-        console.log("connect safe with hex private key failed.");
+        window.o.logger.log("connect safe with hex private key failed.");
         return null;
     }
 }
@@ -92,7 +92,7 @@ export const connectSafeService = (context) => __awaiter(void 0, void 0, void 0,
                 publicKey: null
             });
         }
-        console.log("Linking safe address to profile ..");
+        window.o.logger.log("Linking safe address to profile ..");
         omosapienState.myProfile.circlesAddress = context.data.safeAddress.value;
         yield fissionDrive.profiles.addOrUpdateMyProfile(omosapienState.myProfile);
         setDappState("omo.sapien", current => {
@@ -111,7 +111,7 @@ export const connectSafeService = (context) => __awaiter(void 0, void 0, void 0,
         const mySafeXDaiBalance = new BN(omosapienState.myProfile.circlesAddress
             ? (yield web3.eth.getBalance(omosapienState.myProfile.circlesAddress))
             : "0");
-        console.log("Find token of safe ..");
+        window.o.logger.log("Find token of safe ..");
         const circlesAccount = new CirclesAccount(omosapienState.myProfile.circlesAddress);
         const myToken = yield circlesAccount.tryGetMyToken();
         yield fissionDrive.tokens.addMyToken({
