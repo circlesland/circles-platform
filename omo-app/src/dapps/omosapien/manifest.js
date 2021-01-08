@@ -10,20 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import Me from 'src/dapps/omosapien/views/pages/Me.svelte';
 import Profiles from 'src/dapps/omosapien/views/pages/Profiles.svelte';
 import Keys from 'src/dapps/omosapien/views/pages/Keys.svelte';
+import NoProfile from 'src/dapps/omosapien/views/pages/NoProfile.svelte';
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "./data/actions";
 import { faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "../../libs/o-events/runProcess";
 import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
 import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
 import { runWithDrive } from "../../libs/o-fission/initFission";
-function tryInitMyFs() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        const fs = fissionAuthState.fission.getValue();
-        if (!fs) {
-        }
-    });
-}
 function tryInitMyProfile() {
     return __awaiter(this, void 0, void 0, function* () {
         yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
@@ -73,6 +66,25 @@ function tryInitOmoDirectory() {
         }
     });
 }
+const noProfilePage = {
+    isDefault: true,
+    routeParts: ["no-profile"],
+    component: NoProfile,
+    available: [
+        (detail) => {
+            window.o.logger.log("routeGuard.detail:", detail);
+            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+            return fissionAuthState.fission !== undefined;
+        }
+    ],
+    userData: {
+        showActionBar: true,
+        actions: [
+            ...omoSapienDefaultActions,
+            ...omoSapienOverflowActions
+        ]
+    }
+};
 /**
  * Checks if the user already has a profile.
  * If not, starts the process to create a new Omosapien and cancels the loading.
@@ -87,7 +99,7 @@ function initialize(stack, runtimeDapp) {
             runtimeDapp.shell.publishEvent(new RunProcess(createOmoSapien));
             return {
                 cancelDependencyLoading: true,
-                initialPage: null
+                initialPage: noProfilePage
             };
         }
         yield tryInitOmoDirectory();

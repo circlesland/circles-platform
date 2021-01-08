@@ -1,6 +1,7 @@
 import Me from 'src/dapps/omosapien/views/pages/Me.svelte'
 import Profiles from 'src/dapps/omosapien/views/pages/Profiles.svelte'
 import Keys from 'src/dapps/omosapien/views/pages/Keys.svelte'
+import NoProfile from 'src/dapps/omosapien/views/pages/NoProfile.svelte'
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "./data/actions"
 import { faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 import { DappManifest } from "../../libs/o-os/interfaces/dappManifest";
@@ -36,16 +37,6 @@ export interface LookupDirectory
 export interface OmoSapienState {
   myProfile?: ProfileEntity,
   directory?: LookupDirectory
-}
-
-async function tryInitMyFs()
-{
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const fs = fissionAuthState.fission.getValue();
-  if (!fs)
-  {
-
-  }
 }
 
 async function tryInitMyProfile()
@@ -112,6 +103,26 @@ async function tryInitOmoDirectory()
   }
 }
 
+const noProfilePage = {
+  isDefault: true,
+  routeParts: ["no-profile"],
+  component: NoProfile,
+  available: [
+    (detail) => {
+      window.o.logger.log("routeGuard.detail:", detail);
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+      return fissionAuthState.fission !== undefined
+    }
+  ],
+  userData: {
+    showActionBar: true,
+    actions: [
+      ...omoSapienDefaultActions,
+      ...omoSapienOverflowActions
+    ]
+  }
+};
+
 /**
  * Checks if the user already has a profile.
  * If not, starts the process to create a new Omosapien and cancels the loading.
@@ -127,7 +138,7 @@ async function initialize(stack, runtimeDapp) {
 
     return {
       cancelDependencyLoading: true,
-      initialPage: null
+      initialPage: noProfilePage
     }
   }
 

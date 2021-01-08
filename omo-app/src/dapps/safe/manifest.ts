@@ -2,6 +2,10 @@ import AnswerInviteRequest from "./views/pages/AnswerInviteRequest.svelte"
 import Transactions from "./views/pages/Transactions.svelte"
 import Friends from "./views/pages/Friends.svelte"
 import Tokens from "./views/pages/Tokens.svelte"
+import NoFunds from "./views/pages/NoFunds.svelte"
+import NoKey from "./views/pages/NoKey.svelte"
+import NoSafe from "./views/pages/NoSafe.svelte"
+import NoToken from "./views/pages/NoToken.svelte"
 import {safeDefaultActions, safeOverflowActions} from "./data/actions"
 import {QuickAction} from "../../libs/o-os/types/quickAction";
 import {RunProcess} from "../../libs/o-events/runProcess";
@@ -70,6 +74,90 @@ const transactionPage = {
   }
 };
 
+const noFundsPage = {
+  isDefault: true,
+  routeParts: ["no-funds"],
+  component: NoFunds,
+  available: [
+    (detail) =>
+    {
+      window.o.logger.log("routeGuard.detail:", detail);
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+      return fissionAuthState.fission !== undefined
+    }
+  ],
+  userData: {
+    showActionBar: true,
+    actions: <QuickAction[]>[
+      ...safeDefaultActions,
+      ...safeOverflowActions
+    ]
+  }
+};
+
+const noKeyPage = {
+  isDefault: true,
+  routeParts: ["no-key"],
+  component: NoKey,
+  available: [
+    (detail) =>
+    {
+      window.o.logger.log("routeGuard.detail:", detail);
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+      return fissionAuthState.fission !== undefined
+    }
+  ],
+  userData: {
+    showActionBar: true,
+    actions: <QuickAction[]>[
+      ...safeDefaultActions,
+      ...safeOverflowActions
+    ]
+  }
+};
+
+const noSafePage = {
+  isDefault: true,
+  routeParts: ["no-safe"],
+  component: NoSafe,
+  available: [
+    (detail) =>
+    {
+      window.o.logger.log("routeGuard.detail:", detail);
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+      return fissionAuthState.fission !== undefined
+    }
+  ],
+  userData: {
+    showActionBar: true,
+    actions: <QuickAction[]>[
+      ...safeDefaultActions,
+      ...safeOverflowActions
+    ]
+  }
+};
+
+const noTokenPage = {
+  isDefault: true,
+  routeParts: ["no-token"],
+  component: NoToken,
+  available: [
+    (detail) =>
+    {
+      window.o.logger.log("routeGuard.detail:", detail);
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+      return fissionAuthState.fission !== undefined
+    }
+  ],
+  userData: {
+    showActionBar: true,
+    actions: <QuickAction[]>[
+      ...safeDefaultActions,
+      ...safeOverflowActions
+    ]
+  }
+};
+
 
 /**
  * Checks if the omosapien has a private  key in its storage.
@@ -91,7 +179,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     window.o.publishEvent(new RunProcess(initialMenu));
     return {
       cancelDependencyLoading: true,
-      initialPage: null,
+      initialPage: noKeyPage,
       dappState: null
     };
   }
@@ -110,7 +198,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     window.o.publishEvent(new RunProcess(fundAccountForSafeCreation));
     return {
       cancelDependencyLoading: true,
-      initialPage: null,
+      initialPage: noFundsPage,
       dappState: null
     };
   }
@@ -121,7 +209,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     window.o.publishEvent(new RunProcess(deploySafe));
     return {
       cancelDependencyLoading: true,
-      initialPage: null,
+      initialPage: noSafePage,
       dappState: null
     };
   }
@@ -136,7 +224,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     runtimeDapp.shell.publishEvent(new RunProcess(signupAtCircles));
     return {
       cancelDependencyLoading: true,
-      initialPage: null
+      initialPage: noTokenPage
     };
   }
 
@@ -152,18 +240,9 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your balances ..", 0));
   await initMyBalances();
 
-  if (safeState.mySafeAddress && safeState.myToken)
-  {
-    // Everything is already set up
-    return {
-      cancelDependencyLoading: false,
-      initialPage: null
-    }
-  }
-
   return {
-    cancelDependencyLoading: true,
-    initialPage: null,
+    cancelDependencyLoading: false,
+    initialPage: transactionPage,
     dappState: null
   };
 }
