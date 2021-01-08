@@ -31,12 +31,14 @@ export class ProgressSignal implements Signal
 
   message:string;
   percent:number;
+  dummy:any;
 
-  constructor(key:string, message: string, percent: number)
+  constructor(key:string, message: string, percent: number, dummy?:any)
   {
     this.key = key;
     this.message = message;
     this.percent = percent;
+    this.dummy = dummy;
   }
 }
 

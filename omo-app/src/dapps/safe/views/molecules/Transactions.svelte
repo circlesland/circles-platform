@@ -60,6 +60,7 @@
             }
             else if (signal.key === "transferCircles")
             {
+              dummyTransaction = signal.dummy;
             }
           }
           else if (signal instanceof EndSignal)
