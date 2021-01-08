@@ -1,0 +1,58 @@
+{
+  "_args": [
+    [
+      "svelte-dropzone@1.0.6",
+      "/home/daniel/src/omo-li/omo-li/omo-app"
+    ]
+  ],
+  "_from": "svelte-dropzone@1.0.6",
+  "_id": "svelte-dropzone@1.0.6",
+  "_inBundle": false,
+  "_integrity": "sha512-WGTLT04bNgIUVv9Bh0u3m49aavxYs4mBZgzQhnaMa8e/JiNrAOCNIb9K68ZKbjqzs8cbD5ybCAwHMoxAyv5NKA==",
+  "_location": "/svelte-dropzone",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "svelte-dropzone@1.0.6",
+    "name": "svelte-dropzone",
+    "escapedName": "svelte-dropzone",
+    "rawSpec": "1.0.6",
+    "saveSpec": null,
+    "fetchSpec": "1.0.6"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/svelte-dropzone/-/svelte-dropzone-1.0.6.tgz",
+  "_shasum": "fc0ef9c74992bd0668f2852a0142d3913459a6ca",
+  "_spec": "1.0.6",
+  "_where": "/home/daniel/src/omo-li/omo-li/omo-app",
+  "author": {
+    "name": "Arnaud DERBEY"
+  },
+  "bugs": {
+    "url": "https://github.com/arnaudDerbey/svelte-dropzone/issues"
+  },
+  "dependencies": {
+    "dropzone": "^5.5.1"
+  },
+  "deprecated": false,
+  "description": "A simple & ssr ready wrapper around dropzone.JS for svelte/sapper.",
+  "homepage": "https://github.com/arnaudDerbey/svelte-dropzone#readme",
+  "keywords": [
+    "svelte",
+    "sapper",
+    "svelte-components",
+    "dropzone",
+    "dropzonejs"
+  ],
+  "license": "MIT",
+  "main": "index.svelte",
+  "name": "svelte-dropzone",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnaudDerbey/svelte-dropzone.git"
+  },
+  "version": "1.0.6"
+}
