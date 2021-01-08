@@ -7,7 +7,7 @@ import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
 import { setError } from "../../../../libs/o-processes/actions/setError";
 import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
@@ -111,7 +111,12 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     transferCircles: {
-      entry: sendInProgressPrompt(str.titleProgress),
+      entry: [
+        sendInProgressPrompt(str.titleProgress),
+        sendShellEvent({
+          type: "shell.closeModal"
+        })
+      ],
       invoke: {
         id: 'transferCircles',
         src: transferCirclesService,
@@ -121,7 +126,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
         },
         onDone: {
           actions: setProcessResult(str.successMessage),
-          target: "success"
+          target: "stop"
         }
       }
     },

@@ -9,6 +9,7 @@ import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendP
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {requestUbiService} from "../../services/requestUbiService";
+import {sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 
 /**
  * Requests UBI
@@ -23,7 +24,12 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     requestUbi: {
-      entry: sendInProgressPrompt(str.titleProgress),
+      entry: [
+        sendInProgressPrompt(str.titleProgress),
+        sendShellEvent({
+          type: "shell.closeModal"
+        })
+      ],
       invoke: {
         id: 'requestingUbi',
         src: requestUbiService,
@@ -33,7 +39,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
         },
         onDone: {
           actions: setProcessResult(str.successMessage),
-          target: "success"
+          target: "stop"
         }
       }
     },
