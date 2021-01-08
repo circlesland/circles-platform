@@ -142,6 +142,7 @@ webnative.setup.debug({
   enabled: true,
   logger: logger.log
 });
+
 export const o: Shell = {
   stateMachines: <any>stateMachine,
   wn: webnative,
