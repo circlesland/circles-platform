@@ -4,7 +4,7 @@ import {Subject} from "rxjs";
 import {
   BeginSignal,
   BlockchainEvent,
-  DoneSignal,
+  EndSignal,
   ProgressSignal,
   Signal,
   SystemEvent
@@ -138,7 +138,7 @@ export class CirclesToken
 
     if (signalCallback)
     {
-      signalCallback(new DoneSignal(""));
+      signalCallback(new EndSignal(""));
     }
   }
 

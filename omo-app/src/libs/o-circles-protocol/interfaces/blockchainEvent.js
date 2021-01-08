@@ -14,7 +14,7 @@ export class ProgressSignal {
         this.percent = percent;
     }
 }
-export class DoneSignal {
+export class EndSignal {
     constructor(key) {
         this.type = "shell.done";
         this.key = key;

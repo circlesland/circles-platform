@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { BN } from "ethereumjs-util";
-import { BeginSignal, DoneSignal, ProgressSignal } from "../interfaces/blockchainEvent";
+import { BeginSignal, EndSignal, ProgressSignal } from "../interfaces/blockchainEvent";
 import { config } from "../config";
 import { tryGetDappState } from "../../o-os/loader";
 export class CirclesToken {
@@ -92,7 +92,7 @@ export class CirclesToken {
                 }
             }
             if (signalCallback) {
-                signalCallback(new DoneSignal(""));
+                signalCallback(new EndSignal(""));
             }
         });
     }

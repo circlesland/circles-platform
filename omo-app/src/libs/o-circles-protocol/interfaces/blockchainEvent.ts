@@ -40,7 +40,7 @@ export class ProgressSignal implements Signal
   }
 }
 
-export class DoneSignal implements Signal
+export class EndSignal implements Signal
 {
   readonly key: string;
   type: "shell.done" = "shell.done";

@@ -78,7 +78,7 @@
     }
     else
     {
-      profile.title = safeAddress.slice(0, 8);
+      profile.title = safeAddress ? safeAddress.slice(0, 8) : "";
     }
 
     if (!profile.image)
@@ -106,9 +106,11 @@
       <div>
         <b class="text-xs md:text-sm text-primary">
           {#if transaction.from !== '0x0000000000000000000000000000000000000000'}
-            {transaction.direction === 'in' ? 'Incoming' : 'Outgoing'}
+            {transaction.direction === 'in' ? 'Incoming' : transaction.direction === 'out' ? 'Outgoing' : ""}
             {transaction.subject}
-          {:else}Harvested Time{/if}
+          {:else if transaction.from}
+            Harvested Time
+          {/if}
         </b>
         <p class="text-gray-500 text-xxs md:text-xs">
           {#if !transaction.timestamp}
@@ -121,7 +123,7 @@
             {:else}
               from MamaOmo
             {/if}
-          {:else}
+          {:else if transaction.direction === "out"}
             to
             {getProfile(transaction.to).title}
           {/if}
@@ -134,7 +136,7 @@
           class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-primary">
           <span>-{formatBN(transaction.amount.mul(new BN(3)))}</span>
         </div>
-      {:else}
+      {:else if transaction.direction === "in"}
         <div
           class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-action">
           {formatBN(transaction.amount.mul(new BN(3)))}
@@ -153,7 +155,7 @@
                 src="symbols/o.svg"
                 alt="profile"
                 class="h-12 rounded-xl" />
-            {:else}
+            {:else if transaction.from}
               <img
                 src={getProfile(transaction.from).image}
                 alt="profile"
