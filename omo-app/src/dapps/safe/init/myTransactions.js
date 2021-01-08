@@ -14,6 +14,7 @@ import { DelayedTrigger } from "../../../libs/o-os/delayedTrigger";
 import { CirclesToken } from "../../../libs/o-circles-protocol/model/circlesToken";
 import { config } from "../../../libs/o-circles-protocol/config";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
+let initMyTransactionLogger;
 // The consumable output of this init step (deduplicated ordered list of transactions)
 const myTransactionsSubject = new BehaviorSubject({
     payload: []
@@ -237,7 +238,13 @@ const subscribeToTokenEvents = new DelayedTrigger(500, () => __awaiter(void 0, v
     const firstUnknownBlock = Object.values(cachedBlockMap).reduce((p, c) => c.lastCachedBlock < p ? c.lastCachedBlock : p, Number.MAX_SAFE_INTEGER);
     // Show the cached transactions right away then load all other transaction history ..
     pushTransactions.trigger();
-    yield aToken.feedTransactionHistory(transactionStream, tokensByAddress, tokenAddresses, firstUnknownBlock, "feedTransactionHistory");
+    yield aToken.feedTransactionHistory(transactionStream, tokensByAddress, tokenAddresses, firstUnknownBlock, signal => {
+        const currentTransactionsList = safeState.myTransactions.getValue();
+        safeState.myTransactions.next({
+            signal: signal,
+            payload: currentTransactionsList.payload
+        });
+    });
     annotateTimeAndStoreToCacheTrigger.trigger();
 }));
 /**
@@ -246,14 +253,16 @@ const subscribeToTokenEvents = new DelayedTrigger(500, () => __awaiter(void 0, v
  * 2. Subscribes to the Transfer events of all tokens
  * 3. Queries the history of new and known tokens
  */
-export function initMyTransactions() {
+export function initMyTransactions(logger) {
     return __awaiter(this, void 0, void 0, function* () {
+        initMyTransactionLogger = logger.newLogger("initMyTransaction()");
+        initMyTransactionLogger.log("begin");
         const safeState = tryGetDappState("omo.safe:1");
         let counter = 0;
         transactionStream.subscribe(event => {
             counter++;
             if (counter % 100 == 0) {
-                window.o.logger.log(`Indexed ${counter} transactions so far ...`);
+                initMyTransactionLogger.log(`Indexed ${counter} transactions so far ...`);
             }
             indexTransaction(event);
             pushTransactions.trigger();
@@ -268,5 +277,6 @@ export function initMyTransactions() {
         setDappState("omo.safe:1", existing => {
             return Object.assign(Object.assign({}, existing), { myTransactions: myTransactionsSubject });
         });
+        initMyTransactionLogger.log("end");
     });
 }

@@ -131,6 +131,7 @@ const noTokenPage = {
         ]
     }
 };
+let safeManifestLogger;
 /**
  * Checks if the omosapien has a private  key in its storage.
  * If the user doesn't have a private key, he's prompted to either
@@ -141,6 +142,8 @@ const noTokenPage = {
 function initialize(stack, runtimeDapp) {
     var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
+        safeManifestLogger = window.o.logger.newLogger(`initialize()`);
+        safeManifestLogger.log("begin");
         window.o.publishEvent(new BeginSignal("omo.safe:1:initialize"));
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your safe key ..", 0));
         yield initMyKey();
@@ -195,7 +198,7 @@ function initialize(stack, runtimeDapp) {
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts' tokens ..", 0));
         yield initMyKnownTokens();
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your transactions ..", 0));
-        yield initMyTransactions();
+        yield initMyTransactions(safeManifestLogger);
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your balances ..", 0));
         yield initMyBalances();
         return {
@@ -203,6 +206,7 @@ function initialize(stack, runtimeDapp) {
             initialPage: transactionPage,
             dappState: null
         };
+        safeManifestLogger.log("end");
     });
 }
 export const omosafe = {

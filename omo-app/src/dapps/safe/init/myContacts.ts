@@ -6,10 +6,9 @@ import {OmoSafeState} from "../manifest";
 import {Contact} from "../../../libs/o-circles-protocol/model/contact";
 import {CirclesProfile} from "../../../libs/o-circles-protocol/model/circlesProfile";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
-import {BlockchainEvent, Signal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {runWithDrive} from "../../../libs/o-fission/initFission";
 import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 

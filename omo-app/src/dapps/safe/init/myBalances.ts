@@ -4,7 +4,6 @@ import {BN} from "ethereumjs-util";
 import {DelayedTrigger} from "../../../libs/o-os/delayedTrigger";
 import {OmoSafeState} from "../manifest";
 import {CirclesBalance} from "../../../libs/o-circles-protocol/model/circlesBalance";
-import {Signal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 
 const myCirclesBalancesSubject: BehaviorSubject<Envelope<CirclesBalance[]>> = new BehaviorSubject<Envelope<CirclesBalance[]>>({

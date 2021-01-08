@@ -40,6 +40,7 @@ import {fundAccountForSafeCreation} from "./processes/omo/fundAccountForSafeCrea
 import {signupAtCircles} from "./processes/omo/signupAtCircles";
 import {BeginSignal, ProgressSignal, Signal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {Envelope} from "../../libs/o-os/interfaces/envelope";
+import {Logger} from "../../libs/o-os/interfaces/shell";
 
 export interface OmoSafeState
 {
@@ -159,6 +160,7 @@ const noTokenPage = {
   }
 };
 
+let safeManifestLogger:Logger;
 
 /**
  * Checks if the omosapien has a private  key in its storage.
@@ -169,6 +171,8 @@ const noTokenPage = {
  */
 async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 {
+  safeManifestLogger = window.o.logger.newLogger(`initialize()`);
+  safeManifestLogger.log("begin")
   window.o.publishEvent(new BeginSignal("omo.safe:1:initialize"));
   window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your safe key ..", 0));
   await initMyKey();
@@ -236,7 +240,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   await initMyKnownTokens();
 
   window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your transactions ..", 0));
-  await initMyTransactions();
+  await initMyTransactions(safeManifestLogger);
 
   window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your balances ..", 0));
   await initMyBalances();
@@ -246,6 +250,8 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     initialPage: transactionPage,
     dappState: null
   };
+
+  safeManifestLogger.log("end")
 }
 
 export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {

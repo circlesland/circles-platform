@@ -1,5 +1,4 @@
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
 import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 import {Token} from "../../../libs/o-fission/entities/token";

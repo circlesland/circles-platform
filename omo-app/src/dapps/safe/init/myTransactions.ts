@@ -1,7 +1,7 @@
 import {BehaviorSubject, Subject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {
-  Signal,
+  BeginSignal,
   SystemEvent
 } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {BN} from "ethereumjs-util";
@@ -17,12 +17,15 @@ import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
 import {Token} from "../../../libs/o-fission/entities/token";
 import {runWithDrive} from "../../../libs/o-fission/initFission";
 import {Envelope} from "../../../libs/o-os/interfaces/envelope";
+import {Logger} from "../../../libs/o-os/interfaces/shell";
 
 type TransactionList = {
   [token: string]: {
     [id: string]: CirclesTransaction
   }
 }
+
+let initMyTransactionLogger:Logger;
 
 // The consumable output of this init step (deduplicated ordered list of transactions)
 const myTransactionsSubject: BehaviorSubject<Envelope<CirclesTransaction[]>> = new BehaviorSubject<Envelope<CirclesTransaction[]>>({
@@ -322,7 +325,18 @@ const subscribeToTokenEvents = new DelayedTrigger(500, async () =>
   // Show the cached transactions right away then load all other transaction history ..
   pushTransactions.trigger();
 
-  await aToken.feedTransactionHistory(transactionStream, tokensByAddress, tokenAddresses, firstUnknownBlock, "feedTransactionHistory");
+  await aToken.feedTransactionHistory(
+    transactionStream,
+    tokensByAddress,
+    tokenAddresses,
+    firstUnknownBlock,
+    signal => {
+      const currentTransactionsList = safeState.myTransactions.getValue();
+      safeState.myTransactions.next({
+        signal: signal,
+        payload: currentTransactionsList.payload
+      });
+    });
   annotateTimeAndStoreToCacheTrigger.trigger();
 });
 
@@ -332,8 +346,10 @@ const subscribeToTokenEvents = new DelayedTrigger(500, async () =>
  * 2. Subscribes to the Transfer events of all tokens
  * 3. Queries the history of new and known tokens
  */
-export async function initMyTransactions()
+export async function initMyTransactions(logger:Logger)
 {
+  initMyTransactionLogger = logger.newLogger("initMyTransaction()")
+  initMyTransactionLogger.log("begin");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let counter = 0;
   transactionStream.subscribe(event =>
@@ -341,7 +357,7 @@ export async function initMyTransactions()
     counter++;
     if (counter % 100 == 0)
     {
-      window.o.logger.log(`Indexed ${counter} transactions so far ...`);
+      initMyTransactionLogger.log(`Indexed ${counter} transactions so far ...`);
     }
 
     indexTransaction(event);
@@ -363,4 +379,6 @@ export async function initMyTransactions()
       myTransactions: myTransactionsSubject
     }
   });
+
+  initMyTransactionLogger.log("end");
 }
