@@ -45,7 +45,9 @@ const processDefinition = () => createMachine({
             }
         },
         setTrust: {
-            entry: sendInProgressPrompt(str.titleWorking),
+            entry: [
+                sendInProgressPrompt(str.titleWorking),
+            ],
             invoke: {
                 id: 'setTrust',
                 src: setTrustService,

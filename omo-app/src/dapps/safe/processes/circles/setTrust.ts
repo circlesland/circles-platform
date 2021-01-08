@@ -7,7 +7,7 @@ import { storePromptResponse } from "../../../../libs/o-processes/actions/storeP
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import { setError } from "../../../../libs/o-processes/actions/setError";
 import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
@@ -59,7 +59,12 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       }
     },
     setTrust: {
-      entry: sendInProgressPrompt(str.titleWorking),
+      entry: [
+        sendInProgressPrompt(str.titleWorking),
+        /*sendShellEvent({
+          type: "shell.closeModal"
+        })*/
+      ],
       invoke: {
         id: 'setTrust',
         src: setTrustService,

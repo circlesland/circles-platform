@@ -7,8 +7,11 @@
   const addedfile = file => {
     const reader = new FileReader();
     reader.addEventListener("loadend", (e) => {
-      imageData = reader.result.toString();
-      loadImageIntoCanvas(imageData)
+      processArtifact.value = reader.result.toString();
+      processArtifact.isValid = true;
+      dispatch("validated", processArtifact.isValid);
+
+      loadImageIntoCanvas()
     });
     reader.readAsDataURL(file);
   }
@@ -22,19 +25,14 @@
   const dispatch = createEventDispatcher();
 
   let files = [];
-  let imageData: string;
 
-  function loadImageIntoCanvas(imageDataUrl:string)
+  function loadImageIntoCanvas()
   {
-    processArtifact.value = imageDataUrl;
-    processArtifact.isValid = true;
-    dispatch("validated", processArtifact.isValid);
-
     const canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('cropCanvas');
     const ctx = canvas.getContext('2d');
 
     const image = new Image();
-    image.src = imageDataUrl;
+    image.src = processArtifact.value;
 
     image.onload = function(){
       ctx.drawImage(image,
@@ -45,8 +43,15 @@
     }
   }
 
-  onMount(() => {
-  });
+  $: {
+    if (processArtifact && processArtifact.value) {
+      processArtifact.isValid = true;
+      setTimeout(() => {
+        dispatch("validated", processArtifact.isValid);
+      })
+    }
+  }
+
 /*
   const itemTemplate = `<div class="dz-preview dz-file-preview">
     <div class="dz-details">
@@ -61,9 +66,9 @@
 <div style="width:100%; height:100%;">
 <!--<input bind:files type="file" accept="image/*" />-->
 <canvas style="visibility: hidden; position:absolute; left:-8096px; top:-8096px;" id="cropCanvas" width="300" height="300"></canvas>
-{#if imageData}
+{#if processArtifact.value}
   <Cropper
-    image={imageData}
+    image={processArtifact.value}
     bind:crop
     bind:zoom
     on:cropcomplete={e => console.log(e.detail)}
