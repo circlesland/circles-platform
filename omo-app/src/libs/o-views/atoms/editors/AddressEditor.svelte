@@ -55,55 +55,68 @@
   let lookupContacts: Contact[] = [];
   let contactsBySafeAddress: {
     [safeAddress: string]: Contact
-  };
+  } = {};
+
+  function loadDirectoryContacts()
+  {
+    if (!contactsBySafeAddress)
+    {
+      contactsBySafeAddress = {};
+    }
+    const omoSapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+    Object.values(omoSapienState.directory.byFissionName).forEach((omo:Entry) =>
+    {
+      if (omo.circlesSafe && !contactsBySafeAddress[omo.circlesSafe])
+      {
+        contactsBySafeAddress[omo.circlesSafe] = <Contact>{
+          safeAddress: omo.circlesSafe,
+          circlesProfile: null,
+          trust: {
+            out: 0,
+            in: 0
+          },
+          lastBlockNo: 0,
+          omoProfile: {
+            profile: {
+              firstName: omo.firstName,
+              lastName: omo.lastName,
+              fissionName: omo.fissionName,
+              avatar: omo.avatarUrl,
+              name: "",
+              circlesAddress: omo.circlesSafe
+            },
+            avatar: ""
+          }
+        }
+      }
+    });
+    lookupContacts = Object.values(contactsBySafeAddress);
+  }
 
   onMount(() =>
   {
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-    const omoSapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-
-    safeState.myContacts.subscribe(contacts =>
+    if (safeState.myContacts)
     {
-      lookupContacts = contacts;
-      contacts.forEach(contact =>
+      safeState.myContacts.subscribe(contacts =>
       {
-        if (!contact.safeAddress)
+        contacts.forEach(contact =>
         {
-          return;
-        }
-        if (!contactsBySafeAddress)
-        {
-          contactsBySafeAddress = {};
-        }
-        contactsBySafeAddress[contact.safeAddress] = contact;
-      });
-      Object.values(omoSapienState.directory.byCirclesSafe).forEach((omo:Entry) => {
-        if (!contactsBySafeAddress[omo.circlesSafe])
-        {
-          contactsBySafeAddress[omo.circlesSafe] = {
-            safeAddress: omo.circlesSafe,
-            circlesProfile: null,
-            trust: {
-              out: 0,
-              in: 0
-            },
-            lastBlockNo: 0,
-            omoProfile: {
-              profile: {
-                firstName: omo.firstName,
-                lastName: omo.lastName,
-                fissionName: omo.fissionName,
-                avatar: omo.avatarUrl,
-                name: "",
-                circlesAddress: omo.circlesSafe
-              },
-              avatar: ""
-            }
+          if (!contact.safeAddress)
+          {
+            return;
           }
-        }
+          if (!contactsBySafeAddress)
+          {
+            contactsBySafeAddress = {};
+          }
+          contactsBySafeAddress[contact.safeAddress] = contact;
+        });
+        lookupContacts = Object.values(contactsBySafeAddress);
       });
-    });
+    }
 
+    loadDirectoryContacts();
     validate();
   });
 
@@ -237,8 +250,10 @@
           </div>
         </Typeahead>
       </div>
-    {:else}
+    {:else if typeof mapToFriendItem(processArtifact.value) !== "string"}
       <FriendItem showActions={false} data={mapToFriendItem(processArtifact.value)} />
+    {:else}
+      {processArtifact.value}
     {/if}
   </div>
 {/if}

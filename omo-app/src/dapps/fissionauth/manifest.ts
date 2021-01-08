@@ -28,7 +28,8 @@ async function initialize(stack, runtimeDapp)
       initialPage: authPage
     };
   }
-  else {
+  else
+  {
     window.o.logger.log("X - Cancel dependency loading")
     if (stack.length == 0) {
       window.o.redirectTo = runtimeDapp.route;

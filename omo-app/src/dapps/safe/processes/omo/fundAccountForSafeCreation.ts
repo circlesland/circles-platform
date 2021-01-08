@@ -12,6 +12,7 @@ import {config} from "../../../../libs/o-circles-protocol/config";
 import {OmoSafeState} from "../../manifest";
 import {OmoSapienState} from "../../../omosapien/manifest";
 import {FissionAuthState} from "../../../fissionauth/manifest";
+import {runWithDrive} from "../../../../libs/o-fission/initFission";
 
 export interface FundAccountContext extends ProcessContext {
   data: {
@@ -31,14 +32,15 @@ const processDefinition = () => createMachine<FundAccountContext, OmoEvent>({
     generateFundLink: {
       entry: [assign((context, event) =>
       {
-        const fissionAuthState = tryGetDappState<FissionAuthState>("fission.auth:1");
+        const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+        const fissionName = fissionAuthState.fission.getValue().username;
         const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
         const web3 = config.getCurrent().web3();
         const myAccount = web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey).address;
         context.data.fundLink = {
           type: "string",
           key: "fundLink",
-          value: window.location.origin + "#/safe/empowerMe/" + myAccount + "/" + fissionAuthState.username
+          value: window.location.origin + "#/safe/empowerMe/" + myAccount + "/" + fissionName
         }
         return context;
       }),

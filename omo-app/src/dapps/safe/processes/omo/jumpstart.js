@@ -53,7 +53,7 @@ const processDefinition = () => createMachine({
             entry: sendPrompt((context) => {
                 return {
                     title: str.titleIntro(),
-                    nextButtonTitle: `Empower ${context.data.foreignProfile.value.firstName} ${context.data.foreignProfile.value.lastName}`,
+                    nextButtonTitle: `Empower ${context.data.foreignProfile.value.profile.firstName} ${context.data.foreignProfile.value.profile.lastName}`,
                     banner: {
                         component: JumpstartIntro,
                         data: {
