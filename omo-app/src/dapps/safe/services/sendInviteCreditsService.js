@@ -19,6 +19,6 @@ export const sendInviteCreditsService = (context) => __awaiter(void 0, void 0, v
         .privateKeyToAccount(safeState.myKey.privateKey)
         .address;
     const gnosisSafeProxy = new GnosisSafeProxy(web3, ownerAddress, safeState.mySafeAddress);
-    const ethAmount = new BN(web3.utils.toWei((context.data.value.value / 10).toString(), "ether"));
+    const ethAmount = new BN(web3.utils.toWei((context.data.value.value / 100).toString(), "ether"));
     return yield gnosisSafeProxy.transferEth(safeState.myKey.privateKey, ethAmount, context.data.recipient.value);
 });

@@ -17,6 +17,6 @@ export const transferJumpstartXDaiService = async (context: JumpstartContext) =>
 
   return await gnosisSafeProxy.transferEth(
     safeState.myKey.privateKey,
-    new BN(web3.utils.toWei((context.data.value.value / 10).toString(), "ether")),
+    new BN(web3.utils.toWei((context.data.value.value / 100).toString(), "ether")),
     context.data.recipient.value);
 }

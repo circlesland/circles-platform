@@ -17,6 +17,7 @@
   import {Cancel} from "./libs/o-processes/events/cancel";
   import {Process} from "./libs/o-processes/interfaces/process";
   import {ProgressSignal} from "./libs/o-circles-protocol/interfaces/blockchainEvent";
+  import {NavigateTo} from "./libs/o-events/navigateTo";
 
   let actions = [];
 
@@ -61,6 +62,10 @@
     }
     if (event.type === "shell.begin")
     {
+    }
+    if (event.type === "shell.navigateTo")
+    {
+      push("#" + (<NavigateTo>event).route);
     }
     if (event.type === "shell.done")
     {

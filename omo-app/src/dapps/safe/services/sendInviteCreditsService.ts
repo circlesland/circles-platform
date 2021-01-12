@@ -16,7 +16,7 @@ export const sendInviteCreditsService = async (context: SendInviteCreditsContext
     .address;
 
   const gnosisSafeProxy = new GnosisSafeProxy(web3, ownerAddress, safeState.mySafeAddress);
-  const ethAmount = new BN(web3.utils.toWei((context.data.value.value / 10).toString(), "ether"));
+  const ethAmount = new BN(web3.utils.toWei((context.data.value.value / 100).toString(), "ether"));
   return await gnosisSafeProxy.transferEth(
     safeState.myKey.privateKey,
     ethAmount,

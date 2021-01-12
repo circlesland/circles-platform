@@ -15,10 +15,13 @@
   let myOffers:Offer[] = [];
 
   async function init() {
-    await runWithDrive(async fissiondrive =>
+    if (omosapienState)
     {
-      myOffers = await fissiondrive.offers.listItems();
-    });
+      await runWithDrive(async fissiondrive =>
+      {
+        myOffers = await fissiondrive.offers.listItems();
+      });
+    }
   }
 
   init();
@@ -26,27 +29,38 @@
   function mapToListItem(offer:Offer) {
     // const locationParts = offer.productLocation.display_name.split(",");
     // const country = locationParts[locationParts.length - 1];
-    const offeredBy = omosapienState.directory.getValue().payload.byFissionName[offer.offeredByFissionName];
-    return {
+    const offerItem = {
       data: {
         title: offer.productName,
-          image: offer.productPicture,
-          description: offer.productDescription,
-          price: offer.productPrice,
-          state: "active",
-          category: "mobility",
-          // quantity: "",
-          city: offer.productLocation.display_name,
-          country:  "" /*country*/,
-          delivery: "pickup or delivery",
-          offeredBy: {
-            image: offeredBy.DeineMuddaOida,
-            firstName: offeredBy.firstName,
-            lastName: offeredBy.lastName,
-            email: ""
-          },
+        image: offer.productPicture,
+        description: offer.productDescription,
+        price: offer.productPrice,
+        state: "active",
+        category: "mobility",
+        // quantity: "",
+        city: offer.productLocation.display_name,
+        country:  "" /*country*/,
+        delivery: "pickup or delivery",
+        offeredBy: {
+          image: "",
+          firstName: "",
+          lastName: "",
+          email: ""
+        },
       },
+    };
+    if (omosapienState?.directory)
+    {
+      const offeredBy = omosapienState.directory.getValue().payload.byFissionName[offer.offeredByFissionName];
+      offerItem.data.offeredBy = {
+        image: "",
+        firstName: offeredBy.firstName,
+        lastName: offeredBy.lastName,
+        email: ""
+      };
     }
+
+    return
   }
 </script>
 

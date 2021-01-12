@@ -14,7 +14,6 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
-import { tryGetDappState } from "../../o-os/loader";
 import { runWithDrive } from "../initFission";
 export const ipfsCat = (ipfs, cid) => __awaiter(void 0, void 0, void 0, function* () {
     var e_1, _a;
@@ -65,7 +64,6 @@ export class ForeignProfile {
         return __awaiter(this, void 0, void 0, function* () {
             // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
             try {
-                const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                 const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUsername}.fission.name`;
                 const dnsLinkResult = yield fetch(dnsLink);
                 const dnsLinkResultObj = yield dnsLinkResult.json();

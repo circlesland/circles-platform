@@ -14,7 +14,7 @@ export const fundSafeService = async (context: FundSafeContext) =>
   );
 
   const nonce = await context.environment.eth.web3.eth.getTransactionCount(myAccount.address);
-  const value = new BN(context.environment.eth.web3.utils.toWei("0.01", "ether"));
+  const value = new BN(context.environment.eth.web3.utils.toWei("0.0047", "ether"));
 
   const gasPrice = new BN(await context.environment.eth.web3.eth.getGasPrice());
   const gasEstimate = new BN(await context.environment.eth.web3.eth.estimateGas({
@@ -26,7 +26,7 @@ export const fundSafeService = async (context: FundSafeContext) =>
     nonce: nonce
   }));
 
-  window.o.logger.log("Sending 0.01 xDai to ", safeState.mySafeAddress);
+  window.o.logger.log("Sending 0.0047 xDai to ", safeState.mySafeAddress);
   window.o.logger.log("GasPrice:", gasPrice.toString());
   window.o.logger.log("GasEstimate:", gasEstimate.toString());
 

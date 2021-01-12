@@ -1,11 +1,11 @@
 import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
 import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
-import {createMachine} from "xstate";
+import {assign, createMachine} from "xstate";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {strings} from "../../data/strings";
 import {BN} from "ethereumjs-util";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {tryGetDappState} from "../../../../libs/o-os/loader";
 import {OmoSafeState} from "../../manifest";
@@ -15,6 +15,7 @@ import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessR
 import {deploySafeService} from "../../services/deploySafeService";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
+import {NavigateTo} from "../../../../libs/o-events/navigateTo";
 
 export interface DeploySafeContext extends ProcessContext {
   data: {
@@ -49,11 +50,19 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
         "process.continue": [{
           cond: (context) => {
             const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-            return safeState.myAccountXDaiBalance?.gte(new BN(context.environment.eth.web3.utils.toWei("0.02", "ether"))) === true;
+            return safeState.myAccountXDaiBalance?.gte(new BN(context.environment.eth.web3.utils.toWei("0.0097", "ether"))) === true;
           },
           target: "deploySafe"
         }, {
-          target: "success"
+          actions: [
+            assign((context: ProcessContext, event) => {
+              context.result = {
+                error: new Error("You have not enough xDai on your account to deploy a new safe.")
+              }
+              return context;
+            })
+          ],
+          target: "error"
         }]
       }
     },
@@ -74,7 +83,8 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
     },
     success: {
       entry: [
-        sendSuccessPrompt
+        sendSuccessPrompt,
+        sendShellEvent(new NavigateTo("/safe/tokens"))
       ],
       on: {
         "process.continue": "stop",

@@ -45,8 +45,6 @@ export class ForeignProfile
     // TODO: Remove the hardcoded gateway and either use the webnative library or ipfs directly for this lookup
     try
     {
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-
       const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUsername}.fission.name`;
       const dnsLinkResult = await fetch(dnsLink);
       const dnsLinkResultObj = await dnsLinkResult.json();

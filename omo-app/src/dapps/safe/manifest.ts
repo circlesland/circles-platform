@@ -2,10 +2,11 @@ import AnswerInviteRequest from "./views/pages/AnswerInviteRequest.svelte"
 import Transactions from "./views/pages/Transactions.svelte"
 import Friends from "./views/pages/Friends.svelte"
 import Tokens from "./views/pages/Tokens.svelte"
-import NoFunds from "./views/pages/NoFunds.svelte"
+import NoFundsOnAccount from "./views/pages/NoFundsOnAccount.svelte"
 import NoKey from "./views/pages/NoKey.svelte"
 import NoSafe from "./views/pages/NoSafe.svelte"
 import NoToken from "./views/pages/NoToken.svelte"
+import NoFundsOnSafe from "./views/pages/NoFundsOnSafe.svelte"
 import {safeDefaultActions, safeOverflowActions} from "./data/actions"
 import {QuickAction} from "../../libs/o-os/types/quickAction";
 import {RunProcess} from "../../libs/o-events/runProcess";
@@ -41,6 +42,7 @@ import {signupAtCircles} from "./processes/omo/signupAtCircles";
 import {BeginSignal, ProgressSignal, Signal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {Envelope} from "../../libs/o-os/interfaces/envelope";
 import {Logger} from "../../libs/o-os/interfaces/shell";
+import {fundSafe} from "./processes/omo/fundSafe";
 
 export interface OmoSafeState
 {
@@ -76,10 +78,10 @@ const transactionPage = {
   }
 };
 
-const noFundsPage = {
+const noFundsOnAccountPage = {
   isDefault: true,
   routeParts: ["no-funds"],
-  component: NoFunds,
+  component: NoFundsOnAccount,
   available: [
     (detail) =>
     {
@@ -160,6 +162,27 @@ const noTokenPage = {
   }
 };
 
+const noFundsOnSafePage = {
+  isDefault: true,
+  routeParts: ["no-funds-on-safe"],
+  component: NoFundsOnSafe,
+  available: [
+    (detail) =>
+    {
+      window.o.logger.log("routeGuard.detail:", detail);
+      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+      return fissionAuthState.fission !== undefined
+    }
+  ],
+  userData: {
+    showActionBar: true,
+    actions: <QuickAction[]>[
+      ...safeDefaultActions,
+      ...safeOverflowActions
+    ]
+  }
+};
+
 let safeManifestLogger:Logger;
 
 /**
@@ -203,7 +226,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
     window.o.publishEvent(new RunProcess(fundAccountForSafeCreation));
     return {
       cancelDependencyLoading: true,
-      initialPage: noFundsPage,
+      initialPage: noFundsOnAccountPage,
       dappState: null
     };
   }
@@ -223,6 +246,18 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   await initMyToken();
 
   safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+
+  // If the user doesn't have a token and the safe balance is smaller than
+  if (safeState.mySafeAddress && !safeState.myToken && safeState.mySafeXDaiBalance?.lte(new BN("4600000000000000")))
+  {
+    // Not yet registered at the circles hub
+    runtimeDapp.shell.publishEvent(new RunProcess(fundSafe));
+    return {
+      cancelDependencyLoading: true,
+      initialPage: noFundsOnSafePage
+    };
+  }
+
   if (safeState.mySafeAddress && !safeState.myToken)
   {
     // Not yet registered at the circles hub
@@ -245,13 +280,13 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your balances ..", 0));
   await initMyBalances();
 
+  safeManifestLogger.log("end")
+
   return {
     cancelDependencyLoading: false,
     initialPage: transactionPage,
     dappState: null
   };
-
-  safeManifestLogger.log("end")
 }
 
 export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {

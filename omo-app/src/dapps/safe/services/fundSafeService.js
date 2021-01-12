@@ -14,7 +14,7 @@ export const fundSafeService = (context) => __awaiter(void 0, void 0, void 0, fu
     const safeState = tryGetDappState("omo.safe:1");
     const myAccount = yield context.environment.eth.web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey);
     const nonce = yield context.environment.eth.web3.eth.getTransactionCount(myAccount.address);
-    const value = new BN(context.environment.eth.web3.utils.toWei("0.01", "ether"));
+    const value = new BN(context.environment.eth.web3.utils.toWei("0.0047", "ether"));
     const gasPrice = new BN(yield context.environment.eth.web3.eth.getGasPrice());
     const gasEstimate = new BN(yield context.environment.eth.web3.eth.estimateGas({
         gasPrice: gasPrice,
@@ -24,7 +24,7 @@ export const fundSafeService = (context) => __awaiter(void 0, void 0, void 0, fu
         data: "0x",
         nonce: nonce
     }));
-    window.o.logger.log("Sending 0.01 xDai to ", safeState.mySafeAddress);
+    window.o.logger.log("Sending 0.0047 xDai to ", safeState.mySafeAddress);
     window.o.logger.log("GasPrice:", gasPrice.toString());
     window.o.logger.log("GasEstimate:", gasEstimate.toString());
     const signedRawTransaction = yield Web3Contract.signRawTransaction(myAccount.address, myAccount.privateKey, safeState.mySafeAddress, "0x", gasEstimate, value);

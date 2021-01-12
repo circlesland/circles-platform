@@ -11,10 +11,8 @@ import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
 import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
 import { FissionAuthState } from "../fissionauth/manifest";
 import {runWithDrive} from "../../libs/o-fission/initFission";
-import {ipfsCat} from "../../libs/o-fission/directories/foreignProfile";
 import {BehaviorSubject} from "rxjs";
 import {Logger} from "../../libs/o-os/interfaces/shell";
-import {Signal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {Envelope} from "../../libs/o-os/interfaces/envelope";
 
 export interface Entry {

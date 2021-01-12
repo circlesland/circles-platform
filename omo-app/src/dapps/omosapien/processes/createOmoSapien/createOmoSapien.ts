@@ -7,7 +7,7 @@ import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/process
 import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
 import { setError } from "../../../../libs/o-processes/actions/setError";
 import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import { strings } from "../../data/strings";
@@ -15,6 +15,7 @@ import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
 import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
 import { file } from "../../../../libs/o-processes/artifacts/file";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import {NavigateTo} from "../../../../libs/o-events/navigateTo";
 
 export interface CreateOmoSapienContext extends ProcessContext {
   data: {
@@ -141,10 +142,16 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: [
+        sendSuccessPrompt,
+        sendShellEvent(new NavigateTo("/omosapien/me"))
+      ],
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
+      },
+      after: {
+        2000: { target: 'stop' }
       }
     },
     stop: {

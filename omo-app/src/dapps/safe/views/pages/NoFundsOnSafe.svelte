@@ -6,7 +6,7 @@
   <div class="flex items-center justify-center">
     <div>
       <div class="text-sm text-center text-primary foont-primary">
-        You don't have enough funds to continue. Please follow the steps of the dialog to proceed.
+        You don't have enough funds on your safe. Please follow the steps of the dialog to proceed.
       </div>
     </div>
   </div>
