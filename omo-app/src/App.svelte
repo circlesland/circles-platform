@@ -93,6 +93,10 @@
   let overflowActions: any[] = [];
 
   $: {
+    const headerHeight = headerElement ? headerElement.clientHeight : 0;
+    const footerHeight = footerElement ? footerElement.clientHeight : 0;
+    contentHeight = windowInnerHeight - headerHeight - footerHeight;
+
     let _quickActions = actions.filter((o) => o.pos && o.pos !== "overflow");
     quickActions = [0, 1, 2, 3].map((index) =>
     {
@@ -130,10 +134,6 @@
           pos: item.pos,
         };
       });
-
-    const headerHeight = headerElement ? headerElement.clientHeight : 0;
-    const footerHeight = footerElement ? footerElement.clientHeight : 0;
-    contentHeight = windowInnerHeight - headerHeight - footerHeight;
   }
 
   function toggleOpen()

@@ -291,7 +291,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 
 export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {
   id: "omo.safe:1",
-  dependencies: ["omo.sapien:1"],
+  dependencies: ["omo.li:1"],
   icon: faPiggyBank,
   title: "OmoSafe",
   routeParts: ["safe"],

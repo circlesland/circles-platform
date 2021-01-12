@@ -241,7 +241,7 @@ function initialize(stack, runtimeDapp) {
 }
 export const omosafe = {
     id: "omo.safe:1",
-    dependencies: ["omo.sapien:1"],
+    dependencies: ["omo.li:1"],
     icon: faPiggyBank,
     title: "OmoSafe",
     routeParts: ["safe"],

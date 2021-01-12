@@ -50,9 +50,7 @@ const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0
         const omosapienState = tryGetDappState("omo.sapien:1");
         const safeState = tryGetDappState("omo.safe:1");
         yield Promise.all(Object.values(myContacts)
-            .filter(o => {
-            omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
-        })
+            .filter(o => omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress])
             .map((o) => __awaiter(void 0, void 0, void 0, function* () {
             const directoryEntry = omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
             try {
