@@ -46,7 +46,7 @@
           firstName: "",
           lastName: "",
           email: ""
-        },
+        }
       },
     };
     if (omosapienState?.directory)
@@ -60,7 +60,7 @@
       };
     }
 
-    return
+    return offerItem;
   }
 </script>
 
@@ -155,6 +155,7 @@
   </div>
   <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
     {#each myOffers.map(o => mapToListItem(o)).concat(offers) as item}
+      {#if item.data}
       <div
         class="flex flex-col overflow-hidden bg-white border hover:shadow-xl rounded-xl border-light-200">
         <div class="relative flex-shrink-0">
@@ -239,6 +240,7 @@
           {/if}
         </div>
       </div>
+      {/if}
     {/each}
   </div>
 </section>
