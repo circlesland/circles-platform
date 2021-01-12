@@ -1,7 +1,6 @@
 import {BehaviorSubject, Subject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {
-  BeginSignal,
   SystemEvent
 } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {BN} from "ethereumjs-util";
@@ -10,7 +9,6 @@ import {OmoSafeState} from "../manifest";
 import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
 import {CirclesTransaction} from "../../../libs/o-circles-protocol/model/circlesTransaction";
 import {config} from "../../../libs/o-circles-protocol/config";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransactions";
 import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
 import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";

@@ -92,7 +92,7 @@ router.post('/signup/:fissionName', async (request:Request,response:Response) =>
                     return;
                 }
 
-                const otherProfilePath = `https://ipfs.io/${dnsLinkResultObj.Path}/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland/me/userland`;
+                const otherProfilePath = `https://ipfs.io${dnsLinkResultObj.Path}/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland/me/userland`;
                 console.log("loading", otherProfilePath);
                 const otherProfileData = await fetch(otherProfilePath);
                 const otherProfileObj = await otherProfileData.json();

@@ -34,7 +34,7 @@ export async function initMyToken()
           tokenAddress: mySignup.tokenAddress,
           tokenOwner: mySignup.tokenOwner,
           createdInBlockNo: mySignup.createdInBlockNo,
-          noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo
+          noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo - 1
         }
 
         try

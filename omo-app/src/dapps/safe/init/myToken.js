@@ -34,7 +34,7 @@ export function initMyToken() {
                         tokenAddress: mySignup.tokenAddress,
                         tokenOwner: mySignup.tokenOwner,
                         createdInBlockNo: mySignup.createdInBlockNo,
-                        noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo
+                        noTransactionsUntilBlockNo: mySignup.noTransactionsUntilBlockNo - 1
                     };
                     try {
                         yield fissionDrive.tokens.addMyToken(myToken);
