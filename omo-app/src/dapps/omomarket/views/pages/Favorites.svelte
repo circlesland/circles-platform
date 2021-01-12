@@ -6,6 +6,11 @@
   import {ListItem as IListItem} from "../../../../libs/o-views/interfaces/molecules";
   import {Offer} from "../../../../libs/o-fission/entities/offer";
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
+  import {faEdit, faGlobe, faHome} from "@fortawesome/free-solid-svg-icons";
+  import {RunProcess} from "../../../../libs/o-events/runProcess";
+  import {publishOfferService} from "../../processes/publishOffer/services/publishOfferService";
+  import {publishOffer, PublishOfferContext} from "../../processes/publishOffer/publishOffer";
+  import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer/unpublishOffer";
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   let myOffers: Offer[] = [];
@@ -25,7 +30,56 @@
 
   function mapToListItem(offer: Offer)
   {
-    console.log(offer);
+    console.log("MyOffer:", offer);
+
+    const actions = [{
+      title: "Edit offer",
+      icon: faEdit,
+      action: () => {
+        runWithDrive(async drive => {
+
+        });
+        console.log("Edit")
+      }
+    }];
+
+    if (!offer.isPublished)
+    {
+      actions.push({
+        icon: faGlobe,
+        title: "Publish offer",
+        action: () =>
+        {
+          window.o.publishEvent(new RunProcess(publishOffer, async (processContext:PublishOfferContext) => {
+            processContext.data.offerName = {
+              key: "offerName",
+              isValid: true,
+              value: offer.name,
+              type: "string"
+            };
+            return processContext;
+          }));
+        }
+      });
+    } else {
+      actions.push({
+        icon: faHome,
+        title: "Unpublish offer",
+        action: () =>
+        {
+          window.o.publishEvent(new RunProcess(unpublishOffer, async (processContext:UnpublishOfferContext) => {
+            processContext.data.offerName = {
+              key: "offerName",
+              isValid: true,
+              value: offer.name,
+              type: "string"
+            };
+            return processContext;
+          }));
+        }
+      });
+    }
+
     // const locationParts = offer.productLocation.display_name.split(",");
     // const country = locationParts[locationParts.length - 1];
     const offerItem: IListItem = <IListItem>{
@@ -35,13 +89,7 @@
         description: offer.productDescription,
         balance: offer.productPrice,
         subtitle: offer.productDescription,
-        actions: [{
-          title: "Edit offer"
-        },{
-          title: "Publish offer"
-        },{
-          title: "Unpublish offer"
-        }]
+        actions: actions
       }
     };
 

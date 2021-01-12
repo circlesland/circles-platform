@@ -2,8 +2,8 @@ export const strings = {
   omomarket: {
     processes: {
       createOffer: {
-        successMessage: (context: any) => `Your OmoSapien was successfully created`,
-        errorMessage: (context: any) => `An error occured during the creation of your OmoSapien`,
+        successMessage: (context: any) => `Your offer was successfully created`,
+        errorMessage: (context: any) => `An error occurred during the creation of your offer`,
         titleProductName: () => "Product Title",
         bannerProductName: () => "Describe in short your offer title",
         buttonProductName: () => "Save title",
@@ -25,7 +25,19 @@ export const strings = {
         titleSummary: () => "Summary",
         bannerSummary: () => "",
         buttonSummary: () => "Save Offer",
-        bannerProgress: () => "Your offer is created ..."
+        bannerProgress: () => "Creating your offer .."
+      },
+      publishOffer: {
+        successMessage: (context: any) => `Your offer was successfully published`,
+        errorMessage: (context: any) => `An error occurred during publishing. Refresh the page and try again if necessary.`,
+        title: () => "Publishing ..",
+        bannerProgress: () => "Publishing .."
+      },
+      unpublishOffer: {
+        successMessage: (context: any) => `Your offer was successfully un-published`,
+        errorMessage: (context: any) => `An error occurred during un-publishing. Refresh the page and try again if necessary.`,
+        title: () => "Un-publishing ..",
+        bannerProgress: () => "Un-publishing .."
       }
     }
   }

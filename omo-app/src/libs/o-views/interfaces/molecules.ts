@@ -82,7 +82,7 @@ export interface ListItem {
     description: string;
     actions?: {
       title: string,
-      icon: string,
+      icon: any,
       action: () => Promise<void>
     }[]
   };

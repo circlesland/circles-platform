@@ -10,6 +10,7 @@ export const createOfferService = async (context: CreateOfferContext) =>
     const idBuffer = Buffer.from(idData);
 
     await fissionDrive.offers.addOrUpdate({
+      isPublished: false,
       offeredByFissionName: fissionDrive.username,
       name: idBuffer.toString("hex"),
       productDescription: context.data.productDescription.value,

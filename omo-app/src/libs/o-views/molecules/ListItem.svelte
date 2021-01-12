@@ -39,11 +39,12 @@
         </p>
       </div>
     </div>
+    <!--
     <div class="flex items-center pt-0.5 justify-end px-4 text-right">
-      <div class="text-3xl font-light text-action">{mapping.data.balance}</div>
     </div>
-
+    -->
     <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
+      <div class="text-3xl font-light text-action">{mapping.data.balance}</div>
       {#each mapping.data.actions as a}
         <div
           on:click={async (e) => {
@@ -53,10 +54,11 @@
           }}>
           <ButtonIcon mapping={{
             design: {
-              icon: faFile,
+              icon: a.icon,
               type: "primary",
               disabled: false
-            }
+            },
+            tooltip: a.title
           }} />
         </div>
       {/each}
