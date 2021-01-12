@@ -123,7 +123,7 @@ const processDefinition = () => createMachine({
         success: {
             entry: [
                 sendSuccessPrompt,
-                sendShellEvent(new NavigateTo("/omosapien/me"))
+                sendShellEvent(new NavigateTo("/safe/transactions"))
             ],
             on: {
                 "process.continue": "stop",

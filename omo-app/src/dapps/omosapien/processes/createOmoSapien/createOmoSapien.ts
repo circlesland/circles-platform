@@ -144,7 +144,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent |
     success: {
       entry: [
         sendSuccessPrompt,
-        sendShellEvent(new NavigateTo("/omosapien/me"))
+        sendShellEvent(new NavigateTo("/safe/transactions"))
       ],
       on: {
         "process.continue": "stop",
