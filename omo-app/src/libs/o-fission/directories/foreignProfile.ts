@@ -3,6 +3,7 @@ import {IPFS} from "libs/webnative/ipfs";
 import {tryGetDappState} from "../../o-os/loader";
 import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
 import {runWithDrive} from "../initFission";
+import {Offer} from "../entities/offer";
 
 export const ipfsCat = async (ipfs:IPFS, cid: string): Promise<Buffer> =>
 {

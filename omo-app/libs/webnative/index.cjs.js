@@ -15583,6 +15583,7 @@ function iframe() {
         iframe.style.width = "0";
         iframe.style.height = "0";
         iframe.style.border = "none";
+        iframe.style.display = "none";
         document.body.appendChild(iframe);
         iframe.onload = function () {
             var channel = new MessageChannel();
@@ -20848,16 +20849,6 @@ var size = function (cid) { return __awaiter(void 0, void 0, void 0, function ()
             case 2:
                 stat = _a.sent();
                 return [2 /*return*/, stat.cumulativeSize];
-        }
-    });
-}); };
-var reconnect = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, get$1()];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
         }
     });
 }); };
@@ -27270,7 +27261,6 @@ var index$2 = /*#__PURE__*/Object.freeze({
     dagPut: dagPut,
     dagPutLinks: dagPutLinks,
     size: size,
-    reconnect: reconnect,
     attemptPin: attemptPin,
     DAG_NODE_DATA: DAG_NODE_DATA
 });
@@ -56429,13 +56419,6 @@ function update(cid, proof) {
                     if (fetchController)
                         fetchController.abort();
                     fetchController = new AbortController();
-                    // Ensure peer connection
-                    return [4 /*yield*/, reconnect()
-                        // Make API call
-                    ];
-                case 1:
-                    // Ensure peer connection
-                    _a.sent();
                     // Make API call
                     return [4 /*yield*/, fetchWithRetry(apiEndpoint + "/user/data/" + cid, {
                             headers: function () { return __awaiter(_this, void 0, void 0, function () {
@@ -56469,15 +56452,18 @@ function update(cid, proof) {
                         }, {
                             method: 'PATCH',
                             signal: fetchController.signal
-                        })
-                        // Debug
-                    ];
-                case 2:
+                        }).then(function (response) {
+                            if (response.status < 300)
+                                logger.log("🚀 DNSLink updated:", cid);
+                            else
+                                logger.log("💥  Failed to update DNSLink for:", cid);
+                        }).catch(function (err) {
+                            logger.log("💥  Failed to update DNSLink for:", cid);
+                            console.error(err);
+                        })];
+                case 1:
                     // Make API call
                     _a.sent();
-                    // Debug
-                    logger.log("🚀 DNSLink updated:", cid);
-                    logger.log("end");
                     return [2 /*return*/];
             }
         });
@@ -56495,12 +56481,12 @@ function fetchWithRetry(url, retryOptions, fetchOptions, retry) {
                     return [4 /*yield*/, fetch(url, __assign(__assign({}, fetchOptions), { headers: __assign(__assign({}, fetchOptions.headers), headers) }))];
                 case 2:
                     response = _a.sent();
-                    if (!(retryOptions.retryOn.includes(response.status) && retry < retryOptions.retries)) return [3 /*break*/, 4];
+                    if (!retryOptions.retryOn.includes(response.status)) return [3 /*break*/, 5];
+                    if (!(retry < retryOptions.retries)) return [3 /*break*/, 4];
                     return [4 /*yield*/, new Promise(function (resolve, reject) { return setTimeout(function () { return fetchWithRetry(url, retryOptions, fetchOptions, retry + 1).then(resolve, reject); }, retryOptions.retryDelay); })];
-                case 3:
-                    _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/];
+                case 3: return [2 /*return*/, _a.sent()];
+                case 4: throw new Error("Too many retries for fetch");
+                case 5: return [2 /*return*/, response];
             }
         });
     });
@@ -56808,11 +56794,16 @@ var FileSystem = /** @class */ (function () {
                         if (!sameTree) {
                             throw new Error("`mv` is only supported on the same tree for now");
                         }
+                        return [4 /*yield*/, this.exists(to)];
+                    case 1:
+                        if (_a.sent()) {
+                            throw new Error("Destination already exists");
+                        }
                         return [4 /*yield*/, this.runOnTree(from, true, function (tree, relPath) {
                                 var nextPath = takeHead(to).nextPath;
                                 return tree.mv(relPath, nextPath || '');
                             })];
-                    case 1:
+                    case 2:
                         _a.sent();
                         logger.log("end");
                         return [2 /*return*/, this];
@@ -58035,6 +58026,10 @@ var setup$1 = /*#__PURE__*/Object.freeze({
     Scenario["AuthCancelled"] = "AUTH_CANCELLED";
     Scenario["Continuation"] = "CONTINUATION";
 })(exports.Scenario || (exports.Scenario = {}));
+(function (InitialisationError) {
+    InitialisationError["InsecureContext"] = "INSECURE_CONTEXT";
+    InitialisationError["UnsupportedBrowser"] = "UNSUPPORTED_BROWSER";
+})(exports.InitialisationError || (exports.InitialisationError = {}));
 // INTIALISE
 /**
  * Check if we're authenticated, process any lobby query-parameters present in the URL,
@@ -58070,6 +58065,13 @@ function initialise(options) {
                             }
                         });
                     }); };
+                    // Check if browser is supported
+                    if (globalThis.isSecureContext === false)
+                        throw exports.InitialisationError.InsecureContext;
+                    return [4 /*yield*/, isSupported()];
+                case 1:
+                    if ((_h.sent()) === false)
+                        throw exports.InitialisationError.UnsupportedBrowser;
                     url = new URL(window.location.href);
                     cancellation = url.searchParams.get("cancelled");
                     ucans = url.searchParams.get("ucans");
@@ -58077,24 +58079,24 @@ function initialise(options) {
                     return [4 /*yield*/, store(ucans ? ucans.split(",") : [])
                         // Determine scenario
                     ];
-                case 1:
+                case 2:
                     // Add UCANs to the storage
                     _h.sent();
-                    if (!ucans) return [3 /*break*/, 7];
+                    if (!ucans) return [3 /*break*/, 8];
                     newUser = url.searchParams.get("newUser") === "t";
                     encryptedReadKey = url.searchParams.get("readKey") || "";
                     username = url.searchParams.get("username") || "";
                     return [4 /*yield*/, get()];
-                case 2:
+                case 3:
                     ks = _h.sent();
                     return [4 /*yield*/, ks.decrypt(makeUrlUnsafe(encryptedReadKey))];
-                case 3:
+                case 4:
                     readKey = _h.sent();
                     return [4 /*yield*/, ks.importSymmKey(readKey, READ_KEY_FROM_LOBBY_NAME)];
-                case 4:
+                case 5:
                     _h.sent();
                     return [4 /*yield*/, localforage.setItem(USERNAME_STORAGE_KEY, username)];
-                case 5:
+                case 6:
                     _h.sent();
                     if (autoRemoveUrlParams) {
                         url.searchParams.delete("newUser");
@@ -58111,8 +58113,8 @@ function initialise(options) {
                         newUser,
                         username];
                     return [4 /*yield*/, maybeLoadFs(username)];
-                case 6: return [2 /*return*/, _c.apply(void 0, _d.concat([_h.sent()]))];
-                case 7:
+                case 7: return [2 /*return*/, _c.apply(void 0, _d.concat([_h.sent()]))];
+                case 8:
                     if (cancellation) {
                         c = (function (_) {
                             switch (cancellation) {
@@ -58122,28 +58124,50 @@ function initialise(options) {
                         })();
                         return [2 /*return*/, scenarioAuthCancelled(permissions, c)];
                     }
-                    _h.label = 8;
-                case 8: return [4 /*yield*/, authenticatedUsername()];
-                case 9:
+                    _h.label = 9;
+                case 9: return [4 /*yield*/, authenticatedUsername()];
+                case 10:
                     authedUsername = _h.sent();
                     if (!(authedUsername &&
-                        (permissions ? validatePermissions(permissions) : true))) return [3 /*break*/, 11];
+                        (permissions ? validatePermissions(permissions) : true))) return [3 /*break*/, 12];
                     _f = scenarioContinuation;
                     _g = [permissions, authedUsername];
                     return [4 /*yield*/, maybeLoadFs(authedUsername)];
-                case 10:
-                    _e = _f.apply(void 0, _g.concat([_h.sent()]));
-                    return [3 /*break*/, 12];
                 case 11:
+                    _e = _f.apply(void 0, _g.concat([_h.sent()]));
+                    return [3 /*break*/, 13];
+                case 12:
                     _e = scenarioNotAuthorised(permissions);
-                    _h.label = 12;
-                case 12: return [2 /*return*/, _e];
+                    _h.label = 13;
+                case 13: return [2 /*return*/, _e];
+            }
+        });
+    });
+}
+// SUPPORTED
+function isSupported() {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = localforage.supports(localforage.INDEXEDDB);
+                    if (!_a) return [3 /*break*/, 2];
+                    return [4 /*yield*/, (function () { return new Promise(function (resolve) {
+                            var db = indexedDB.open("testDatabase");
+                            db.onsuccess = function () { return resolve(true); };
+                            db.onerror = function () { return resolve(false); };
+                        }); })()];
+                case 1:
+                    _a = (_b.sent());
+                    _b.label = 2;
+                case 2: return [2 /*return*/, _a];
             }
         });
     });
 }
 var fs = FileSystem;
-// ㊙️
+// ㊙️  ⚛  SCENARIOS
 function scenarioAuthSucceeded(permissions, newUser, username, fs) {
     return {
         scenario: exports.Scenario.AuthSucceeded,
@@ -58193,6 +58217,7 @@ exports.fs = fs;
 exports.initialise = initialise;
 exports.initialize = initialise;
 exports.ipfs = index$2;
+exports.isSupported = isSupported;
 exports.keystore = index$1;
 exports.leave = leave;
 exports.loadFileSystem = loadFileSystem;

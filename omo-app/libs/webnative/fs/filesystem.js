@@ -335,11 +335,16 @@ var FileSystem = /** @class */ (function () {
                         if (!sameTree) {
                             throw new Error("`mv` is only supported on the same tree for now");
                         }
+                        return [4 /*yield*/, this.exists(to)];
+                    case 1:
+                        if (_a.sent()) {
+                            throw new Error("Destination already exists");
+                        }
                         return [4 /*yield*/, this.runOnTree(from, true, function (tree, relPath) {
                                 var nextPath = pathUtil.takeHead(to).nextPath;
                                 return tree.mv(relPath, nextPath || '');
                             })];
-                    case 1:
+                    case 2:
                         _a.sent();
                         logger.log("end");
                         return [2 /*return*/, this];

@@ -61,6 +61,7 @@ export function iframe() {
         iframe.style.width = "0";
         iframe.style.height = "0";
         iframe.style.border = "none";
+        iframe.style.display = "none";
         document.body.appendChild(iframe);
         iframe.onload = function () {
             var channel = new MessageChannel();
