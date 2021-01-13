@@ -95,7 +95,7 @@
       {#if dummyTransaction}
         <TransactionItem transaction={dummyTransaction}></TransactionItem>
       {/if}
-      {#each transactions as transaction}
+      {#each transactions as transaction (transaction.id)}
         <TransactionItem transaction={transaction}></TransactionItem>
       {/each}
     </div>

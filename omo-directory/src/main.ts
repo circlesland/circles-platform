@@ -131,32 +131,47 @@ router.post('/update/offers/:fissionName', async (request:Request,response:Respo
 
                 console.log("Loading " + offersRoot)
 
-                const offerNames:string[] = [];
+                const offerCIDs:string[] = [];
 
                 const directoryContents = ipfs.files.ls(offersRoot);
                 for await (let item of directoryContents)
                 {
-                    console.log("offer:", item);
-                    offerNames.push(item.name);
+                    console.log("offer fs item:", item);
+                    //offerNames.push(item.name);
+
+                    for await (let offerNode of ipfs.files.ls(offersRoot + "/" + item.name))
+                    {
+                        if (offerNode.name == "userland")
+                        {
+                            console.log("offer item userland cid:", offerNode.cid);
+                            offerCIDs.push(offerNode.cid.toString());
+                            break;
+                        }
+                    }
                 }
 
-                const offersJson = await Promise.all(offerNames.map(async offer =>
+                const allOfferData: {
+                    [name:string]: Buffer
+                } = {};
+
+                for (let offerCID of offerCIDs)
                 {
-                    const blocks = await ipfs.files.read(offersRoot + "/" + offer + "/userland");
-                    if (!blocks)
+                    const chunks = await ipfs.cat(offerCID);
+                    if (!chunks)
                     {
-                        throw new Error("Cannot read '" + offersRoot + "/" + offer + "/userland" + "'");
+                        throw new Error("Cannot read '" + offerCID + "'");
                     }
 
-                    const chunks = [];
-                    for await (let chunk of blocks)
+                    const readChunks = [];
+                    for await (let chunk of chunks)
                     {
-                        chunks.push(chunk)
+                        readChunks.push(chunk)
                     }
-                    return Buffer.concat(chunks)
-                }));
+                    allOfferData[offerCID] = Buffer.concat(readChunks);
+                    console.log(`Size of offer ${offerCID}:`, allOfferData[offerCID]);
+                }
 
-                const offerObjs = offersJson.map(o => JSON.parse(o)).map(o => {
+                const offerObjs = Object.values(allOfferData).map(o => JSON.parse(o.toString())).map(o => {
                     delete o.productPicture;
                     return o;
                 });
