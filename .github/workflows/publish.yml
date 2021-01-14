@@ -17,10 +17,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Node
         uses: actions/setup-node@v2
-      - name: Install & Build
+      - name: Install
         working-directory: ./omo-app
-        run: npm run install
-        run: npm run build
+        run: npm run install && npm run build
       - name: Publish
         uses: fission-suite/publish-action@v1
         with:
