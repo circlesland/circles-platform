@@ -2,7 +2,7 @@ import {ScheduledTask} from "./scheduledTask";
 import {Slot} from "./slot";
 import {DistributingTaskExecutor} from "./distributingTaskExecutor";
 
-export const TaskSchedulerSlotLength = 5000;
+export const TaskSchedulerSlotLength = 20000;
 
 export class TaskScheduler
 {

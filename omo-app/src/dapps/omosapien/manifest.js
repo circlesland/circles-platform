@@ -18,6 +18,7 @@ import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
 import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
 import { runWithDrive } from "../../libs/o-fission/initFission";
 import { BehaviorSubject } from "rxjs";
+import { ProfileIndex } from "../../libs/o-fission/indexes/profileIndex";
 function tryInitMyProfile(logger) {
     return __awaiter(this, void 0, void 0, function* () {
         const l = logger.newLogger(`tryInitMyProfile()`);
@@ -36,72 +37,27 @@ function tryInitOmoDirectory(logger) {
         const l = logger.newLogger(`tryInitOmoDirectory()`);
         l.log("begin");
         const omosapienState = tryGetDappState("omo.sapien:1");
-        if (!omosapienState.directory) {
-            omosapienState.directory = new BehaviorSubject({
-                payload: {
-                    byFissionName: {},
-                    byCirclesSafe: {}
-                }
-            });
-        }
-        l.log("Loading the global directory file ... begin");
-        l.log("Fetching 'https://directory.omo.earth/directory' ... begin");
-        fetch("https://directory.omo.earth/directory").then((cid) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                /*
-                    // TODO: Currently takes way too long
-                    let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-                    const ipfs = await fissionAuthState.fission.getValue().fs.getIpfs();
-                    const cidStr = await cid.text();
-                    const directoryData = await ipfsCat(ipfs, cidStr);
-                    if (!directoryData)
-                    {
-                      throw new Error("Couldn't load the directory from " + cid)
-                    }
-                 */
-                const cidString = yield cid.text();
-                l.log("Fetching 'https://directory.omo.earth/directory' ... end");
-                l.log("Fetching 'https://ipfs.io/ipfs/" + cidString + "' ... begin");
-                const directory = yield (yield fetch("https://ipfs.io/ipfs/" + cidString)).json();
-                l.log("Fetching 'https://ipfs.io/ipfs/" + cidString + "' ... end");
-                const lookupDirectory = {
-                    byFissionName: directory,
-                    byCirclesSafe: {}
-                };
-                Object.values(directory).forEach((o) => {
-                    if (!o.circlesSafe) {
-                        return;
-                    }
-                    lookupDirectory.byCirclesSafe[o.circlesSafe] = o;
-                });
-                l.log("Loading the global directory file ... end");
-                const current = omosapienState.directory.getValue();
-                omosapienState.directory.next({
-                    signal: current === null || current === void 0 ? void 0 : current.signal,
-                    payload: lookupDirectory
+        if (!omosapienState.profileIndex) {
+            const profileIndexData = yield ProfileIndex.tryGetProfileIndex();
+            if (profileIndexData) {
+                omosapienState.profileIndex = new BehaviorSubject({
+                    payload: profileIndexData
                 });
                 // Check if the directory includes myself and, if not add me.
                 // This is necessary because at the time of the profile creation or update
                 // the DNSLink still updates.
                 const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-                const myDirectoryEntry = lookupDirectory.byFissionName[fissionAuthState.username];
+                const myDirectoryEntry = profileIndexData.byFissionName[fissionAuthState.username];
                 const isRegistrationCorrect = myDirectoryEntry
                     && myDirectoryEntry.firstName == omosapienState.myProfile.firstName
                     && myDirectoryEntry.lastName == omosapienState.myProfile.lastName
                     && myDirectoryEntry.circlesSafe == omosapienState.myProfile.circlesAddress;
                 if (!isRegistrationCorrect) {
                     window.o.logger.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ...");
-                    yield fetch("https://directory.omo.earth/signup/" + fissionAuthState.username, {
-                        method: "POST"
-                    });
-                    window.o.logger.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ... Done");
+                    yield ProfileIndex.signup(fissionAuthState.username);
                 }
             }
-            catch (e) {
-                console.warn(e);
-            }
-            l.log("end");
-        }));
+        }
     });
 }
 const noProfilePage = {

@@ -12,8 +12,9 @@ import { BehaviorSubject } from "rxjs";
 import { DelayedTrigger } from "../../../libs/o-os/delayedTrigger";
 import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAccount";
 import { BlockIndex } from "../../../libs/o-os/blockIndex";
-import { ForeignProfile } from "../../../libs/o-fission/directories/foreignProfile";
+// import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
 import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { ProfileIndex } from "../../../libs/o-fission/indexes/profileIndex";
 const myContactsSubject = new BehaviorSubject({
     payload: []
 });
@@ -50,9 +51,10 @@ const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0
         const omosapienState = tryGetDappState("omo.sapien:1");
         const safeState = tryGetDappState("omo.safe:1");
         yield Promise.all(Object.values(myContacts)
-            .filter(o => omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress])
+            .filter(o => omosapienState.profileIndex
+            && omosapienState.profileIndex.getValue().payload.byCirclesSafe[o.safeAddress])
             .map((o) => __awaiter(void 0, void 0, void 0, function* () {
-            const directoryEntry = omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
+            const directoryEntry = omosapienState.profileIndex.getValue().payload.byCirclesSafe[o.safeAddress];
             try {
                 if (o.safeAddress == safeState.mySafeAddress) {
                     o.omoProfile = {
@@ -61,7 +63,8 @@ const augmentOmoProfiles = new DelayedTrigger(30, () => __awaiter(void 0, void 0
                     };
                 }
                 else {
-                    o.omoProfile = yield ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+                    o.omoProfile = yield ProfileIndex.tryReadPublicProfile(directoryEntry.fissionName);
+                    // o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
                 }
             }
             catch (e) {

@@ -8,9 +8,10 @@ import {CirclesProfile} from "../../../libs/o-circles-protocol/model/circlesProf
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {OmoSapienState} from "../../omosapien/manifest";
-import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
+// import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
 import {runWithDrive} from "../../../libs/o-fission/initFission";
 import {Envelope} from "../../../libs/o-os/interfaces/envelope";
+import {ProfileIndex} from "../../../libs/o-fission/indexes/profileIndex";
 
 const myContactsSubject: BehaviorSubject<Envelope<Contact[]>> = new BehaviorSubject<Envelope<Contact[]>>({
   payload: []
@@ -58,9 +59,12 @@ const augmentOmoProfiles = new DelayedTrigger(30, async () =>
     const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
     await Promise.all(Object.values(myContacts)
-      .filter(o => omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress])
+      .filter(o =>
+        omosapienState.profileIndex
+        && omosapienState.profileIndex.getValue().payload.byCirclesSafe[o.safeAddress]
+      )
       .map(async o => {
-        const directoryEntry = omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
+        const directoryEntry = omosapienState.profileIndex.getValue().payload.byCirclesSafe[o.safeAddress];
         try
         {
           if (o.safeAddress == safeState.mySafeAddress)
@@ -72,7 +76,8 @@ const augmentOmoProfiles = new DelayedTrigger(30, async () =>
           }
           else
           {
-            o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+            o.omoProfile = await ProfileIndex.tryReadPublicProfile(directoryEntry.fissionName);
+            // o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
           }
         } catch (e)
         {

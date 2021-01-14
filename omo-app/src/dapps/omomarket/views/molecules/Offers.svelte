@@ -11,12 +11,22 @@
   import {OmoSapienState} from "../../../omosapien/manifest";
   import {runWithDrive} from "../../../../libs/o-fission/initFission";
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
+  import {IpfsNode} from "../../../../libs/o-fission/indexes/ipfsNode";
+
+  const allOffers = [];
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   let myOffers: Offer[] = [];
 
   async function init()
   {
+    const offerDirectoryCidResponse = await fetch("https://directory.omo.earth/offers");
+    const offerDirectoryCid = await offerDirectoryCidResponse.text();
+
+    await IpfsNode.runWithIPFS(async (ipfs) => {
+
+    });
+
     if (omosapienState)
     {
       await runWithDrive(async fissiondrive =>
@@ -53,9 +63,9 @@
         }
       },
     };
-    if (omosapienState?.directory)
+    if (omosapienState?.profileIndex)
     {
-      const offeredBy = omosapienState.directory.getValue().payload.byFissionName[offer.offeredByFissionName];
+      const offeredBy = omosapienState.profileIndex.getValue().payload.byFissionName[offer.offeredByFissionName];
       if (offeredBy)
       {
         offerItem.data.offeredBy = {

@@ -5,7 +5,6 @@ import {ProcessContext} from "../o-processes/interfaces/processContext";
 import {ProcessEvent} from "../o-processes/interfaces/processEvent";
 import {Process} from "../o-processes/interfaces/process";
 import {getProcessContext} from "./o";
-import {ShellEvent} from "../o-processes/events/shellEvent";
 
 export const stateMachine = {
   _current: null,

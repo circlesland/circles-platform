@@ -8,7 +8,6 @@
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
   import {faEdit, faGlobe, faHome} from "@fortawesome/free-solid-svg-icons";
   import {RunProcess} from "../../../../libs/o-events/runProcess";
-  import {publishOfferService} from "../../processes/publishOffer/services/publishOfferService";
   import {publishOffer, PublishOfferContext} from "../../processes/publishOffer/publishOffer";
   import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer/unpublishOffer";
 

@@ -1,8 +1,6 @@
 <script lang="ts">
-  import {ForeignProfile} from "../../o-fission/directories/foreignProfile";
-  import {tryGetDappState} from "../../o-os/loader";
-  import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
   import {runWithDrive} from "../../o-fission/initFission";
+  import {ProfileIndex} from "../../o-fission/indexes/profileIndex";
 
   export let fissionUsername:string;
   export let classes:string;
@@ -29,10 +27,12 @@
       }
       else
       {
-        const data = await ForeignProfile.findByFissionUsername(fissionUsername);
-        if (data.avatar)
+        console.log("await ProfileIndex.tryReadPublicProfile(" + fissionUsername + ") ..")
+        const data = await ProfileIndex.tryReadPublicProfile(fissionUsername);
+
+        if (data.avatarDataUrl)
         {
-          dataUrl = data.avatar;
+          dataUrl = data.avatarDataUrl;
         }
       }
     });

@@ -1,11 +1,22 @@
 import {JumpstartContext} from "../processes/omo/jumpstart";
-import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
+import {tryGetDappState} from "../../../libs/o-os/loader";
+import {OmoSapienState} from "../../omosapien/manifest";
 
 export const getForeignProfileService = async (context: JumpstartContext) =>
 {
-  window.o.logger.log("loading foreign profile by fission name:", context.data.foreignProfileFissionName.value);
-  const foreignProfile = await ForeignProfile.findByFissionUsername(context.data.foreignProfileFissionName.value);
-  window.o.logger.log("got foreign profile:", foreignProfile);
+  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+  const profileIndex = omosapienState.profileIndex.getValue();
+
+  if (!profileIndex)
+  {
+    throw new Error("This service needs the 'omo.sapien:1'.profileIndex to function.");
+  }
+
+  const foreignProfile = profileIndex.payload.byFissionName[context.data.foreignProfileFissionName.value];
+  if (!foreignProfile)
+  {
+    throw new Error(`Tried to get the profile of fission user '${context.data.foreignProfileFissionName.value}' from the 'omosapienState.profileIndex' but couldn't find an entry.`)
+  }
 
   return foreignProfile;
 }
