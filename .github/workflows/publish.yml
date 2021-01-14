@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Go To Omo-App
-        run: cd omo-app
+        working-directory: ./omo-app
       - name: Setup Node
         uses: actions/setup-node@v2
       - run: npm run install
