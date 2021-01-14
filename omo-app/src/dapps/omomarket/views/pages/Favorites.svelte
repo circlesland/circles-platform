@@ -1,7 +1,7 @@
 <script lang="ts">
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../../omosapien/manifest";
-  import {runWithDrive} from "../../../../libs/o-fission/initFission";
+  import {runWithDrive} from "../../../../libs/o-fission/fissionDrive";
   import ListItem from "../../../../libs/o-views/molecules/ListItem.svelte";
   import {ListItem as IListItem} from "../../../../libs/o-views/interfaces/molecules";
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
@@ -9,10 +9,10 @@
   import {RunProcess} from "../../../../libs/o-events/runProcess";
   import {publishOffer, PublishOfferContext} from "../../processes/publishOffer/publishOffer";
   import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer/unpublishOffer";
-  import {Offer} from "../../../../libs/o-fission/directories/offers";
+  import {OfferMetadata} from "../../../../libs/o-fission/directories/offers";
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  let myOffers: Offer[] = [];
+  let myOffers: OfferMetadata[] = [];
 
   async function init()
   {
@@ -20,14 +20,22 @@
     {
       await runWithDrive(async fissiondrive =>
       {
-        // myOffers = await fissiondrive.offers.listItems();
+        const itemNames = await fissiondrive.offers.listNames();
+        const offers:OfferMetadata[] = await Promise.all(itemNames.map(async itemName => {
+          const offerMetadataBuffer = await fissiondrive.offers.tryGetFileByPath([itemName, "metadata"]);
+          const offerMetadataJson = offerMetadataBuffer.toString();
+          const offerMetadata:OfferMetadata = JSON.parse(offerMetadataJson);
+          return offerMetadata;
+        }));
+
+        myOffers = offers;
       });
     }
   }
 
   init();
 
-  function mapToListItem(offer: Offer)
+  function mapToListItem(offer: OfferMetadata)
   {
     console.log("MyOffer:", offer);
 
@@ -42,7 +50,7 @@
       }
     }];
 
-    if (!true /*offer.isPublished*/)
+    if (!offer.description.isPublished)
     {
       actions.push({
         icon: faGlobe,
@@ -53,7 +61,7 @@
             processContext.data.offerName = {
               key: "offerName",
               isValid: true,
-              value: "", // offer.name,
+              value: offer.description.productName,
               type: "string"
             };
             return processContext;
@@ -70,7 +78,7 @@
             processContext.data.offerName = {
               key: "offerName",
               isValid: true,
-              value: "", // offer.name,
+              value: offer.description.productName,
               type: "string"
             };
             return processContext;
@@ -83,11 +91,11 @@
     // const country = locationParts[locationParts.length - 1];
     const offerItem: IListItem = <IListItem>{
       data: {
-        title: "", // offer.productName,
+        title: offer.description.productName,
         image: "", // offer.productPicture,
-        description: "", // offer.productDescription,
-        balance: "", // offer.productPrice,
-        subtitle: "", // offer.productDescription,
+        description: offer.description.productDescription,
+        balance: offer.description.productPrice,
+        subtitle: offer.description.productLocation.display_name,
         actions: actions
       }
     };

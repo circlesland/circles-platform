@@ -7,13 +7,13 @@
   const addedfile = file => {
     const reader = new FileReader();
     reader.addEventListener("loadend", (e) => {
-      processArtifact.value = reader.result.toString();
+      processArtifact.value = Buffer.from(<ArrayBuffer>reader.result);
       processArtifact.isValid = true;
       dispatch("validated", processArtifact.isValid);
 
       loadImageIntoCanvas()
     });
-    reader.readAsDataURL(file);
+    reader.readAsArrayBuffer(file);
   }
   const drop = event => console.log(event.target);
   const init = () => console.log("dropzone init ! 😍");
@@ -32,7 +32,7 @@
     const ctx = canvas.getContext('2d');
 
     const image = new Image();
-    image.src = processArtifact.value;
+    image.src = `data:image/png;base64,${processArtifact.value.toString('base64')}`;
 
     image.onload = function(){
       ctx.drawImage(image,
@@ -68,7 +68,7 @@
 <canvas style="visibility: hidden; position:absolute; left:-8096px; top:-8096px;" id="cropCanvas" width="300" height="300"></canvas>
 {#if processArtifact.value}
   <Cropper
-    image={processArtifact.value}
+    image={`data:image/png;base64,${processArtifact.value.toString('base64')}`}
     bind:crop
     bind:zoom
     on:cropcomplete={e => console.log(e.detail)}

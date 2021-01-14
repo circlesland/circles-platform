@@ -1,5 +1,6 @@
 import FileSystem from "../../../libs/webnative/fs/filesystem";
 import {withTimeout} from "./fissionDrive";
+import {BaseLink} from "../../../libs/webnative/fs/types";
 
 export abstract class FissionDir
 {
@@ -39,11 +40,83 @@ export abstract class FissionDir
     return randomDataBuffer.toString("hex");
   }
 
+  getPathFromApp(pathParts: string[]): string
+  {
+    return this.fs.appPath(pathParts);
+  }
+
   getPath(pathParts?: string[]): string
   {
     return this.fs.appPath(pathParts
       ? this._pathParts.concat(pathParts)
       : this._pathParts);
+  }
+
+  async copyDirectory(fromPath:string, toPath:string, publish:boolean = true)
+  {
+    const logger = window.o.logger.newLogger(`copyDirectory(from: ${fromPath}, to: ${toPath})`);
+    logger.log("begin");
+
+    if (fromPath.endsWith("/"))
+    {
+      throw new Error(`The 'fromPath' must not end with a slash: '${fromPath}'`);
+    }
+    if (!toPath.endsWith("/"))
+    {
+      throw new Error(`The 'toPath' must end with a slash: '${toPath}'`);
+    }
+
+    const stack:{
+      parentPath: string;
+      baseLink:BaseLink;
+    }[] = [];
+
+    const contents = await this.fs.ls(fromPath);
+    for (let contentsKey in contents)
+    {
+      const item = contents[contentsKey];
+      stack.push({
+        parentPath: fromPath,
+        baseLink: item
+      });
+    }
+
+    while (stack.length > 0)
+    {
+      const current = stack.pop();
+      const currentSourcePath = current.parentPath + "/" + current.baseLink.name;
+      const currentTargetPath = currentSourcePath.replace(fromPath + "/", toPath);
+
+      if (current.baseLink.isFile)
+      {
+        logger.log(`creating target file ${currentTargetPath} ..`);
+        const sourceFileContents = await this.fs.cat(currentSourcePath);
+        await this.fs.add(currentTargetPath, sourceFileContents, {publish: false});
+      }
+      else
+      {
+        logger.log(`creating target directory ${currentTargetPath} ..`);
+        await this.fs.mkdir(currentTargetPath, {publish: false});
+
+        const contents = await this.fs.ls(currentSourcePath);
+        for (let contentsKey in contents)
+        {
+          const item = contents[contentsKey];
+          stack.push({
+            parentPath: currentSourcePath,
+            baseLink: item
+          });
+        }
+      }
+    }
+
+    if (publish)
+    {
+      logger.log(`publishing changes to fs ..`);
+      await this.fs.publish();
+    }
+
+    logger.log("end");
   }
 
   async exists(pathParts?: string[]): Promise<boolean>
@@ -80,6 +153,15 @@ export abstract class FissionDir
       const listing = await this.fs.ls(this.getPath());
       const list = Object.entries(listing);
       return list.map(([name, _]) => name);
+    }, FissionDir.defaultTimeout);
+  }
+
+  async listPaths(): Promise<string[]>
+  {
+    const path = this.getPath();
+    return withTimeout(`listPaths(${this.getPath()})`, async () => {
+      const names = await this.listNames();
+      return names.map(o => path + "/" + o);
     }, FissionDir.defaultTimeout);
   }
 

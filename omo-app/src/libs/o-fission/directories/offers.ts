@@ -1,4 +1,4 @@
-import {BinaryFile, Directory, DirectoryChangeType} from "../directories/directory";
+import {BinaryFile, Directory, DirectoryChangeType} from "./directory";
 import FileSystem from "../../../../libs/webnative/fs/filesystem";
 import {Entity} from "../entities/entity";
 import {withTimeout} from "../fissionDrive";
@@ -30,7 +30,7 @@ export class Offers extends FissionDir
       }
 
       return new Offer(
-        this.pathParts.concat([offerMetadata.name])
+          offerMetadata.description.productName
         , this._fissionUser
         , this.fs
         , offerMetadata);
@@ -51,11 +51,11 @@ export class Offers extends FissionDir
         owner: this._fissionUser,
         description: description,
         createdAt: new Date().toJSON(),
-        name: name,
+        name: "metadata",
         pictures: []
       };
 
-      const offer = new Offer(this.pathParts.concat([name]), this._fissionUser, this.fs);
+      const offer = new Offer(name, this._fissionUser, this.fs);
       await offer.addOrUpdateEntity(offerMetadata);
 
       if (publish)
@@ -73,13 +73,13 @@ export class Offer extends Directory<OfferMetadata | BinaryFile> implements Enti
   private _cachedMetadata: OfferMetadata;
   readonly name: string;
 
-  constructor(pathParts: string[],
+  constructor(name: string,
               fissionUser: string,
               fs: FileSystem,
               offerMetadata?:OfferMetadata)
   {
-    super(fissionUser, fs, pathParts);
-    this.name = pathParts[pathParts.length - 1];
+    super(fissionUser, fs, ["offers", name]);
+    this.name = name;
     this._cachedMetadata = offerMetadata;
   }
 
@@ -163,6 +163,17 @@ export class Offer extends Directory<OfferMetadata | BinaryFile> implements Enti
 
   async publishOffer()
   {
+    const sourcePath = this.getPath();
+    const destinationPath = `public/Apps/MamaOmo/OmoSapien/offers/${this.name}/`;
+
+    await this.copyDirectory(sourcePath, destinationPath);
+
+    const currentMetadata = await this.tryGetMetadata();
+    await this.setDescription({
+      ...currentMetadata.description,
+      isPublished: true
+    });
+
     await fetch("https://directory.omo.earth/update/offers/" + this._fissionUser, {
       method: "POST"
     });
@@ -170,6 +181,15 @@ export class Offer extends Directory<OfferMetadata | BinaryFile> implements Enti
 
   async unpublishOffer()
   {
+    const destinationPath = `public/Apps/MamaOmo/OmoSapien/offers/${this.name}/`;
+    await this.fs.rm(destinationPath);
+
+    const currentMetadata = await this.tryGetMetadata();
+    await this.setDescription({
+      ...currentMetadata.description,
+      isPublished: false
+    });
+
     await fetch("https://directory.omo.earth/update/offers/" + this._fissionUser, {
       method: "POST"
     });
