@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v2
       - name: Install
         working-directory: ./omo-app
-        run: npm run install && npm run build
+        run: npm install && npm run build
       - name: Publish
         uses: fission-suite/publish-action@v1
         with:
