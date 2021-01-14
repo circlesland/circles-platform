@@ -15,9 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Go To Omo-App
-        working-directory: ./omo-app
       - name: Setup Node
+        working-directory: ./omo-app
         uses: actions/setup-node@v2
       - run: npm run install
       - run: npm run build
