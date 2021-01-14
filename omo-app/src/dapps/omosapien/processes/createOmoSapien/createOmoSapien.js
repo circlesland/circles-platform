@@ -3,7 +3,7 @@ import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
 import { setError } from "../../../../libs/o-processes/actions/setError";
 import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import { sendPrompt, sendShellEvent } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import { strings } from "../../data/strings";
@@ -11,6 +11,7 @@ import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
 import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
 import { file } from "../../../../libs/o-processes/artifacts/file";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
+import { NavigateTo } from "../../../../libs/o-events/navigateTo";
 /**
  * Connect safe
  */
@@ -120,10 +121,16 @@ const processDefinition = () => createMachine({
             }
         },
         success: {
-            entry: sendSuccessPrompt,
+            entry: [
+                sendSuccessPrompt,
+                sendShellEvent(new NavigateTo("/safe/transactions"))
+            ],
             on: {
                 "process.continue": "stop",
                 "process.cancel": "stop"
+            },
+            after: {
+                2000: { target: 'stop' }
             }
         },
         stop: {

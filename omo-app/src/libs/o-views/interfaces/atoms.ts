@@ -23,6 +23,7 @@ export interface ButtonIcon {
     type: string;
     disabled?: boolean;
   };
+  tooltip?: string;
 };
 
 export interface CategoryTitle {

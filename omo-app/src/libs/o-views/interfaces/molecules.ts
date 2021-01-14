@@ -72,3 +72,18 @@ export interface TokenItem {
     description: string;
   };
 }
+
+export interface ListItem {
+  data: {
+    image: string;
+    title: string;
+    subtitle: string;
+    balance: number;
+    description: string;
+    actions?: {
+      title: string,
+      icon: any,
+      action: () => Promise<void>
+    }[]
+  };
+}

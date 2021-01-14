@@ -139,7 +139,7 @@ export class CirclesHub extends Web3Contract {
     )
       .encodeABI();
 
-    console.log("transferTroughAbi:", txData);
+    window.o.logger.log("transferTroughAbi:", txData);
 
     return await safeProxy.execTransaction(
       privateKey,

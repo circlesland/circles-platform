@@ -49,6 +49,15 @@ export var Scenario;
     Scenario["AuthCancelled"] = "AUTH_CANCELLED";
     Scenario["Continuation"] = "CONTINUATION";
 })(Scenario || (Scenario = {}));
+// ERRORS
+/**
+ * Initialisation error
+ */
+export var InitialisationError;
+(function (InitialisationError) {
+    InitialisationError["InsecureContext"] = "INSECURE_CONTEXT";
+    InitialisationError["UnsupportedBrowser"] = "UNSUPPORTED_BROWSER";
+})(InitialisationError || (InitialisationError = {}));
 // INTIALISE
 /**
  * Check if we're authenticated, process any lobby query-parameters present in the URL,
@@ -84,6 +93,13 @@ export function initialise(options) {
                             }
                         });
                     }); };
+                    // Check if browser is supported
+                    if (globalThis.isSecureContext === false)
+                        throw InitialisationError.InsecureContext;
+                    return [4 /*yield*/, isSupported()];
+                case 1:
+                    if ((_h.sent()) === false)
+                        throw InitialisationError.UnsupportedBrowser;
                     url = new URL(window.location.href);
                     cancellation = url.searchParams.get("cancelled");
                     ucans = url.searchParams.get("ucans");
@@ -91,24 +107,24 @@ export function initialise(options) {
                     return [4 /*yield*/, ucan.store(ucans ? ucans.split(",") : [])
                         // Determine scenario
                     ];
-                case 1:
+                case 2:
                     // Add UCANs to the storage
                     _h.sent();
-                    if (!ucans) return [3 /*break*/, 7];
+                    if (!ucans) return [3 /*break*/, 8];
                     newUser = url.searchParams.get("newUser") === "t";
                     encryptedReadKey = url.searchParams.get("readKey") || "";
                     username = url.searchParams.get("username") || "";
                     return [4 /*yield*/, keystore.get()];
-                case 2:
+                case 3:
                     ks = _h.sent();
                     return [4 /*yield*/, ks.decrypt(common.base64.makeUrlUnsafe(encryptedReadKey))];
-                case 3:
+                case 4:
                     readKey = _h.sent();
                     return [4 /*yield*/, ks.importSymmKey(readKey, READ_KEY_FROM_LOBBY_NAME)];
-                case 4:
+                case 5:
                     _h.sent();
                     return [4 /*yield*/, localforage.setItem(USERNAME_STORAGE_KEY, username)];
-                case 5:
+                case 6:
                     _h.sent();
                     if (autoRemoveUrlParams) {
                         url.searchParams.delete("newUser");
@@ -125,8 +141,8 @@ export function initialise(options) {
                         newUser,
                         username];
                     return [4 /*yield*/, maybeLoadFs(username)];
-                case 6: return [2 /*return*/, _c.apply(void 0, _d.concat([_h.sent()]))];
-                case 7:
+                case 7: return [2 /*return*/, _c.apply(void 0, _d.concat([_h.sent()]))];
+                case 8:
                     if (cancellation) {
                         c = (function (_) {
                             switch (cancellation) {
@@ -136,22 +152,22 @@ export function initialise(options) {
                         })();
                         return [2 /*return*/, scenarioAuthCancelled(permissions, c)];
                     }
-                    _h.label = 8;
-                case 8: return [4 /*yield*/, common.authenticatedUsername()];
-                case 9:
+                    _h.label = 9;
+                case 9: return [4 /*yield*/, common.authenticatedUsername()];
+                case 10:
                     authedUsername = _h.sent();
                     if (!(authedUsername &&
-                        (permissions ? ucan.validatePermissions(permissions, authedUsername) : true))) return [3 /*break*/, 11];
+                        (permissions ? ucan.validatePermissions(permissions, authedUsername) : true))) return [3 /*break*/, 12];
                     _f = scenarioContinuation;
                     _g = [permissions, authedUsername];
                     return [4 /*yield*/, maybeLoadFs(authedUsername)];
-                case 10:
-                    _e = _f.apply(void 0, _g.concat([_h.sent()]));
-                    return [3 /*break*/, 12];
                 case 11:
+                    _e = _f.apply(void 0, _g.concat([_h.sent()]));
+                    return [3 /*break*/, 13];
+                case 12:
                     _e = scenarioNotAuthorised(permissions);
-                    _h.label = 12;
-                case 12: return [2 /*return*/, _e];
+                    _h.label = 13;
+                case 13: return [2 /*return*/, _e];
             }
         });
     });
@@ -160,6 +176,28 @@ export function initialise(options) {
  * Alias for `initialise`.
  */
 export { initialise as initialize };
+// SUPPORTED
+export function isSupported() {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = localforage.supports(localforage.INDEXEDDB);
+                    if (!_a) return [3 /*break*/, 2];
+                    return [4 /*yield*/, (function () { return new Promise(function (resolve) {
+                            var db = indexedDB.open("testDatabase");
+                            db.onsuccess = function () { return resolve(true); };
+                            db.onerror = function () { return resolve(false); };
+                        }); })()];
+                case 1:
+                    _a = (_b.sent());
+                    _b.label = 2;
+                case 2: return [2 /*return*/, _a];
+            }
+        });
+    });
+}
 // EXPORT
 export * from './auth';
 export * from './filesystem';
@@ -184,7 +222,7 @@ import * as ipfs_1 from './ipfs';
 export { ipfs_1 as ipfs };
 import * as keystore_1 from './keystore';
 export { keystore_1 as keystore };
-// ㊙️
+// ㊙️  ⚛  SCENARIOS
 function scenarioAuthSucceeded(permissions, newUser, username, fs) {
     return {
         scenario: Scenario.AuthSucceeded,

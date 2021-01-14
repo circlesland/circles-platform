@@ -1,4 +1,6 @@
 import { faUserCircle, faCoins, faStar, faStore, faDove } from "@fortawesome/free-solid-svg-icons";
+import { createOffer } from "../processes/createOffer/createOffer";
+import { RunProcess } from "../../../libs/o-events/runProcess";
 export const omomarketDefaultActions = [
     {
         type: "route",
@@ -62,6 +64,7 @@ export const omomarketOverflowActions = [
                 label: "Create new Offer",
             }
         },
+        event: () => new RunProcess(createOffer)
     },
     {
         type: "trigger",

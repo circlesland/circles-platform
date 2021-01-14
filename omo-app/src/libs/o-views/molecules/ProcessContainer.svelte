@@ -28,7 +28,6 @@
   const dispatch = createEventDispatcher();
 
   $: {
-    let initial = !subscription;
     if (subscription) {
       console.log("unsubscribe()");
       subscription.unsubscribe();

@@ -21,7 +21,7 @@ export const omofunding: DappManifest<OmoFundingState, OmoFundingState> = {
     component: Featured,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }

@@ -19,7 +19,7 @@ export const stateMachine = {
   },
   async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>)
   {
-    console.log("run", definition.name);
+    window.o.logger.log("run", definition.name);
     const {service, state, send} = useMachine(
       (<any>definition).stateMachine(),
       {
@@ -32,13 +32,10 @@ export const stateMachine = {
 
     service.onTransition((state1, event) =>
     {
-      console.log(event);
-      /*
-      if (event.type === "process.shellEvent")
+      if (event.type == 'error.platform')
       {
-        window.o.publishEvent((<ShellEvent>event).payload);
+        window.o.logger.log(`An error occurred during the execution of a workflow:`, event);
       }
-       */
 
       processEvents.next(<any>{
         stopped: false,

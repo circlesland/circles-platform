@@ -240,16 +240,6 @@ export var size = function (cid) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-export var reconnect = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, getIpfs()];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); };
 export var attemptPin = function (cid) { return __awaiter(void 0, void 0, void 0, function () {
     var ipfs, _err_1;
     return __generator(this, function (_a) {

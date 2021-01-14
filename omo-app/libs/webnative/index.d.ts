@@ -39,6 +39,13 @@ export declare type Continuation = {
     fs?: FileSystem;
 };
 /**
+ * Initialisation error
+ */
+export declare enum InitialisationError {
+    InsecureContext = "INSECURE_CONTEXT",
+    UnsupportedBrowser = "UNSUPPORTED_BROWSER"
+}
+/**
  * Check if we're authenticated, process any lobby query-parameters present in the URL,
  * and initiate the user's file system if authenticated (can be disabled).
  *
@@ -54,6 +61,7 @@ export declare function initialise(options: {
  * Alias for `initialise`.
  */
 export { initialise as initialize };
+export declare function isSupported(): Promise<boolean>;
 export * from './auth';
 export * from './filesystem';
 export declare const fs: typeof FileSystem;

@@ -2,6 +2,7 @@
   import {ForeignProfile} from "../../o-fission/directories/foreignProfile";
   import {tryGetDappState} from "../../o-os/loader";
   import {FissionAuthState} from "../../../dapps/fissionauth/manifest";
+  import {runWithDrive} from "../../o-fission/initFission";
 
   export let fissionUsername:string;
   export let classes:string;
@@ -20,20 +21,21 @@
     {
       return;
     }
-
-    let fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    if (fissionAuth.username == fissionUsername)
+    await runWithDrive(async fissionDrive =>
     {
-      dataUrl = await fissionAuth.fission.profiles.tryGetMyAvatar();
-    }
-    else
-    {
-      const data = await ForeignProfile.findByFissionUsername(fissionUsername);
-      if (data.avatar)
+      if (fissionDrive.username == fissionUsername)
       {
-        dataUrl = data.avatar;
+        dataUrl = await fissionDrive.profiles.tryGetMyAvatar();
       }
-    }
+      else
+      {
+        const data = await ForeignProfile.findByFissionUsername(fissionUsername);
+        if (data.avatar)
+        {
+          dataUrl = data.avatar;
+        }
+      }
+    });
   }
 
   init();

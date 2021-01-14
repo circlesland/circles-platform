@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { BN } from "ethereumjs-util";
 import { tryGetDappState } from "../../../libs/o-os/loader";
 import { GnosisSafeProxy } from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
+import { EndSignal, ProgressSignal } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 function sendMessage(message) {
     // This wraps the message posting/response in a promise, which will resolve if the response doesn't
     // contain an error, and reject with the error if it does. If you'd prefer, it's possible to call
@@ -33,12 +34,8 @@ function sendMessage(message) {
     });
 }
 export const transferCirclesService = (context) => __awaiter(void 0, void 0, void 0, function* () {
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    if (!fissionAuthState.fission) {
-        throw new Error("You're not authenticated");
-    }
-    const web3 = context.environment.eth.web3;
     const safeState = tryGetDappState("omo.safe:1");
+    const web3 = context.environment.eth.web3;
     const ownerAddress = context.environment.eth.web3
         .eth
         .accounts
@@ -59,7 +56,7 @@ export const transferCirclesService = (context) => __awaiter(void 0, void 0, voi
           }
         });
     
-        console.log(pathResult);
+        window.o.logger.log(pathResult);
     */
         const tokenOwners = [safeState.mySafeAddress];
         const sources = [safeState.mySafeAddress];
@@ -74,8 +71,32 @@ export const transferCirclesService = (context) => __awaiter(void 0, void 0, voi
               values.push(transfer.value);
             });
         */
+        const dummyTransaction = {
+            from: safeState.mySafeAddress,
+            to: context.data.recipient.value,
+            direction: "out",
+            amount: oValueInWei,
+            token: safeState.myToken.tokenAddress,
+            timestamp: Date.now() / 1000,
+            tokenOwner: safeState.mySafeAddress,
+            type: "blockchain",
+            subject: "",
+            blockNo: 0,
+            cached: false,
+            id: ""
+        };
+        let currentTransactionsList = safeState.myTransactions.getValue();
+        safeState.myTransactions.next({
+            signal: new ProgressSignal("transferCircles", "`", 0, dummyTransaction),
+            payload: currentTransactionsList.payload
+        });
         const transferTroughResult = yield context.environment.eth.contracts.hub.transferTrough(safeState.myKey.privateKey, gnosisSafeProxy, tokenOwners, sources, destinations, values);
-        console.log(transferTroughResult);
+        currentTransactionsList = safeState.myTransactions.getValue();
+        safeState.myTransactions.next({
+            signal: new EndSignal("transferCircles"),
+            payload: currentTransactionsList.payload
+        });
+        window.o.logger.log(transferTroughResult);
     }
     catch (e) {
         console.error(e);

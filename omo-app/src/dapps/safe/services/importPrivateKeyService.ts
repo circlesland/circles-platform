@@ -5,6 +5,7 @@ import {ProcessArtifact} from "../../../libs/o-processes/interfaces/processArtif
 import {ImportPrivateKeyContext} from "../processes/omo/importPrivateKey";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 
 function isValidKeyPhrase(value: string): string | null {
   try {
@@ -27,7 +28,7 @@ function isValidKeyPhrase(value: string): string | null {
     }
 
   } catch (e) {
-    console.log("connect safe with private key phrase failed.")
+    window.o.logger.log("connect safe with private key phrase failed.")
     return null;
   }
 }
@@ -60,7 +61,7 @@ function isValidHexKey(value: string): string | null {
       return null;
   }
   catch (e) {
-    console.log("connect safe with hex private key failed.")
+    window.o.logger.log("connect safe with hex private key failed.")
     return null;
   }
 }
@@ -68,42 +69,41 @@ function isValidHexKey(value: string): string | null {
 
 export const importPrivateKeyService = async (context: ImportPrivateKeyContext) =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState.fission) {
-    throw new Error("You're not authenticated");
-  }
+  await runWithDrive(async fissionDrive =>
+  {
+    window.o.logger.log("Importing an exising account");
 
-  console.log("Importing an exising account");
+    const privateKey = isValidHexKey(context.data.privateKey.value)
+      ?? isValidKeyPhrase(context.data.privateKey.value);
 
-  const privateKey = isValidHexKey(context.data.privateKey.value)
-    ?? isValidKeyPhrase(context.data.privateKey.value);
+    const ownerAddress = config.getCurrent().web3()
+      .eth
+      .accounts
+      .privateKeyToAccount(privateKey)
+      .address;
 
-  const ownerAddress = config.getCurrent().web3()
-    .eth
-    .accounts
-    .privateKeyToAccount(privateKey)
-    .address;
+    if (!context.environment.eth.web3.utils.isAddress(ownerAddress))
+    {
+      throw new Error("The private key seems to be invalid because no address could be derived from it.");
+    }
 
-  if (!context.environment.eth.web3.utils.isAddress(ownerAddress)) {
-    throw new Error("The private key seems to be invalid because no address could be derived from it.");
-  }
+    await fissionDrive.keys.addMyKey({
+      name: "me",
+      privateKey: privateKey
+    });
 
-  await fissionAuthState.fission.keys.addMyKey({
-    name: "me",
-    privateKey: privateKey
+    context.data.privateKey = <ProcessArtifact>{
+      key: "privateKey",
+      type: "string",
+      value: privateKey,
+      isReadonly: true
+    };
+
+    context.data.privateKeyPhrase = <ProcessArtifact>{
+      key: "privateKeyPhrase",
+      type: "string",
+      value: entropyToMnemonic(privateKey.replace("0x", "")),
+      isReadonly: true
+    };
   });
-
-  context.data.privateKey = <ProcessArtifact>{
-    key: "privateKey",
-    type: "string",
-    value: privateKey,
-    isReadonly: true
-  };
-
-  context.data.privateKeyPhrase = <ProcessArtifact>{
-    key: "privateKeyPhrase",
-    type: "string",
-    value: entropyToMnemonic(privateKey.replace("0x", "")),
-    isReadonly: true
-  };
 }

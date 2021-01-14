@@ -7,11 +7,6 @@ import {OmoSafeState} from "../manifest";
 
 export const fundSafeService = async (context: FundSafeContext) =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState.fission) {
-    throw new Error("You're not authenticated.");
-  }
-
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
   const myAccount = await context.environment.eth.web3.eth.accounts.privateKeyToAccount(
@@ -19,7 +14,7 @@ export const fundSafeService = async (context: FundSafeContext) =>
   );
 
   const nonce = await context.environment.eth.web3.eth.getTransactionCount(myAccount.address);
-  const value = new BN(context.environment.eth.web3.utils.toWei("0.01", "ether"));
+  const value = new BN(context.environment.eth.web3.utils.toWei("0.0047", "ether"));
 
   const gasPrice = new BN(await context.environment.eth.web3.eth.getGasPrice());
   const gasEstimate = new BN(await context.environment.eth.web3.eth.estimateGas({
@@ -31,9 +26,9 @@ export const fundSafeService = async (context: FundSafeContext) =>
     nonce: nonce
   }));
 
-  console.log("Sending 0.01 xDai to ", safeState.mySafeAddress);
-  console.log("GasPrice:", gasPrice.toString());
-  console.log("GasEstimate:", gasEstimate.toString());
+  window.o.logger.log("Sending 0.0047 xDai to ", safeState.mySafeAddress);
+  window.o.logger.log("GasPrice:", gasPrice.toString());
+  window.o.logger.log("GasEstimate:", gasEstimate.toString());
 
   const signedRawTransaction = await Web3Contract.signRawTransaction(
     myAccount.address,
@@ -44,5 +39,5 @@ export const fundSafeService = async (context: FundSafeContext) =>
     value);
 
   const minedReceipt = await Web3Contract.sendSignedRawTransaction(signedRawTransaction);
-  console.log(minedReceipt);
+  window.o.logger.log(minedReceipt);
 }

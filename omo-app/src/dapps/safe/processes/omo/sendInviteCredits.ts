@@ -47,7 +47,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
           }
         },
         artifacts: {
-          ...ethereumAddress("recipient")
+          ...ethereumAddress("recipient", null, false, true)
         }
       }}),
       on: {

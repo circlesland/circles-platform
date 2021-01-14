@@ -31,16 +31,18 @@ export class ProgressSignal implements Signal
 
   message:string;
   percent:number;
+  dummy:any;
 
-  constructor(key:string, message: string, percent: number)
+  constructor(key:string, message: string, percent: number, dummy?:any)
   {
     this.key = key;
     this.message = message;
     this.percent = percent;
+    this.dummy = dummy;
   }
 }
 
-export class DoneSignal implements Signal
+export class EndSignal implements Signal
 {
   readonly key: string;
   type: "shell.done" = "shell.done";

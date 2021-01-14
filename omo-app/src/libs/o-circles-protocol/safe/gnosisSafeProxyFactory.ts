@@ -75,7 +75,7 @@ export class GnosisSafeProxyFactory extends Web3Contract
         name: "proxy",
         type: "address"
       }], logEntry.data, logEntry.topics);
-      console.log("Deployed safe address is:", proxyCreatedEvent["proxy"]);
+      window.o.logger.log("Deployed safe address is:", proxyCreatedEvent["proxy"]);
       proxyAddress = proxyCreatedEvent["proxy"];
       break;
     }

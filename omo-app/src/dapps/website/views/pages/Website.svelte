@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { push } from "svelte-spa-router";
   import Header from "../molecules/Header.svelte";
   import Hero from "../molecules/Hero.svelte";
   import Pricing from "../molecules/Pricing.svelte";
@@ -10,12 +9,14 @@
   import Video from "../molecules/Video.svelte";
   import Steps from "../molecules/Steps.svelte";
   import Details from "../molecules/Details.svelte";
-  import Projects from "src/dapps/omofunding/views/molecules/Projects.svelte";
+  import {initAuth, runWithDrive} from "../../../../libs/o-fission/initFission";
 
   onMount(async () => {
-    if (window.o.fission) {
-      push("/omoli/dapps");
-    }
+    runWithDrive(async drive => {
+
+    }).then(() => {
+      console.log("Initialized drive:");
+    });
   });
 </script>
 

@@ -12,5 +12,6 @@ export type ProcessArtifactType =
   | "ethereumAddress"
   | "ether"
   | "file"
+  | "location"
   | "byteString"
   | "omo.sapien:1:profile"

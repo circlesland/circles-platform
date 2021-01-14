@@ -11,20 +11,20 @@ export function initPathFinder() {
     return __awaiter(this, void 0, void 0, function* () {
         const registration = yield navigator.serviceWorker.register("pathfinderWorker.js");
         registration.addEventListener("message", msg => {
-            console.log("Response:", msg);
+            window.o.logger.log("Response:", msg);
         });
         if (registration.installing) {
             // Installing..
-            console.log("inner worker: Installing");
+            window.o.logger.log("inner worker: Installing");
         }
         else if (registration.waiting) {
             // Installed the service worker but still waiting
             // for activation (a previously installed service worker is still running)
-            console.log("inner worker: Installed the service worker but still waiting");
+            window.o.logger.log("inner worker: Installed the service worker but still waiting");
         }
         else if (registration.active) {
             // Re-used the same service worker
-            console.log("inner worker: Re-used the same service worker");
+            window.o.logger.log("inner worker: Re-used the same service worker");
         }
         return Promise.resolve();
     });

@@ -3,12 +3,12 @@ import { createMachine } from "xstate";
 import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
 import { setError } from "../../../../libs/o-processes/actions/setError";
 import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import { sendPrompt, sendShellEvent } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import { hubSignupService } from "../../services/hubSignupService";
 import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import { fundSafeService } from "../../services/fundSafeService";
+import { NavigateTo } from "../../../../libs/o-events/navigateTo";
 const str = strings.safe.processes.initializeApp;
 const processDefinition = () => createMachine({
     initial: "idle",
@@ -35,23 +35,8 @@ A small amount of the credits you received from your invite will be used to do t
             }),
             on: {
                 "process.continue": [{
-                        target: "fundSafe"
+                        target: "hubSignup"
                     }]
-            }
-        },
-        fundSafe: {
-            entry: sendInProgressPrompt(str.progressFundSafe),
-            invoke: {
-                id: 'fundSafe',
-                src: fundSafeService,
-                onError: {
-                    actions: setError,
-                    target: "error"
-                },
-                onDone: {
-                    actions: setProcessResult(str.successFundSafe),
-                    target: "hubSignup"
-                }
             }
         },
         hubSignup: {
@@ -60,7 +45,7 @@ A small amount of the credits you received from your invite will be used to do t
                 id: 'hubSignup',
                 src: hubSignupService,
                 onError: {
-                    actions: "setError",
+                    actions: setError,
                     target: "error"
                 },
                 onDone: {
@@ -71,7 +56,8 @@ A small amount of the credits you received from your invite will be used to do t
         },
         success: {
             entry: [
-                sendSuccessPrompt
+                sendSuccessPrompt,
+                sendShellEvent(new NavigateTo("/safe/tokens"))
             ],
             on: {
                 "process.continue": "stop",

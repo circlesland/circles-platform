@@ -32,6 +32,8 @@ export interface ProcessArtifact {
    * If an artifact is invalid and non-optional, the process cannot proceed.
    */
   isValid?:boolean,
+
+  enableAutocomplete?:boolean,
   /**
    * If set, the value is used as <label> for the rendered input.
    */

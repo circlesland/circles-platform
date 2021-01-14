@@ -1,20 +1,23 @@
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 
 export async function initSafeAddress()
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const myProfile = await fissionAuthState.fission.profiles.tryGetMyProfile();
-
-  if (myProfile?.circlesAddress)
+  await runWithDrive(async fissionDrive =>
   {
-    setDappState<OmoSafeState>("omo.safe:1", currentState =>
+    const myProfile = await fissionDrive.profiles.tryGetMyProfile();
+
+    if (myProfile?.circlesAddress)
     {
-      return {
-        ...currentState,
-        mySafeAddress: myProfile.circlesAddress
-      };
-    });
-  }
+      setDappState<OmoSafeState>("omo.safe:1", currentState =>
+      {
+        return {
+          ...currentState,
+          mySafeAddress: myProfile.circlesAddress
+        };
+      });
+    }
+  });
 }

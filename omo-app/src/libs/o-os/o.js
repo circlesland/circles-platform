@@ -40,8 +40,106 @@ export function getProcessContext() {
         };
     });
 }
-webnative.setup.debug({ enabled: true });
+let sessionLog = {
+    name: Date.now().toString(),
+    messages: []
+};
+export function newLogger(name, parent) {
+    const l = {
+        name,
+        parent,
+        log: null,
+        newLogger: null
+    };
+    l.newLogger = (name) => {
+        return newLogger(name, l);
+    };
+    l.log = (...args) => {
+        if (args === null || args === void 0 ? void 0 : args.length) {
+            let current = l;
+            const pathParts = [];
+            while (current) {
+                pathParts.unshift(current.name);
+                current = current.parent;
+            }
+            const path = pathParts.join("/");
+            const remainingArgs = args.splice(1);
+            if (remainingArgs.length) {
+                console.log(`${Date.now()} [${path}]: ${args[0]}`, remainingArgs);
+                sessionLog.messages.push({
+                    message: `${Date.now()} [${path}]: ${args[0]}`,
+                    args: remainingArgs
+                });
+            }
+            else {
+                console.log(`${Date.now()} [${path}]: ${args[0]}`);
+                sessionLog.messages.push({
+                    message: `${Date.now()} [${path}]: ${args[0]}`,
+                    args: undefined
+                });
+            }
+        }
+    };
+    return l;
+}
+import { runWithDrive } from "../o-fission/initFission";
+window.addEventListener('error', function (event) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            logger.log("An error occurred:", {
+                error: event.error,
+                file: event.filename,
+                line: event.lineno,
+                message: event.message
+            });
+            yield runWithDrive((drive) => __awaiter(this, void 0, void 0, function* () {
+                yield drive.sessionLogs.addOrUpdate(sessionLog, true);
+            }));
+        }
+        catch (e) {
+            console.error(`Couldn't write the error log to the fission drive:`, e);
+        }
+    });
+});
+setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
+            yield drive.sessionLogs.addOrUpdate(sessionLog, false);
+            if (sessionLog.messages.length > 10000) {
+                sessionLog = {
+                    name: sessionLog.name + "_" + Date.now(),
+                    messages: []
+                };
+            }
+        }));
+    }
+    catch (e) {
+        console.error(`Couldn't perform the periodic log-flush to the fission drive:`, e);
+    }
+}), 30000);
+setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
+            yield drive.sessionLogs.addOrUpdate(sessionLog, true);
+            if (sessionLog.messages.length > 10000) {
+                sessionLog = {
+                    name: sessionLog.name + "_" + Date.now(),
+                    messages: []
+                };
+            }
+        }));
+    }
+    catch (e) {
+        console.error(`Couldn't perform the periodic log-publishing to the fission drive:`, e);
+    }
+}), 240000);
+const logger = newLogger("o");
+webnative.setup.debug({
+    enabled: true,
+    logger: logger.log
+});
 export const o = {
     stateMachines: stateMachine,
-    wn: webnative
+    wn: webnative,
+    logger: logger
 };

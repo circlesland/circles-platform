@@ -1,5 +1,7 @@
 import { faUserCircle, faCoins, faStar, faStore, faDove } from "@fortawesome/free-solid-svg-icons";
 import { QuickAction } from "../../../libs/o-os/types/quickAction";
+import {createOffer} from "../processes/createOffer/createOffer";
+import {RunProcess} from "../../../libs/o-events/runProcess";
 
 export const omomarketDefaultActions: QuickAction[] = [
   {
@@ -66,7 +68,7 @@ export const omomarketOverflowActions: QuickAction[] = [
         label: "Create new Offer",
       }
     },
-    // event: () => new RunProcess(createNew)
+    event: () => new RunProcess(createOffer)
   },
   {
     type: "trigger",

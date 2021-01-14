@@ -1,49 +1,87 @@
 <script lang="ts">
   import { ProcessArtifact } from "../../../o-processes/interfaces/processArtifact";
   import {createEventDispatcher, onMount} from "svelte";
-  import Cropper from "js-cropper";
+  import Cropper from '../svelte-easy-crop/Cropper.svelte' ;
+  import Dropzone from "libs/svelte-dropzone";
+
+  const addedfile = file => {
+    const reader = new FileReader();
+    reader.addEventListener("loadend", (e) => {
+      processArtifact.value = reader.result.toString();
+      processArtifact.isValid = true;
+      dispatch("validated", processArtifact.isValid);
+
+      loadImageIntoCanvas()
+    });
+    reader.readAsDataURL(file);
+  }
+  const drop = event => console.log(event.target);
+  const init = () => console.log("dropzone init ! 😍");
+
+  let crop = { x: 0, y: 0 }
+  let zoom = 1
 
   export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();
 
   let files = [];
-  let imageData: string;
-  let croppedImageData: string;
 
-  $: {
-    if (files && files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-        reader.addEventListener("loadend", (e) => {
-          imageData = reader.result.toString();
-        });
-        reader.readAsDataURL(file);
-      }
-    }
+  function loadImageIntoCanvas()
+  {
+    const canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('cropCanvas');
+    const ctx = canvas.getContext('2d');
 
-    if (cropper && imageData)
-    {
-      cropper.loadImage(imageData)
+    const image = new Image();
+    image.src = processArtifact.value;
+
+    image.onload = function(){
+      ctx.drawImage(image,
+        70, 20,   // Start at 70/20 pixels from the left and the top of the image (crop),
+        50, 50,   // "Get" a `50 * 50` (w * h) area from the source image (crop),
+        0, 0,     // Place the result at 0, 0 in the canvas,
+        100, 100); // With as width / height: 100 * 100 (scale)
     }
   }
 
-  let cropper;
-
-  onMount(() => {
-    cropper = new Cropper({
-      onChange: function(crop) {
-        croppedImageData = cropper.getCroppedImage();
-        processArtifact.value = croppedImageData;
-        processArtifact.isValid = true;
+  $: {
+    if (processArtifact && processArtifact.value) {
+      processArtifact.isValid = true;
+      setTimeout(() => {
         dispatch("validated", processArtifact.isValid);
-      }
-    });
-    cropper.render("#crop");
-    cropper.setWidth(512);
-    cropper.setHeight(512);
-  });
+      })
+    }
+  }
+
+/*
+  const itemTemplate = `<div class="dz-preview dz-file-preview">
+    <div class="dz-details">
+      <!--<div class="dz-filename"><span data-dz-name></span></div>
+        <div class="dz-size" data-dz-size></div>-->
+        <img data-dz-thumbnail />
+      </div>
+    </div>`;
+ */
 
 </script>
-<div id="crop" ></div>
-<input bind:files type="file" accept="image/*" />
+<div style="width:100%; height:100%;">
+<!--<input bind:files type="file" accept="image/*" />-->
+<canvas style="visibility: hidden; position:absolute; left:-8096px; top:-8096px;" id="cropCanvas" width="300" height="300"></canvas>
+{#if processArtifact.value}
+  <Cropper
+    image={processArtifact.value}
+    bind:crop
+    bind:zoom
+    on:cropcomplete={e => console.log(e.detail)}
+  />
+{:else}
+  <Dropzone
+    dropzoneClass="dropzone"
+    hooveringClass="hooveringClass"
+    id="id"
+    dropzoneEvents={{ addedfile, drop, init }}
+    options={{ clickable: true, acceptedFiles: 'image/png,image/jpeg,image/jpg', maxFilesize: 1024 * 5, init }}>
+    <p>Drop files here to upload</p>
+  </Dropzone>
+{/if}
+
+</div>

@@ -20,7 +20,7 @@ export const stateMachine = {
     },
     run(definition, contextModifier) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("run", definition.name);
+            window.o.logger.log("run", definition.name);
             const { service, state, send } = useMachine(definition.stateMachine(), {
                 context: contextModifier
                     ? yield contextModifier(yield getProcessContext())
@@ -28,13 +28,9 @@ export const stateMachine = {
             });
             const processEvents = new Subject();
             service.onTransition((state1, event) => {
-                console.log(event);
-                /*
-                if (event.type === "process.shellEvent")
-                {
-                  window.o.publishEvent((<ShellEvent>event).payload);
+                if (event.type == 'error.platform') {
+                    window.o.logger.log(`An error occurred during the execution of a workflow:`, event);
                 }
-                 */
                 processEvents.next({
                     stopped: false,
                     currentState: state1,

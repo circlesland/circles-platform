@@ -51,6 +51,7 @@ import BareTree from '../bare/tree';
 import MMPT from '../protocol/private/mmpt';
 import PublicTree from '../v1/PublicTree';
 import PrivateTree from '../v1/PrivateTree';
+import * as debug from "../../common/debug";
 var RootTree = /** @class */ (function () {
     function RootTree(_a) {
         var links = _a.links, mmpt = _a.mmpt, privateLog = _a.privateLog, publicTree = _a.publicTree, prettyTree = _a.prettyTree, privateTree = _a.privateTree;
@@ -113,15 +114,19 @@ var RootTree = /** @class */ (function () {
         var _b, _c, _d;
         var cid = _a.cid, key = _a.key;
         return __awaiter(this, void 0, void 0, function () {
-            var links, publicCID, publicTree, _e, prettyTree, _f, privateCID, mmpt, privateTree, privateLogCid, privateLog, _g, tree;
+            var logger, links, publicCID, publicTree, _e, prettyTree, _f, privateCID, mmpt, privateTree, privateLogCid, privateLog, _g, tree;
             return __generator(this, function (_h) {
                 switch (_h.label) {
-                    case 0: return [4 /*yield*/, protocol.basic.getLinks(cid)
-                        // Load public parts
-                    ];
+                    case 0:
+                        logger = debug.newLogger("Tree.fromCID");
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await protocol.basic.getLinks(cid) ...");
+                        return [4 /*yield*/, protocol.basic.getLinks(cid)
+                            // Load public parts
+                        ];
                     case 1:
                         links = _h.sent();
                         publicCID = ((_b = links[Branch.Public]) === null || _b === void 0 ? void 0 : _b.cid) || null;
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await PublicTree.fromCID(publicCID) ...");
                         if (!(publicCID === null)) return [3 /*break*/, 3];
                         return [4 /*yield*/, PublicTree.empty()];
                     case 2:
@@ -133,6 +138,7 @@ var RootTree = /** @class */ (function () {
                         _h.label = 5;
                     case 5:
                         publicTree = _e;
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await BareTree.fromCID(links[Branch.Pretty].cid) ...");
                         if (!links[Branch.Pretty]) return [3 /*break*/, 7];
                         return [4 /*yield*/, BareTree.fromCID(links[Branch.Pretty].cid)];
                     case 6:
@@ -151,6 +157,7 @@ var RootTree = /** @class */ (function () {
                         return [4 /*yield*/, MMPT.create()];
                     case 10:
                         mmpt = _h.sent();
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await PrivateTree.create(mmpt, key, null) ...");
                         return [4 /*yield*/, PrivateTree.create(mmpt, key, null)];
                     case 11:
                         privateTree = _h.sent();
@@ -158,12 +165,14 @@ var RootTree = /** @class */ (function () {
                     case 12: return [4 /*yield*/, MMPT.fromCID(privateCID)];
                     case 13:
                         mmpt = _h.sent();
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await PrivateTree.fromBaseKey(mmpt, key) ...");
                         return [4 /*yield*/, PrivateTree.fromBaseKey(mmpt, key)];
                     case 14:
                         privateTree = _h.sent();
                         _h.label = 15;
                     case 15:
                         privateLogCid = (_d = links[Branch.PrivateLog]) === null || _d === void 0 ? void 0 : _d.cid;
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await ipfs.dagGet(privateLogCid) ...");
                         if (!privateLogCid) return [3 /*break*/, 17];
                         return [4 /*yield*/, ipfs.dagGet(privateLogCid)
                                 .then(function (dagNode) { return dagNode.Links.map(link.fromDAGLink); })
@@ -178,6 +187,8 @@ var RootTree = /** @class */ (function () {
                         _h.label = 18;
                     case 18:
                         privateLog = _g;
+                        // Construct tree
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> new RootTree ...");
                         tree = new RootTree({
                             links: links,
                             mmpt: mmpt,
@@ -187,6 +198,7 @@ var RootTree = /** @class */ (function () {
                             privateTree: privateTree
                         });
                         // Fin
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> DONE");
                         return [2 /*return*/, tree];
                 }
             });

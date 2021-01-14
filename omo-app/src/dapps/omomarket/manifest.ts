@@ -11,7 +11,7 @@ import {FissionAuthState} from "../fissionauth/manifest";
 export interface OmoMarketState {}
 export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
   id: "omo.market:1",
-  dependencies: [],
+  dependencies: ["omo.li:1"],
   icon: faPeopleCarry,
   title: "OmoMarket",
   routeParts: ["omomarket"],
@@ -23,7 +23,7 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     component: Offers,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }
@@ -40,7 +40,7 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     component: Requests,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }
@@ -57,7 +57,7 @@ export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
     component: Favorites,
     available: [
       (detail) => {
-        console.log("routeGuard.detail:", detail);
+        window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         return fissionAuthState.fission !== undefined
       }

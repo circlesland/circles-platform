@@ -15579,6 +15579,7 @@ function iframe() {
         iframe.style.width = "0";
         iframe.style.height = "0";
         iframe.style.border = "none";
+        iframe.style.display = "none";
         document.body.appendChild(iframe);
         iframe.onload = function () {
             var channel = new MessageChannel();
@@ -20844,16 +20845,6 @@ var size = function (cid) { return __awaiter(void 0, void 0, void 0, function ()
             case 2:
                 stat = _a.sent();
                 return [2 /*return*/, stat.cumulativeSize];
-        }
-    });
-}); };
-var reconnect = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, get$1()];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
         }
     });
 }); };
@@ -27266,7 +27257,6 @@ var index$2 = /*#__PURE__*/Object.freeze({
     dagPut: dagPut,
     dagPutLinks: dagPutLinks,
     size: size,
-    reconnect: reconnect,
     attemptPin: attemptPin,
     DAG_NODE_DATA: DAG_NODE_DATA
 });
@@ -55047,6 +55037,39 @@ var PrivateTree = /** @class */ (function (_super) {
     return PrivateTree;
 }(BaseTree));
 
+function newLogger(name, parent) {
+    return {
+        name: name,
+        parent: parent,
+        log: function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            if (setup.debug && (args === null || args === void 0 ? void 0 : args.length)) {
+                var remainingArgs = args.splice(1);
+                if (remainingArgs.length) {
+                    if (setup.logger) {
+                        setup.logger(Date.now() + " [" + name + "]: " + args[0], remainingArgs);
+                    }
+                    else {
+                        console.log(Date.now() + " [" + name + "]: " + args[0], remainingArgs);
+                    }
+                }
+                else {
+                    if (setup.logger) {
+                        setup.logger(Date.now() + " [" + name + "]: " + args[0]);
+                    }
+                    else {
+                        console.log(Date.now() + " [" + name + "]: " + args[0]);
+                    }
+                }
+            }
+        },
+        newLogger: function (name) { return newLogger(name, parent); }
+    };
+}
+
 var RootTree = /** @class */ (function () {
     function RootTree(_a) {
         var links = _a.links, mmpt = _a.mmpt, privateLog = _a.privateLog, publicTree = _a.publicTree, prettyTree = _a.prettyTree, privateTree = _a.privateTree;
@@ -55109,15 +55132,19 @@ var RootTree = /** @class */ (function () {
         var _b, _c, _d;
         var cid = _a.cid, key = _a.key;
         return __awaiter(this, void 0, void 0, function () {
-            var links, publicCID, publicTree, _e, prettyTree, _f, privateCID, mmpt, privateTree, privateLogCid, privateLog, _g, tree;
+            var logger, links, publicCID, publicTree, _e, prettyTree, _f, privateCID, mmpt, privateTree, privateLogCid, privateLog, _g, tree;
             return __generator(this, function (_h) {
                 switch (_h.label) {
-                    case 0: return [4 /*yield*/, getLinks(cid)
-                        // Load public parts
-                    ];
+                    case 0:
+                        logger = newLogger("Tree.fromCID");
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await protocol.basic.getLinks(cid) ...");
+                        return [4 /*yield*/, getLinks(cid)
+                            // Load public parts
+                        ];
                     case 1:
                         links = _h.sent();
                         publicCID = ((_b = links[Branch.Public]) === null || _b === void 0 ? void 0 : _b.cid) || null;
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await PublicTree.fromCID(publicCID) ...");
                         if (!(publicCID === null)) return [3 /*break*/, 3];
                         return [4 /*yield*/, PublicTree.empty()];
                     case 2:
@@ -55129,6 +55156,7 @@ var RootTree = /** @class */ (function () {
                         _h.label = 5;
                     case 5:
                         publicTree = _e;
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await BareTree.fromCID(links[Branch.Pretty].cid) ...");
                         if (!links[Branch.Pretty]) return [3 /*break*/, 7];
                         return [4 /*yield*/, BareTree.fromCID(links[Branch.Pretty].cid)];
                     case 6:
@@ -55147,6 +55175,7 @@ var RootTree = /** @class */ (function () {
                         return [4 /*yield*/, MMPT.create()];
                     case 10:
                         mmpt = _h.sent();
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await PrivateTree.create(mmpt, key, null) ...");
                         return [4 /*yield*/, PrivateTree.create(mmpt, key, null)];
                     case 11:
                         privateTree = _h.sent();
@@ -55154,12 +55183,14 @@ var RootTree = /** @class */ (function () {
                     case 12: return [4 /*yield*/, MMPT.fromCID(privateCID)];
                     case 13:
                         mmpt = _h.sent();
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await PrivateTree.fromBaseKey(mmpt, key) ...");
                         return [4 /*yield*/, PrivateTree.fromBaseKey(mmpt, key)];
                     case 14:
                         privateTree = _h.sent();
                         _h.label = 15;
                     case 15:
                         privateLogCid = (_d = links[Branch.PrivateLog]) === null || _d === void 0 ? void 0 : _d.cid;
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> await ipfs.dagGet(privateLogCid) ...");
                         if (!privateLogCid) return [3 /*break*/, 17];
                         return [4 /*yield*/, dagGet(privateLogCid)
                                 .then(function (dagNode) { return dagNode.Links.map(fromDAGLink); })
@@ -55174,6 +55205,8 @@ var RootTree = /** @class */ (function () {
                         _h.label = 18;
                     case 18:
                         privateLog = _g;
+                        // Construct tree
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> new RootTree ...");
                         tree = new RootTree({
                             links: links,
                             mmpt: mmpt,
@@ -55183,6 +55216,7 @@ var RootTree = /** @class */ (function () {
                             privateTree: privateTree
                         });
                         // Fin
+                        logger.log("RootTree.fromCID(" + cid.toString() + ") -> DONE");
                         return [2 /*return*/, tree];
                 }
             });
@@ -55378,15 +55412,6 @@ function clear$1() {
             }
         });
     });
-}
-
-function log() {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    if (setup.debug)
-        console.log.apply(console, args);
 }
 
 /**
@@ -56340,27 +56365,30 @@ function lookup$1(username) {
  */
 function lookupOnFisson(username) {
     return __awaiter(this, void 0, void 0, function () {
-        var resp, cid, err_2;
+        var logger, resp, cid, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
+                    logger = newLogger("lookupOnFisson()");
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
                     return [4 /*yield*/, fetch(setup.endpoints.api + "/user/data/" + username, { cache: 'reload' } // don't use cache
                         )];
-                case 1:
+                case 2:
                     resp = _a.sent();
                     return [4 /*yield*/, resp.json()];
-                case 2:
+                case 3:
                     cid = _a.sent();
                     if (!isCID(cid)) {
                         throw new Error("Did not receive a CID");
                     }
                     return [2 /*return*/, cid];
-                case 3:
+                case 4:
                     err_2 = _a.sent();
-                    log('Could not locate user root on Fission server: ', err_2.toString());
+                    logger.log('Could not locate user root on Fission server: ', err_2.toString());
                     return [2 /*return*/, null];
-                case 4: return [2 /*return*/];
+                case 5: return [2 /*return*/];
             }
         });
     });
@@ -56373,25 +56401,20 @@ function lookupOnFisson(username) {
  */
 function update(cid, proof) {
     return __awaiter(this, void 0, void 0, function () {
-        var apiEndpoint;
+        var logger, apiEndpoint;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    logger = newLogger("DataRoot.update(cid: " + cid.toString() + ")");
+                    logger.log("begin");
                     apiEndpoint = setup.endpoints.api;
                     // Debug
-                    log("🚀 Updating your DNSLink:", cid);
+                    logger.log("🚀 Updating your DNSLink:", cid);
                     // Cancel previous updates
                     if (fetchController)
                         fetchController.abort();
                     fetchController = new AbortController();
-                    // Ensure peer connection
-                    return [4 /*yield*/, reconnect()
-                        // Make API call
-                    ];
-                case 1:
-                    // Ensure peer connection
-                    _a.sent();
                     // Make API call
                     return [4 /*yield*/, fetchWithRetry(apiEndpoint + "/user/data/" + cid, {
                             headers: function () { return __awaiter(_this, void 0, void 0, function () {
@@ -56425,14 +56448,18 @@ function update(cid, proof) {
                         }, {
                             method: 'PATCH',
                             signal: fetchController.signal
-                        })
-                        // Debug
-                    ];
-                case 2:
+                        }).then(function (response) {
+                            if (response.status < 300)
+                                logger.log("🚀 DNSLink updated:", cid);
+                            else
+                                logger.log("💥  Failed to update DNSLink for:", cid);
+                        }).catch(function (err) {
+                            logger.log("💥  Failed to update DNSLink for:", cid);
+                            console.error(err);
+                        })];
+                case 1:
                     // Make API call
                     _a.sent();
-                    // Debug
-                    log("🚀 DNSLink updated:", cid);
                     return [2 /*return*/];
             }
         });
@@ -56450,12 +56477,12 @@ function fetchWithRetry(url, retryOptions, fetchOptions, retry) {
                     return [4 /*yield*/, fetch(url, __assign(__assign({}, fetchOptions), { headers: __assign(__assign({}, fetchOptions.headers), headers) }))];
                 case 2:
                     response = _a.sent();
-                    if (!(retryOptions.retryOn.includes(response.status) && retry < retryOptions.retries)) return [3 /*break*/, 4];
+                    if (!retryOptions.retryOn.includes(response.status)) return [3 /*break*/, 5];
+                    if (!(retry < retryOptions.retries)) return [3 /*break*/, 4];
                     return [4 /*yield*/, new Promise(function (resolve, reject) { return setTimeout(function () { return fetchWithRetry(url, retryOptions, fetchOptions, retry + 1).then(resolve, reject); }, retryOptions.retryDelay); })];
-                case 3:
-                    _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/];
+                case 3: return [2 /*return*/, _a.sent()];
+                case 4: throw new Error("Too many retries for fetch");
+                case 5: return [2 /*return*/, response];
             }
         });
     });
@@ -56493,6 +56520,8 @@ var FileSystem = /** @class */ (function () {
         this.publishHooks = [];
         this.publishWhenOnline = [];
         this.root = root;
+        var logger = newLogger("Filesystem.ctor()");
+        logger.log("begin");
         if (permissions &&
             permissions.app &&
             permissions.app.creator &&
@@ -56503,7 +56532,7 @@ var FileSystem = /** @class */ (function () {
         // (reverse list, newest cid first)
         var logCid = function (cid) {
             add$2(cid);
-            log("📓 Adding to the CID ledger:", cid);
+            logger.log("📓 Adding to the CID ledger:", cid);
         };
         // Update the user's data root when making changes
         var updateDataRootWhenOnline = throttle(3000, false, function (cid, proof) {
@@ -56515,6 +56544,7 @@ var FileSystem = /** @class */ (function () {
         this.publishHooks.push(updateDataRootWhenOnline);
         // Publish when coming back online
         globalThis.addEventListener('online', function () { return _this._whenOnline(); });
+        logger.log("end");
     }
     FileSystem.prototype.getIpfs = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -56561,22 +56591,27 @@ var FileSystem = /** @class */ (function () {
     FileSystem.fromCID = function (cid, opts) {
         if (opts === void 0) { opts = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var _a, keyName, permissions, localOnly, key, root, fs;
+            var logger, _a, keyName, permissions, localOnly, key, root, fs;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
+                        logger = newLogger("FileSystem.fromCID(FileSystem.fromCID(" + cid.toString() + ")");
+                        logger.log("begin");
                         _a = opts.keyName, keyName = _a === void 0 ? 'filesystem-root' : _a, permissions = opts.permissions, localOnly = opts.localOnly;
                         return [4 /*yield*/, getKeyByName(keyName)];
                     case 1:
                         key = _b.sent();
+                        logger.log("await RootTree.fromCID({ cid, key }) ...");
                         return [4 /*yield*/, RootTree.fromCID({ cid: cid, key: key })];
                     case 2:
                         root = _b.sent();
+                        logger.log("new FileSystem() ...");
                         fs = new FileSystem({
                             root: root,
                             permissions: permissions,
                             localOnly: localOnly
                         });
+                        logger.log("end");
                         return [2 /*return*/, fs];
                 }
             });
@@ -56598,11 +56633,15 @@ var FileSystem = /** @class */ (function () {
     FileSystem.prototype.mkdir = function (path, options) {
         if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
+            var logger;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
-                            return tree.mkdir(relPath);
-                        })];
+                    case 0:
+                        logger = newLogger("FileSystem.mkdir(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
+                                return tree.mkdir(relPath);
+                            })];
                     case 1:
                         _a.sent();
                         if (!options.publish) return [3 /*break*/, 3];
@@ -56610,28 +56649,44 @@ var FileSystem = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         _a.label = 3;
-                    case 3: return [2 /*return*/, this];
+                    case 3:
+                        logger.log("end");
+                        return [2 /*return*/, this];
                 }
             });
         });
     };
     FileSystem.prototype.ls = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                        return tree.ls(relPath);
-                    })];
+                switch (_a.label) {
+                    case 0:
+                        logger = newLogger("FileSystem.ls(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                return tree.ls(relPath);
+                            })];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
     FileSystem.prototype.add = function (path, content, options) {
         if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
+            var logger;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
-                            return tree.add(relPath, content);
-                        })];
+                    case 0:
+                        logger = newLogger("FileSystem.add(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
+                                return tree.add(relPath, content);
+                            })];
                     case 1:
                         _a.sent();
                         if (!options.publish) return [3 /*break*/, 3];
@@ -56639,38 +56694,65 @@ var FileSystem = /** @class */ (function () {
                     case 2:
                         _a.sent();
                         _a.label = 3;
-                    case 3: return [2 /*return*/, this];
+                    case 3:
+                        logger.log("end");
+                        return [2 /*return*/, this];
                 }
             });
         });
     };
     FileSystem.prototype.cat = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                        return tree.cat(relPath);
-                    })];
+                switch (_a.label) {
+                    case 0:
+                        logger = newLogger("FileSystem.cat(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                return tree.cat(relPath);
+                            })];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
     FileSystem.prototype.exists = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                        return tree.exists(relPath);
-                    })];
+                switch (_a.label) {
+                    case 0:
+                        logger = newLogger("FileSystem.exists(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                return tree.exists(relPath);
+                            })];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
     FileSystem.prototype.rm = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
-                            return tree.rm(relPath);
-                        })];
+                    case 0:
+                        logger = newLogger("FileSystem.rm(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.runOnTree(path, true, function (tree, relPath) {
+                                return tree.rm(relPath);
+                            })];
                     case 1:
                         _a.sent();
+                        logger.log("end");
                         return [2 /*return*/, this];
                 }
             });
@@ -56678,30 +56760,48 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.get = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.runOnTree(path, false, function (tree, relPath) {
-                        return tree.get(relPath);
-                    })];
+                switch (_a.label) {
+                    case 0:
+                        logger = newLogger("FileSystem.get(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.runOnTree(path, false, function (tree, relPath) {
+                                return tree.get(relPath);
+                            })];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
     // This is only implemented on the same tree for now and will error otherwise
     FileSystem.prototype.mv = function (from, to) {
         return __awaiter(this, void 0, void 0, function () {
-            var sameTree;
+            var logger, sameTree;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        logger = newLogger("FileSystem.mv(from:" + from + ", to:" + to + ")");
+                        logger.log("begin");
                         sameTree = sameParent(from, to);
                         if (!sameTree) {
                             throw new Error("`mv` is only supported on the same tree for now");
+                        }
+                        return [4 /*yield*/, this.exists(to)];
+                    case 1:
+                        if (_a.sent()) {
+                            throw new Error("Destination already exists");
                         }
                         return [4 /*yield*/, this.runOnTree(from, true, function (tree, relPath) {
                                 var nextPath = takeHead(to).nextPath;
                                 return tree.mv(relPath, nextPath || '');
                             })];
-                    case 1:
+                    case 2:
                         _a.sent();
+                        logger.log("end");
                         return [2 /*return*/, this];
                 }
             });
@@ -56709,16 +56809,36 @@ var FileSystem = /** @class */ (function () {
     };
     FileSystem.prototype.read = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.cat(path)];
+                switch (_a.label) {
+                    case 0:
+                        logger = newLogger("FileSystem.read(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.cat(path)];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
     FileSystem.prototype.write = function (path, content, options) {
         if (options === void 0) { options = {}; }
         return __awaiter(this, void 0, void 0, function () {
+            var logger, result;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.add(path, content, options)];
+                switch (_a.label) {
+                    case 0:
+                        logger = newLogger("FileSystem.write(path:" + path + ")");
+                        logger.log("begin");
+                        return [4 /*yield*/, this.add(path, content, options)];
+                    case 1:
+                        result = _a.sent();
+                        logger.log("end");
+                        return [2 /*return*/, result];
+                }
             });
         });
     };
@@ -56730,11 +56850,13 @@ var FileSystem = /** @class */ (function () {
      */
     FileSystem.prototype.publish = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var proofs, cid;
+            var logger, proofs, cid;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        logger = newLogger("FileSystem.publish()");
+                        logger.log("FileSystem.publish() ...");
                         proofs = Array.from(Object.entries(this.proofs));
                         this.proofs = {};
                         return [4 /*yield*/, this.root.put()];
@@ -56745,6 +56867,7 @@ var FileSystem = /** @class */ (function () {
                             var encodedProof = encode(proof);
                             _this.publishHooks.forEach(function (hook) { return hook(cid, encodedProof); });
                         });
+                        logger.log("FileSystem.publish() -> DONE");
                         return [2 /*return*/, cid];
                 }
             });
@@ -56854,10 +56977,12 @@ function appPath(permissions) {
  */
 function loadFileSystem(permissions, username) {
     return __awaiter(this, void 0, void 0, function () {
-        var cid, fs, _a, dataCid, _b, _c, logIdx, logLength, _d, idxLog, keyName, p, _e;
+        var cid, fs, logger, _a, dataCid, _b, _c, logIdx, logLength, _d, idxLog, keyName, p, _e;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
+                    logger = newLogger("FileSystem.loadFileSystem(username:" + username + ")");
+                    logger.log("begin");
                     _a = username;
                     if (_a) return [3 /*break*/, 2];
                     return [4 /*yield*/, authenticatedUsername()];
@@ -56909,15 +57034,15 @@ function loadFileSystem(permissions, username) {
                     // No DNS CID yet
                     cid = _f.sent();
                     if (cid)
-                        log("📓 No DNSLink, using local CID:", cid);
+                        logger.log("📓 No DNSLink, using local CID:", cid);
                     else
-                        log("📓 Creating a new file system");
+                        logger.log("📓 Creating a new file system");
                     return [3 /*break*/, 18];
                 case 13:
                     if (!(logIdx === 0)) return [3 /*break*/, 14];
                     // DNS is up to date
                     cid = dataCid;
-                    log("📓 DNSLink is up to date:", cid);
+                    logger.log("📓 DNSLink is up to date:", cid);
                     return [3 /*break*/, 18];
                 case 14:
                     if (!(logIdx > 0)) return [3 /*break*/, 16];
@@ -56926,7 +57051,7 @@ function loadFileSystem(permissions, username) {
                     // DNS is outdated
                     cid = _f.sent();
                     idxLog = logIdx === 1 ? "1 newer local entry" : logIdx + " newer local entries";
-                    log("📓 DNSLink is outdated (" + idxLog + "), using local CID:", cid);
+                    logger.log("📓 DNSLink is outdated (" + idxLog + "), using local CID:", cid);
                     return [3 /*break*/, 18];
                 case 16:
                     // DNS is newer
@@ -56934,7 +57059,7 @@ function loadFileSystem(permissions, username) {
                     return [4 /*yield*/, add$2(cid)];
                 case 17:
                     _f.sent();
-                    log("📓 DNSLink is newer:", cid);
+                    logger.log("📓 DNSLink is newer:", cid);
                     _f.label = 18;
                 case 18:
                     keyName = READ_KEY_FROM_LOBBY_NAME;
@@ -56963,6 +57088,7 @@ function loadFileSystem(permissions, username) {
                 case 23:
                     _f.sent();
                     // Fin
+                    logger.log("end");
                     return [2 /*return*/, fs];
             }
         });
@@ -57861,8 +57987,9 @@ var index$5 = /*#__PURE__*/Object.freeze({
  * Only adds a few `console.log`s at this moment.
  */
 function debug(_a) {
-    var enabled = _a.enabled;
+    var enabled = _a.enabled, logger = _a.logger;
     setup.debug = enabled;
+    setup.logger = logger;
     return setup.debug;
 }
 /**
@@ -57897,6 +58024,15 @@ var Scenario;
     Scenario["AuthCancelled"] = "AUTH_CANCELLED";
     Scenario["Continuation"] = "CONTINUATION";
 })(Scenario || (Scenario = {}));
+// ERRORS
+/**
+ * Initialisation error
+ */
+var InitialisationError;
+(function (InitialisationError) {
+    InitialisationError["InsecureContext"] = "INSECURE_CONTEXT";
+    InitialisationError["UnsupportedBrowser"] = "UNSUPPORTED_BROWSER";
+})(InitialisationError || (InitialisationError = {}));
 // INTIALISE
 /**
  * Check if we're authenticated, process any lobby query-parameters present in the URL,
@@ -57932,6 +58068,13 @@ function initialise(options) {
                             }
                         });
                     }); };
+                    // Check if browser is supported
+                    if (globalThis.isSecureContext === false)
+                        throw InitialisationError.InsecureContext;
+                    return [4 /*yield*/, isSupported()];
+                case 1:
+                    if ((_h.sent()) === false)
+                        throw InitialisationError.UnsupportedBrowser;
                     url = new URL(window.location.href);
                     cancellation = url.searchParams.get("cancelled");
                     ucans = url.searchParams.get("ucans");
@@ -57939,24 +58082,24 @@ function initialise(options) {
                     return [4 /*yield*/, store(ucans ? ucans.split(",") : [])
                         // Determine scenario
                     ];
-                case 1:
+                case 2:
                     // Add UCANs to the storage
                     _h.sent();
-                    if (!ucans) return [3 /*break*/, 7];
+                    if (!ucans) return [3 /*break*/, 8];
                     newUser = url.searchParams.get("newUser") === "t";
                     encryptedReadKey = url.searchParams.get("readKey") || "";
                     username = url.searchParams.get("username") || "";
                     return [4 /*yield*/, get()];
-                case 2:
+                case 3:
                     ks = _h.sent();
                     return [4 /*yield*/, ks.decrypt(makeUrlUnsafe(encryptedReadKey))];
-                case 3:
+                case 4:
                     readKey = _h.sent();
                     return [4 /*yield*/, ks.importSymmKey(readKey, READ_KEY_FROM_LOBBY_NAME)];
-                case 4:
+                case 5:
                     _h.sent();
                     return [4 /*yield*/, localforage.setItem(USERNAME_STORAGE_KEY, username)];
-                case 5:
+                case 6:
                     _h.sent();
                     if (autoRemoveUrlParams) {
                         url.searchParams.delete("newUser");
@@ -57973,8 +58116,8 @@ function initialise(options) {
                         newUser,
                         username];
                     return [4 /*yield*/, maybeLoadFs(username)];
-                case 6: return [2 /*return*/, _c.apply(void 0, _d.concat([_h.sent()]))];
-                case 7:
+                case 7: return [2 /*return*/, _c.apply(void 0, _d.concat([_h.sent()]))];
+                case 8:
                     if (cancellation) {
                         c = (function (_) {
                             switch (cancellation) {
@@ -57984,28 +58127,50 @@ function initialise(options) {
                         })();
                         return [2 /*return*/, scenarioAuthCancelled(permissions, c)];
                     }
-                    _h.label = 8;
-                case 8: return [4 /*yield*/, authenticatedUsername()];
-                case 9:
+                    _h.label = 9;
+                case 9: return [4 /*yield*/, authenticatedUsername()];
+                case 10:
                     authedUsername = _h.sent();
                     if (!(authedUsername &&
-                        (permissions ? validatePermissions(permissions) : true))) return [3 /*break*/, 11];
+                        (permissions ? validatePermissions(permissions) : true))) return [3 /*break*/, 12];
                     _f = scenarioContinuation;
                     _g = [permissions, authedUsername];
                     return [4 /*yield*/, maybeLoadFs(authedUsername)];
-                case 10:
-                    _e = _f.apply(void 0, _g.concat([_h.sent()]));
-                    return [3 /*break*/, 12];
                 case 11:
+                    _e = _f.apply(void 0, _g.concat([_h.sent()]));
+                    return [3 /*break*/, 13];
+                case 12:
                     _e = scenarioNotAuthorised(permissions);
-                    _h.label = 12;
-                case 12: return [2 /*return*/, _e];
+                    _h.label = 13;
+                case 13: return [2 /*return*/, _e];
+            }
+        });
+    });
+}
+// SUPPORTED
+function isSupported() {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _a = localforage.supports(localforage.INDEXEDDB);
+                    if (!_a) return [3 /*break*/, 2];
+                    return [4 /*yield*/, (function () { return new Promise(function (resolve) {
+                            var db = indexedDB.open("testDatabase");
+                            db.onsuccess = function () { return resolve(true); };
+                            db.onerror = function () { return resolve(false); };
+                        }); })()];
+                case 1:
+                    _a = (_b.sent());
+                    _b.label = 2;
+                case 2: return [2 /*return*/, _a];
             }
         });
     });
 }
 var fs = FileSystem;
-// ㊙️
+// ㊙️  ⚛  SCENARIOS
 function scenarioAuthSucceeded(permissions, newUser, username, fs) {
     return {
         scenario: Scenario.AuthSucceeded,
@@ -58045,5 +58210,5 @@ function scenarioNotAuthorised(permissions) {
     };
 }
 
-export { Scenario, apps, authenticatedUsername$1 as authenticatedUsername, dataRoot, did$1 as did, index as dns, errors$1 as errors, fs, initialise, initialise as initialize, index$2 as ipfs, index$1 as keystore, leave, loadFileSystem, index$5 as lobby, redirectToLobby, setup$1 as setup, ucan };
+export { InitialisationError, Scenario, apps, authenticatedUsername$1 as authenticatedUsername, dataRoot, did$1 as did, index as dns, errors$1 as errors, fs, initialise, initialise as initialize, index$2 as ipfs, isSupported, index$1 as keystore, leave, loadFileSystem, index$5 as lobby, redirectToLobby, setup$1 as setup, ucan };
 //# sourceMappingURL=index.es5.js.map

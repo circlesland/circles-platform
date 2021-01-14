@@ -32,7 +32,7 @@
     {
       contactsSubscription = safeState.myContacts.subscribe(async contactList =>
       {
-        contacts = contactList.filter(o => o.safeAddress !== safeState.mySafeAddress);
+        contacts = contactList.payload.filter(o => o.safeAddress !== safeState.mySafeAddress);
       });
     }
   }
@@ -43,6 +43,7 @@
       image: string,
       title: string,
       detail: {
+        fissionUsername: string,
         address: string,
         trust: {
           in: number
@@ -52,6 +53,8 @@
       actions: string[]
     } = {};
 
+    let fissionUsername:string = null;
+
     if (contact.omoProfile)
     {
       if (contact.omoProfile.avatar)
@@ -59,6 +62,7 @@
         listItem.image = contact.omoProfile.avatar;
       }
       listItem.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`
+      fissionUsername = contact.omoProfile.profile.fissionName;
     }
     else if (contact.circlesProfile)
     {
@@ -77,6 +81,7 @@
 
     listItem.detail = {
       address: contact.safeAddress,
+      fissionUsername: fissionUsername,
       trust: {
         in: contact.trust.in,
         out: contact.trust.out

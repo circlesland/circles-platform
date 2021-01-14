@@ -51,10 +51,12 @@ import { READ_KEY_FROM_LOBBY_NAME, authenticatedUsername } from './common';
  */
 export function loadFileSystem(permissions, username) {
     return __awaiter(this, void 0, void 0, function () {
-        var cid, fs, _a, dataCid, _b, _c, logIdx, logLength, _d, idxLog, keyName, p, _e;
+        var cid, fs, logger, _a, dataCid, _b, _c, logIdx, logLength, _d, idxLog, keyName, p, _e;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
+                    logger = debug.newLogger("FileSystem.loadFileSystem(username:" + username + ")");
+                    logger.log("begin");
                     _a = username;
                     if (_a) return [3 /*break*/, 2];
                     return [4 /*yield*/, authenticatedUsername()];
@@ -106,15 +108,15 @@ export function loadFileSystem(permissions, username) {
                     // No DNS CID yet
                     cid = _f.sent();
                     if (cid)
-                        debug.log("📓 No DNSLink, using local CID:", cid);
+                        logger.log("📓 No DNSLink, using local CID:", cid);
                     else
-                        debug.log("📓 Creating a new file system");
+                        logger.log("📓 Creating a new file system");
                     return [3 /*break*/, 18];
                 case 13:
                     if (!(logIdx === 0)) return [3 /*break*/, 14];
                     // DNS is up to date
                     cid = dataCid;
-                    debug.log("📓 DNSLink is up to date:", cid);
+                    logger.log("📓 DNSLink is up to date:", cid);
                     return [3 /*break*/, 18];
                 case 14:
                     if (!(logIdx > 0)) return [3 /*break*/, 16];
@@ -123,7 +125,7 @@ export function loadFileSystem(permissions, username) {
                     // DNS is outdated
                     cid = _f.sent();
                     idxLog = logIdx === 1 ? "1 newer local entry" : logIdx + " newer local entries";
-                    debug.log("📓 DNSLink is outdated (" + idxLog + "), using local CID:", cid);
+                    logger.log("📓 DNSLink is outdated (" + idxLog + "), using local CID:", cid);
                     return [3 /*break*/, 18];
                 case 16:
                     // DNS is newer
@@ -131,7 +133,7 @@ export function loadFileSystem(permissions, username) {
                     return [4 /*yield*/, cidLog.add(cid)];
                 case 17:
                     _f.sent();
-                    debug.log("📓 DNSLink is newer:", cid);
+                    logger.log("📓 DNSLink is newer:", cid);
                     _f.label = 18;
                 case 18:
                     keyName = READ_KEY_FROM_LOBBY_NAME;
@@ -160,6 +162,7 @@ export function loadFileSystem(permissions, username) {
                 case 23:
                     _f.sent();
                     // Fin
+                    logger.log("end");
                     return [2 /*return*/, fs];
             }
         });

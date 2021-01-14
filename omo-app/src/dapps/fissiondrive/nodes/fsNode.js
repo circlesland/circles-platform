@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { tryGetDappState } from "../../../libs/o-os/loader";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
 //import {defaultTimeout} from "libs/webnative/logFormatted";
 export class FsNode {
     constructor(parent, name) {
@@ -18,13 +19,16 @@ export class FsNode {
     }
     get path() {
         const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+        const fission = fissionAuthState.fission.getValue().payload;
+        if (!fission)
+            throw new Error("Your fission drive is not available.");
         let current = this;
         let path = [];
         while (current) {
             path.unshift(current.name);
             current = current.parent;
         }
-        return fissionAuthState.fission._fs.appPath(path);
+        return fission.fs.appPath(path);
     }
     onCollapse() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,9 +37,10 @@ export class FsNode {
     }
     delete() {
         return __awaiter(this, void 0, void 0, function* () {
-            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-            yield fissionAuthState.fission._fs.rm(this.path);
-            yield fissionAuthState.fission._fs.publish();
+            yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+                yield fissionDrive.fs.rm(this.path);
+                yield fissionDrive.fs.publish();
+            }));
         });
     }
 }

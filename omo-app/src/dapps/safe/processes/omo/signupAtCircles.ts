@@ -1,26 +1,17 @@
 import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import {strings} from "../../data/strings";
 import {createMachine} from "xstate";
 import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ConnectSafeContext} from "./importCircles";
 import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
 import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {createPrivateKeyService} from "../../services/createPrivateKeyService";
 import {setError} from "../../../../libs/o-processes/actions/setError";
 import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import {text} from "../../../../libs/o-processes/artifacts/text";
-import {RunProcess} from "../../../../libs/o-events/runProcess";
-import {fundAccountForSafeCreation} from "./fundAccountForSafeCreation";
 import {hubSignupService} from "../../services/hubSignupService";
-import {tryGetDappState} from "../../../../libs/o-os/loader";
-import {OmoSafeState} from "../../manifest";
-import {BN} from "ethereumjs-util";
 import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {fundSafeService} from "../../services/fundSafeService";
+import {NavigateTo} from "../../../../libs/o-events/navigateTo";
 
 export interface SignupAtCirclesContext extends ProcessContext {
   data: {
@@ -53,23 +44,8 @@ A small amount of the credits you received from your invite will be used to do t
       }),
       on: {
         "process.continue": [{
-          target: "fundSafe"
-        }]
-      }
-    },
-    fundSafe: {
-      entry: sendInProgressPrompt(str.progressFundSafe),
-      invoke: {
-        id: 'fundSafe',
-        src: fundSafeService,
-        onError: {
-          actions: setError,
-          target: "error"
-        },
-        onDone: {
-          actions: setProcessResult(str.successFundSafe),
           target: "hubSignup"
-        }
+        }]
       }
     },
     hubSignup: {
@@ -78,7 +54,7 @@ A small amount of the credits you received from your invite will be used to do t
         id: 'hubSignup',
         src: hubSignupService,
         onError: {
-          actions: "setError",
+          actions: setError,
           target: "error"
         },
         onDone: {
@@ -89,7 +65,8 @@ A small amount of the credits you received from your invite will be used to do t
     },
     success: {
       entry: [
-        sendSuccessPrompt
+        sendSuccessPrompt,
+        sendShellEvent(new NavigateTo("/safe/tokens"))
       ],
       on: {
         "process.continue": "stop",

@@ -4,8 +4,9 @@ import { Endpoints } from './setup/internal';
  *
  * Only adds a few `console.log`s at this moment.
  */
-export declare function debug({ enabled }: {
+export declare function debug({ enabled, logger }: {
     enabled: boolean;
+    logger?: (...args: any[]) => void;
 }): boolean;
 /**
  * Override endpoints.

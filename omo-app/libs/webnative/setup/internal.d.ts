@@ -8,6 +8,7 @@ export declare type Endpoints = {
  */
 export declare const setup: {
     debug: boolean;
+    logger?: (...args: any[]) => void;
     endpoints: {
         api: string;
         lobby: string;

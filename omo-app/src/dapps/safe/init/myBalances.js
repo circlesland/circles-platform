@@ -11,16 +11,22 @@ import { BehaviorSubject } from "rxjs";
 import { setDappState, tryGetDappState } from "../../../libs/o-os/loader";
 import { BN } from "ethereumjs-util";
 import { DelayedTrigger } from "../../../libs/o-os/delayedTrigger";
-const myCirclesBalancesSubject = new BehaviorSubject([]);
+const myCirclesBalancesSubject = new BehaviorSubject({
+    payload: []
+});
 let myBalances = [];
 const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
-    myCirclesBalancesSubject.next(myBalances);
+    const current = myCirclesBalancesSubject.getValue();
+    myCirclesBalancesSubject.next({
+        signal: current === null || current === void 0 ? void 0 : current.signal,
+        payload: myBalances
+    });
 }));
 export function initMyBalances() {
     return __awaiter(this, void 0, void 0, function* () {
         const safeState = tryGetDappState("omo.safe:1");
         safeState.myTransactions.subscribe(transactions => {
-            const amounts = transactions.map(o => {
+            const amounts = transactions.payload.map(o => {
                 return {
                     token: o.token,
                     amount: o.direction == "out" ? o.amount.neg() : o.amount,

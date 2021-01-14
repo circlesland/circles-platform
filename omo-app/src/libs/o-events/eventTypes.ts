@@ -5,6 +5,7 @@ export type OmoEventTypes =
   | "shell.begin"
   | "shell.progress"
   | "shell.done"
+  | "shell.navigateTo"
   | "shell.authenticated"
   | "shell.gotProfile"
   | "shell.showNotification"

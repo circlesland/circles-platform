@@ -28,15 +28,17 @@ export class Profiles extends Directory<Profile>
     }
   }
 
-  async addOrUpdateMyAvatar(imageData:Buffer, publish:boolean)
+  async addOrUpdateMyAvatar(imageData:Buffer, publish:boolean) : Promise<string|null>
   {
     await this.fs.add(this.getPath(["me.png"]), imageData);
     await this.fs.add("public/Apps/MamaOmo/OmoSapien/profiles/me.png", imageData);
 
     if (publish)
     {
-      await this.fs.publish();
+      return await this.fs.publish();
     }
+
+    return null;
   }
 
   async addOrUpdateMyProfile(myProfile: Profile) {
@@ -46,8 +48,10 @@ export class Profiles extends Directory<Profile>
     return await this.addOrUpdate(myProfile, true, "addOrUpdateMyProfile");
   }
 
-  async maintainIndexes(change: DirectoryChangeType, entity: Profile, hint?: string): Promise<void> {
-    if (entity.name === "me" && hint !== "addOrUpdateMyProfile") {
+  async maintainIndexes(change: DirectoryChangeType, entity: Profile, hint?: string): Promise<void>
+  {
+    if (entity.name === "me" && hint !== "addOrUpdateMyProfile")
+    {
       throw new Error(`The 'me' entity is a system entity in '${this.getPath()}' and should not be used directly.`);
     }
 

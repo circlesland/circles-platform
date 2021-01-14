@@ -7,11 +7,6 @@ import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeP
 
 export const sendInviteCreditsService = async (context: SendInviteCreditsContext) =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState.fission) {
-    throw new Error("You're not authenticated");
-  }
-
   const web3 = context.environment.eth.web3;
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const ownerAddress = context.environment.eth.web3
@@ -21,7 +16,7 @@ export const sendInviteCreditsService = async (context: SendInviteCreditsContext
     .address;
 
   const gnosisSafeProxy = new GnosisSafeProxy(web3, ownerAddress, safeState.mySafeAddress);
-  const ethAmount = new BN(web3.utils.toWei((context.data.value.value / 10).toString(), "ether"));
+  const ethAmount = new BN(web3.utils.toWei((context.data.value.value / 100).toString(), "ether"));
   return await gnosisSafeProxy.transferEth(
     safeState.myKey.privateKey,
     ethAmount,

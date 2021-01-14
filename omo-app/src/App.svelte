@@ -1,9 +1,7 @@
 <script lang="ts">
   import ProcessNav from "./libs/o-views/molecules/ProcessNav.svelte";
-  import Compose from "./libs/o-views/atoms/Compose.svelte";
 
-  import ComposeApp from "./libs/o-views/atoms/ComposeApp.svelte";
-  import Router, { push } from "svelte-spa-router";
+  import Router, {push} from "svelte-spa-router";
   import routes from "./libs/o-os/loader";
 
   import "./libs/o-views/css/base.css";
@@ -13,13 +11,13 @@
   import OverflowAction from "./libs/o-views/atoms/OverflowAction.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
-  import type { OmoEvent } from "./libs/o-events/omoEvent";
-  import { RunProcess } from "./libs/o-events/runProcess";
+  import type {OmoEvent} from "./libs/o-events/omoEvent";
+  import {RunProcess} from "./libs/o-events/runProcess";
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
-  import { Cancel } from "./libs/o-processes/events/cancel";
-  import { Process } from "./libs/o-processes/interfaces/process";
-  import { ProgressSignal } from "./libs/o-circles-protocol/interfaces/blockchainEvent";
-  import { onMount } from "svelte";
+  import {Cancel} from "./libs/o-processes/events/cancel";
+  import {Process} from "./libs/o-processes/interfaces/process";
+  import {ProgressSignal} from "./libs/o-circles-protocol/interfaces/blockchainEvent";
+  import {NavigateTo} from "./libs/o-events/navigateTo";
 
   let actions = [];
 
@@ -39,30 +37,42 @@
     percent: number;
   };
 
-  window.o.events.subscribe(async (event: OmoEvent) => {
+  window.o.events.subscribe(async (event: OmoEvent) =>
+  {
     // runningProcess = window.o.stateMachines.current();
-    if (event.type === "shell.openMenu") {
+    if (event.type === "shell.openMenu")
+    {
       isOpen = true;
     }
-    if (event.type === "shell.closeModal") {
+    if (event.type === "shell.closeModal")
+    {
       isOpen = false;
     }
-    if (event.type === "shell.openModal") {
+    if (event.type === "shell.openModal")
+    {
       isOpen = true;
     }
-    if (event.type == "shell.runProcess") {
+    if (event.type == "shell.runProcess")
+    {
       runningProcess = await window.o.stateMachines.run(
         (<RunProcess>event).definition,
         (<RunProcess>event).contextModifier
       );
       isOpen = true;
     }
-    if (event.type === "shell.begin") {
+    if (event.type === "shell.begin")
+    {
     }
-    if (event.type === "shell.done") {
+    if (event.type === "shell.navigateTo")
+    {
+      push("#" + (<NavigateTo>event).route);
+    }
+    if (event.type === "shell.done")
+    {
       progressIndicator = null;
     }
-    if (event.type === "shell.progress") {
+    if (event.type === "shell.progress")
+    {
       const progressEvent: ProgressSignal = <ProgressSignal>event;
       progressIndicator = {
         message: progressEvent.message,
@@ -71,7 +81,8 @@
     }
   });
 
-  function routeLoading(e) {
+  function routeLoading(e)
+  {
     if (!e.detail.userData) return;
 
     showActionBar = e.detail.userData.showActionBar;
@@ -82,8 +93,13 @@
   let overflowActions: any[] = [];
 
   $: {
+    const headerHeight = headerElement ? headerElement.clientHeight : 0;
+    const footerHeight = footerElement ? footerElement.clientHeight : 0;
+    contentHeight = windowInnerHeight - headerHeight - footerHeight;
+
     let _quickActions = actions.filter((o) => o.pos && o.pos !== "overflow");
-    quickActions = [0, 1, 2, 3].map((index) => {
+    quickActions = [0, 1, 2, 3].map((index) =>
+    {
       let actionAt: any = _quickActions.find(
         (action) => action.pos == index + 1
       );
@@ -104,7 +120,8 @@
 
     overflowActions = actions
       .filter((o) => !o.pos || o.pos === "overflow")
-      .map((item) => {
+      .map((item) =>
+      {
         return {
           data: {
             label: item.mapping.data.label,
@@ -117,41 +134,46 @@
           pos: item.pos,
         };
       });
-
-    const headerHeight = headerElement ? headerElement.clientHeight : 0;
-    const footerHeight = footerElement ? footerElement.clientHeight : 0;
-    contentHeight = windowInnerHeight - headerHeight - footerHeight;
   }
 
-  function toggleOpen() {
+  function toggleOpen()
+  {
     isOpen = !isOpen;
   }
 
-  function modalWantsToClose() {
+  function modalWantsToClose()
+  {
     isOpen = false;
-    if (!runningProcess) {
+    if (!runningProcess)
+    {
       return;
     }
     runningProcess.sendEvent(new Cancel());
   }
 
-  function conditionsFailed(event) {
+  function conditionsFailed(event)
+  {
     console.log(
       "Escaped redirect url:",
       encodeURIComponent(event.detail.location)
     );
-    if (event.detail.userData && event.detail.userData.shellEvent) {
+    if (event.detail.userData && event.detail.userData.shellEvent)
+    {
       // There are some cases where we don't want to route to a different page
       // but instead only use the route params to initiate a process
       //window.o.publishEvent(event.detail.userData.shellEvent);
-    } else {
+    }
+    else
+    {
       push(
         `#/omosapien/authenticate/${encodeURIComponent(event.detail.location)}`
       );
     }
   }
 </script>
-
+<!--
+<ImageEditor></ImageEditor>
+-->
 <svelte:window bind:innerHeight={windowInnerHeight} />
 <div class="appContainer font-primary bg-light-100">
   <div
@@ -182,23 +204,23 @@
   {/if}
 </div>
 <Modal bind:isOpen on:closeRequest={modalWantsToClose}>
-  {#if runningProcess}
-    <ProcessContainer
-      process={runningProcess}
-      on:stopped={() => {
-        isOpen = false;
-        runningProcess = null;
-      }} />
-  {:else}
-    {#each overflowActions as action}
-      <div class="w-full">
-        <div class="space-y-2">
+  <div class="font-primary">
+    {#if runningProcess}
+      <ProcessContainer
+        process={runningProcess}
+        on:stopped={() => {
+          isOpen = false;
+          runningProcess = null;
+        }} />
+    {:else}
+      {#each overflowActions as action}
+        <div class="w-full my-2">
           <div on:click={() => window.o.publishEvent(action.event())}>
             <OverflowAction mapping={action} />
           </div>
         </div>
-      </div>
-    {/each}
-    <ProcessNav bind:isOpen />
-  {/if}
+      {/each}
+      <ProcessNav bind:isOpen />
+    {/if}
+  </div>
 </Modal>

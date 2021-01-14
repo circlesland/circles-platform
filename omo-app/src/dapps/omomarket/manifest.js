@@ -6,7 +6,7 @@ import { faPeopleCarry } from "@fortawesome/free-solid-svg-icons";
 import { tryGetDappState } from "../../libs/o-os/loader";
 export const omomarket = {
     id: "omo.market:1",
-    dependencies: [],
+    dependencies: ["omo.li:1"],
     icon: faPeopleCarry,
     title: "OmoMarket",
     routeParts: ["omomarket"],
@@ -18,7 +18,7 @@ export const omomarket = {
             component: Offers,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -35,7 +35,7 @@ export const omomarket = {
             component: Requests,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -52,7 +52,7 @@ export const omomarket = {
             component: Favorites,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }

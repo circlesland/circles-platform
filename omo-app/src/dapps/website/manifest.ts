@@ -6,6 +6,16 @@ import Attributions from 'src/dapps/website/views/pages/Attributions.svelte'
 import {faGlobe} from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 
+const homepage = {
+  isDefault: true,
+  routeParts: [],
+  component: Website,
+  userData: {
+    showActionBar: false,
+    actions: []
+  }
+};
+
 export interface OmoWebsiteState {}
 export const omowebsite : DappManifest<OmoWebsiteState,OmoWebsiteState> = {
   id: "omo.website:1",
@@ -16,15 +26,7 @@ export const omowebsite : DappManifest<OmoWebsiteState,OmoWebsiteState> = {
   routeParts: [],
   tag: Promise.resolve(null),
   isEnabled: true,
-  pages: [{
-    isDefault: true,
-    routeParts: [],
-    component: Website,
-    userData: {
-      showActionBar: false,
-      actions: []
-    }
-  }, {
+  pages: [homepage, {
     routeParts: ["privacy"],
     component: Privacy,
     userData: {

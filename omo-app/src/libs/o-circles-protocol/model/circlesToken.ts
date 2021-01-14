@@ -1,7 +1,14 @@
 import {Address} from "../interfaces/address";
 import {BN} from "ethereumjs-util";
 import {Subject} from "rxjs";
-import {BeginSignal, BlockchainEvent, DoneSignal, ProgressSignal, SystemEvent} from "../interfaces/blockchainEvent";
+import {
+  BeginSignal,
+  BlockchainEvent,
+  EndSignal,
+  ProgressSignal,
+  Signal,
+  SystemEvent
+} from "../interfaces/blockchainEvent";
 import {config} from "../config";
 import {Subscription} from "web3-core-subscriptions";
 import {tryGetDappState} from "../../o-os/loader";
@@ -39,11 +46,16 @@ export class CirclesToken
    * @param fromBlock Start block
    * @param signalKey If a "BeginSignal" and "EndSignal" event should be put on the stream then this parameter must have a value.
    */
-  async feedTransactionHistory(subject: Subject<SystemEvent>, tokensByAddress:{[tokenAddress:string]:CirclesToken}, tokenAddresses: Address[], fromBlock: number, signalKey?: string)
+  async feedTransactionHistory(
+    subject: Subject<SystemEvent>,
+    tokensByAddress:{[tokenAddress:string]:CirclesToken},
+    tokenAddresses: Address[],
+    fromBlock: number,
+    signalCallback?: (signal:Signal) => void)
   {
-    if (signalKey && window.o)
+    if (signalCallback)
     {
-      window.o.publishEvent(new BeginSignal(signalKey));
+      signalCallback(new BeginSignal(""));
     }
 
     const partitionSize = 50000;
@@ -68,12 +80,12 @@ export class CirclesToken
       {
         try
         {
-          if (signalKey && window.o)
+          if (signalCallback)
           {
             const percent = (partitionIdx + 1) * (100 / partitionCount)
 
-            window.o.publishEvent(new ProgressSignal(
-              signalKey, `Updating your transactions ..`, parseInt(percent.toFixed(0))));
+            signalCallback(new ProgressSignal(
+              "", `Updating your transactions ..`, parseInt(percent.toFixed(0))));
           }
 
           const f = getFromBlock(partitionIdx);
@@ -85,7 +97,7 @@ export class CirclesToken
             topics: topics
           });
 
-          console.log(`Received ${pastLogs.length} events from block ${f} to ${t} (partition ${partitionIdx + 1} of ${partitionCount}).`)
+          window.o.logger.log(`Received ${pastLogs.length} events from block ${f} to ${t} (partition ${partitionIdx + 1} of ${partitionCount}).`)
 
           pastLogs.forEach(event =>
           {
@@ -124,9 +136,9 @@ export class CirclesToken
       }
     }
 
-    if (signalKey && window.o)
+    if (signalCallback)
     {
-      window.o.publishEvent(new DoneSignal(signalKey));
+      signalCallback(new EndSignal(""));
     }
   }
 

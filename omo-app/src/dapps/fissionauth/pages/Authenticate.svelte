@@ -1,10 +1,7 @@
 <script lang="ts">
-  import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import { onMount } from "svelte";
   import {push} from "svelte-spa-router";
   import { Jumper } from "svelte-loading-spinners";
-  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
-  import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
   import {setDappState} from "../../../libs/o-os/loader";
   import {FissionAuthState} from "../manifest";
 
@@ -32,6 +29,7 @@
             publicPaths: ["omo.sapien"],
           },
         },
+        loadFileSystem: false
       });
 
       switch (state.scenario)
@@ -55,9 +53,15 @@
             {
               return {
                 username: state.username,
-                fission: new FissionDrive(state)
+                fissionState: state,
+                fission: null
               };
             });
+
+            // set a marker in the local storage that indicates whether we've already logged-in
+            localStorage.setItem("fissionAuth", JSON.stringify({
+              username: state.username
+            }));
 
             if (params && params.redirectTo)
             {

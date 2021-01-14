@@ -4,6 +4,15 @@ import Privacy from 'src/dapps/website/views/pages/Privacy.svelte';
 import TOS from 'src/dapps/website/views/pages/TOS.svelte';
 import Attributions from 'src/dapps/website/views/pages/Attributions.svelte';
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
+const homepage = {
+    isDefault: true,
+    routeParts: [],
+    component: Website,
+    userData: {
+        showActionBar: false,
+        actions: []
+    }
+};
 export const omowebsite = {
     id: "omo.website:1",
     dependencies: [],
@@ -13,15 +22,7 @@ export const omowebsite = {
     routeParts: [],
     tag: Promise.resolve(null),
     isEnabled: true,
-    pages: [{
-            isDefault: true,
-            routeParts: [],
-            component: Website,
-            userData: {
-                showActionBar: false,
-                actions: []
-            }
-        }, {
+    pages: [homepage, {
             routeParts: ["privacy"],
             component: Privacy,
             userData: {

@@ -69,7 +69,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       entry: sendPrompt((context: JumpstartContext) => {
         return {
           title: str.titleIntro(),
-          nextButtonTitle: `Empower ${context.data.foreignProfile.value.firstName} ${context.data.foreignProfile.value.lastName}`,
+          nextButtonTitle: `Empower ${context.data.foreignProfile.value.profile.firstName} ${context.data.foreignProfile.value.profile.lastName}`,
           banner: {
             component: JumpstartIntro,
             data: {

@@ -37,8 +37,9 @@ export class Profiles extends Directory {
             yield this.fs.add(this.getPath(["me.png"]), imageData);
             yield this.fs.add("public/Apps/MamaOmo/OmoSapien/profiles/me.png", imageData);
             if (publish) {
-                yield this.fs.publish();
+                return yield this.fs.publish();
             }
+            return null;
         });
     }
     addOrUpdateMyProfile(myProfile) {

@@ -9,19 +9,18 @@ import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
-import {FissionAuthState} from "../../fissionauth/manifest";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 
-const myContactsSubject: BehaviorSubject<Contact[]> = new BehaviorSubject<Contact[]>([]);
+const myContactsSubject: BehaviorSubject<Envelope<Contact[]>> = new BehaviorSubject<Envelope<Contact[]>>({
+  payload: []
+});
 const blockIndex = new BlockIndex();
 const myContacts:{[safeAddress:string]:Contact} = {};
 const circlesProfiles:{[safeAddress:string]:CirclesProfile} = {};
 
-const updateTrigger = new DelayedTrigger(30, async () =>
+const augmentCirclesProfiles = new DelayedTrigger(30, async () =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-
   const circlesApiUrls = Object.values(myContacts)
     .filter(o => !circlesProfiles[o.safeAddress])
     .map(o => {
@@ -31,29 +30,6 @@ const updateTrigger = new DelayedTrigger(30, async () =>
       };
       return "address[]=" + o.safeAddress;
     }).join("&");
-
-  await Promise.all(Object.values(myContacts)
-    .filter(o => omosapienState.directory.byCirclesSafe[o.safeAddress])
-    .map(async o => {
-      const directoryEntry = omosapienState.directory.byCirclesSafe[o.safeAddress];
-      try
-      {
-        if (o.safeAddress == safeState.mySafeAddress)
-        {
-          o.omoProfile = {
-            profile: omosapienState.myProfile,
-            avatar: await fissionAuthState.fission.profiles.tryGetMyAvatar()
-          };
-        }
-        else
-        {
-          o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
-        }
-      } catch (e)
-      {
-        console.warn("An error occurred while loading the fission contacts:", e);
-      }
-    }));
 
   if (circlesApiUrls !== "")
   {
@@ -68,7 +44,59 @@ const updateTrigger = new DelayedTrigger(30, async () =>
     });
   }
 
-  myContactsSubject.next(Object.values(myContacts));
+  const current = myContactsSubject.getValue();
+  myContactsSubject.next({
+    signal: current?.signal,
+    payload: Object.values(myContacts)
+  });
+});
+
+const augmentOmoProfiles = new DelayedTrigger(30, async () =>
+{
+  await runWithDrive(async fissionDrive =>
+  {
+    const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+    const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+    await Promise.all(Object.values(myContacts)
+      .filter(o => omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress])
+      .map(async o => {
+        const directoryEntry = omosapienState.directory.getValue().payload.byCirclesSafe[o.safeAddress];
+        try
+        {
+          if (o.safeAddress == safeState.mySafeAddress)
+          {
+            o.omoProfile = {
+              profile: omosapienState.myProfile,
+              avatar: await fissionDrive.profiles.tryGetMyAvatar()
+            };
+          }
+          else
+          {
+            o.omoProfile = await ForeignProfile.findByFissionUsername(directoryEntry.fissionName);
+          }
+        } catch (e)
+        {
+          console.warn("An error occurred while loading the fission contacts:", e);
+        }
+      }));
+
+    const current = myContactsSubject.getValue();
+    myContactsSubject.next({
+      signal: current?.signal,
+      payload: Object.values(myContacts)
+    });
+  });
+});
+
+const updateTrigger = new DelayedTrigger(30, async () =>
+{
+  augmentCirclesProfiles.trigger();
+  augmentOmoProfiles.trigger();
+  const current = myContactsSubject.getValue();
+  myContactsSubject.next({
+    signal: current?.signal,
+    payload: Object.values(myContacts)
+  });
 });
 
 export async function initMyContacts()

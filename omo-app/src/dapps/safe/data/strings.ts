@@ -46,7 +46,7 @@ export const strings = {
         titleValue: () => "invite credits",
         bannerIntro: () => "0x123.. sent you a jumpstart request. Every transaction on the distributed computer costs a little fee. Send 1 invite credit to allow 0x123 to pay for all transaction fees that are required to join omo.",
         titleIntro: () => "Jumpstart",
-        introHeader: (context: JumpstartContext) => `<span class="text-3xl">${context.data.foreignProfile.value.firstName} ${context.data.foreignProfile.value.lastName}</span>`,
+        introHeader: (context: JumpstartContext) => `<span class="text-3xl">${context.data.foreignProfile.value.profile.firstName} ${context.data.foreignProfile.value.profile.lastName}</span>`,
         introSubHeader: () => `is asking you to empower his/her life`,
         introBody: (context: JumpstartContext) => {
           const recipient = context.data.recipient.value;

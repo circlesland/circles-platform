@@ -11,6 +11,11 @@ import AnswerInviteRequest from "./views/pages/AnswerInviteRequest.svelte";
 import Transactions from "./views/pages/Transactions.svelte";
 import Friends from "./views/pages/Friends.svelte";
 import Tokens from "./views/pages/Tokens.svelte";
+import NoFundsOnAccount from "./views/pages/NoFundsOnAccount.svelte";
+import NoKey from "./views/pages/NoKey.svelte";
+import NoSafe from "./views/pages/NoSafe.svelte";
+import NoToken from "./views/pages/NoToken.svelte";
+import NoFundsOnSafe from "./views/pages/NoFundsOnSafe.svelte";
 import { safeDefaultActions, safeOverflowActions } from "./data/actions";
 import { RunProcess } from "../../libs/o-events/runProcess";
 import { faCheck, faPiggyBank, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -32,13 +37,14 @@ import { initialMenu } from "./processes/menus/initialMenu";
 import { fundAccountForSafeCreation } from "./processes/omo/fundAccountForSafeCreation";
 import { signupAtCircles } from "./processes/omo/signupAtCircles";
 import { BeginSignal, ProgressSignal } from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
+import { fundSafe } from "./processes/omo/fundSafe";
 const transactionPage = {
     isDefault: true,
     routeParts: ["transactions"],
     component: Transactions,
     available: [
         (detail) => {
-            console.log("routeGuard.detail:", detail);
+            window.o.logger.log("routeGuard.detail:", detail);
             const fissionAuthState = tryGetDappState("omo.fission.auth:1");
             return fissionAuthState.fission !== undefined;
         }
@@ -51,6 +57,102 @@ const transactionPage = {
         ]
     }
 };
+const noFundsOnAccountPage = {
+    isDefault: true,
+    routeParts: ["no-funds"],
+    component: NoFundsOnAccount,
+    available: [
+        (detail) => {
+            window.o.logger.log("routeGuard.detail:", detail);
+            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+            return fissionAuthState.fission !== undefined;
+        }
+    ],
+    userData: {
+        showActionBar: true,
+        actions: [
+            ...safeDefaultActions,
+            ...safeOverflowActions
+        ]
+    }
+};
+const noKeyPage = {
+    isDefault: true,
+    routeParts: ["no-key"],
+    component: NoKey,
+    available: [
+        (detail) => {
+            window.o.logger.log("routeGuard.detail:", detail);
+            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+            return fissionAuthState.fission !== undefined;
+        }
+    ],
+    userData: {
+        showActionBar: true,
+        actions: [
+            ...safeDefaultActions,
+            ...safeOverflowActions
+        ]
+    }
+};
+const noSafePage = {
+    isDefault: true,
+    routeParts: ["no-safe"],
+    component: NoSafe,
+    available: [
+        (detail) => {
+            window.o.logger.log("routeGuard.detail:", detail);
+            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+            return fissionAuthState.fission !== undefined;
+        }
+    ],
+    userData: {
+        showActionBar: true,
+        actions: [
+            ...safeDefaultActions,
+            ...safeOverflowActions
+        ]
+    }
+};
+const noTokenPage = {
+    isDefault: true,
+    routeParts: ["no-token"],
+    component: NoToken,
+    available: [
+        (detail) => {
+            window.o.logger.log("routeGuard.detail:", detail);
+            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+            return fissionAuthState.fission !== undefined;
+        }
+    ],
+    userData: {
+        showActionBar: true,
+        actions: [
+            ...safeDefaultActions,
+            ...safeOverflowActions
+        ]
+    }
+};
+const noFundsOnSafePage = {
+    isDefault: true,
+    routeParts: ["no-funds-on-safe"],
+    component: NoFundsOnSafe,
+    available: [
+        (detail) => {
+            window.o.logger.log("routeGuard.detail:", detail);
+            const fissionAuthState = tryGetDappState("omo.fission.auth:1");
+            return fissionAuthState.fission !== undefined;
+        }
+    ],
+    userData: {
+        showActionBar: true,
+        actions: [
+            ...safeDefaultActions,
+            ...safeOverflowActions
+        ]
+    }
+};
+let safeManifestLogger;
 /**
  * Checks if the omosapien has a private  key in its storage.
  * If the user doesn't have a private key, he's prompted to either
@@ -59,8 +161,10 @@ const transactionPage = {
  * @param runtimeDapp
  */
 function initialize(stack, runtimeDapp) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     return __awaiter(this, void 0, void 0, function* () {
+        safeManifestLogger = window.o.logger.newLogger(`initialize()`);
+        safeManifestLogger.log("begin");
         window.o.publishEvent(new BeginSignal("omo.safe:1:initialize"));
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your safe key ..", 0));
         yield initMyKey();
@@ -70,7 +174,7 @@ function initialize(stack, runtimeDapp) {
             window.o.publishEvent(new RunProcess(initialMenu));
             return {
                 cancelDependencyLoading: true,
-                initialPage: null,
+                initialPage: noKeyPage,
                 dappState: null
             };
         }
@@ -85,7 +189,7 @@ function initialize(stack, runtimeDapp) {
             window.o.publishEvent(new RunProcess(fundAccountForSafeCreation));
             return {
                 cancelDependencyLoading: true,
-                initialPage: null,
+                initialPage: noFundsOnAccountPage,
                 dappState: null
             };
         }
@@ -95,19 +199,28 @@ function initialize(stack, runtimeDapp) {
             window.o.publishEvent(new RunProcess(deploySafe));
             return {
                 cancelDependencyLoading: true,
-                initialPage: null,
+                initialPage: noSafePage,
                 dappState: null
             };
         }
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token ..", 0));
         yield initMyToken();
         safeState = tryGetDappState("omo.safe:1");
+        // If the user doesn't have a token and the safe balance is smaller than
+        if (safeState.mySafeAddress && !safeState.myToken && ((_e = safeState.mySafeXDaiBalance) === null || _e === void 0 ? void 0 : _e.lte(new BN("4600000000000000")))) {
+            // Not yet registered at the circles hub
+            runtimeDapp.shell.publishEvent(new RunProcess(fundSafe));
+            return {
+                cancelDependencyLoading: true,
+                initialPage: noFundsOnSafePage
+            };
+        }
         if (safeState.mySafeAddress && !safeState.myToken) {
             // Not yet registered at the circles hub
             runtimeDapp.shell.publishEvent(new RunProcess(signupAtCircles));
             return {
                 cancelDependencyLoading: true,
-                initialPage: null
+                initialPage: noTokenPage
             };
         }
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts ..", 0));
@@ -115,26 +228,20 @@ function initialize(stack, runtimeDapp) {
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts' tokens ..", 0));
         yield initMyKnownTokens();
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your transactions ..", 0));
-        yield initMyTransactions();
+        yield initMyTransactions(safeManifestLogger);
         window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your balances ..", 0));
         yield initMyBalances();
-        if (safeState.mySafeAddress && safeState.myToken) {
-            // Everything is already set up
-            return {
-                cancelDependencyLoading: false,
-                initialPage: null
-            };
-        }
+        safeManifestLogger.log("end");
         return {
-            cancelDependencyLoading: true,
-            initialPage: null,
+            cancelDependencyLoading: false,
+            initialPage: transactionPage,
             dappState: null
         };
     });
 }
 export const omosafe = {
     id: "omo.safe:1",
-    dependencies: ["omo.sapien:1"],
+    dependencies: ["omo.li:1"],
     icon: faPiggyBank,
     title: "OmoSafe",
     routeParts: ["safe"],
@@ -146,7 +253,7 @@ export const omosafe = {
             component: AnswerInviteRequest,
             available: [
                 (detail) => {
-                    console.log("Starting answer invite process ..", detail);
+                    window.o.logger.log("Starting answer invite process ..", detail);
                     return true;
                 }
             ],
@@ -196,7 +303,7 @@ export const omosafe = {
             component: Friends,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }
@@ -213,7 +320,7 @@ export const omosafe = {
             component: Tokens,
             available: [
                 (detail) => {
-                    console.log("routeGuard.detail:", detail);
+                    window.o.logger.log("routeGuard.detail:", detail);
                     const fissionAuthState = tryGetDappState("omo.fission.auth:1");
                     return fissionAuthState.fission !== undefined;
                 }

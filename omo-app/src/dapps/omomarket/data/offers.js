@@ -1,5 +1,6 @@
 export let featured = [
     {
+        name: "1",
         data: {
             category: "Food & Beverages",
             title: "The Great White Chuck",
@@ -21,6 +22,7 @@ export let featured = [
         },
     },
     {
+        name: "2",
         data: {
             category: "Food & Beverages",
             title: "Pflanzenstoff Superfruitdrink",
@@ -44,6 +46,7 @@ export let featured = [
 ];
 export let offers = [
     {
+        name: "3",
         data: {
             title: "UNU 2 Electro Scooter",
             image: "./images/market/unu.jpg",
@@ -56,6 +59,7 @@ export let offers = [
             country: "Germany",
             delivery: "pickup or delivery",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",
@@ -64,6 +68,7 @@ export let offers = [
         },
     },
     {
+        name: "4",
         data: {
             title: 'MacBook Pro (13", 2018)',
             image: "./images/market/macbook.jpg",
@@ -76,6 +81,7 @@ export let offers = [
             country: "Germany",
             delivery: "pickup or delivery",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",
@@ -84,6 +90,7 @@ export let offers = [
         },
     },
     {
+        name: "5",
         data: {
             image: "./images/market/lederhose.jpg",
             title: "Bavarian Lederhosn (Size 48)",
@@ -96,6 +103,7 @@ export let offers = [
             country: "Germany",
             delivery: "pickup or delivery",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",
@@ -104,6 +112,7 @@ export let offers = [
         },
     },
     {
+        name: "6",
         data: {
             title: "Bavarian Leathershoes (Size 44)",
             image: "./images/market/shoes.jpg",
@@ -116,6 +125,7 @@ export let offers = [
             country: "Germany",
             delivery: "pickup or delivery",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",
@@ -124,6 +134,7 @@ export let offers = [
         },
     },
     {
+        name: "7",
         data: {
             image: "./images/market/hemdblau.jpg",
             title: "Blue plaid shirt (Size S/M 37/38)",
@@ -136,6 +147,7 @@ export let offers = [
             country: "Germany",
             delivery: "pickup or delivery",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",
@@ -144,6 +156,7 @@ export let offers = [
         },
     },
     {
+        name: "8",
         data: {
             image: "./images/market/hemdrot.jpg",
             title: "Red plaid shirt (Size S/M 39/40)",
@@ -156,6 +169,7 @@ export let offers = [
             country: "Germany",
             delivery: "pickup or delivery",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",
@@ -164,6 +178,7 @@ export let offers = [
         },
     },
     {
+        name: "9",
         data: {
             image: "./images/market/roomsamuel.jpg",
             title: "1-room in shared apartment",
@@ -176,6 +191,7 @@ export let offers = [
             country: "Germany",
             delivery: "ask for the address",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",
@@ -184,6 +200,7 @@ export let offers = [
         },
     },
     {
+        name: "10",
         data: {
             image: "./images/market/iphone.jpg",
             title: "iPhone 7 with broken screen",
@@ -196,6 +213,7 @@ export let offers = [
             country: "Germany",
             delivery: "pickup or delivery",
             offeredBy: {
+                fissionUsername: "Samuel",
                 image: "images/users/samuel.jpg",
                 firstName: "Samuel",
                 lastName: "Andert",

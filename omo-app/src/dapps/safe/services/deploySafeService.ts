@@ -4,14 +4,10 @@ import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
 import {OmoSapienState} from "../../omosapien/manifest";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 
 export const deploySafeService = async (context: DeploySafeContext) =>
 {
-  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState.fission) {
-    throw new Error("You're not authenticated");
-  }
-
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
@@ -41,12 +37,14 @@ export const deploySafeService = async (context: DeploySafeContext) =>
     circlesAddress: safeProxy.address
   };
 
-  await fissionAuthState.fission.profiles.addOrUpdateMyProfile(myProfile);
-
-  setDappState<OmoSapienState>("omo.sapien:1", current => {
-    return {
-      ...current,
-      myProfile: myProfile
-    }
+  await runWithDrive(async fissionDrive =>
+  {
+    await fissionDrive.profiles.addOrUpdateMyProfile(myProfile);
+    setDappState<OmoSapienState>("omo.sapien:1", current => {
+      return {
+        ...current,
+        myProfile: myProfile
+      }
+    });
   });
 }

@@ -50,7 +50,6 @@ import * as debug from './common/debug';
 import * as did from './did';
 import * as dns from './dns';
 import * as ucan from './ucan';
-import * as ipfs from './ipfs';
 import { api } from './common';
 import { setup } from './setup/internal';
 // Controller for data-root-update fetches
@@ -101,27 +100,30 @@ export function lookup(username) {
  */
 export function lookupOnFisson(username) {
     return __awaiter(this, void 0, void 0, function () {
-        var resp, cid, err_2;
+        var logger, resp, cid, err_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
+                    logger = debug.newLogger("lookupOnFisson()");
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
                     return [4 /*yield*/, fetch(setup.endpoints.api + "/user/data/" + username, { cache: 'reload' } // don't use cache
                         )];
-                case 1:
+                case 2:
                     resp = _a.sent();
                     return [4 /*yield*/, resp.json()];
-                case 2:
+                case 3:
                     cid = _a.sent();
                     if (!check.isCID(cid)) {
                         throw new Error("Did not receive a CID");
                     }
                     return [2 /*return*/, cid];
-                case 3:
+                case 4:
                     err_2 = _a.sent();
-                    debug.log('Could not locate user root on Fission server: ', err_2.toString());
+                    logger.log('Could not locate user root on Fission server: ', err_2.toString());
                     return [2 /*return*/, null];
-                case 4: return [2 /*return*/];
+                case 5: return [2 /*return*/];
             }
         });
     });
@@ -134,25 +136,20 @@ export function lookupOnFisson(username) {
  */
 export function update(cid, proof) {
     return __awaiter(this, void 0, void 0, function () {
-        var apiEndpoint;
+        var logger, apiEndpoint;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    logger = debug.newLogger("DataRoot.update(cid: " + cid.toString() + ")");
+                    logger.log("begin");
                     apiEndpoint = setup.endpoints.api;
                     // Debug
-                    debug.log("🚀 Updating your DNSLink:", cid);
+                    logger.log("🚀 Updating your DNSLink:", cid);
                     // Cancel previous updates
                     if (fetchController)
                         fetchController.abort();
                     fetchController = new AbortController();
-                    // Ensure peer connection
-                    return [4 /*yield*/, ipfs.reconnect()
-                        // Make API call
-                    ];
-                case 1:
-                    // Ensure peer connection
-                    _a.sent();
                     // Make API call
                     return [4 /*yield*/, fetchWithRetry(apiEndpoint + "/user/data/" + cid, {
                             headers: function () { return __awaiter(_this, void 0, void 0, function () {
@@ -186,14 +183,18 @@ export function update(cid, proof) {
                         }, {
                             method: 'PATCH',
                             signal: fetchController.signal
-                        })
-                        // Debug
-                    ];
-                case 2:
+                        }).then(function (response) {
+                            if (response.status < 300)
+                                logger.log("🚀 DNSLink updated:", cid);
+                            else
+                                logger.log("💥  Failed to update DNSLink for:", cid);
+                        }).catch(function (err) {
+                            logger.log("💥  Failed to update DNSLink for:", cid);
+                            console.error(err);
+                        })];
+                case 1:
                     // Make API call
                     _a.sent();
-                    // Debug
-                    debug.log("🚀 DNSLink updated:", cid);
                     return [2 /*return*/];
             }
         });
@@ -211,12 +212,12 @@ function fetchWithRetry(url, retryOptions, fetchOptions, retry) {
                     return [4 /*yield*/, fetch(url, __assign(__assign({}, fetchOptions), { headers: __assign(__assign({}, fetchOptions.headers), headers) }))];
                 case 2:
                     response = _a.sent();
-                    if (!(retryOptions.retryOn.includes(response.status) && retry < retryOptions.retries)) return [3 /*break*/, 4];
+                    if (!retryOptions.retryOn.includes(response.status)) return [3 /*break*/, 5];
+                    if (!(retry < retryOptions.retries)) return [3 /*break*/, 4];
                     return [4 /*yield*/, new Promise(function (resolve, reject) { return setTimeout(function () { return fetchWithRetry(url, retryOptions, fetchOptions, retry + 1).then(resolve, reject); }, retryOptions.retryDelay); })];
-                case 3:
-                    _a.sent();
-                    _a.label = 4;
-                case 4: return [2 /*return*/];
+                case 3: return [2 /*return*/, _a.sent()];
+                case 4: throw new Error("Too many retries for fetch");
+                case 5: return [2 /*return*/, response];
             }
         });
     });

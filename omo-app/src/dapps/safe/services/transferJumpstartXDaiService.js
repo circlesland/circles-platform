@@ -17,5 +17,5 @@ export const transferJumpstartXDaiService = (context) => __awaiter(void 0, void 
         .privateKeyToAccount(safeState.myKey.privateKey)
         .address;
     const gnosisSafeProxy = new GnosisSafeProxy(web3, ownerAddress, safeState.mySafeAddress);
-    return yield gnosisSafeProxy.transferEth(safeState.myKey.privateKey, new BN(web3.utils.toWei((context.data.value.value / 10).toString(), "ether")), context.data.recipient.value);
+    return yield gnosisSafeProxy.transferEth(safeState.myKey.privateKey, new BN(web3.utils.toWei((context.data.value.value / 100).toString(), "ether")), context.data.recipient.value);
 });

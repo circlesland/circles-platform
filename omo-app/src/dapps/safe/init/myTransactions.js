@@ -13,8 +13,12 @@ import { BN } from "ethereumjs-util";
 import { DelayedTrigger } from "../../../libs/o-os/delayedTrigger";
 import { CirclesToken } from "../../../libs/o-circles-protocol/model/circlesToken";
 import { config } from "../../../libs/o-circles-protocol/config";
+import { runWithDrive } from "../../../libs/o-fission/initFission";
+let initMyTransactionLogger;
 // The consumable output of this init step (deduplicated ordered list of transactions)
-const myTransactionsSubject = new BehaviorSubject([]);
+const myTransactionsSubject = new BehaviorSubject({
+    payload: []
+});
 // In-memory cache of all transactions
 const myTransactions = {};
 // Contains all known tokens to which we've already subscribed
@@ -35,7 +39,6 @@ function indexTransaction(ct) {
  * Stores all known transactions to the fission cache.
  */
 const updateCacheTrigger = new DelayedTrigger(1000, () => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     const allTransactions = Object.values(myTransactions)
         .map(transactionsById => Object.values(transactionsById))
         .reduce((p, c) => p.concat(c), []);
@@ -57,32 +60,34 @@ const updateCacheTrigger = new DelayedTrigger(1000, () => __awaiter(void 0, void
             transactionBlocks[transaction.blockNo].transactions.push(serializableTransaction);
         }
     }
-    console.log("Writing transactions to fission cache ...");
-    const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-    yield fissionAuthState.fission.transactions.addOrUpdate(transactionBlocks);
-    const currentBlock = yield config.getCurrent().web3().eth.getBlockNumber();
-    // Go trough all tokens and find the first block that contains a transactions
-    const existingKnownTokensList = (_a = (yield fissionAuthState.fission.tokens.tryGetByName("tokens"))) !== null && _a !== void 0 ? _a : { entries: {} };
-    yield Promise.all(Object.keys(tokensByAddress).map((tokenAddress) => __awaiter(void 0, void 0, void 0, function* () {
-        var _b;
-        const firstBlockWithEvents = Object.values((_b = myTransactions[tokenAddress]) !== null && _b !== void 0 ? _b : {})
-            .reduce((p, c) => c.blockNo < p ? c.blockNo : p, Number.MAX_SAFE_INTEGER);
-        if (!existingKnownTokensList.entries[tokenAddress]) {
-            existingKnownTokensList.entries[tokenAddress] = {
-                name: "",
-                noTransactionsUntilBlockNo: tokensByAddress[tokenAddress].noTransactionsUntilBlockNo,
-                createdInBlockNo: tokensByAddress[tokenAddress].createdInBlockNo,
-                tokenAddress: tokensByAddress[tokenAddress].tokenAddress,
-                tokenOwner: tokensByAddress[tokenAddress].tokenOwner
-            };
-        }
-        if (firstBlockWithEvents == Number.MAX_SAFE_INTEGER) {
-            // No events till now
-            existingKnownTokensList.entries[tokenAddress].noTransactionsUntilBlockNo = currentBlock;
-        }
-    })));
-    yield fissionAuthState.fission.tokens.addOrUpdate(existingKnownTokensList);
-    console.log("Wrote transactions to fission cache.");
+    window.o.logger.log("Writing transactions to fission cache ...");
+    yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
+        yield fissionDrive.transactions.addOrUpdate(transactionBlocks);
+        const currentBlock = yield config.getCurrent().web3().eth.getBlockNumber();
+        // Go trough all tokens and find the first block that contains a transactions
+        const existingKnownTokensList = (_a = (yield fissionDrive.tokens.tryGetByName("tokens"))) !== null && _a !== void 0 ? _a : { entries: {} };
+        yield Promise.all(Object.keys(tokensByAddress).map((tokenAddress) => __awaiter(void 0, void 0, void 0, function* () {
+            var _b;
+            const firstBlockWithEvents = Object.values((_b = myTransactions[tokenAddress]) !== null && _b !== void 0 ? _b : {})
+                .reduce((p, c) => c.blockNo < p ? c.blockNo : p, Number.MAX_SAFE_INTEGER);
+            if (!existingKnownTokensList.entries[tokenAddress]) {
+                existingKnownTokensList.entries[tokenAddress] = {
+                    name: "",
+                    noTransactionsUntilBlockNo: tokensByAddress[tokenAddress].noTransactionsUntilBlockNo,
+                    createdInBlockNo: tokensByAddress[tokenAddress].createdInBlockNo,
+                    tokenAddress: tokensByAddress[tokenAddress].tokenAddress,
+                    tokenOwner: tokensByAddress[tokenAddress].tokenOwner
+                };
+            }
+            if (firstBlockWithEvents == Number.MAX_SAFE_INTEGER) {
+                // No events till now
+                existingKnownTokensList.entries[tokenAddress].noTransactionsUntilBlockNo = currentBlock;
+            }
+        })));
+        yield fissionDrive.tokens.addOrUpdate(existingKnownTokensList);
+        window.o.logger.log("Wrote transactions to fission cache.");
+    }));
 }));
 /**
  * Goes trough all transactions and looks for transactions without a timestamp.
@@ -106,7 +111,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, () => __awai
         .map(transactionsById => Object.values(transactionsById))
         .reduce((p, c) => p.concat(c), []);
     allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-    console.log("Determining time for " + allTransactions.length + " transactions:", allTransactions);
+    window.o.logger.log("Determining time for " + allTransactions.length + " transactions ..");
     for (let transactionIndex = 0; transactionIndex < allTransactions.length; transactionIndex++) {
         const transaction = allTransactions[transactionIndex];
         try {
@@ -132,6 +137,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, () => __awai
             console.warn("Couldn't determine the time of block " + transaction.blockNo + ": " + e.toString());
         }
     }
+    window.o.logger.log("Determining time for " + allTransactions.length + " transactions .. Done.");
     pushTransactions.trigger();
     updateCacheTrigger.trigger();
 }));
@@ -140,26 +146,27 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, () => __awai
  */
 function feedCachedTransactions(transactions, tokenAddresses) {
     return __awaiter(this, void 0, void 0, function* () {
-        const fissionAuthState = tryGetDappState("omo.fission.auth:1");
-        const cachedTransactions = yield fissionAuthState.fission.transactions.tryGetByName("transactions");
-        if (!cachedTransactions) {
-            return;
-        }
-        const requestedTokensByAddress = {};
-        tokenAddresses.forEach(ta => requestedTokensByAddress[ta] = true);
-        Object.values(cachedTransactions).forEach((blockEntry) => {
-            if (!blockEntry.transactions) {
+        yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+            const cachedTransactions = yield fissionDrive.transactions.tryGetByName("transactions");
+            if (!cachedTransactions) {
                 return;
             }
-            blockEntry.transactions.forEach(transaction => {
-                if (!requestedTokensByAddress[transaction.token]) {
+            const requestedTokensByAddress = {};
+            tokenAddresses.forEach(ta => requestedTokensByAddress[ta] = true);
+            Object.values(cachedTransactions).forEach((blockEntry) => {
+                if (!blockEntry.transactions) {
                     return;
                 }
-                transaction.cached = true;
-                transaction.amount = new BN(transaction.amount);
-                transactions.next(transaction);
+                blockEntry.transactions.forEach(transaction => {
+                    if (!requestedTokensByAddress[transaction.token]) {
+                        return;
+                    }
+                    transaction.cached = true;
+                    transaction.amount = new BN(transaction.amount);
+                    transactions.next(transaction);
+                });
             });
-        });
+        }));
     });
 }
 const pushTransactions = new DelayedTrigger(35, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -167,7 +174,11 @@ const pushTransactions = new DelayedTrigger(35, () => __awaiter(void 0, void 0, 
         .map(transactionsById => Object.values(transactionsById))
         .reduce((p, c) => p.concat(c), []);
     allTransactions.sort((a, b) => a.blockNo > b.blockNo ? -1 : a.blockNo < b.blockNo ? 1 : 0);
-    myTransactionsSubject.next(allTransactions);
+    const current = myTransactionsSubject.getValue();
+    myTransactionsSubject.next({
+        signal: current === null || current === void 0 ? void 0 : current.signal,
+        payload: allTransactions
+    });
 }));
 /**
  * Is triggered whenever the list of known tokens changed (after 500 ms delay).
@@ -182,7 +193,7 @@ const pushTransactions = new DelayedTrigger(35, () => __awaiter(void 0, void 0, 
 const subscribeToTokenEvents = new DelayedTrigger(500, () => __awaiter(void 0, void 0, void 0, function* () {
     const safeState = tryGetDappState("omo.safe:1");
     // Get all known tokens and filter only the new (unsubscribed) ones
-    const tokenList = safeState.myKnownTokens.getValue();
+    const tokenList = safeState.myKnownTokens.getValue().payload;
     const newTokens = Object.values(tokenList).filter(o => !tokensByAddress[o.tokenAddress]);
     if (newTokens.length == 0) {
         return;
@@ -227,7 +238,13 @@ const subscribeToTokenEvents = new DelayedTrigger(500, () => __awaiter(void 0, v
     const firstUnknownBlock = Object.values(cachedBlockMap).reduce((p, c) => c.lastCachedBlock < p ? c.lastCachedBlock : p, Number.MAX_SAFE_INTEGER);
     // Show the cached transactions right away then load all other transaction history ..
     pushTransactions.trigger();
-    yield aToken.feedTransactionHistory(transactionStream, tokensByAddress, tokenAddresses, firstUnknownBlock, "feedTransactionHistory");
+    yield aToken.feedTransactionHistory(transactionStream, tokensByAddress, tokenAddresses, firstUnknownBlock, signal => {
+        const currentTransactionsList = safeState.myTransactions.getValue();
+        safeState.myTransactions.next({
+            signal: signal,
+            payload: currentTransactionsList.payload
+        });
+    });
     annotateTimeAndStoreToCacheTrigger.trigger();
 }));
 /**
@@ -236,14 +253,16 @@ const subscribeToTokenEvents = new DelayedTrigger(500, () => __awaiter(void 0, v
  * 2. Subscribes to the Transfer events of all tokens
  * 3. Queries the history of new and known tokens
  */
-export function initMyTransactions() {
+export function initMyTransactions(logger) {
     return __awaiter(this, void 0, void 0, function* () {
+        initMyTransactionLogger = logger.newLogger("initMyTransaction()");
+        initMyTransactionLogger.log("begin");
         const safeState = tryGetDappState("omo.safe:1");
         let counter = 0;
         transactionStream.subscribe(event => {
             counter++;
             if (counter % 100 == 0) {
-                console.log(`Indexed ${counter} transactions so far ...`);
+                initMyTransactionLogger.log(`Indexed ${counter} transactions so far ...`);
             }
             indexTransaction(event);
             pushTransactions.trigger();
@@ -258,5 +277,6 @@ export function initMyTransactions() {
         setDappState("omo.safe:1", existing => {
             return Object.assign(Object.assign({}, existing), { myTransactions: myTransactionsSubject });
         });
+        initMyTransactionLogger.log("end");
     });
 }

@@ -5,7 +5,71 @@
   } from "@fortawesome/free-solid-svg-icons";
 
   import Icon from "fa-svelte";
-  import { featured, offers } from "../../data/offers";
+  import {featured, offers} from "../../data/offers";
+  import {Offer} from "../../../../libs/o-fission/entities/offer";
+  import {tryGetDappState} from "../../../../libs/o-os/loader";
+  import {OmoSapienState} from "../../../omosapien/manifest";
+  import {runWithDrive} from "../../../../libs/o-fission/initFission";
+  import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
+
+  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+  let myOffers: Offer[] = [];
+
+  async function init()
+  {
+    if (omosapienState)
+    {
+      await runWithDrive(async fissiondrive =>
+      {
+        myOffers = await fissiondrive.offers.listItems();
+      });
+    }
+  }
+
+  init();
+
+  function mapToListItem(offer: Offer)
+  {
+    // const locationParts = offer.productLocation.display_name.split(",");
+    // const country = locationParts[locationParts.length - 1];
+    const offerItem = {
+      data: {
+        title: offer.productName,
+        image: offer.productPicture,
+        description: offer.productDescription,
+        price: offer.productPrice,
+        state: "active",
+        category: "mobility",
+        // quantity: "",
+        city: offer.productLocation.display_name,
+        country: "" /*country*/,
+        delivery: "pickup or delivery",
+        offeredBy: {
+          fissionUsername: "",
+          image: "",
+          firstName: "",
+          lastName: "",
+          email: ""
+        }
+      },
+    };
+    if (omosapienState?.directory)
+    {
+      const offeredBy = omosapienState.directory.getValue().payload.byFissionName[offer.offeredByFissionName];
+      if (offeredBy)
+      {
+        offerItem.data.offeredBy = {
+          fissionUsername: offer.offeredByFissionName,
+          image: "",
+          firstName: offeredBy.firstName,
+          lastName: offeredBy.lastName,
+          email: ""
+        };
+      }
+    }
+
+    return offerItem;
+  }
 </script>
 
 <section class="w-full p-4 mx-auto md:p-8">
@@ -98,7 +162,8 @@
     {/each}
   </div>
   <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-    {#each offers as item}
+    {#each myOffers.map(o => mapToListItem(o)).concat(offers) as item(item.name)}
+      {#if item.data}
       <div
         class="flex flex-col overflow-hidden bg-white border hover:shadow-xl rounded-xl border-light-200">
         <div class="relative flex-shrink-0">
@@ -144,11 +209,8 @@
             </p>
           </div>
           <div class="flex items-center p-4 border-t border-light-200">
-            <div class="flex-shrink-0">
-              <img
-                class="w-10 h-10 rounded-xl"
-                src={item.data.offeredBy.image}
-                alt="" />
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl">
+              <OmosapienAvatar fissionUsername={item.data.offeredBy.fissionUsername}></OmosapienAvatar>
             </div>
             <div class="ml-3">
               <div class="text-sm font-medium leading-5 text-primary">
@@ -183,6 +245,7 @@
           {/if}
         </div>
       </div>
+      {/if}
     {/each}
   </div>
 </section>

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { withTimeout } from "../fissionDrive";
 export class Directory {
     constructor(fs, pathParts, entityFactory) {
-        console.log("Directory.ctor(pathParts:" + pathParts.join(",") + ")");
+        window.o.logger.log("Directory.ctor(pathParts:" + pathParts.join(",") + ")");
         this._pathParts = pathParts;
         this._fs = fs;
         this._entityFactory = entityFactory;
@@ -28,14 +28,16 @@ export class Directory {
             return withTimeout(`exists(${this.getPath(pathParts)})`, () => this.fs.exists(this.getPath(pathParts)), Directory.defaultTimeout);
         });
     }
-    ensureDirectoryExists(pathParts) {
+    ensureDirectoryExists(pathParts, publish = true) {
         return __awaiter(this, void 0, void 0, function* () {
             yield withTimeout(`ensureDirectoryExists(${this.getPath(pathParts)})`, () => __awaiter(this, void 0, void 0, function* () {
                 if (!(yield this.exists(pathParts))) {
                     yield this.fs.mkdir(this.getPath(pathParts));
                 }
             }), Directory.defaultTimeout);
-            yield this.fs.publish();
+            if (publish) {
+                yield this.fs.publish();
+            }
         });
     }
     listNames() {
@@ -67,12 +69,12 @@ export class Directory {
     tryGetByName(entityName) {
         return __awaiter(this, void 0, void 0, function* () {
             return withTimeout(`tryGetByName(${this.getPath([entityName])})`, () => __awaiter(this, void 0, void 0, function* () {
-                console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
+                window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
                 if (!(yield this.exists([entityName]))) {
-                    console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Doesn't exist");
+                    window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Doesn't exist");
                     return null;
                 }
-                console.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
+                window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
                 const contents = yield this.fs.cat(this.getPath([entityName]));
                 if (this._entityFactory) {
                     return this._entityFactory(contents.toString());
@@ -84,7 +86,7 @@ export class Directory {
     addOrUpdate(entity, publish = true, indexHint) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, () => __awaiter(this, void 0, void 0, function* () {
-                yield this.ensureDirectoryExists();
+                yield this.ensureDirectoryExists(null, publish);
                 const result = {
                     cid: "",
                     added: yield this.exists([entity.name]),

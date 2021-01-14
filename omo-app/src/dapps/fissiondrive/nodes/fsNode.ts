@@ -1,6 +1,9 @@
 import {TreeNode} from "../interfaces/treeNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
+import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
+import {Subscription} from "rxjs";
+import {runWithDrive} from "../../../libs/o-fission/initFission";
 //import {defaultTimeout} from "libs/webnative/logFormatted";
 
 export abstract class FsNode implements TreeNode
@@ -18,6 +21,10 @@ export abstract class FsNode implements TreeNode
   get path() :string
   {
     const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+    const fission = fissionAuthState.fission.getValue().payload;
+    if (!fission)
+      throw new Error("Your fission drive is not available.")
+
     let current: FsNode = this;
     let path = [];
 
@@ -27,7 +34,7 @@ export abstract class FsNode implements TreeNode
       current = current.parent;
     }
 
-    return fissionAuthState.fission._fs.appPath(path);
+    return fission.fs.appPath(path);
   }
 
   constructor(parent: FsNode, name: string)
@@ -46,8 +53,10 @@ export abstract class FsNode implements TreeNode
 
   async delete()
   {
-    const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    await fissionAuthState.fission._fs.rm(this.path);
-    await fissionAuthState.fission._fs.publish();
+    await runWithDrive(async fissionDrive =>
+    {
+      await fissionDrive.fs.rm(this.path);
+      await fissionDrive.fs.publish();
+    });
   }
 }

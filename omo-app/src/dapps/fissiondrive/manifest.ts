@@ -24,7 +24,7 @@ export const defaultActions: QuickAction[] = [
 
 export const fissiondrive : DappManifest<FissionDriveState,FissionDriveState> = {
   id: "omo.fission.drive:1",
-  dependencies: ["omo.fission.auth:1"],
+  dependencies: ["omo.li:1"],
   isHidden: false,
   icon: faSave,
   title: "Fission Drive",
