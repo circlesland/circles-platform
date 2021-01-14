@@ -16,10 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup Node
-        working-directory: ./omo-app
         uses: actions/setup-node@v2
-      - run: npm run install
-      - run: npm run build
-      - uses: fission-suite/publish-action@v1
+        working-directory: ./omo-app
+        run: npm run install
+        run: npm run build
+      - name: Publish
+        uses: fission-suite/publish-action@v1
         with:
           machine_key: ${{ secrets.MACHINE_KEY }}
