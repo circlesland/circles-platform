@@ -16,7 +16,7 @@ import { faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
 import { RunProcess } from "../../libs/o-events/runProcess";
 import { createOmoSapien } from "./processes/createOmoSapien/createOmoSapien";
 import { setDappState, tryGetDappState } from "../../libs/o-os/loader";
-import { runWithDrive } from "../../libs/o-fission/initFission";
+import { runWithDrive } from "../../libs/o-fission/fissionDrive";
 import { BehaviorSubject } from "rxjs";
 import { ProfileIndex } from "../../libs/o-fission/indexes/profileIndex";
 function tryInitMyProfile(logger) {

@@ -4,12 +4,12 @@ import FileSystem from "libs/webnative/fs/filesystem";
 
 export class Keys extends Directory<KeyPair>
 {
-  constructor(fs: FileSystem) {
-    super(fs, ["keys"]);
+  constructor(fissionUser:string, fs: FileSystem) {
+    super(fissionUser, fs, ["keys"]);
   }
 
   async tryGetMyKey(): Promise<KeyPair | null> {
-    return await this.tryGetByName("me");
+    return await this.tryGetEntityByName("me");
   }
 
   async addMyKey(myKey: KeyPair) {
@@ -19,7 +19,7 @@ export class Keys extends Directory<KeyPair>
     if (await this.exists(["me"])) {
       throw new Error("The circles safe owner keypair cannot be modified.")
     }
-    return await this.addOrUpdate(myKey, true, "addMyKey");
+    return await this.addOrUpdateEntity(myKey, true, "addMyKey");
   }
 
   async maintainIndexes(change: DirectoryChangeType, entity: KeyPair, hint?: string): Promise<void> {

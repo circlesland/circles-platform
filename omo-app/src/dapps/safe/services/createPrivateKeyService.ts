@@ -1,10 +1,9 @@
 import {entropyToMnemonic} from "bip39";
 import {ProcessArtifact} from "../../../libs/o-processes/interfaces/processArtifact";
 import {CreatePrivateKeyContext} from "../processes/omo/createPrivateKey";
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
+import {setDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 export const createPrivateKeyService = async (context: CreatePrivateKeyContext) =>
 {

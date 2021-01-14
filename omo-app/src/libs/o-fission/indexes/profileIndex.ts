@@ -60,7 +60,7 @@ export class ProfileIndex extends Index
 
     const profileIndexCidResponse = await fetch("https://directory.omo.earth/directory");
     const profileIndexCid = await profileIndexCidResponse.text();
-    const profileIndexDataBuffer = await this.catCid(profileIndexCid);
+    const profileIndexDataBuffer = await Index.catCid(profileIndexCid);
     const profileIndexDataJson = profileIndexDataBuffer.toString();
     const profileIndex: ProfileIndexData = JSON.parse(profileIndexDataJson);
 

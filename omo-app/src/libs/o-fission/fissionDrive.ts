@@ -4,8 +4,13 @@ import { Keys } from "./directories/keys";
 import {AuthSucceeded, Continuation, loadFileSystem} from "libs/webnative";
 import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
-import { Offers } from "./directories/offers";
 import {SessionLogs} from "./directories/logs";
+import {Offers} from "./directories/offers";
+import {tryGetDappState} from "../o-os/loader";
+import {FissionAuthState} from "../../dapps/fissionauth/manifest";
+import {BehaviorSubject} from "rxjs";
+import {Envelope} from "../o-os/interfaces/envelope";
+import {initAuth} from "./initFission";
 
 export class FissionDrive
 {
@@ -59,13 +64,72 @@ export class FissionDrive
   async init()
   {
     this._fs = await loadFileSystem(this._fissionAuth.permissions, this._fissionAuth.username);
-    this._sessionLogs = new SessionLogs(this._fs);
-    this._profiles = new Profiles(this._fs);
-    this._keys = new Keys(this._fs);
-    this._transactions = new CirclesTransactions(this._fs);
-    this._tokens = new CirclesTokens(this._fs);
-    this._offers = new Offers(this._fs);
+    this._sessionLogs = new SessionLogs(this._fissionAuth.username, this._fs);
+    this._profiles = new Profiles(this._fissionAuth.username, this._fs);
+    this._keys = new Keys(this._fissionAuth.username, this._fs);
+    this._transactions = new CirclesTransactions(this._fissionAuth.username, this._fs);
+    this._tokens = new CirclesTokens(this._fissionAuth.username, this._fs);
+    this._offers = new Offers(this._fissionAuth.username, this._fs);
   }
+}
+let initializingDrive:boolean = false;
+
+export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>) : Promise<TOut>
+{
+  let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  if (!fissionAuthState)
+  {
+    const initAuthSuccess = await initAuth();
+    if (!initAuthSuccess)
+    {
+      throw new Error("Cannot access your fission drive: The authorization failed.");
+    }
+  }
+
+  fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  if (!fissionAuthState.fission)
+  {
+    fissionAuthState.fission = new BehaviorSubject<Envelope<FissionDrive>>(null);
+  }
+
+  const existingDrive = fissionAuthState.fission.getValue()?.payload;
+  if (!existingDrive && !initializingDrive)
+  {
+    const initFsBegin = Date.now();
+    initializingDrive = true;
+    // FS is not loaded yet. Load it.
+    const drive = new FissionDrive(fissionAuthState.fissionState)
+    drive.init().then(() => {
+      const current = fissionAuthState.fission.getValue();
+      fissionAuthState.fission.next({
+        signal: current?.signal,
+        payload: drive
+      });
+      const initFsEnd = Date.now();
+      const initFsDuration = (initFsEnd - initFsBegin) / 1000
+      window.o.logger.log("initFsDuration", initFsDuration)
+      initializingDrive = false;
+    });
+  }
+
+  return new Promise((resolve, reject) =>
+  {
+    const sub = fissionAuthState.fission.subscribe(async fissionDrive =>
+    {
+      if (!fissionDrive || !(fissionDrive.payload instanceof FissionDrive))
+        return;
+
+      func(fissionDrive.payload)
+        .then(result => {
+          resolve(<TOut>result);
+          sub.unsubscribe();
+        })
+        .catch(error => {
+          reject(error);
+          sub.unsubscribe();
+        });
+    });
+  });
 }
 
 export async function withTimeout<T>(operationName:string, func: () => Promise<T>, timeout?:number) : Promise<T>

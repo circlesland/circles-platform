@@ -12,7 +12,7 @@ import { BN } from "ethereumjs-util";
 import { config } from "../../../libs/o-circles-protocol/config";
 import { setDappState, tryGetDappState } from "../../../libs/o-os/loader";
 import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAccount";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 function isValidKeyPhrase(value) {
     try {
         const privateKey = mnemonicToEntropy(value);

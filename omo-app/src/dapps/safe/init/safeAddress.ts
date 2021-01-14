@@ -1,7 +1,6 @@
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
+import {setDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 export async function initSafeAddress()
 {

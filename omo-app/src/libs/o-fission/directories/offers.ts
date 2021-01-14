@@ -1,47 +1,224 @@
-import { Directory, DirectoryChangeType } from "./directory";
-import { Profile } from "../entities/profile";
-import FileSystem from "libs/webnative/fs/filesystem";
-import {Offer} from "../entities/offer";
-import {of} from "rxjs";
+import {BinaryFile, Directory, DirectoryChangeType} from "../directories/directory";
+import FileSystem from "../../../../libs/webnative/fs/filesystem";
+import {Entity} from "../entities/entity";
+import {withTimeout} from "../fissionDrive";
+import {FissionDir} from "../fissionBase";
 
-export class Offers extends Directory<Offer>
+export class Offers extends FissionDir
 {
-  constructor(fs: FileSystem) {
-    super(fs, ["offers"]);
+  constructor(fissionUser: string, fs: FileSystem)
+  {
+    super(fissionUser, fs, ["offers"]);
   }
 
-  async publishOffer(name:string)
+  async tryGetOfferByName(name:string) : Promise<Offer|null>
   {
-    const offer = await this.tryGetByName(name);
-    if (!offer)
-      throw new Error(`Couldn't find an offer with the name '${name}'`);
-
-    offer.isPublished = true;
-    await this.addOrUpdate(offer);
-  }
-
-  async unpublishOffer(name:string)
-  {
-    const offer = await this.tryGetByName(name);
-    if (!offer)
-      throw new Error(`Couldn't find an offer with the name '${name}'`);
-
-    offer.isPublished = false;
-    await this.addOrUpdate(offer);
-  }
-
-  async maintainIndexes(change: DirectoryChangeType, entity: Offer, hint?: string): Promise<void>
-  {
-    if (entity.isPublished)
+    return await withTimeout(`tryGetOfferByName(${this.getPath([name])}`, async () =>
     {
-      await this.fs.add("public/Apps/MamaOmo/OmoSapien/offers/" + entity.name, JSON.stringify(entity));
+      const offerMetadataData = await this.tryGetFileByPath([name, "metadata"]);
+      if (!offerMetadataData)
+      {
+        return null;
+      }
+
+      const offerMetadataJson = offerMetadataData.toString();
+      const offerMetadata:OfferMetadata = JSON.parse(offerMetadataJson);
+      if (!offerMetadata)
+      {
+        console.warn("Encountered an unreadable offer: " + name);
+        return null;
+      }
+
+      return new Offer(
+        this.pathParts.concat([offerMetadata.name])
+        , this._fissionUser
+        , this.fs
+        , offerMetadata);
+    });
+  }
+
+  async createOffer(name: string, description: OfferDescription, publish: boolean = true): Promise<Offer>
+  {
+    return await withTimeout(`createOffer(${this.getPath([name])}, publish: ${publish})`, async () =>
+    {
+      const exists = await this.exists([name]);
+      if (exists)
+      {
+        throw new Error(`You have already created an offer with the name '${name}'.`);
+      }
+
+      const offerMetadata: OfferMetadata = {
+        owner: this._fissionUser,
+        description: description,
+        createdAt: new Date().toJSON(),
+        name: name,
+        pictures: []
+      };
+
+      const offer = new Offer(this.pathParts.concat([name]), this._fissionUser, this.fs);
+      await offer.addOrUpdateEntity(offerMetadata);
+
+      if (publish)
+      {
+        await offer.publish();
+      }
+
+      return offer;
+    });
+  }
+}
+
+export class Offer extends Directory<OfferMetadata | BinaryFile> implements Entity
+{
+  private _cachedMetadata: OfferMetadata;
+  readonly name: string;
+
+  constructor(pathParts: string[],
+              fissionUser: string,
+              fs: FileSystem,
+              offerMetadata?:OfferMetadata)
+  {
+    super(fissionUser, fs, pathParts);
+    this.name = pathParts[pathParts.length - 1];
+    this._cachedMetadata = offerMetadata;
+  }
+
+  async tryGetMetadata(): Promise<OfferMetadata | null>
+  {
+    if (this._cachedMetadata)
+    {
+      return this._cachedMetadata;
+    }
+
+    this._cachedMetadata = await this.tryGetEntityByName<OfferMetadata>("metadata");
+    return this._cachedMetadata;
+  }
+
+  protected async setMetadata(offerMetadata: OfferMetadata)
+  {
+    offerMetadata.owner = this._fissionUser;
+    offerMetadata.lastUpdatedAt = new Date().toJSON();
+    offerMetadata.name = "metadata";
+    this._cachedMetadata = offerMetadata;
+
+    return await this.addOrUpdateEntity(this._cachedMetadata);
+  }
+
+  async setDescription(description: OfferDescription)
+  {
+    if (this._cachedMetadata)
+    {
+      this._cachedMetadata.description = description;
     }
     else
     {
-      if (await this.fs.exists("public/Apps/MamaOmo/OmoSapien/offers/" + entity.name))
-      {
-        await this.fs.rm("public/Apps/MamaOmo/OmoSapien/offers/" + entity.name);
-      }
+      await this.tryGetMetadata();
     }
+
+    if (!this._cachedMetadata)
+    {
+      throw new Error("The offer has no metadata yet. You need to create a metadata file first before setting a description.");
+    }
+
+    await this.setMetadata(this._cachedMetadata);
   }
+
+  async addPicture(pictureData: Buffer): Promise<string>
+  {
+    const metadata = await this.tryGetMetadata();
+    if (!metadata)
+    {
+      throw new Error("A 'metadata' file must exist prior to adding pictures to an offer.");
+    }
+    if (!metadata.pictures)
+    {
+      metadata.pictures = [];
+    }
+
+    const pictureFilename = Directory.generateRandomHexString();
+    await this.addOrUpdateFile(pictureFilename, pictureData);
+
+    metadata.pictures.push({
+      file: {
+        name: pictureFilename
+      }
+    });
+
+    return pictureFilename;
+  }
+
+  async removePicture(name: string)
+  {
+    const metadata = await this.tryGetMetadata();
+    if (!metadata || !metadata.pictures)
+    {
+      throw new Error("A 'metadata' file must exist prior to editing pictures of an offer.");
+    }
+    if (!await this.exists([name]) || metadata.pictures.find(o => o.file.name == name))
+    {
+      throw new Error("A product picture with the name '" + name + "' doesn't exist.")
+    }
+    await this.tryRemove(name);
+  }
+
+  async publishOffer()
+  {
+    await fetch("https://directory.omo.earth/update/offers/" + this._fissionUser, {
+      method: "POST"
+    });
+  }
+
+  async unpublishOffer()
+  {
+    await fetch("https://directory.omo.earth/update/offers/" + this._fissionUser, {
+      method: "POST"
+    });
+  }
+
+  async maintainIndexes(change: DirectoryChangeType, entity: OfferMetadata | BinaryFile, indexHint?: string)
+  {
+  }
+}
+
+export interface OfferMetadata extends Entity
+{
+  createdAt: string;
+  lastUpdatedAt?: string;
+  owner: string;
+  description: OfferDescription;
+  pictures: OfferPicture[];
+}
+
+export interface OfferDescription
+{
+  isPublished: boolean;
+  productName: string;
+  productPrice: string;
+  productDescription: string;
+  productLocation?: OfferLocation;
+}
+
+export interface OfferLocation
+{
+  place_id: number,
+  licence: string,
+  osm_type: string,
+  osm_id: number,
+  boundingbox: number[],
+  lat: number,
+  lon: number,
+  display_name: string,
+  class: string,
+  type: string,
+  importance: number,
+  icon: string
+}
+
+export interface OfferPicture
+{
+  width?: number;
+  height?: number;
+  title?: string;
+  description?: string;
+  file: BinaryFile;
 }

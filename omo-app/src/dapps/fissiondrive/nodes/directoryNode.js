@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { FsNode } from "./fsNode";
 import { tryGetDappState } from "../../../libs/o-os/loader";
 import { FileNode } from "./fileNode";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 export class DirectoryNode extends FsNode {
     constructor() {
         super(...arguments);

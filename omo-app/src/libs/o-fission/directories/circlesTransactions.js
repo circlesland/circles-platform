@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Directory } from "./directory";
 export class CirclesTransactions extends Directory {
-    constructor(fs) {
-        super(fs, ["transactions"]);
+    constructor(fissionUser, fs) {
+        super(fissionUser, fs, ["transactions"]);
     }
     maintainIndexes(change, entity, hint) {
         return __awaiter(this, void 0, void 0, function* () {

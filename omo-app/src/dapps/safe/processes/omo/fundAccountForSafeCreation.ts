@@ -10,9 +10,7 @@ import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
 import {tryGetDappState} from "../../../../libs/o-os/loader";
 import {config} from "../../../../libs/o-circles-protocol/config";
 import {OmoSafeState} from "../../manifest";
-import {OmoSapienState} from "../../../omosapien/manifest";
 import {FissionAuthState} from "../../../fissionauth/manifest";
-import {runWithDrive} from "../../../../libs/o-fission/initFission";
 
 export interface FundAccountContext extends ProcessContext {
   data: {

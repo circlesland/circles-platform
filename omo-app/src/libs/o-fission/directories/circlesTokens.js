@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Directory } from "./directory";
 export class CirclesTokens extends Directory {
-    constructor(fs) {
-        super(fs, ["tokens"]);
+    constructor(fissionUser, fs) {
+        super(fissionUser, fs, ["tokens"]);
     }
     tryGetMyToken() {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield this.tryGetByName("me");
+            const result = yield this.tryGetEntityByName("me");
             if (!result) {
                 return null;
             }
@@ -26,7 +26,7 @@ export class CirclesTokens extends Directory {
             if (myToken.name !== "me") {
                 throw new Error("The own token must always have the name 'me'.");
             }
-            return yield this.addOrUpdate(myToken, true, "addMyToken");
+            return yield this.addOrUpdateEntity(myToken, true, "addMyToken");
         });
     }
     maintainIndexes(change, entity, hint) {

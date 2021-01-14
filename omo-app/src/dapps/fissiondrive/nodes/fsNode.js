@@ -8,8 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { tryGetDappState } from "../../../libs/o-os/loader";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
-//import {defaultTimeout} from "libs/webnative/logFormatted";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 export class FsNode {
     constructor(parent, name) {
         this.childNodes = [];

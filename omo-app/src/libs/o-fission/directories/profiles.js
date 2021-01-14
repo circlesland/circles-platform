@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Directory } from "./directory";
 export class Profiles extends Directory {
-    constructor(fs) {
-        super(fs, ["profiles"]);
+    constructor(fissionUser, fs) {
+        super(fissionUser, fs, ["profiles"]);
     }
     tryGetMyProfile() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.tryGetByName("me");
+            return yield this.tryGetEntityByName("me");
         });
     }
     tryGetMyAvatar() {
@@ -47,7 +47,7 @@ export class Profiles extends Directory {
             if (myProfile.name !== "me") {
                 throw new Error("The own profile must always have the name 'me'.");
             }
-            return yield this.addOrUpdate(myProfile, true, "addOrUpdateMyProfile");
+            return yield this.addOrUpdateEntity(myProfile, true, "addOrUpdateMyProfile");
         });
     }
     maintainIndexes(change, entity, hint) {

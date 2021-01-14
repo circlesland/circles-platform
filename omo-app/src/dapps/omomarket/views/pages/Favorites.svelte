@@ -4,12 +4,12 @@
   import {runWithDrive} from "../../../../libs/o-fission/initFission";
   import ListItem from "../../../../libs/o-views/molecules/ListItem.svelte";
   import {ListItem as IListItem} from "../../../../libs/o-views/interfaces/molecules";
-  import {Offer} from "../../../../libs/o-fission/entities/offer";
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
   import {faEdit, faGlobe, faHome} from "@fortawesome/free-solid-svg-icons";
   import {RunProcess} from "../../../../libs/o-events/runProcess";
   import {publishOffer, PublishOfferContext} from "../../processes/publishOffer/publishOffer";
   import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer/unpublishOffer";
+  import {Offer} from "../../../../libs/o-fission/directories/offers";
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   let myOffers: Offer[] = [];
@@ -20,7 +20,7 @@
     {
       await runWithDrive(async fissiondrive =>
       {
-        myOffers = await fissiondrive.offers.listItems();
+        // myOffers = await fissiondrive.offers.listItems();
       });
     }
   }
@@ -42,7 +42,7 @@
       }
     }];
 
-    if (!offer.isPublished)
+    if (!true /*offer.isPublished*/)
     {
       actions.push({
         icon: faGlobe,
@@ -53,7 +53,7 @@
             processContext.data.offerName = {
               key: "offerName",
               isValid: true,
-              value: offer.name,
+              value: "", // offer.name,
               type: "string"
             };
             return processContext;
@@ -70,7 +70,7 @@
             processContext.data.offerName = {
               key: "offerName",
               isValid: true,
-              value: offer.name,
+              value: "", // offer.name,
               type: "string"
             };
             return processContext;
@@ -83,11 +83,11 @@
     // const country = locationParts[locationParts.length - 1];
     const offerItem: IListItem = <IListItem>{
       data: {
-        title: offer.productName,
-        image: offer.productPicture,
-        description: offer.productDescription,
-        balance: offer.productPrice,
-        subtitle: offer.productDescription,
+        title: "", // offer.productName,
+        image: "", // offer.productPicture,
+        description: "", // offer.productDescription,
+        balance: "", // offer.productPrice,
+        subtitle: "", // offer.productDescription,
         actions: actions
       }
     };

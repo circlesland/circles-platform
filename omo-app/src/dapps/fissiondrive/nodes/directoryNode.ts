@@ -2,7 +2,7 @@ import {FsNode} from "./fsNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {FileNode} from "./fileNode";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 export class DirectoryNode extends FsNode
 {

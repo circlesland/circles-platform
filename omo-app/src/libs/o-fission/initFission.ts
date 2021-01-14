@@ -1,69 +1,6 @@
 import {setDappState, tryGetDappState} from "../o-os/loader";
 import {FissionAuthState} from "../../dapps/fissionauth/manifest";
-import {FissionDrive} from "./fissionDrive";
 import {BehaviorSubject} from "rxjs";
-import {Envelope} from "../o-os/interfaces/envelope";
-
-export let initializingDrive:boolean = false;
-
-export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>) : Promise<TOut>
-{
-  let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState)
-  {
-    const initAuthSuccess = await initAuth();
-    if (!initAuthSuccess)
-    {
-      throw new Error("Cannot access your fission drive: The authorization failed.");
-    }
-  }
-
-  fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState.fission)
-  {
-    fissionAuthState.fission = new BehaviorSubject<Envelope<FissionDrive>>(null);
-  }
-
-  const existingDrive = fissionAuthState.fission.getValue()?.payload;
-  if (!existingDrive && !initializingDrive)
-  {
-    const initFsBegin = Date.now();
-    initializingDrive = true;
-    // FS is not loaded yet. Load it.
-    const drive = new FissionDrive(fissionAuthState.fissionState)
-    drive.init().then(() => {
-      const current = fissionAuthState.fission.getValue();
-      fissionAuthState.fission.next({
-        signal: current?.signal,
-        payload: drive
-      });
-      const initFsEnd = Date.now();
-      const initFsDuration = (initFsEnd - initFsBegin) / 1000
-      window.o.logger.log("initFsDuration", initFsDuration)
-      initializingDrive = false;
-    });
-  }
-
-  return new Promise((resolve, reject) =>
-  {
-    const sub = fissionAuthState.fission.subscribe(async fissionDrive =>
-    {
-      if (!fissionDrive || !(fissionDrive.payload instanceof FissionDrive))
-        return;
-
-      func(fissionDrive.payload)
-        .then(result => {
-          resolve(<TOut>result);
-          sub.unsubscribe();
-        })
-        .catch(error => {
-          reject(error);
-          sub.unsubscribe();
-        });
-    });
-  });
-}
-
 
 export async function initAuth()
 {

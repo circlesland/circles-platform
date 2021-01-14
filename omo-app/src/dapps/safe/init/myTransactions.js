@@ -13,7 +13,7 @@ import { BN } from "ethereumjs-util";
 import { DelayedTrigger } from "../../../libs/o-os/delayedTrigger";
 import { CirclesToken } from "../../../libs/o-circles-protocol/model/circlesToken";
 import { config } from "../../../libs/o-circles-protocol/config";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 let initMyTransactionLogger;
 // The consumable output of this init step (deduplicated ordered list of transactions)
 const myTransactionsSubject = new BehaviorSubject({
@@ -63,10 +63,10 @@ const updateCacheTrigger = new DelayedTrigger(1000, () => __awaiter(void 0, void
     window.o.logger.log("Writing transactions to fission cache ...");
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
-        yield fissionDrive.transactions.addOrUpdate(transactionBlocks);
+        yield fissionDrive.transactions.addOrUpdateEntity(transactionBlocks);
         const currentBlock = yield config.getCurrent().web3().eth.getBlockNumber();
         // Go trough all tokens and find the first block that contains a transactions
-        const existingKnownTokensList = (_a = (yield fissionDrive.tokens.tryGetByName("tokens"))) !== null && _a !== void 0 ? _a : { entries: {} };
+        const existingKnownTokensList = (_a = (yield fissionDrive.tokens.tryGetEntityByName("tokens"))) !== null && _a !== void 0 ? _a : { entries: {} };
         yield Promise.all(Object.keys(tokensByAddress).map((tokenAddress) => __awaiter(void 0, void 0, void 0, function* () {
             var _b;
             const firstBlockWithEvents = Object.values((_b = myTransactions[tokenAddress]) !== null && _b !== void 0 ? _b : {})
@@ -85,7 +85,7 @@ const updateCacheTrigger = new DelayedTrigger(1000, () => __awaiter(void 0, void
                 existingKnownTokensList.entries[tokenAddress].noTransactionsUntilBlockNo = currentBlock;
             }
         })));
-        yield fissionDrive.tokens.addOrUpdate(existingKnownTokensList);
+        yield fissionDrive.tokens.addOrUpdateEntity(existingKnownTokensList);
         window.o.logger.log("Wrote transactions to fission cache.");
     }));
 }));
@@ -147,7 +147,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, () => __awai
 function feedCachedTransactions(transactions, tokenAddresses) {
     return __awaiter(this, void 0, void 0, function* () {
         yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
-            const cachedTransactions = yield fissionDrive.transactions.tryGetByName("transactions");
+            const cachedTransactions = yield fissionDrive.transactions.tryGetEntityByName("transactions");
             if (!cachedTransactions) {
                 return;
             }

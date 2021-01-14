@@ -14,7 +14,7 @@ import { CirclesToken } from "../../../libs/o-circles-protocol/model/circlesToke
 import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAccount";
 import { BlockIndex } from "../../../libs/o-os/blockIndex";
 import { ProgressSignal } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 const myKnownTokensSubject = new BehaviorSubject({
     payload: {}
 });
@@ -23,7 +23,7 @@ const myKnownTokens = {};
 const storeToCacheTrigger = new DelayedTrigger(500, () => __awaiter(void 0, void 0, void 0, function* () {
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
-        const existingKnownTokensList = (_a = (yield fissionDrive.tokens.tryGetByName("tokens"))) !== null && _a !== void 0 ? _a : {
+        const existingKnownTokensList = (_a = (yield fissionDrive.tokens.tryGetEntityByName("tokens"))) !== null && _a !== void 0 ? _a : {
             name: "tokens",
             entries: {}
         };
@@ -38,7 +38,7 @@ const storeToCacheTrigger = new DelayedTrigger(500, () => __awaiter(void 0, void
             };
         });
         existingKnownTokensList.entries = existingKnownTokens;
-        yield fissionDrive.tokens.addOrUpdate(existingKnownTokensList);
+        yield fissionDrive.tokens.addOrUpdateEntity(existingKnownTokensList);
     }));
 }));
 const updateTrigger = new DelayedTrigger(30, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,7 +55,7 @@ export function initMyKnownTokens() {
             const safeState = tryGetDappState("omo.safe:1");
             const circlesAccount = new CirclesAccount(safeState.mySafeAddress);
             try {
-                const existingKnownTokensList = yield fissionDrive.tokens.tryGetByName("tokens");
+                const existingKnownTokensList = yield fissionDrive.tokens.tryGetEntityByName("tokens");
                 if (existingKnownTokensList) {
                     const existingKnownTokens = existingKnownTokensList.entries;
                     Object.values(existingKnownTokens).forEach(cachedToken => {

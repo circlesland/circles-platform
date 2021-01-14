@@ -8,49 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { withTimeout } from "../fissionDrive";
-export class Directory {
-    constructor(fs, pathParts, entityFactory) {
+import { FissionDir } from "../fissionBase";
+export class Directory extends FissionDir {
+    constructor(fissionUser, fs, pathParts, entityFactory, entitySerializer) {
+        super(fissionUser, fs, pathParts);
         window.o.logger.log("Directory.ctor(pathParts:" + pathParts.join(",") + ")");
-        this._pathParts = pathParts;
-        this._fs = fs;
         this._entityFactory = entityFactory;
-    }
-    get fs() {
-        return this._fs;
-    }
-    getPath(pathParts) {
-        return this.fs.appPath(pathParts
-            ? this._pathParts.concat(pathParts)
-            : this._pathParts);
-    }
-    exists(pathParts) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return withTimeout(`exists(${this.getPath(pathParts)})`, () => this.fs.exists(this.getPath(pathParts)), Directory.defaultTimeout);
-        });
-    }
-    ensureDirectoryExists(pathParts, publish = true) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield withTimeout(`ensureDirectoryExists(${this.getPath(pathParts)})`, () => __awaiter(this, void 0, void 0, function* () {
-                if (!(yield this.exists(pathParts))) {
-                    yield this.fs.mkdir(this.getPath(pathParts));
-                }
-            }), Directory.defaultTimeout);
-            if (publish) {
-                yield this.fs.publish();
-            }
-        });
-    }
-    listNames() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return withTimeout(`listNames(${this.getPath()})`, () => __awaiter(this, void 0, void 0, function* () {
-                if (!(yield this.exists())) {
-                    return [];
-                }
-                const listing = yield this.fs.ls(this.getPath());
-                const list = Object.entries(listing);
-                return list.map(([name, _]) => name);
-            }), Directory.defaultTimeout);
-        });
+        this._entitySerializer = entitySerializer;
     }
     listItems() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -60,13 +24,13 @@ export class Directory {
                     return this.fs.cat(this.getPath([name]));
                 }));
                 if (this._entityFactory) {
-                    return items.map(o => this._entityFactory(o.toString()));
+                    return yield Promise.all(items.map((o) => __awaiter(this, void 0, void 0, function* () { return yield this._entityFactory(o.toString()); })));
                 }
                 return items.map(item => JSON.parse(item));
             }), Directory.defaultTimeout);
         });
     }
-    tryGetByName(entityName) {
+    tryGetEntityByName(entityName) {
         return __awaiter(this, void 0, void 0, function* () {
             return withTimeout(`tryGetByName(${this.getPath([entityName])})`, () => __awaiter(this, void 0, void 0, function* () {
                 window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
@@ -77,37 +41,39 @@ export class Directory {
                 window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
                 const contents = yield this.fs.cat(this.getPath([entityName]));
                 if (this._entityFactory) {
-                    return this._entityFactory(contents.toString());
+                    return (yield this._entityFactory(contents.toString()));
                 }
                 return JSON.parse(contents);
             }), Directory.defaultTimeout);
         });
     }
-    addOrUpdate(entity, publish = true, indexHint) {
+    addOrUpdateEntity(entity, publish = true, indexHint) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, () => __awaiter(this, void 0, void 0, function* () {
                 yield this.ensureDirectoryExists(null, publish);
                 const result = {
-                    cid: "",
                     added: yield this.exists([entity.name]),
                     entity: entity
                 };
-                yield this.fs.add(this.getPath([entity.name]), JSON.stringify(entity));
+                const serializedEntity = this._entitySerializer
+                    ? yield this._entitySerializer(entity)
+                    : JSON.stringify(entity);
+                yield this.fs.add(this.getPath([entity.name]), serializedEntity);
                 return result;
             }), Directory.defaultTimeout);
             yield withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, () => __awaiter(this, void 0, void 0, function* () {
                 yield this.maintainIndexes(result.added ? "add" : "update", entity, indexHint);
             }), Directory.defaultTimeout);
-            result.cid = publish
-                ? yield this.fs.publish()
-                : null;
-            return result;
+            if (publish) {
+                yield this.fs.publish();
+            }
+            return result.added;
         });
     }
     tryRemove(entityName, publish = true, indexHint) {
         return __awaiter(this, void 0, void 0, function* () {
             const entity = yield withTimeout(`tryRemove(${this.getPath([entityName])}, publish: ${publish})`, () => __awaiter(this, void 0, void 0, function* () {
-                const entity = yield this.tryGetByName(entityName);
+                const entity = yield this.tryGetEntityByName(entityName);
                 if (!entity) {
                     return null;
                 }
@@ -129,4 +95,3 @@ export class Directory {
         });
     }
 }
-Directory.defaultTimeout = 30000;

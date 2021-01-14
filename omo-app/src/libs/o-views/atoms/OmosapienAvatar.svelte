@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {runWithDrive} from "../../o-fission/initFission";
+  import {runWithDrive} from "../../o-fission/fissionDrive";
   import {ProfileIndex} from "../../o-fission/indexes/profileIndex";
 
   export let fissionUsername:string;

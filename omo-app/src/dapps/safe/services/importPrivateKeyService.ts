@@ -3,9 +3,7 @@ import {config} from "../../../libs/o-circles-protocol/config";
 import {ByteString} from "../../../libs/o-circles-protocol/interfaces/byteString";
 import {ProcessArtifact} from "../../../libs/o-processes/interfaces/processArtifact";
 import {ImportPrivateKeyContext} from "../processes/omo/importPrivateKey";
-import {tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 function isValidKeyPhrase(value: string): string | null {
   try {

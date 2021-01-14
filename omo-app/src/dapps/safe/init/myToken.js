@@ -12,7 +12,7 @@ import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAc
 import { CirclesToken } from "../../../libs/o-circles-protocol/model/circlesToken";
 import { BN } from "ethereumjs-util";
 import { ProgressSignal } from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 export function initMyToken() {
     return __awaiter(this, void 0, void 0, function* () {
         yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {

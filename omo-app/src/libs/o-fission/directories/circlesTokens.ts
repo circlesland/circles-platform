@@ -5,12 +5,12 @@ import {Token} from "../entities/token";
 
 export class CirclesTokens extends Directory<CachedTokens>
 {
-  constructor(fs: FileSystem) {
-    super(fs, ["tokens"]);
+  constructor(fissionUser:string, fs: FileSystem) {
+    super(fissionUser, fs, ["tokens"]);
   }
 
   async tryGetMyToken(): Promise<Token | null> {
-    const result = await this.tryGetByName("me");
+    const result = await this.tryGetEntityByName("me");
     if (!result)
     {
       return null;
@@ -23,7 +23,7 @@ export class CirclesTokens extends Directory<CachedTokens>
     if (myToken.name !== "me") {
       throw new Error("The own token must always have the name 'me'.");
     }
-    return await this.addOrUpdate(<any>myToken, true, "addMyToken");
+    return await this.addOrUpdateEntity(<any>myToken, true, "addMyToken");
   }
 
   async maintainIndexes(change: DirectoryChangeType, entity: CachedTokens, hint?: string): Promise<void> {

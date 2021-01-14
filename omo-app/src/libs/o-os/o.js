@@ -12,6 +12,7 @@ import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
 import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 import { config } from "../o-circles-protocol/config";
 import * as webnative from "libs/webnative";
+import { runWithDrive } from "../o-fission/fissionDrive";
 /**
  * Gets all environment properties like the currently logged-on account, token and profile.
  */
@@ -82,7 +83,6 @@ export function newLogger(name, parent) {
     };
     return l;
 }
-import { runWithDrive } from "../o-fission/initFission";
 window.addEventListener('error', function (event) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -93,7 +93,7 @@ window.addEventListener('error', function (event) {
                 message: event.message
             });
             yield runWithDrive((drive) => __awaiter(this, void 0, void 0, function* () {
-                yield drive.sessionLogs.addOrUpdate(sessionLog, true);
+                yield drive.sessionLogs.addOrUpdateEntity(sessionLog, true);
             }));
         }
         catch (e) {
@@ -104,7 +104,7 @@ window.addEventListener('error', function (event) {
 setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
-            yield drive.sessionLogs.addOrUpdate(sessionLog, false);
+            yield drive.sessionLogs.addOrUpdateEntity(sessionLog, false);
             if (sessionLog.messages.length > 10000) {
                 sessionLog = {
                     name: sessionLog.name + "_" + Date.now(),
@@ -120,7 +120,7 @@ setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
 setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield runWithDrive((drive) => __awaiter(void 0, void 0, void 0, function* () {
-            yield drive.sessionLogs.addOrUpdate(sessionLog, true);
+            yield drive.sessionLogs.addOrUpdateEntity(sessionLog, true);
             if (sessionLog.messages.length > 10000) {
                 sessionLog = {
                     name: sessionLog.name + "_" + Date.now(),

@@ -1,10 +1,9 @@
 import { BN } from "ethereumjs-util";
 import {DeploySafeContext} from "../processes/safe/deploySafe";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
 import {OmoSapienState} from "../../omosapien/manifest";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 export const deploySafeService = async (context: DeploySafeContext) =>
 {

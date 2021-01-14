@@ -1,10 +1,7 @@
 import {TreeNode} from "../interfaces/treeNode";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
-import {FissionDrive} from "../../../libs/o-fission/fissionDrive";
-import {Subscription} from "rxjs";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
-//import {defaultTimeout} from "libs/webnative/logFormatted";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 export abstract class FsNode implements TreeNode
 {

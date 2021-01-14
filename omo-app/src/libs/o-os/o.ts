@@ -8,6 +8,7 @@ import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
 import {config} from "../o-circles-protocol/config";
 import * as webnative from "libs/webnative";
 import {SessionLog} from "../o-fission/entities/sessionLog";
+import {runWithDrive} from "../o-fission/fissionDrive";
 
 export type Ethereum = {
   web3: Web3,
@@ -102,7 +103,6 @@ export function newLogger(name:string, parent?:any)
   return l;
 }
 
-import {runWithDrive} from "../o-fission/initFission";
 window.addEventListener('error', async function(event)
 {
   try
@@ -115,7 +115,7 @@ window.addEventListener('error', async function(event)
     });
     await runWithDrive(async drive =>
     {
-      await drive.sessionLogs.addOrUpdate(sessionLog, true);
+      await drive.sessionLogs.addOrUpdateEntity(sessionLog, true);
     });
   } catch (e)
   {
@@ -129,7 +129,7 @@ setInterval(async () => {
   {
     await runWithDrive(async drive =>
     {
-      await drive.sessionLogs.addOrUpdate(sessionLog, false);
+      await drive.sessionLogs.addOrUpdateEntity(sessionLog, false);
       if (sessionLog.messages.length > 10000) {
         sessionLog = {
           name: sessionLog.name + "_" + Date.now(),
@@ -149,7 +149,7 @@ setInterval(async () => {
   {
     await runWithDrive(async drive =>
     {
-      await drive.sessionLogs.addOrUpdate(sessionLog, true);
+      await drive.sessionLogs.addOrUpdateEntity(sessionLog, true);
       if (sessionLog.messages.length > 10000) {
         sessionLog = {
           name: sessionLog.name + "_" + Date.now(),

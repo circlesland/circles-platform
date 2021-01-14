@@ -13,7 +13,7 @@ import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransac
 import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
 import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
 import {Token} from "../../../libs/o-fission/entities/token";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 import {Logger} from "../../../libs/o-os/interfaces/shell";
 
@@ -92,11 +92,11 @@ const updateCacheTrigger = new DelayedTrigger(1000, async () =>
   window.o.logger.log("Writing transactions to fission cache ...");
   await runWithDrive(async fissionDrive =>
   {
-    await fissionDrive.transactions.addOrUpdate(transactionBlocks);
+    await fissionDrive.transactions.addOrUpdateEntity(transactionBlocks);
     const currentBlock = await config.getCurrent().web3().eth.getBlockNumber();
 
     // Go trough all tokens and find the first block that contains a transactions
-    const existingKnownTokensList = (await fissionDrive.tokens.tryGetByName("tokens")) ?? <CachedTokens>{entries: {}};
+    const existingKnownTokensList = (await fissionDrive.tokens.tryGetEntityByName("tokens")) ?? <CachedTokens>{entries: {}};
     await Promise.all(Object.keys(tokensByAddress).map(async tokenAddress =>
     {
       const firstBlockWithEvents = Object.values(myTransactions[tokenAddress] ?? {})
@@ -120,7 +120,7 @@ const updateCacheTrigger = new DelayedTrigger(1000, async () =>
       }
     }));
 
-    await fissionDrive.tokens.addOrUpdate(existingKnownTokensList);
+    await fissionDrive.tokens.addOrUpdateEntity(existingKnownTokensList);
     window.o.logger.log("Wrote transactions to fission cache.");
   });
 });
@@ -201,7 +201,7 @@ async function feedCachedTransactions(transactions: Subject<SystemEvent>, tokenA
 {
   await runWithDrive(async fissionDrive =>
   {
-    const cachedTransactions = await fissionDrive.transactions.tryGetByName("transactions");
+    const cachedTransactions = await fissionDrive.transactions.tryGetEntityByName("transactions");
     if (!cachedTransactions)
     {
       return;

@@ -4,12 +4,12 @@ import FileSystem from "libs/webnative/fs/filesystem";
 
 export class Profiles extends Directory<Profile>
 {
-  constructor(fs: FileSystem) {
-    super(fs, ["profiles"]);
+  constructor(fissionUser:string, fs: FileSystem) {
+    super(fissionUser, fs, ["profiles"]);
   }
 
   async tryGetMyProfile(): Promise<Profile | null> {
-    return await this.tryGetByName("me");
+    return await this.tryGetEntityByName("me");
   }
 
   async tryGetMyAvatar(): Promise<string | null>
@@ -45,7 +45,7 @@ export class Profiles extends Directory<Profile>
     if (myProfile.name !== "me") {
       throw new Error("The own profile must always have the name 'me'.");
     }
-    return await this.addOrUpdate(myProfile, true, "addOrUpdateMyProfile");
+    return await this.addOrUpdateEntity(myProfile, true, "addOrUpdateMyProfile");
   }
 
   async maintainIndexes(change: DirectoryChangeType, entity: Profile, hint?: string): Promise<void>

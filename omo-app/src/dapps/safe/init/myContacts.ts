@@ -8,8 +8,7 @@ import {CirclesProfile} from "../../../libs/o-circles-protocol/model/circlesProf
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {OmoSapienState} from "../../omosapien/manifest";
-// import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 import {ProfileIndex} from "../../../libs/o-fission/indexes/profileIndex";
 

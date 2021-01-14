@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { entropyToMnemonic, mnemonicToEntropy } from "bip39";
 import { config } from "../../../libs/o-circles-protocol/config";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 function isValidKeyPhrase(value) {
     try {
         const privateKey = mnemonicToEntropy(value);

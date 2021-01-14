@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { BN } from "ethereumjs-util";
 import { setDappState, tryGetDappState } from "../../../libs/o-os/loader";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 export const deploySafeService = (context) => __awaiter(void 0, void 0, void 0, function* () {
     const omosapienState = tryGetDappState("omo.sapien:1");
     const safeState = tryGetDappState("omo.safe:1");

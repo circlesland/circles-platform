@@ -1,10 +1,9 @@
 import {SignupAtCirclesContext} from "../processes/omo/signupAtCircles";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
 import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
 import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 export const hubSignupService = async (context: SignupAtCirclesContext) =>
 {

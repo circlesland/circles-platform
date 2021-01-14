@@ -6,12 +6,12 @@
 
   import Icon from "fa-svelte";
   import {featured, offers} from "../../data/offers";
-  import {Offer} from "../../../../libs/o-fission/entities/offer";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../../omosapien/manifest";
   import {runWithDrive} from "../../../../libs/o-fission/initFission";
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
   import {IpfsNode} from "../../../../libs/o-fission/indexes/ipfsNode";
+  import {Offer} from "../../../../libs/o-fission/directories/offers";
 
   const allOffers = [];
 
@@ -27,6 +27,7 @@
 
     });
 
+    /*
     if (omosapienState)
     {
       await runWithDrive(async fissiondrive =>
@@ -34,6 +35,7 @@
         myOffers = await fissiondrive.offers.listItems();
       });
     }
+    */
   }
 
   init();
@@ -44,14 +46,14 @@
     // const country = locationParts[locationParts.length - 1];
     const offerItem = {
       data: {
-        title: offer.productName,
-        image: offer.productPicture,
-        description: offer.productDescription,
-        price: offer.productPrice,
+        title: "", // offer.productName,
+        image: "", // offer.productPicture,
+        description: "", // offer.productDescription,
+        price: "", // offer.productPrice,
         state: "active",
         category: "mobility",
         // quantity: "",
-        city: offer.productLocation.display_name,
+        city: "", // offer.productLocation.display_name,
         country: "" /*country*/,
         delivery: "pickup or delivery",
         offeredBy: {
@@ -69,7 +71,7 @@
       if (offeredBy)
       {
         offerItem.data.offeredBy = {
-          fissionUsername: offer.offeredByFissionName,
+          fissionUsername: "", // offer.offeredByFissionName,
           image: "",
           firstName: offeredBy.firstName,
           lastName: offeredBy.lastName,

@@ -12,8 +12,11 @@ import { Keys } from "./directories/keys";
 import { loadFileSystem } from "libs/webnative";
 import { CirclesTransactions } from "./directories/circlesTransactions";
 import { CirclesTokens } from "./directories/circlesTokens";
-import { Offers } from "./directories/offers";
 import { SessionLogs } from "./directories/logs";
+import { Offers } from "./directories/offers";
+import { tryGetDappState } from "../o-os/loader";
+import { BehaviorSubject } from "rxjs";
+import { initAuth } from "./initFission";
 export class FissionDrive {
     constructor(fissionAuth) {
         this._fissionAuth = fissionAuth;
@@ -45,14 +48,64 @@ export class FissionDrive {
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             this._fs = yield loadFileSystem(this._fissionAuth.permissions, this._fissionAuth.username);
-            this._sessionLogs = new SessionLogs(this._fs);
-            this._profiles = new Profiles(this._fs);
-            this._keys = new Keys(this._fs);
-            this._transactions = new CirclesTransactions(this._fs);
-            this._tokens = new CirclesTokens(this._fs);
-            this._offers = new Offers(this._fs);
+            this._sessionLogs = new SessionLogs(this._fissionAuth.username, this._fs);
+            this._profiles = new Profiles(this._fissionAuth.username, this._fs);
+            this._keys = new Keys(this._fissionAuth.username, this._fs);
+            this._transactions = new CirclesTransactions(this._fissionAuth.username, this._fs);
+            this._tokens = new CirclesTokens(this._fissionAuth.username, this._fs);
+            this._offers = new Offers(this._fissionAuth.username, this._fs);
         });
     }
+}
+let initializingDrive = false;
+export function runWithDrive(func) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        let fissionAuthState = tryGetDappState("omo.fission.auth:1");
+        if (!fissionAuthState) {
+            const initAuthSuccess = yield initAuth();
+            if (!initAuthSuccess) {
+                throw new Error("Cannot access your fission drive: The authorization failed.");
+            }
+        }
+        fissionAuthState = tryGetDappState("omo.fission.auth:1");
+        if (!fissionAuthState.fission) {
+            fissionAuthState.fission = new BehaviorSubject(null);
+        }
+        const existingDrive = (_a = fissionAuthState.fission.getValue()) === null || _a === void 0 ? void 0 : _a.payload;
+        if (!existingDrive && !initializingDrive) {
+            const initFsBegin = Date.now();
+            initializingDrive = true;
+            // FS is not loaded yet. Load it.
+            const drive = new FissionDrive(fissionAuthState.fissionState);
+            drive.init().then(() => {
+                const current = fissionAuthState.fission.getValue();
+                fissionAuthState.fission.next({
+                    signal: current === null || current === void 0 ? void 0 : current.signal,
+                    payload: drive
+                });
+                const initFsEnd = Date.now();
+                const initFsDuration = (initFsEnd - initFsBegin) / 1000;
+                window.o.logger.log("initFsDuration", initFsDuration);
+                initializingDrive = false;
+            });
+        }
+        return new Promise((resolve, reject) => {
+            const sub = fissionAuthState.fission.subscribe((fissionDrive) => __awaiter(this, void 0, void 0, function* () {
+                if (!fissionDrive || !(fissionDrive.payload instanceof FissionDrive))
+                    return;
+                func(fissionDrive.payload)
+                    .then(result => {
+                    resolve(result);
+                    sub.unsubscribe();
+                })
+                    .catch(error => {
+                    reject(error);
+                    sub.unsubscribe();
+                });
+            }));
+        });
+    });
 }
 export function withTimeout(operationName, func, timeout) {
     return __awaiter(this, void 0, void 0, function* () {

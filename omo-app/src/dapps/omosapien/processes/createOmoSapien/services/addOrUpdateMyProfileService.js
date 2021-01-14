@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
 import { setDappState, tryGetDappState } from "../../../../../libs/o-os/loader";
-import { runWithDrive } from "../../../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../../../libs/o-fission/fissionDrive";
 export const addOrUpdateMyProfileService = (context) => __awaiter(void 0, void 0, void 0, function* () {
     yield runWithDrive((fissionDrive) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;

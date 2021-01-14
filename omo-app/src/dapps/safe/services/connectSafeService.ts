@@ -4,11 +4,10 @@ import {config} from "../../../libs/o-circles-protocol/config";
 import {ByteString} from "../../../libs/o-circles-protocol/interfaces/byteString";
 import {ConnectSafeContext} from "../processes/omo/importCircles";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {OmoSafeState} from "../manifest";
 import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 
 
 function isValidKeyPhrase(value: string): string | null {

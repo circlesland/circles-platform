@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Directory } from "./directory";
 export class Keys extends Directory {
-    constructor(fs) {
-        super(fs, ["keys"]);
+    constructor(fissionUser, fs) {
+        super(fissionUser, fs, ["keys"]);
     }
     tryGetMyKey() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.tryGetByName("me");
+            return yield this.tryGetEntityByName("me");
         });
     }
     addMyKey(myKey) {
@@ -25,7 +25,7 @@ export class Keys extends Directory {
             if (yield this.exists(["me"])) {
                 throw new Error("The circles safe owner keypair cannot be modified.");
             }
-            return yield this.addOrUpdate(myKey, true, "addMyKey");
+            return yield this.addOrUpdateEntity(myKey, true, "addMyKey");
         });
     }
     maintainIndexes(change, entity, hint) {

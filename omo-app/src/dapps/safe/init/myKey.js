@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { setDappState } from "../../../libs/o-os/loader";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 export function initMyKey() {
     return __awaiter(this, void 0, void 0, function* () {
         yield runWithDrive((fissionDrive) => __awaiter(this, void 0, void 0, function* () {

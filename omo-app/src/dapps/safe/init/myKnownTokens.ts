@@ -8,7 +8,7 @@ import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {Token} from "../../../libs/o-fission/entities/token";
 import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
-import {runWithDrive} from "../../../libs/o-fission/initFission";
+import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
 import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 
 const myKnownTokensSubject: BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>> = new BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>>({
@@ -21,7 +21,7 @@ const storeToCacheTrigger = new DelayedTrigger(500, async () =>
 {
   await runWithDrive(async fissionDrive =>
   {
-    const existingKnownTokensList = (await fissionDrive.tokens.tryGetByName("tokens")) ?? <CachedTokens>{
+    const existingKnownTokensList = (await fissionDrive.tokens.tryGetEntityByName("tokens")) ?? <CachedTokens>{
       name: "tokens",
       entries: {}
     };
@@ -39,7 +39,7 @@ const storeToCacheTrigger = new DelayedTrigger(500, async () =>
     });
 
     existingKnownTokensList.entries = existingKnownTokens;
-    await fissionDrive.tokens.addOrUpdate(existingKnownTokensList);
+    await fissionDrive.tokens.addOrUpdateEntity(existingKnownTokensList);
   });
 });
 
@@ -62,7 +62,7 @@ export async function initMyKnownTokens()
 
     try
     {
-      const existingKnownTokensList = await fissionDrive.tokens.tryGetByName("tokens");
+      const existingKnownTokensList = await fissionDrive.tokens.tryGetEntityByName("tokens");
       if (existingKnownTokensList)
       {
         const existingKnownTokens = existingKnownTokensList.entries;

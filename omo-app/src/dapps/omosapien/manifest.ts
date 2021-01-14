@@ -10,7 +10,7 @@ import {RunProcess} from "../../libs/o-events/runProcess";
 import {createOmoSapien} from "./processes/createOmoSapien/createOmoSapien";
 import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
-import {runWithDrive} from "../../libs/o-fission/initFission";
+import {runWithDrive} from "../../libs/o-fission/fissionDrive";
 import {BehaviorSubject} from "rxjs";
 import {Logger} from "../../libs/o-os/interfaces/shell";
 import {Envelope} from "../../libs/o-os/interfaces/envelope";

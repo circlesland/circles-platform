@@ -12,8 +12,7 @@ import { BehaviorSubject } from "rxjs";
 import { DelayedTrigger } from "../../../libs/o-os/delayedTrigger";
 import { CirclesAccount } from "../../../libs/o-circles-protocol/model/circlesAccount";
 import { BlockIndex } from "../../../libs/o-os/blockIndex";
-// import {ForeignProfile} from "../../../libs/o-fission/directories/foreignProfile";
-import { runWithDrive } from "../../../libs/o-fission/initFission";
+import { runWithDrive } from "../../../libs/o-fission/fissionDrive";
 import { ProfileIndex } from "../../../libs/o-fission/indexes/profileIndex";
 const myContactsSubject = new BehaviorSubject({
     payload: []
