@@ -1,6 +1,6 @@
 import {Index} from "./index";
 import {IpfsNode} from "./ipfsNode";
-import {OfferMetadata} from "../directories/offers";
+import {OfferMetadata} from "./offers";
 
 export interface OfferIndexEntry
 {
@@ -22,23 +22,7 @@ export interface OfferIndexData
 
 export class OfferIndex extends Index
 {
-  async tryGetOfferIndex() : Promise<OfferIndexData>
-  {
-    const offerIndexCidResponse = await fetch("https://directory.omo.earth/offers");
-    const offerIndexCid = await offerIndexCidResponse.text();
-    const offerIndexDataBuffer = await Index.catCid(offerIndexCid);
-    const offerIndexDataJson = offerIndexDataBuffer.toString();
-    const offerIndex: OfferIndexData = JSON.parse(offerIndexDataJson);
-
-    if (!offerIndex || !offerIndex.byFissionName)
-    {
-      return null;
-    }
-
-    return offerIndex;
-  }
-
-  static async tryReadPublicOffers(fissionUser: string): Promise<OfferMetadata[]>
+  static async tryReadPublicOffers(fissionUser: string): Promise<OfferMetadata[]|null>
   {
     const fsRoot = await Index.tryGetUserFsRoot(fissionUser);
     if (!fsRoot)
@@ -59,9 +43,13 @@ export class OfferIndex extends Index
       }
 
       const offers:OfferMetadata[] = await Promise.all(offerNames.map(async offerName => {
-        const offerMetadataBuffer = await ipfs.files.read(path + "/" + offerName + "/userland/metadata/userland");
-        const offerMetadataJson = Buffer.from(offerMetadataBuffer).toString();
-        const offerMetadata:OfferMetadata = JSON.parse(offerMetadataJson);
+        const statResult = await ipfs.files.stat(path + "/" + offerName + "/userland/metadata");
+        const metadataFile = await this.tryGetFissionFile(statResult.cid)
+        if (!metadataFile)
+        {
+          throw new Error("The offer directory of offer '" + offerName + "' contains no 'metadata' file")
+        }
+        const offerMetadata:OfferMetadata = JSON.parse(metadataFile.toString());
         return offerMetadata;
       }));
 

@@ -1,6 +1,7 @@
 import {IpfsNode} from "./ipfsNode";
-import {Profile} from "../entities/profile";
-import {AsyncBroadcast} from "../../o-os/asyncBroadcast";
+import {AsyncBroadcast} from "./asyncBroadcast";
+import {Profile} from "./profileIndex";
+import fetch from 'cross-fetch';
 
 export type TForeignProfile = {
   profile: Profile,
@@ -45,11 +46,11 @@ export abstract class Index
     });
   }
 
-  static async tryGetFileFromDirectoryCid(cid: string): Promise<Buffer | null>
+  static async tryGetFissionFile(nodeDirCid: string): Promise<Buffer | null>
   {
     return await IpfsNode.runWithIPFS(async ipfs =>
     {
-      const fileContentCid = ipfs.ls(cid);
+      const fileContentCid = ipfs.ls(nodeDirCid);
 
       for await (const fileCid of fileContentCid)
       {

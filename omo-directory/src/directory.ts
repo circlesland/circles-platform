@@ -1,23 +1,15 @@
+import {OfferMetadata} from "./indexes/offers";
+
 export interface Entity {
     name: string;
 }
 
 export interface Entry {
+    avatarCid: string;
     fissionName: string;
     circlesSafe: string;
     firstName: string;
     lastName: string;
-}
-
-export interface Offer extends Entity
-{
-    isPublished: boolean;
-    offeredByFissionName: string;
-    productName: string;
-    productPicture: string;
-    productPrice: string;
-    productDescription: string;
-    productLocation: any;
 }
 
 export interface Directory
@@ -27,5 +19,5 @@ export interface Directory
 
 export interface Offers
 {
-    [fissionName: string]: Offer[];
+    [fissionName: string]: OfferMetadata[];
 }

@@ -1,7 +1,6 @@
 import {Index} from "./index";
 import {IpfsNode} from "./ipfsNode";
 import {Profile} from "../entities/profile";
-import {AsyncBroadcast} from "../../o-os/asyncBroadcast";
 
 export type TForeignProfile = {
   profile: Profile,
@@ -28,25 +27,6 @@ export interface ProfileIndexData
 
 export class ProfileIndex extends Index
 {
-  static fissionNameResolver: AsyncBroadcast<string, string> = new AsyncBroadcast<string, string>(async (fissionUser:string) =>
-  {
-    const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUser}.fission.name`;
-    const dnsLinkResult = await fetch(dnsLink);
-    const dnsLinkResultObj = await dnsLinkResult.json();
-
-    if (!dnsLinkResultObj || !dnsLinkResultObj.Path)
-    {
-      return null;
-    }
-
-    return dnsLinkResultObj.Path;
-  });
-
-  static async tryGetUserFsRoot(fissionUser: string): Promise<string | null>
-  {
-    return ProfileIndex.fissionNameResolver.subscribeToResult(fissionUser);
-  }
-
   static async signup(fissionUser: string): Promise<void>
   {
     await fetch("https://directory.omo.earth/signup/" + fissionUser, {
@@ -59,6 +39,7 @@ export class ProfileIndex extends Index
     console.log("tryGetProfileIndex()");
 
     const profileIndexCidResponse = await fetch("https://directory.omo.earth/directory");
+    //const profileIndexCidResponse = await fetch("https://directory.omo.earth/profiles");
     const profileIndexCid = await profileIndexCidResponse.text();
     const profileIndexDataBuffer = await Index.catCid(profileIndexCid);
     const profileIndexDataJson = profileIndexDataBuffer.toString();
@@ -89,7 +70,7 @@ export class ProfileIndex extends Index
 
   static async tryReadPublicProfile(fissionUser: string): Promise<TForeignProfile | null>
   {
-    const fsRoot = await ProfileIndex.tryGetUserFsRoot(fissionUser);
+    const fsRoot = await Index.tryGetUserFsRoot(fissionUser);
     if (!fsRoot)
     {
       return null;

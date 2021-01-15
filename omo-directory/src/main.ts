@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
-import * as IPFS from "ipfs-core";
 import {Directory, Offers} from "./directory";
-import fetch from 'cross-fetch';
 import {TaskScheduler} from "./taskScheduler";
+import {IpfsNode} from "./indexes/ipfsNode";
+import {ProfileIndex} from "./indexes/profileIndex";
+import {OfferIndex} from "./indexes/offerIndex";
 
-const toBuffer = require('it-to-buffer')
 const fs = require('fs');
 const express = require("express");
 const router = express.Router();
@@ -15,14 +15,17 @@ let directory:Directory = {};
 let offers:Offers = {};
 let lastDirectoryCid: any = "You're alone";
 let lastOffersCid: any = "You're alone";
-let ipfs:any;
 
 export const catRaw = async (cid: any): Promise<Buffer[]> => {
-    const chunks = []
-    for await (const chunk of ipfs.cat(cid)) {
-        chunks.push(chunk)
-    }
-    return chunks
+    return IpfsNode.runWithIPFS(async ipfs =>
+    {
+        const chunks = []
+        for await (const chunk of ipfs.cat(cid))
+        {
+            chunks.push(Buffer.from(chunk))
+        }
+        return chunks
+    });
 }
 
 export const catBuf = async (cid: any): Promise<Buffer> => {
@@ -33,40 +36,49 @@ export const catBuf = async (cid: any): Promise<Buffer> => {
 async function init()
 {
     console.log("Creating IPFS node ..")
-    ipfs = await IPFS.create();
-
-    console.log("Loading the directory cid from 'lastDirectoryCid.cid'");
-    await fs.exists("lastDirectoryCid.cid", async (exists:boolean) => {
-        if (exists)
+    return IpfsNode.runWithIPFS(async _ =>
+    {
+        console.log("Loading the directory cid from 'lastDirectoryCid.cid'");
+        await fs.exists("lastDirectoryCid.cid", async (exists: boolean) =>
         {
-            fs.readFile('lastDirectoryCid.cid', async (error:any, data:any) => {
-                console.log("Loading the directory from ", data.toString());
+            if (exists)
+            {
+                fs.readFile('lastDirectoryCid.cid', async (error: any, data: any) =>
+                {
+                    console.log("Loading the directory from ", data.toString());
 
-                lastDirectoryCid = data.toString();
-                const buf = await catBuf(data.toString());
-                directory = JSON.parse(buf.toString());
-            });
-        } else {
-            console.log("No directory cid at 'lastDirectoryCid.cid'");
-        }
-    });
-    await fs.exists("lastOffersCid.cid", async (exists:boolean) => {
-        if (exists)
+                    lastDirectoryCid = data.toString();
+                    const buf = await catBuf(data.toString());
+                    directory = JSON.parse(buf.toString());
+                });
+            }
+            else
+            {
+                console.log("No directory cid at 'lastDirectoryCid.cid'");
+            }
+        });
+        await fs.exists("lastOffersCid.cid", async (exists: boolean) =>
         {
-            fs.readFile('lastOffersCid.cid', async (error:any, data:any) => {
-                console.log("Loading the directory from ", data.toString());
+            if (exists)
+            {
+                fs.readFile('lastOffersCid.cid', async (error: any, data: any) =>
+                {
+                    console.log("Loading the directory from ", data.toString());
 
-                lastOffersCid = data.toString();
-                const buf = await catBuf(data.toString());
-                offers = JSON.parse(buf.toString());
-            });
-        } else {
-            console.log("No directory cid at 'lastOffersCid.cid'");
-        }
+                    lastOffersCid = data.toString();
+                    const buf = await catBuf(data.toString());
+                    offers = JSON.parse(buf.toString());
+                });
+            }
+            else
+            {
+                console.log("No directory cid at 'lastOffersCid.cid'");
+            }
+        });
     });
 }
 
-router.get('/directory', (request:Request,response:Response) =>
+router.get('/profiles', (request:Request,response:Response) =>
 {
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -87,21 +99,6 @@ router.get('/list',(request:Request,response:Response) =>
     response.send(JSON.stringify(directory, null, 2));
 });
 
-async function resolveFissionName(fissionName:string) : Promise<string|null>
-{
-    const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionName}.fission.name`;
-    console.log("loading", dnsLink);
-    const dnsLinkResult = await fetch(dnsLink);
-    const dnsLinkResultObj = await dnsLinkResult.json();
-
-    if (!dnsLinkResultObj || !dnsLinkResultObj.Path)
-    {
-        return null;
-    }
-
-    return dnsLinkResultObj.Path;
-}
-
 router.post('/update/offers/:fissionName', async (request:Request,response:Response) =>
 {
     // TODO: The profile is only available after the IPNS link was updated.
@@ -111,11 +108,10 @@ router.post('/update/offers/:fissionName', async (request:Request,response:Respo
     const taskName = "updateOffers_" + request.params.fissionName;
     profileUpdateScheduler.addOrResetTask(taskName, 5, async () =>
     {
-        return new Promise<any>((async (resolve, reject) =>
+        return IpfsNode.runWithIPFS(async ipfs =>
         {
-            /*
-            try
-            {*/
+            return new Promise<any>((async (resolve, reject) =>
+            {
                 let done = false;
                 setTimeout(() =>
                 {
@@ -126,75 +122,29 @@ router.post('/update/offers/:fissionName', async (request:Request,response:Respo
                     reject(new Error(`The execution of Task '${taskName}' timed out after 60 sec.`));
                 }, 60000);
 
-                const fsRoot = await resolveFissionName(request.params.fissionName);
-                const offersRoot = fsRoot + "/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/offers/userland";
-
-                console.log("Loading " + offersRoot)
-
-                const offerCIDs:string[] = [];
-
-                const directoryContents = ipfs.files.ls(offersRoot);
-                for await (let item of directoryContents)
+                const offerMetadata = await OfferIndex.tryReadPublicOffers(request.params.fissionName)
+                if (offerMetadata && offerMetadata.length > 0)
                 {
-                    console.log("offer fs item:", item);
-                    //offerNames.push(item.name);
-
-                    for await (let offerNode of ipfs.files.ls(offersRoot + "/" + item.name))
-                    {
-                        if (offerNode.name == "userland")
-                        {
-                            console.log("offer item userland cid:", offerNode.cid);
-                            offerCIDs.push(offerNode.cid.toString());
-                            break;
-                        }
-                    }
+                    offers[request.params.fissionName] = offerMetadata;
+                }
+                else
+                {
+                    delete offers[request.params.fissionName];
                 }
 
-                const allOfferData: {
-                    [name:string]: Buffer
-                } = {};
-
-                for (let offerCID of offerCIDs)
-                {
-                    const chunks = await ipfs.cat(offerCID);
-                    if (!chunks)
-                    {
-                        throw new Error("Cannot read '" + offerCID + "'");
-                    }
-
-                    const readChunks = [];
-                    for await (let chunk of chunks)
-                    {
-                        readChunks.push(chunk)
-                    }
-                    allOfferData[offerCID] = Buffer.concat(readChunks);
-                    console.log(`Size of offer ${offerCID}:`, allOfferData[offerCID]);
-                }
-
-                const offerObjs = Object.values(allOfferData).map(o => JSON.parse(o.toString())).map(o => {
-                    delete o.productPicture;
-                    return o;
-                });
-                offers[request.params.fissionName] = offerObjs;
-
-                const cid = await ipfs.add(JSON.stringify(offers));
+                const cid = await ipfs.add(<any>JSON.stringify(offers));
                 await ipfs.pin.add(cid.cid);
 
-                await fs.writeFile('lastOffersCid.cid', cid.cid.toString(), () => {
+                await fs.writeFile('lastOffersCid.cid', cid.cid.toString(), () =>
+                {
                     console.log("Wrote last cid:", cid.cid.toString());
                 });
 
                 done = true;
                 lastDirectoryCid = cid.cid;
                 resolve();
-            /*}
-            catch (e)
-            {
-                console.warn("Couldn't load the offers of profile:" + request.params.fissionName);
-                console.warn(e);
-                reject(e);
-            }*/
-        }));
+            }));
+        });
     });
 
     response.send("Pending");
@@ -209,76 +159,71 @@ router.post('/signup/:fissionName', async (request:Request,response:Response) =>
     const taskName = "updateProfile_" + request.params.fissionName;
     profileUpdateScheduler.addOrResetTask(taskName, 5, async () =>
     {
-        return new Promise<any>((async (resolve, reject) =>
+        return IpfsNode.runWithIPFS(async ipfs =>
         {
-            try
+            return new Promise<any>((async (resolve, reject) =>
             {
-                let done = false;
-                setTimeout(() => {
-                    if (done)
-                    {
-                        return;
-                    }
-                    reject(new Error(`The execution of Task '${taskName}' timed out after 60 sec.`));
-                }, 60000);
-
-                const fsRoot = await resolveFissionName(request.params.fissionName);
-                const otherProfilePath = `https://ipfs.io${fsRoot}/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland/me/userland`;
-
-                console.log("loading", otherProfilePath);
-
-                const otherProfileData = await fetch(otherProfilePath);
-                const otherProfileObj = await otherProfileData.json();
-
-                /*
-                const avatar = otherProfileObj.avatar && otherProfileObj.avatar.length > 512
-                    ? null
-                    : otherProfileObj.avatar
-                */
-                const existingDirectoryEntry = directory[request.params.fissionName];
-                if (existingDirectoryEntry)
+                try
                 {
-                    const changed =
-                        existingDirectoryEntry.firstName != otherProfileObj.firstName
-                        ||existingDirectoryEntry.lastName != otherProfileObj.lastName
-                        ||existingDirectoryEntry.circlesSafe != otherProfileObj.circlesAddress;
-
-                    if (changed)
+                    let done = false;
+                    setTimeout(() =>
                     {
-                        console.log(`Entry '${request.params.fissionName}' was updated.`)
+                        if (done)
+                        {
+                            return;
+                        }
+                        reject(new Error(`The execution of Task '${taskName}' timed out after 60 sec.`));
+                    }, 60000);
+
+                    console.log("loading profile of '" + request.params.fissionName + "' ..");
+                    const otherProfileObj = await ProfileIndex.tryReadPublicProfile(request.params.fissionName)
+
+                    const existingDirectoryEntry = directory[request.params.fissionName];
+                    if (existingDirectoryEntry)
+                    {
+                        const changed =
+                            existingDirectoryEntry.firstName != otherProfileObj?.profile.firstName
+                            || existingDirectoryEntry.lastName != otherProfileObj?.profile.lastName
+                            || existingDirectoryEntry.circlesSafe != otherProfileObj?.profile.circlesAddress;
+
+                        if (changed)
+                        {
+                            console.log(`Entry '${request.params.fissionName}' was updated.`)
+                        }
                     }
+                    else
+                    {
+                        console.log(`Entry '${request.params.fissionName}' was added.`)
+                    }
+
+                    directory[request.params.fissionName] = {
+                        avatarCid: otherProfileObj?.avatarCid ?? "",
+                        firstName: otherProfileObj?.profile.firstName ?? "",
+                        lastName: otherProfileObj?.profile.lastName ?? "",
+                        circlesSafe: otherProfileObj?.profile.circlesAddress ?? "",
+                        fissionName: request.params.fissionName
+                    };
+
+                    const cid = await ipfs.add(<any>JSON.stringify(directory));
+                    await ipfs.pin.add(cid.cid);
+
+                    await fs.writeFile('lastDirectoryCid.cid', cid.cid.toString(), () =>
+                    {
+                        console.log("Wrote last cid:", cid.cid.toString());
+                    });
+
+                    done = true;
+                    lastDirectoryCid = cid.cid;
+                    resolve();
                 }
-                else
+                catch (e)
                 {
-                    console.log(`Entry '${request.params.fissionName}' was added.`)
+                    console.warn("Couldn't load a foreign profile:");
+                    console.warn(e);
+                    reject(e);
                 }
-
-                directory[request.params.fissionName] = {
-                    firstName: otherProfileObj.firstName,
-                    lastName: otherProfileObj.lastName,
-                    //    avatarUrl: avatar,
-                    circlesSafe: otherProfileObj.circlesAddress,
-                    fissionName: request.params.fissionName
-                };
-
-                const cid = await ipfs.add(JSON.stringify(directory));
-                await ipfs.pin.add(cid.cid);
-
-                await fs.writeFile('lastDirectoryCid.cid', cid.cid.toString(), () => {
-                    console.log("Wrote last cid:", cid.cid.toString());
-                });
-
-                done = true;
-                lastDirectoryCid = cid.cid;
-                resolve();
-            }
-            catch (e)
-            {
-                console.warn("Couldn't load a foreign profile:");
-                console.warn(e);
-                reject(e);
-            }
-        }));
+            }));
+        });
     });
 
     response.send("Pending");
