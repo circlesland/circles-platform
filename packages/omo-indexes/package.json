@@ -1,0 +1,13 @@
+{
+  "name": "omo-indexes",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "dependencies": {
+    "ipfs": "^0.52.3",
+    "cross-fetch": "^3.0.6",
+    "omo-utils": "1.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
