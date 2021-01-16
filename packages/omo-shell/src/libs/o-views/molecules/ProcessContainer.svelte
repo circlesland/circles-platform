@@ -7,19 +7,19 @@
   } from "@fortawesome/free-solid-svg-icons";
   import Prompt from "./Prompt.svelte";
   import { createEventDispatcher } from "svelte";
-  import { Subscription } from "rxjs";
   import {Process} from "omo-process/dist/interfaces/process";
   import {ShellEvent} from "omo-process/dist/events/shellEvent";
   import {Back} from "omo-process/dist/events/back";
   import {Cancel} from "omo-process/dist/events/cancel";
   import {Continue} from "omo-process/dist/events/continue";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 
   /**
    * A channel to an already running process.
    */
   export let process: Process;
 
-  let subscription: Subscription;
+  let subscription: OmoSubscription;
   let canSkip = false;
   let canGoBack = false;
   let prompt: PromptEvent;

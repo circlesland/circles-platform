@@ -1,5 +1,5 @@
 import type {AbiItem} from "web3-utils";
-import Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import {EMPTY_DATA, GNOSIS_SAFE_ABI, ZERO_ADDRESS} from "../consts";
 import BN from "omo-quirks/dist/BN";
 import {config} from "../config";

@@ -1,16 +1,16 @@
 <script lang="ts">
   import { BN } from "ethereumjs-util";
 
-  import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
   import {config} from "omo-circles/dist/config";
   import {OmoEvent} from "omo-events/dist/omoEvent";
   import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 
   let safeState: OmoSafeState = {};
-  let balanceSubscriptions: Subscription;
+  let balanceSubscriptions: OmoSubscription;
   let balance: BN = new BN("0");
 
   const web3 = config.getCurrent().web3();

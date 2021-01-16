@@ -8,14 +8,14 @@
     labelTrusting,
     labelRevoked,
   } from "../../data/friends";
-  import {Subscription} from "rxjs";
   import {onDestroy, onMount} from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
   import {Contact} from "omo-models/dist/omo/contact";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 
   let safeState: OmoSafeState = {};
-  let contactsSubscription: Subscription;
+  let contactsSubscription: OmoSubscription;
   let contacts: Contact[] = [];
 
   function init()

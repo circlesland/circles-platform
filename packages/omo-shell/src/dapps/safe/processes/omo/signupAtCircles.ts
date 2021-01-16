@@ -2,7 +2,7 @@ import {strings} from "../../data/strings";
 import {createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {hubSignupService} from "../../services/hubSignupService";
-import Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {sendPrompt, sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";

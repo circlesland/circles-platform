@@ -1,4 +1,4 @@
-import type Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import type { AbiItem } from "web3-utils";
 import { CIRCLES_HUB_ABI, ZERO_ADDRESS } from "../consts";
 import type { GnosisSafeProxy } from "../safe/gnosisSafeProxy";

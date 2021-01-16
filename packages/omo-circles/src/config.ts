@@ -1,4 +1,4 @@
-import Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import Common from "ethereumjs-common";
 import { BN } from "ethereumjs-util";
 

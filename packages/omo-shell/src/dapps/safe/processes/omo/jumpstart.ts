@@ -4,7 +4,7 @@ import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
 import {strings} from "../../data/strings";
 import {transferJumpstartXDaiService} from "../../services/transferJumpstartXDaiService";
 import {getForeignProfileService} from "../../services/getForeignProfile";
-import Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import {ProcessContext} from "omo-process/dist/processContext";
 import {ProcessArtifact} from "omo-process/dist/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";

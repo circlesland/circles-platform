@@ -3,7 +3,6 @@
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
 
@@ -12,9 +11,10 @@
   import {CirclesToken} from "omo-circles/dist/model/circlesToken";
   import {Contact} from "omo-models/dist/omo/contact";
   import {config} from "omo-circles/dist/config";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 
   let safeState:OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  let balanceSubscriptions: Subscription;
+  let balanceSubscriptions: OmoSubscription;
   let balances: CirclesToken[] = [];
   let contacts: {[safeAddress:string]:Contact} = {};
   let omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");

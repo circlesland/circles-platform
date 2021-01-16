@@ -1,12 +1,12 @@
 <script lang="ts">
   import {pop, replace} from "svelte-spa-router";
   import {onDestroy, onMount} from "svelte";
-  import {Subscription} from "rxjs";
   import Compose from "../../../libs/o-views/atoms/Compose.svelte";
   import Mobile from "../../../libs/o-views/templates/Mobile.svelte";
   import { Jumper } from "svelte-loading-spinners";
   import {OmoEvent} from "omo-events/dist/omoEvent";
   import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 
   if (!window.o.redirectTo)
   {
@@ -20,7 +20,7 @@
   }
 
   let progressIndicator: { message: string, percent: number };
-  let subscription: Subscription;
+  let subscription: OmoSubscription;
 
   onMount(() =>
   {

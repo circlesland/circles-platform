@@ -15,7 +15,7 @@ import {setError} from "omo-process/dist/actions/setError";
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {ProcessDefinition} from "omo-process/dist/processManifest";
-import Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 
 export interface SendInviteCreditsContext extends ProcessContext
 {

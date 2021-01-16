@@ -1,5 +1,4 @@
 <script lang="ts">
-  import {Subscription} from "rxjs";
   import Icon from "fa-svelte";
   import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
   import {faChevronRight} from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +9,7 @@
   import { Jumper } from "svelte-loading-spinners";
   import {FsNode} from "../../nodes/fsNode";
   import {createEventDispatcher} from "svelte";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 
   const dispatcher = createEventDispatcher();
 
@@ -22,7 +22,7 @@
 
   let isExpanded: boolean = false;
   let isSelected: boolean = false;
-  let sub: Subscription;
+  let sub: OmoSubscription;
 
   $:{
     title = treeNode.title;

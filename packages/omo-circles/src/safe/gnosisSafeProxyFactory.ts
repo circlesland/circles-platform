@@ -1,4 +1,4 @@
-import type Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import type {AbiItem} from "web3-utils";
 import {GNOSIS_SAFE_ABI, PROXY_FACTORY_ABI, ZERO_ADDRESS} from "../consts";
 import BN from "omo-quirks/dist/BN";

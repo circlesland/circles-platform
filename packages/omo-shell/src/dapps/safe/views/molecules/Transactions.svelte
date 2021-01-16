@@ -1,6 +1,5 @@
 <script lang="ts">
   import {Jumper} from "svelte-loading-spinners";
-  import {Subscription} from "rxjs";
   import {onDestroy, onMount} from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
@@ -9,9 +8,10 @@
   import {Signal} from "omo-events/dist/signals/signal";
   import {BeginSignal} from "omo-events/dist/signals/beginSignal";
   import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 
   let safeState: OmoSafeState = {};
-  let transactionsSubscription: Subscription;
+  let transactionsSubscription: OmoSubscription;
   let transactions: CirclesTransaction[] = [];
   let signal: Signal;
   let dummyTransaction:CirclesTransaction;

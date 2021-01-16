@@ -3,7 +3,7 @@ import {strings} from "../../data/strings";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {importPrivateKeyService} from "../../services/importPrivateKeyService";
 import {fundAccountForSafeCreation} from "./fundAccountForSafeCreation";
-import Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";

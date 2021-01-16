@@ -1,7 +1,7 @@
 import { createMachine } from "xstate";
 import { strings } from "../../data/strings";
 import {requestUbiService} from "../../services/requestUbiService";
-import Web3 from "web3";
+import Web3 from "omo-quirks/dist/web3";
 import {ProcessContext} from "omo-process/dist/processContext";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";

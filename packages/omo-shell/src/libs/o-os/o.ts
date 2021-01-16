@@ -1,7 +1,7 @@
 import { stateMachine } from "./stateMachine";
 import { Shell } from "./interfaces/shell";
 // import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
-// import Web3 from "web3";
+// import Web3 from "omo-quirks/dist/web3";
 // import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
 // import { ProcessContext } from "../o-processes/interfaces/processContext";
 // import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
@@ -12,7 +12,7 @@ import { Shell } from "./interfaces/shell";
 import {newLogger} from "omo-utils/dist/logger";
 import {ProcessEnvironment} from "omo-process/dist/processEnvironment";
 import {ProcessContext} from "omo-process/dist/processContext";
-import {SessionLog} from "../../../../omo-models/dist/sessionLog";
+import {SessionLog} from "omo-models/dist/sessionLog";
 
 /*
 export type Ethereum = {
