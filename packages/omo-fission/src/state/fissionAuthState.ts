@@ -1,9 +1,9 @@
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {FissionDrive} from "../fissionDrive";
-import {BehaviorSubject} from "rxjs";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface FissionAuthState {
     fissionState: any,
-    fission: BehaviorSubject<StatePropagation<FissionDrive>>,
+    fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
     username: string
 }

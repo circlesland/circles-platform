@@ -1,8 +1,8 @@
 import {BinaryFile, Directory, DirectoryChangeType} from "./directory";
 import FileSystem from "webnative/fs/filesystem";
-import {Entity} from "omo-models/dist/entity";
 import {withTimeout} from "../fissionDrive";
 import {FissionDir} from "../fissionDir";
+import {Entity} from "omo-models/dist/omo/entity";
 import {Generate} from "omo-utils/dist/generate";
 
 export class Offers extends FissionDir

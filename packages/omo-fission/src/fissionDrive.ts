@@ -6,7 +6,7 @@ import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
 import {SessionLogs} from "./directories/logs";
 import {Offers} from "./directories/offers";
-import {BehaviorSubject} from "rxjs";
+//import {BehaviorSubject} from "rxjs";
 // import {initAuth} from "./initFission";
 // import {tryGetDappState} from "../o-os/loader";
 // import {Envelope} from "omo-kernel-interfaces/dist/envelope";

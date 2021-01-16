@@ -9,7 +9,7 @@
   "dependencies": {
     "omo-utils": "1.0.0",
     "omo-events": "1.0.0",
-    "rxjs": "^6.6.3"
+    "omo-quirks": "1.0.0"
   },
   "author": "",
   "license": "ISC"

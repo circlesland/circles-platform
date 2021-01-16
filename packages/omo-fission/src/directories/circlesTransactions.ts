@@ -1,6 +1,6 @@
 import { Directory, DirectoryChangeType } from "./directory";
 import FileSystem from "webnative/fs/filesystem";
-import {CachedTransactions} from "omo-models/dist/omo/cachedTransactions";
+import {CachedTransactions} from "../../../omo-models/dist/cachedTransactions";
 
 export class CirclesTransactions extends Directory<CachedTransactions>
 {

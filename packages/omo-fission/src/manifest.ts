@@ -1,14 +1,13 @@
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import {BehaviorSubject} from "rxjs";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {FissionDrive} from "./fissionDrive";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {tryToAuthenticate} from "./tryToAuthenticate";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface FissionAuthState {
   fissionState: any,
-  fission: BehaviorSubject<StatePropagation<FissionDrive>>,
+  fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
   username: string
 }
 
@@ -36,7 +35,7 @@ export const fission: DappManifest<FissionAuthState, FissionAuthState> = {
   dependencies: [],
   isHidden: true,
   isEnabled: false,
-  icon: faCheckCircle,
+  icon: undefined,
   title: "Fission",
   routeParts: ["fission"],
   tag: Promise.resolve("beta"),

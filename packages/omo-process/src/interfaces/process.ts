@@ -1,6 +1,6 @@
-import { Observable } from "rxjs";
 import { ProcessEvent } from "./processEvent";
 import { OmoEvent } from "omo-events/dist/omoEvent";
+import {OmoObservable} from "omo-quirks/dist/OmoObservable";
 
 /**
  * Provides a connection to a running process.
@@ -18,7 +18,7 @@ export interface Process {
   /**
    * The process' out-stream.
    */
-  events: Observable<ProcessEvent>;
+  events: OmoObservable<ProcessEvent>;
   /**
    * The process' in-stream.
    */

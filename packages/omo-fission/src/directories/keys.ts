@@ -1,6 +1,6 @@
 import { Directory, DirectoryChangeType } from "./directory";
-import { KeyPair } from "omo-models/dist/omo/keyPair";
 import FileSystem from "webnative/fs/filesystem";
+import {KeyPair} from "../../../omo-models/dist/keyPair";
 
 export class Keys extends Directory<KeyPair>
 {

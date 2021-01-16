@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 
 export class EventBroker
 {
@@ -85,17 +85,17 @@ export class Topic<T>
     /**
      * The event source for regular subscribers.
      */
-    public get observable(): Subject<T> {
+    public get observable(): OmoSubject<T> {
         return this._observable;
     }
 
-    private _observable: Subject<T>;
+    private _observable: OmoSubject<T>;
 
     constructor(namespace: string, name: string) {
         this._namespace = namespace;
         this._name = name;
 
-        this._observable = new Subject<T>();
+        this._observable = new OmoSubject<T>();
     }
 
     /**

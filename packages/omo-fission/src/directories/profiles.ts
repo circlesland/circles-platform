@@ -1,6 +1,6 @@
 import { Directory, DirectoryChangeType } from "./directory";
-import { Profile } from "omo-models/dist/omo/profile";
 import FileSystem from "webnative/fs/filesystem";
+import {Profile} from "../../../omo-models/dist/omo/profile";
 
 export class Profiles extends Directory<Profile>
 {

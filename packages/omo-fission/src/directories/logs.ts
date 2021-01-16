@@ -1,6 +1,6 @@
 import { Directory, DirectoryChangeType } from "./directory";
 import FileSystem from "webnative/fs/filesystem";
-import {SessionLog} from "omo-models/dist/omo/sessionLog";
+import {SessionLog} from "../../../omo-models/dist/sessionLog";
 
 export class SessionLogs extends Directory<SessionLog>
 {
