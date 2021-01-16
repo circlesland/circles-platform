@@ -33,7 +33,7 @@ export interface CreateOfferContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.omomarket.processes.createOffer;
-const processDefinition = () => createMachine<CreateOfferContext, OmoEvent | { type: "evaluateChoice" }>({
+const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
   initial: "idle",
   states: {
 

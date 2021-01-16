@@ -118,7 +118,8 @@ export class CirclesToken implements CirclesTokenModel
               returnValues: {
                 from: this.web3.eth.abi.decodeParameter("address", event.topics[1]),
                 to: this.web3.eth.abi.decodeParameter("address", event.topics[2]),
-                value: new BN(this.web3.eth.abi.decodeParameter("uint256", event.data)).toString()
+                // TODO: Seems to be o.k. according to the docs at https://web3js.readthedocs.io/en/v1.2.7/web3-eth-abi.html#encodeparameter
+                value: new BN(<string><any>this.web3.eth.abi.decodeParameter("uint256", event.data)).toString()
               }
             };
 
@@ -198,7 +199,8 @@ export class CirclesToken implements CirclesTokenModel
         returnValues: {
           from: this.web3.eth.abi.decodeParameter("address", event.topics[1]),
           to: this.web3.eth.abi.decodeParameter("address", event.topics[2]),
-          value: new BN(this.web3.eth.abi.decodeParameter("uint256", event.data)).toString()
+          // TODO: Seems to be o.k. according to the docs at https://web3js.readthedocs.io/en/v1.2.7/web3-eth-abi.html#encodeparameter
+          value: new BN(<string><any>this.web3.eth.abi.decodeParameter("uint256", event.data)).toString()
         }
       };
 

@@ -10,7 +10,7 @@ import {Contact} from "omo-models/dist/omo/contact";
 import {CirclesProfile} from "omo-models/dist/circles/circlesProfile";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
-import {BlockchainEvent} from "omo-models/dist/omo-circles/src/interfaces/blockchainEvent";
+import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 
 const myContactsSubject: BehaviorSubject<Envelope<Contact[]>> = new BehaviorSubject<Envelope<Contact[]>>({
   payload: []
@@ -133,7 +133,7 @@ export async function initMyContacts()
 function indexContact(safeState:OmoSafeState, event:BlockchainEvent)
 {
   const {canSendTo, user, limit} = event.returnValues;
-  const blockNo = event.blockNumber.toNumber();
+  const blockNo = event.blockNumber;
 
   const direction = user == safeState.mySafeAddress
     ? "in"

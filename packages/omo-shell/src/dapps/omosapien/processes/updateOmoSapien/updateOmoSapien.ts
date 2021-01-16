@@ -25,7 +25,7 @@ export interface UpdateOmoSapienContext extends ProcessContext {
 }
 
 const str = strings.omosapien.processes.createOmoSapien;
-const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent | { type: "evaluateChoice" }>({
+const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>({
   initial: "idle",
   states: {
 

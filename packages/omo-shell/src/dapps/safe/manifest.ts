@@ -251,7 +251,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   if (safeState.mySafeAddress && !safeState.myToken && safeState.mySafeXDaiBalance?.lte(new BN("4600000000000000")))
   {
     // Not yet registered at the circles hub
-    runtimeDapp.shell.publishEvent(new RunProcess(fundSafe));
+    runtimeDapp.outEvents.publish(new RunProcess(fundSafe));
     return {
       cancelDependencyLoading: true,
       initialPage: noFundsOnSafePage
@@ -261,7 +261,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   if (safeState.mySafeAddress && !safeState.myToken)
   {
     // Not yet registered at the circles hub
-    runtimeDapp.shell.publishEvent(new RunProcess(signupAtCircles));
+    runtimeDapp.outEvents.publish(new RunProcess(signupAtCircles));
     return {
       cancelDependencyLoading: true,
       initialPage: noTokenPage
