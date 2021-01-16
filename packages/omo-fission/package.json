@@ -1,0 +1,17 @@
+{
+  "name": "omo-fission",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "webnative": "^0.21.2",
+    "omo-models": "1.0.0",
+    "omo-kernel-interfaces": "1.0.0",
+    "rxjs": "^6.6.3"
+  },
+  "author": "",
+  "license": "ISC"
+}

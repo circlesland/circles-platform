@@ -5,6 +5,7 @@ export abstract class Signal implements OmoEvent
 {
     readonly key: string;
     readonly type: OmoEventTypes;
+    readonly timestamp: number = Date.now();
 
     constructor(type:OmoEventTypes, key:string)
     {
