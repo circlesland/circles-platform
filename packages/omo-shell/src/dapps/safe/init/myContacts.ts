@@ -5,14 +5,14 @@ import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
 import {ProfileIndex} from "omo-indexes/dist/profileIndex";
-import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {Contact} from "omo-models/dist/omo/contact";
 import {CirclesProfile} from "omo-models/dist/circles/circlesProfile";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 
-const myContactsSubject: BehaviorSubject<Envelope<Contact[]>> = new BehaviorSubject<Envelope<Contact[]>>({
+const myContactsSubject: BehaviorSubject<StatePropagation<Contact[]>> = new BehaviorSubject<StatePropagation<Contact[]>>({
   payload: []
 });
 const blockIndex = new BlockIndex();

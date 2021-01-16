@@ -1,5 +1,5 @@
 <script>
-    import { onMount, setContext, createEventDispatcher } from 'svelte';
+    import { setContext, createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
     import { key } from './menu.js';
 

@@ -6,7 +6,7 @@ import {Logger} from "omo-utils/dist/logger";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
 import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
 import {CirclesToken} from "omo-circles/dist/model/circlesToken";
-import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {CachedTransactions} from "omo-models/dist/omo/cachedTransactions";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {config} from "omo-circles/dist/config";
@@ -23,7 +23,7 @@ type TransactionList = {
 let initMyTransactionLogger:Logger;
 
 // The consumable output of this init step (deduplicated ordered list of transactions)
-const myTransactionsSubject: BehaviorSubject<Envelope<CirclesTransaction[]>> = new BehaviorSubject<Envelope<CirclesTransaction[]>>({
+const myTransactionsSubject: BehaviorSubject<StatePropagation<CirclesTransaction[]>> = new BehaviorSubject<StatePropagation<CirclesTransaction[]>>({
   payload: []
 });
 

@@ -1,12 +1,12 @@
 <script lang="ts">
   import NavItem from "../atoms/NavItem.svelte";
-  import { location, push } from "svelte-spa-router";
+  import { location} from "svelte-spa-router";
   import { createEventDispatcher } from "svelte";
   import Compose from "../atoms/Compose.svelte";
   import Icon from "fa-svelte";
 
   import { faPlus } from "@fortawesome/free-solid-svg-icons";
-  import {QuickAction} from "../../o-os/types/quickAction";
+  import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 
   const dispatch = createEventDispatcher();
   export let quickActions: QuickAction[] = [];

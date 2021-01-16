@@ -1,5 +1,5 @@
 <script>
-    import { onMount, getContext } from 'svelte';
+    import { getContext } from 'svelte';
     import { key } from './menu.js';
 
     export let isDisabled = false;

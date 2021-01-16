@@ -3,7 +3,7 @@ import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
-import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {CirclesToken} from "omo-circles/dist/model/circlesToken";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Token} from "omo-models/dist/omo/token";
@@ -11,7 +11,7 @@ import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 
-const myKnownTokensSubject: BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>> = new BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>>({
+const myKnownTokensSubject: BehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>> = new BehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>({
   payload: {}
 });
 const blockIndex = new BlockIndex();

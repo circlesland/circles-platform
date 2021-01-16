@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { ProcessArtifact } from "../../../o-processes/interfaces/processArtifact";
-  import {createEventDispatcher, onMount} from "svelte";
+  import {createEventDispatcher} from "svelte";
   import Cropper from '../svelte-easy-crop/Cropper.svelte' ;
   import Dropzone from "libs/svelte-dropzone";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 
   const addedfile = file => {
     const reader = new FileReader();

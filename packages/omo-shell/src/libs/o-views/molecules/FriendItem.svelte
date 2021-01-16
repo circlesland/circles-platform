@@ -1,11 +1,9 @@
 <script lang="ts">
-  import type {Address} from "../../o-circles-protocol/interfaces/address";
   import {
     setTrust,
     SetTrustContext,
   } from "../../../dapps/safe/processes/circles/setTrust";
   import ButtonIcon from "../atoms/ButtonIcon.svelte";
-  import {RunProcess} from "../../o-events/runProcess";
 
   import Icon from "fa-svelte";
   import {
@@ -25,10 +23,11 @@
     transferCircles,
     TransferCirclesContext,
   } from "../../../dapps/safe/processes/circles/transferCircles";
-  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
   import {tryGetDappState} from "../../o-os/loader";
   import {OmoSafeState} from "../../../dapps/safe/manifest";
   import OmosapienAvatar from "../atoms/OmosapienAvatar.svelte";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+  import {RunProcess} from "omo-process/dist/events/runProcess";
 
   export let showActions: boolean = true;
   export let data = {
@@ -70,7 +69,7 @@
     openDetail = !openDetail;
   }
 
-  async function runTransferCircles(recipientAddress: Address)
+  async function runTransferCircles(recipientAddress: string)
   {
     const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
     const myBalance = safeState.myBalances.getValue().payload.map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
@@ -100,7 +99,7 @@
     );
   }
 
-  function runTrust(recipientAddress: Address)
+  function runTrust(recipientAddress: string)
   {
     const contextInitializer = async (context: SetTrustContext) =>
     {
@@ -115,7 +114,7 @@
     window.o.publishEvent(new RunProcess(setTrust, contextInitializer));
   }
 
-  function runUntrust(recipientAddress: Address)
+  function runUntrust(recipientAddress: string)
   {
     const contextInitializer = async (context: UnTrustContext) =>
     {

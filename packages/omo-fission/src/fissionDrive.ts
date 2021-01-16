@@ -91,7 +91,7 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
   fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (!fissionAuthState.fission)
   {
-    fissionAuthState.fission = new BehaviorSubject<Envelope<FissionDrive>>(null);
+    fissionAuthState.fission = new BehaviorSubject<StatePropagation<FissionDrive>>(null);
   }
 
   const existingDrive = fissionAuthState.fission.getValue()?.payload;
@@ -116,7 +116,7 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
 
   return new Promise((resolve, reject) =>
   {
-    const sub = fissionAuthState.fission.subscribe(async (fissionDrive:Envelope<FissionDrive>) =>
+    const sub = fissionAuthState.fission.subscribe(async (fissionDrive:StatePropagation<FissionDrive>) =>
     {
       if (!fissionDrive || !(fissionDrive.payload instanceof FissionDrive))
         return;

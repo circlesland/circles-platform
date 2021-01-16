@@ -1,14 +1,9 @@
 <script lang="ts">
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import KeyItem from "src/libs/o-views/molecules/KeyItem.svelte";
   import { onMount } from "svelte";
   import { labelKeys } from "../../data/keys";
-  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
-  import {FissionAuthState} from "../../../fissionauth/manifest";
-  import {runWithDrive} from "../../../../libs/o-fission/initFission";
-  import {fissiondrive} from "../../../fissiondrive/manifest";
+  import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
   let keys: any[] = [];
 

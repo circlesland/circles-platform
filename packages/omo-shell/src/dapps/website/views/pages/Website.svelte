@@ -9,7 +9,7 @@
   import Video from "../molecules/Video.svelte";
   import Steps from "../molecules/Steps.svelte";
   import Details from "../molecules/Details.svelte";
-  import {runWithDrive} from "../../../../libs/o-fission/fissionDrive";
+  import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
   onMount(async () => {
     runWithDrive(async drive => {

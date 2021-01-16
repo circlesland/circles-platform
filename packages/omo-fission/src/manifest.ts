@@ -1,6 +1,6 @@
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import {BehaviorSubject} from "rxjs";
-import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {FissionDrive} from "./fissionDrive";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
@@ -8,7 +8,7 @@ import {tryToAuthenticate} from "./tryToAuthenticate";
 
 export interface FissionAuthState {
   fissionState: any,
-  fission: BehaviorSubject<Envelope<FissionDrive>>,
+  fission: BehaviorSubject<StatePropagation<FissionDrive>>,
   username: string
 }
 

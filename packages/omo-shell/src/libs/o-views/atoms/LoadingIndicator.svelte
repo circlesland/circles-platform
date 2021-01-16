@@ -1,11 +1,11 @@
 <script lang="ts">
   import { Jumper } from "svelte-loading-spinners";
-  import {OmoEvent} from "../../../libs/o-events/omoEvent";
-  import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
   import {onDestroy, onMount} from "svelte";
   import {Subscription} from "rxjs";
   import Compose from "../../../libs/o-views/atoms/Compose.svelte";
   import Mobile from "../../../libs/o-views/templates/Mobile.svelte";
+  import {OmoEvent} from "omo-events/dist/omoEvent";
+  import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 
   let progressIndicator: { message: string, percent: number };
   let subscription: Subscription;

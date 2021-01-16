@@ -1,13 +1,13 @@
 <script lang="ts">
-  import {ProcessArtifact} from "../../../o-processes/interfaces/processArtifact";
-  import {config} from "../../../o-circles-protocol/config";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
   import {createEventDispatcher, onMount} from "svelte";
   import {tryGetDappState} from "../../../o-os/loader";
   import {OmoSafeState} from "../../../../dapps/safe/manifest";
-  import {Contact} from "../../../o-circles-protocol/model/contact";
   import Typeahead from "../svelte-typeahead/Typeahead.svelte";
   import FriendItem from "../../molecules/FriendItem.svelte";
   import {OmoSapienState} from "../../../../dapps/omosapien/manifest";
+  import {config} from "omo-circles/dist/config";
+  import {Contact} from "omo-models/dist/omo/contact";
 
   export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();

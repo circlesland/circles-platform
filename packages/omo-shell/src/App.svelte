@@ -11,13 +11,13 @@
   import OverflowAction from "./libs/o-views/atoms/OverflowAction.svelte";
   import ActionBar from "./libs/o-views/molecules/ActionBar.svelte";
   import Modal from "./libs/o-views/molecules/Modal.svelte";
-  import type {OmoEvent} from "./libs/o-events/omoEvent";
-  import {RunProcess} from "./libs/o-events/runProcess";
   import ProcessContainer from "./libs/o-views/molecules/ProcessContainer.svelte";
-  import {Cancel} from "./libs/o-processes/events/cancel";
-  import {Process} from "./libs/o-processes/interfaces/process";
-  import {ProgressSignal} from "./libs/o-circles-protocol/interfaces/blockchainEvent";
-  import {NavigateTo} from "./libs/o-events/navigateTo";
+  import {Process} from "omo-process/dist/interfaces/process";
+  import {OmoEvent} from "omo-events/dist/omoEvent";
+  import {RunProcess} from "omo-process/dist/events/runProcess";
+  import {NavigateTo} from "omo-events/dist/shell/navigateTo";
+  import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+  import {Cancel} from "omo-process/dist/events/cancel";
 
   let actions = [];
 

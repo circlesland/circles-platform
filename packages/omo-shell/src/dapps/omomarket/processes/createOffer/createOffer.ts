@@ -1,5 +1,7 @@
 import { createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
+import Success from "../../../../libs/o-views/atoms/Success.svelte";
+import Error from "../../../../libs/o-views/atoms/Error.svelte";
 import {strings} from "../../data/strings";
 import {createOfferService} from "./services/createOfferService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -18,8 +20,6 @@ import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
-import Success from "omo-shell/o-views/atoms/Success.svelte";
-import Error from "omo-shell/o-views/atoms/Error.svelte";
 
 export interface CreateOfferContext extends ProcessContext {
   data: {

@@ -31,7 +31,7 @@ import {Logger} from "omo-utils/dist/logger";
 import {fundSafe} from "./processes/omo/fundSafe";
 import {KeyPair} from "omo-models/dist/omo/keyPair";
 import {CirclesToken} from "omo-circles/dist/model/circlesToken";
-import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {Contact} from "omo-models/dist/omo/contact";
 import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
 import {CirclesBalance} from "omo-models/dist/circles/circlesBalance";
@@ -51,10 +51,10 @@ export interface OmoSafeState
   myToken?: CirclesToken,
   myAccountXDaiBalance?: BN,
   mySafeXDaiBalance?: BN,
-  myContacts?: BehaviorSubject<Envelope<Contact[]>>,
-  myKnownTokens?: BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>>,
-  myTransactions?: BehaviorSubject<Envelope<CirclesTransaction[]>>,
-  myBalances?: BehaviorSubject<Envelope<CirclesBalance[]>>
+  myContacts?: BehaviorSubject<StatePropagation<Contact[]>>,
+  myKnownTokens?: BehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>,
+  myTransactions?: BehaviorSubject<StatePropagation<CirclesTransaction[]>>,
+  myBalances?: BehaviorSubject<StatePropagation<CirclesBalance[]>>
 }
 
 const transactionPage = {

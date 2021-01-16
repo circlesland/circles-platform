@@ -6,14 +6,13 @@
     faPlus,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
-  import {CirclesTransaction} from "../../../../libs/o-circles-protocol/model/circlesTransaction";
   import {BN} from "ethereumjs-util";
-  import {Address} from "../../../../libs/o-circles-protocol/interfaces/address";
   import {onMount} from "svelte";
-  import {Contact} from "../../../../libs/o-circles-protocol/model/contact";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
-  import {config} from "../../../../libs/o-circles-protocol/config";
+  import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
+  import {Contact} from "omo-models/dist/omo/contact";
+  import {config} from "omo-circles/dist/config";
 
   export let transaction:CirclesTransaction;
 
@@ -55,7 +54,7 @@
     return bnStr.substring(0, digits) + "." + bnStr.substring(digits);
   }
 
-  function getProfile(safeAddress: Address)
+  function getProfile(safeAddress: string)
   {
     const contact = contacts[safeAddress];
     const profile = {

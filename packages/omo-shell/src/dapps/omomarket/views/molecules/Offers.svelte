@@ -9,9 +9,9 @@
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../../omosapien/manifest";
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
-  import {IpfsNode} from "../../../../libs/o-fission/indexes/ipfsNode";
-  import {Offer, OfferMetadata} from "../../../../libs/o-fission/directories/offers";
   import {OfferIndex} from "omo-indexes/dist/offerIndex";
+  import {Offer, OfferMetadata} from "omo-fission/dist/directories/offers";
+  import {IpfsNode} from "omo-indexes/dist/ipfsNode";
 
   const allOffers = [];
 

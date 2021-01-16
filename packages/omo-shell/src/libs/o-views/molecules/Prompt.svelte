@@ -1,10 +1,6 @@
 <script lang="ts">
   import Button from "../../o-views/atoms/Button.svelte";
   import {Button as ButtonMapping} from "./../interfaces/atoms";
-  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
-  import {Prompt} from "../../o-processes/events/prompt";
-  import {Continue} from "../../o-processes/events/continue";
-  import {Process} from "../../o-processes/interfaces/process";
   import EtherEditor from "../atoms/editors/EtherEditor.svelte";
   import StringEditor from "../atoms/editors/StringEditor.svelte";
   import AddressEditor from "../atoms/editors/AddressEditor.svelte";
@@ -15,6 +11,10 @@
   import InviteCreditEditor from "../atoms/editors/InviteCreditEditor.svelte";
   import OEditor from "../atoms/editors/OEditor.svelte";
   import LocationEditor from "../atoms/editors/LocationEditor.svelte";
+  import {Process} from "omo-process/dist/interfaces/process";
+  import {Prompt} from "omo-process/dist/events/prompt";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+  import {Continue} from "omo-process/dist/events/continue";
 
   export let process: Process;
   export let prompt: Prompt;

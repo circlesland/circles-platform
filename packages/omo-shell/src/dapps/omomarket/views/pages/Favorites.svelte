@@ -1,15 +1,15 @@
 <script lang="ts">
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../../omosapien/manifest";
-  import {runWithDrive} from "../../../../libs/o-fission/fissionDrive";
   import ListItem from "../../../../libs/o-views/molecules/ListItem.svelte";
   import {ListItem as IListItem} from "../../../../libs/o-views/interfaces/molecules";
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
   import {faEdit, faGlobe, faHome} from "@fortawesome/free-solid-svg-icons";
-  import {RunProcess} from "../../../../libs/o-events/runProcess";
   import {publishOffer, PublishOfferContext} from "../../processes/publishOffer/publishOffer";
   import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer/unpublishOffer";
-  import {OfferMetadata} from "../../../../libs/o-fission/directories/offers";
+  import {OfferMetadata} from "omo-fission/dist/directories/offers";
+  import {runWithDrive} from "omo-fission/dist/fissionDrive";
+  import {RunProcess} from "omo-process/dist/events/runProcess";
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   let myOffers: OfferMetadata[] = [];

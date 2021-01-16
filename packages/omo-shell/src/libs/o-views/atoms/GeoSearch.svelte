@@ -2,8 +2,8 @@
   import {OpenStreetMapProvider} from "leaflet-geosearch";
   import TypeaheadAlike from "./svelte-typeahead/TypeaheadAlike.svelte";
   import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
-  import {ProcessArtifact} from "../../o-processes/interfaces/processArtifact";
   import {createEventDispatcher, onMount} from "svelte";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 
   const provider = new OpenStreetMapProvider();
   export let processArtifact: ProcessArtifact;

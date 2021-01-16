@@ -3,10 +3,10 @@ import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {BN} from "ethereumjs-util";
 import {OmoSafeState} from "../manifest";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
-import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {CirclesBalance} from "omo-models/dist/omo/circlesBalance";
 
-const myCirclesBalancesSubject: BehaviorSubject<Envelope<CirclesBalance[]>> = new BehaviorSubject<Envelope<CirclesBalance[]>>({
+const myCirclesBalancesSubject: BehaviorSubject<StatePropagation<CirclesBalance[]>> = new BehaviorSubject<StatePropagation<CirclesBalance[]>>({
   payload: []
 });
 let myBalances: CirclesBalance[] = [];

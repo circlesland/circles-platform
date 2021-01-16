@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {ProcessArtifact} from "../../../o-processes/interfaces/processArtifact";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
   import {createEventDispatcher, onMount} from "svelte";
   import GeoSearch from "../GeoSearch.svelte";
 

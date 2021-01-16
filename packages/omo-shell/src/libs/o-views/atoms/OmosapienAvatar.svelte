@@ -1,6 +1,6 @@
 <script lang="ts">
-  import {runWithDrive} from "../../o-fission/fissionDrive";
-  import {ProfileIndex} from "../../o-fission/indexes/profileIndex";
+  import {runWithDrive} from "omo-fission/dist/fissionDrive";
+  import {ProfileIndex} from "omo-indexes/dist/profileIndex";
 
   export let fissionUsername:string;
   export let classes:string;
@@ -30,9 +30,10 @@
         console.log("await ProfileIndex.tryReadPublicProfile(" + fissionUsername + ") ..")
         const data = await ProfileIndex.tryReadPublicProfile(fissionUsername);
 
-        if (data.avatarDataUrl)
+        if (data.avatarCid)
         {
-          dataUrl = data.avatarDataUrl;
+          // TODO: Load image from CID
+          dataUrl = data.avatarCid;
         }
       }
     });

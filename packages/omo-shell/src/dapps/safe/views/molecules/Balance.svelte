@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { config } from "src/libs/o-circles-protocol/config";
   import { BN } from "ethereumjs-util";
 
   import { Subscription } from "rxjs";
   import { onDestroy, onMount } from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
-  import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-  import {ProgressSignal} from "../../../../libs/o-circles-protocol/interfaces/blockchainEvent";
+  import {config} from "omo-circles/dist/config";
+  import {OmoEvent} from "omo-events/dist/omoEvent";
+  import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 
   let safeState: OmoSafeState = {};
   let balanceSubscriptions: Subscription;

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { ProcessArtifact } from "../../../o-processes/interfaces/processArtifact";
-  import { config } from "../../../o-circles-protocol/config";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
   import { BN } from "ethereumjs-util";
   import { createEventDispatcher, onMount } from "svelte";
+  import {config} from "omo-circles/dist/config";
 
   export let processArtifact: ProcessArtifact;
   const dispatch = createEventDispatcher();

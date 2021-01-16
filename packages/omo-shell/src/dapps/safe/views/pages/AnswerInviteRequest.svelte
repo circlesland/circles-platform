@@ -2,10 +2,10 @@
   import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import {onMount} from "svelte";
   import {pop, push} from "svelte-spa-router";
-  import {RunProcess} from "../../../../libs/o-events/runProcess";
-  import {CloseModal} from "../../../../libs/o-events/closeModal";
   import { Jumper } from "svelte-loading-spinners";
   import {jumpstart, JumpstartContext} from "../../processes/omo/jumpstart";
+  import {CloseModal} from "omo-events/dist/shell/closeModal";
+  import {RunProcess} from "omo-process/dist/events/runProcess";
 
   export let params: {
     from?:string

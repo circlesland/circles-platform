@@ -1,19 +1,18 @@
 <script lang="ts">
   import NavItem from "../atoms/NavItem.svelte";
-  import { Process } from "../../o-processes/interfaces/process";
   import {
     faArrowLeft,
     faForward,
     faTimes,
   } from "@fortawesome/free-solid-svg-icons";
-  import { Back } from "../../o-processes/events/back";
-  import { Cancel } from "../../o-processes/events/cancel";
   import Prompt from "./Prompt.svelte";
-  import { Prompt as PromptEvent } from "../../o-processes/events/prompt";
-  import { Continue } from "../../o-processes/events/continue";
   import { createEventDispatcher } from "svelte";
   import { Subscription } from "rxjs";
-  import { ShellEvent } from "../../o-processes/events/shellEvent";
+  import {Process} from "omo-process/dist/interfaces/process";
+  import {ShellEvent} from "omo-process/dist/events/shellEvent";
+  import {Back} from "omo-process/dist/events/back";
+  import {Cancel} from "omo-process/dist/events/cancel";
+  import {Continue} from "omo-process/dist/events/continue";
 
   /**
    * A channel to an already running process.

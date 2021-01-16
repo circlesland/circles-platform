@@ -4,14 +4,11 @@
   import {onDestroy, onMount} from "svelte";
   import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
-  import {CirclesTransaction} from "../../../../libs/o-circles-protocol/model/circlesTransaction";
-  import {
-    BeginSignal,
-    EndSignal,
-    ProgressSignal,
-    Signal
-  } from "../../../../libs/o-circles-protocol/interfaces/blockchainEvent";
   import TransactionItem from "../atoms/TransactionItem.svelte";
+  import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
+  import {Signal} from "omo-events/dist/signals/signal";
+  import {BeginSignal} from "omo-events/dist/signals/beginSignal";
+  import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 
   let safeState: OmoSafeState = {};
   let transactionsSubscription: Subscription;

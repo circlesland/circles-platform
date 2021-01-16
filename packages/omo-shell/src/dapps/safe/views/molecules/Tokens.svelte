@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { config } from "src/libs/o-circles-protocol/config";
   import { Jumper } from "svelte-loading-spinners";
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
   import { BN } from "ethereumjs-util";
@@ -10,8 +9,9 @@
 
   import {OmoSapienState} from "../../../omosapien/manifest";
   import {OmoSafeState} from "../../manifest";
-  import {CirclesToken} from "../../../../libs/o-circles-protocol/model/circlesToken";
-  import {Contact} from "../../../../libs/o-circles-protocol/model/contact";
+  import {CirclesToken} from "omo-circles/dist/model/circlesToken";
+  import {Contact} from "omo-models/dist/omo/contact";
+  import {config} from "omo-circles/dist/config";
 
   let safeState:OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let balanceSubscriptions: Subscription;

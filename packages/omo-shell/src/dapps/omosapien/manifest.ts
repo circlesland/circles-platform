@@ -11,7 +11,7 @@ import {BehaviorSubject} from "rxjs";
 import {ProfileIndex, ProfileIndexData} from "omo-indexes/dist/profileIndex";
 import {Logger} from "omo-utils/dist/logger";
 import {Profile} from "omo-models/dist/profile";
-import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
@@ -19,7 +19,7 @@ import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 export interface OmoSapienState
 {
   myProfile?: Profile,
-  profileIndex?: BehaviorSubject<Envelope<ProfileIndexData>>
+  profileIndex?: BehaviorSubject<StatePropagation<ProfileIndexData>>
 }
 
 async function tryInitMyProfile(logger: Logger)
@@ -53,7 +53,7 @@ async function tryInitOmoDirectory(logger: Logger)
     const profileIndexData = await ProfileIndex.tryGetProfileIndex();
     if (profileIndexData)
     {
-      omosapienState.profileIndex = new BehaviorSubject<Envelope<ProfileIndexData>>({
+      omosapienState.profileIndex = new BehaviorSubject<StatePropagation<ProfileIndexData>>({
         payload: profileIndexData
       });
 
