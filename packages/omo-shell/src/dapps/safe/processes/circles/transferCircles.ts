@@ -37,7 +37,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     promptRecipient: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleRecipient(),
           nextButtonTitle: "Next",
@@ -61,7 +61,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     promptValue: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleValue(),
           nextButtonTitle: "Next",
@@ -89,7 +89,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     summarize: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleSummary(),
           nextButtonTitle: "Transfer ⦿",
@@ -115,13 +115,13 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     transferCircles: {
-      entry: [
+      entry: <any>[
         sendInProgressPrompt(str.titleProgress),
         sendShellEvent({
           type: "shell.closeModal"
         })
       ],
-      invoke: {
+      invoke: <any>{
         id: 'transferCircles',
         src: transferCirclesService,
         onError: {
@@ -159,5 +159,5 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
 
 export const transferCircles: ProcessDefinition = {
   name: "transferCircles",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

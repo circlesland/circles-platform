@@ -34,7 +34,7 @@ const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>
       }
     },
     promptPrivateKey: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleSeedPhrase(),
           nextButtonTitle: "Import",
@@ -62,8 +62,8 @@ const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>
       }
     },
     importAccount: {
-      entry: sendInProgressPrompt(str.progressImportAccount),
-      invoke: {
+      entry:<any> sendInProgressPrompt(str.progressImportAccount),
+      invoke: <any>{
         id: 'importAccount',
         src: importPrivateKeyService,
         onError: {
@@ -77,7 +77,7 @@ const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>
       }
     },
     success: {
-      entry: sendShellEvent(new RunProcess(fundAccountForSafeCreation)),
+      entry:<any> sendShellEvent(new RunProcess(fundAccountForSafeCreation)),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -98,6 +98,6 @@ const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>
 
 export const importPrivateKey: ProcessDefinition = {
   name: "importPrivateKey",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };
 

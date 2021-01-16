@@ -46,8 +46,8 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     getForeignProfile: {
-      entry: sendInProgressPrompt(str.loadingForeignProfile),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.loadingForeignProfile),
+      invoke: <any>{
         id: 'getForeignProfile',
         src: getForeignProfileService,
         onError: {
@@ -55,7 +55,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
           target: "error"
         },
         onDone: {
-          actions: assign((context, event) => {
+          actions: assign((context:JumpstartContext, event:any) => {
             context.data.foreignProfile  = {
                 key: "foreignProfile",
                 type: "omo.sapien:1:profile",
@@ -68,7 +68,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     intro: {
-      entry: sendPrompt((context: JumpstartContext) => {
+      entry: <any>sendPrompt((context: JumpstartContext) => {
         return {
           title: str.titleIntro(),
           nextButtonTitle: `Empower ${context.data.foreignProfile.value.profile.firstName} ${context.data.foreignProfile.value.profile.lastName}`,
@@ -89,7 +89,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     summarize: {
-      entry: sendPrompt((context: JumpstartContext) => {
+      entry: <any>sendPrompt((context: JumpstartContext) => {
         return {
           title: str.titleSummary(),
           nextButtonTitle: "Use 1 invite credit",
@@ -113,8 +113,8 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     transferJumpstartXDai: {
-      entry: sendInProgressPrompt(str.titleProgress),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.titleProgress),
+      invoke: <any>{
         id: 'transferJumpstartXDai',
         src: transferJumpstartXDaiService,
         onError: {
@@ -152,5 +152,5 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
 
 export const jumpstart: ProcessDefinition = {
   name: "jumpstart",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

@@ -32,7 +32,7 @@ const processDefinition = () => createMachine<SignupAtCirclesContext, OmoEvent>(
       }
     },
     introduction: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: "Create a Circles account?",
           nextButtonTitle: "Next",
@@ -53,8 +53,8 @@ A small amount of the credits you received from your invite will be used to do t
       }
     },
     hubSignup: {
-      entry: sendInProgressPrompt(str.progressHubSignup),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.progressHubSignup),
+      invoke: <any>{
         id: 'hubSignup',
         src: hubSignupService,
         onError: {
@@ -68,7 +68,7 @@ A small amount of the credits you received from your invite will be used to do t
       }
     },
     success: {
-      entry: [
+      entry:<any> [
         sendSuccessPrompt,
         sendShellEvent(new NavigateTo("/safe/tokens"))
       ],
@@ -95,5 +95,5 @@ A small amount of the credits you received from your invite will be used to do t
 
 export const signupAtCircles: ProcessDefinition = {
   name: "signupAtCircles",
-  stateMachine: processDefinition
+  stateMachine:<any> processDefinition
 };

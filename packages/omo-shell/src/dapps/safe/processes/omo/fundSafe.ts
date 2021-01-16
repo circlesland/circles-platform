@@ -30,8 +30,8 @@ const processDefinition = () => createMachine<FundSafeContext, OmoEvent>({
       }
     },
     fundSafe: {
-      entry: sendInProgressPrompt(str.titleProgress),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.titleProgress),
+      invoke: <any>{
         id: 'fundSafe',
         src: fundSafeService,
         onError: {
@@ -45,7 +45,7 @@ const processDefinition = () => createMachine<FundSafeContext, OmoEvent>({
       }
     },
     success: {
-      entry: [
+      entry:<any> [
         sendSuccessPrompt,
         sendShellEvent(new NavigateTo("/safe/transactions"))
       ],
@@ -72,5 +72,5 @@ const processDefinition = () => createMachine<FundSafeContext, OmoEvent>({
 
 export const fundSafe: ProcessDefinition = {
   name: "fundSafe",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

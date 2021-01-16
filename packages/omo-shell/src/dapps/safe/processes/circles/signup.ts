@@ -20,8 +20,8 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     signup: {
-      entry: sendInProgressPrompt(() => ""),
-      invoke: {
+      entry: <any>sendInProgressPrompt(() => ""),
+      invoke:<any> {
         id: 'signup',
         src: hubSignupService,
         onError: {
@@ -59,5 +59,5 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
 
 export const signup: ProcessDefinition = {
   name: "signup",
-  stateMachine: processDefinition
+  stateMachine:<any> processDefinition
 };

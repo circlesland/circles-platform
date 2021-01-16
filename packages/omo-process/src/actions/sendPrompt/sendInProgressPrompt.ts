@@ -1,10 +1,12 @@
 import { send } from "xstate";
-//import Progress from "../../../o-views/atoms/Progress.svelte";
 import { ProcessContext } from "../../interfaces/processContext";
 import { Prompt } from "../../events/prompt";
+import {OmoEvent} from "omo-events/dist/omoEvent";
 
-export const sendInProgressPrompt = (component:unknown, message?: (context: ProcessContext) => string) =>
-  send((context: ProcessContext) => {
+export function sendInProgressPrompt<TContext extends ProcessContext>(component:unknown, message?: (context: TContext) => string)
+{
+  return send<TContext, OmoEvent>((context: TContext) =>
+  {
     return <Prompt>{
       hideNextButton: true,
       type: "process.prompt",
@@ -18,3 +20,4 @@ export const sendInProgressPrompt = (component:unknown, message?: (context: Proc
       data: {}
     };
   });
+}

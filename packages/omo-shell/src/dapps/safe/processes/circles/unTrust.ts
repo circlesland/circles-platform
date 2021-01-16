@@ -35,7 +35,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
       }
     },
     promptTrustReceiver: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleTrustReceiver(),
           nextButtonTitle: "Revoke trust",
@@ -59,13 +59,13 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
       }
     },
     setTrust: {
-      entry: [
+      entry:<any> [
         sendInProgressPrompt(str.titleWorking),
         /*sendShellEvent({
           type: "shell.closeModal"
         })*/
       ],
-      invoke: {
+      invoke: <any>{
         id: 'setTrust',
         src: unTrustService,
         onError: {
@@ -107,5 +107,5 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
 
 export const unTrust: ProcessDefinition = {
   name: "unTrust",
-  stateMachine: processDefinition
+  stateMachine:<any> processDefinition
 };

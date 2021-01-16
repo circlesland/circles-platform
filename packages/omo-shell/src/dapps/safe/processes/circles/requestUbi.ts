@@ -34,13 +34,13 @@ const processDefinition = () => createMachine<RequestUbiContext, OmoEvent>({
       }
     },
     requestUbi: {
-      entry: [
+      entry: <any>[
         sendInProgressPrompt(str.titleProgress),
         sendShellEvent({
           type: "shell.closeModal"
         })
       ],
-      invoke: {
+      invoke:<any> {
         id: 'requestingUbi',
         src: requestUbiService,
         onError: {
@@ -78,5 +78,5 @@ const processDefinition = () => createMachine<RequestUbiContext, OmoEvent>({
 
 export const requestUbi: ProcessDefinition = {
   name: "requestUbi",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

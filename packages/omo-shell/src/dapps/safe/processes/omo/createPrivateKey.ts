@@ -34,8 +34,8 @@ const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>
       }
     },
     createPrivateKey: {
-      entry: sendInProgressPrompt(str.progressCreatePrivateKey),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.progressCreatePrivateKey),
+      invoke: <any>{
         id: 'createPrivateKey',
         src: createPrivateKeyService,
         onError: {
@@ -49,7 +49,7 @@ const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>
       }
     },
     exportPassphrase: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleBackupKey(),
           nextButtonTitle: str.buttonBackupKey(),
@@ -69,7 +69,7 @@ const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>
       }
     },
     success: {
-      entry: sendShellEvent(new RunProcess(fundAccountForSafeCreation)),
+      entry: <any>sendShellEvent(new RunProcess(fundAccountForSafeCreation)),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -90,6 +90,6 @@ const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>
 
 export const createPrivateKey: ProcessDefinition = {
   name: "createPrivateKey",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };
 

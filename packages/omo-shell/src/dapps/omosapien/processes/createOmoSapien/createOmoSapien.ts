@@ -1,5 +1,6 @@
 import { createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
+import Success from "../../../../libs/o-views/atoms/Success.svelte"
 import { strings } from "../../data/strings";
 import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -40,7 +41,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
       }
     },
     promptFirstName: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleFirstName(),
           nextButtonTitle: str.buttonFirstName(),
@@ -64,7 +65,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
       }
     },
     promptLastName: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           canGoBack: true,
           title: str.titleLastName(),
@@ -92,7 +93,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
       }
     },
     promptAvatar: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           canGoBack: true,
           title: str.titleAvatar(),
@@ -120,8 +121,8 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
       }
     },
     createOmoSapien: {
-      entry: sendInProgressPrompt(str.bannerProgress),
-      invoke: {
+      entry:<any> sendInProgressPrompt(str.bannerProgress),
+      invoke: <any>{
         id: 'createOmoSapien',
         src: addOrUpdateMyProfileService,
         onError: {
@@ -142,8 +143,8 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
       }
     },
     success: {
-      entry: [
-        sendSuccessPrompt,
+      entry:<any> [
+        sendSuccessPrompt(Success),
         sendShellEvent(new NavigateTo("/safe/transactions"))
       ],
       on: {
@@ -162,5 +163,5 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
 
 export const createOmoSapien: ProcessDefinition = {
   name: "createOmoSapien",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

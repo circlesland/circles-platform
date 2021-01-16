@@ -12,6 +12,7 @@ import {choice} from "omo-process/dist/artifacts/choice";
 import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
 
 export interface InitialMenuContext extends ProcessContext {
   data: {
@@ -29,7 +30,7 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
       }
     },
     connectOrCreateSafe: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.title_initialMenu(),
           hideNextButton: true,
@@ -66,7 +67,7 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
       }
     },
     importCircles: {
-      entry: [
+      entry: <any>[
         sendShellEvent(new RunProcess(importCircles)),
         send({
           type: "process.triggerSelf"
@@ -77,7 +78,7 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
       }
     },
     signupAtCircles: {
-      entry: [
+      entry:<any> [
         sendShellEvent(new RunProcess(createPrivateKey)),
         send({
           type: "process.triggerSelf"
@@ -94,6 +95,6 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
 });
 export const initialMenu: ProcessDefinition = {
   name: "initialMenu",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };
 

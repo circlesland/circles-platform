@@ -30,8 +30,8 @@ const processDefinition = () => createMachine<PublishOfferContext, OmoEvent>({
       }
     },
     publishOffer: {
-      entry: sendInProgressPrompt(str.bannerProgress),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.bannerProgress),
+      invoke: <any>{
         id: 'publishOffer',
         src: publishOfferService,
         onError: {
@@ -66,5 +66,5 @@ const processDefinition = () => createMachine<PublishOfferContext, OmoEvent>({
 
 export const publishOffer: ProcessDefinition = {
   name: "publishOffer",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

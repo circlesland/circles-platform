@@ -39,7 +39,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     promptRecipient: {
-      entry: sendPrompt((context:SendInviteCreditsContext) => {
+      entry: <any>sendPrompt((context:SendInviteCreditsContext) => {
           return {
             title: str.titleRecipient(),
             nextButtonTitle: "Next",
@@ -63,7 +63,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     promptValue: {
-      entry: sendPrompt((context) => {return{
+      entry: <any>sendPrompt((context) => {return{
         title: str.titleValue(),
         nextButtonTitle: "Next",
         canGoBack: true,
@@ -89,7 +89,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     summarize: {
-      entry: sendPrompt((context) => {return{
+      entry: <any>sendPrompt((context) => {return{
         title: str.titleSummary(),
         nextButtonTitle: "Transfer xDai",
         canGoBack: true,
@@ -113,8 +113,8 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     transferXDai: {
-      entry: sendInProgressPrompt(str.titleProgress),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.titleProgress),
+      invoke: <any>{
         id: 'transferXDai',
         src: sendInviteCreditsService,
         onError: {
@@ -152,5 +152,5 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
 
 export const sendInviteCredits: ProcessDefinition = {
   name: "sendInviteCredits",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

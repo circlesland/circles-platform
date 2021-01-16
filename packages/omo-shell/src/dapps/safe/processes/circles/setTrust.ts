@@ -31,7 +31,7 @@ export interface SetTrustContext extends ProcessContext {
  * Set trust
  */
 const str = strings.safe.processes.setTrust;
-const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
+const processDefinition = (progressView:any) => createMachine<SetTrustContext, OmoEvent>({
   initial: "idle",
   states: {
 
@@ -41,7 +41,7 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       }
     },
     promptTrustReceiver: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleTrustReceiver(),
           nextButtonTitle: "Trust",
@@ -65,13 +65,8 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
       }
     },
     setTrust: {
-      entry: [
-        sendInProgressPrompt(str.titleWorking),
-        /*sendShellEvent({
-          type: "shell.closeModal"
-        })*/
-      ],
-      invoke: {
+      entry: <any>sendInProgressPrompt(progressView, str.titleWorking),
+      invoke: <any>{
         id: 'setTrust',
         src: setTrustService,
         onError: {
@@ -113,5 +108,5 @@ const processDefinition = () => createMachine<SetTrustContext, OmoEvent>({
 
 export const setTrust: ProcessDefinition = {
   name: "setTrust",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

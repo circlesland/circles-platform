@@ -35,7 +35,7 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>(
       }
     },
     promptFirstName: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleFirstName(),
           nextButtonTitle: str.buttonFirstName(),
@@ -59,7 +59,7 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>(
       }
     },
     promptLastName: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           canGoBack: true,
           title: str.titleLastName(),
@@ -87,7 +87,7 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>(
       }
     },
     promptAvatar: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           canGoBack: true,
           title: str.titleAvatar(),
@@ -115,8 +115,8 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>(
       }
     },
     updateOmoSapien: {
-      entry: sendInProgressPrompt(str.bannerProgress),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.bannerProgress),
+      invoke: <any>{
         id: 'updateOmoSapien',
         src: addOrUpdateMyProfileService,
         onError: {
@@ -146,5 +146,5 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>(
 
 export const updateOmoSapien: ProcessDefinition = {
   name: "updateOmoSapien",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

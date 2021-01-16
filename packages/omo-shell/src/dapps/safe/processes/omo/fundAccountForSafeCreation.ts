@@ -28,7 +28,7 @@ const processDefinition = () => createMachine<FundAccountContext, OmoEvent>({
       }
     },
     generateFundLink: {
-      entry: [assign((context, event) =>
+      entry: <any>[assign((context:FundAccountContext, event) =>
       {
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
         const fissionName = fissionAuthState.fission.getValue().payload.username;
@@ -73,6 +73,6 @@ const processDefinition = () => createMachine<FundAccountContext, OmoEvent>({
 
 export const fundAccountForSafeCreation: ProcessDefinition = {
   name: "fundAccountForSafeCreation",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };
 

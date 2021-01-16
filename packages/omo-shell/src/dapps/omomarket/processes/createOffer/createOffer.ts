@@ -18,6 +18,8 @@ import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import Success from "omo-shell/o-views/atoms/Success.svelte";
+import Error from "omo-shell/o-views/atoms/Error.svelte";
 
 export interface CreateOfferContext extends ProcessContext {
   data: {
@@ -43,7 +45,7 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     promptName: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleProductName(),
           nextButtonTitle: str.buttonProductName(),
@@ -67,7 +69,7 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     promptPicture: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           canGoBack: true,
           title: str.titleProductPicture(),
@@ -95,7 +97,7 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     promptPrice: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleProductPrice(),
           nextButtonTitle: str.buttonProductPrice(),
@@ -123,7 +125,7 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     promptDescription: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleProductDescription(),
           nextButtonTitle: str.buttonProductDescription(),
@@ -151,7 +153,7 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     promptLocation: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleProductLocation(),
           nextButtonTitle: str.buttonProductLocation(),
@@ -179,7 +181,7 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     summarize: {
-      entry: sendPrompt((context: CreateOfferContext) => {
+      entry: <any>sendPrompt((context: CreateOfferContext) => {
         return {
           title: str.titleSummary(),
           nextButtonTitle: str.buttonSummary(),
@@ -206,8 +208,8 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     createOffer: {
-      entry: sendInProgressPrompt(str.bannerProgress),
-      invoke: {
+      entry:<any> sendInProgressPrompt(str.bannerProgress),
+      invoke: <any>{
         id: 'createOffer',
         src: createOfferService,
         onError: {
@@ -221,14 +223,14 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(Error),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(Success),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -242,5 +244,5 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
 
 export const createOffer: ProcessDefinition = {
   name: "createOffer",
-  stateMachine: processDefinition
+  stateMachine:<any> processDefinition
 };

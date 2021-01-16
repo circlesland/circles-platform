@@ -37,7 +37,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     promptSafeAddress: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleSafeAddress(),
           nextButtonTitle: str.buttonSafeAddress(),
@@ -61,7 +61,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     promptPrivateKey: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: str.titleSeedPhrase(),
           nextButtonTitle: "Connect safe",
@@ -92,8 +92,8 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     connectSafe: {
-      entry: sendInProgressPrompt(str.titleProgress),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.titleProgress),
+      invoke: <any>{
         id: 'connectSafe',
         src: connectSafeService,
         onError: {
@@ -128,5 +128,5 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
 
 export const importCircles: ProcessDefinition = {
   name: "importCircles",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };

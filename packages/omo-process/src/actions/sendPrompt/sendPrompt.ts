@@ -20,7 +20,7 @@ export type PromptSpec = {
 };
 
 export const sendPrompt = (generateSpec: (context: ProcessContext) => PromptSpec) => {
-
+  
   const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
     const spec = generateSpec(context);
     Object.keys(spec.artifacts)

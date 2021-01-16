@@ -37,7 +37,7 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
       }
     },
     introduction: {
-      entry: sendPrompt((context) => {
+      entry: <any>sendPrompt((context) => {
         return {
           title: "Create a new safe?",
           nextButtonTitle: "Next",
@@ -71,8 +71,8 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
       }
     },
     deploySafe: {
-      entry: sendInProgressPrompt(str.progressCreatePrivateKey),
-      invoke: {
+      entry: <any>sendInProgressPrompt(str.progressCreatePrivateKey),
+      invoke: <any>{
         id: 'deploySafe',
         src: deploySafeService,
         onError: {
@@ -86,7 +86,7 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
       }
     },
     success: {
-      entry: [
+      entry: <any>[
         sendSuccessPrompt,
         sendShellEvent(new NavigateTo("/safe/tokens"))
       ],
@@ -113,6 +113,6 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
 
 export const deploySafe: ProcessDefinition = {
   name: "deploySafe",
-  stateMachine: processDefinition
+  stateMachine: <any>processDefinition
 };
 
