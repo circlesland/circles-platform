@@ -1,4 +1,4 @@
-import { BN } from "ethereumjs-util";
+import BN from "omo-quirks/dist/BN";
 import {FundSafeContext} from "../processes/omo/fundSafe";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";

@@ -7,7 +7,6 @@ import {faUserAstronaut} from "@fortawesome/free-solid-svg-icons";
 import {createOmoSapien} from "./processes/createOmoSapien/createOmoSapien";
 import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
-import {BehaviorSubject} from "rxjs";
 import {ProfileIndex, ProfileIndexData} from "omo-indexes/dist/profileIndex";
 import {Logger} from "omo-utils/dist/logger";
 import {Profile} from "omo-models/dist/profile";
@@ -15,11 +14,12 @@ import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface OmoSapienState
 {
   myProfile?: Profile,
-  profileIndex?: BehaviorSubject<StatePropagation<ProfileIndexData>>
+  profileIndex?: OmoBehaviorSubject<StatePropagation<ProfileIndexData>>
 }
 
 async function tryInitMyProfile(logger: Logger)
@@ -53,7 +53,7 @@ async function tryInitOmoDirectory(logger: Logger)
     const profileIndexData = await ProfileIndex.tryGetProfileIndex();
     if (profileIndexData)
     {
-      omosapienState.profileIndex = new BehaviorSubject<StatePropagation<ProfileIndexData>>({
+      omosapienState.profileIndex = new OmoBehaviorSubject<StatePropagation<ProfileIndexData>>({
         payload: profileIndexData
       });
 

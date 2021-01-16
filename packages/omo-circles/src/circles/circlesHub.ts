@@ -2,7 +2,7 @@ import type Web3 from "web3";
 import type { AbiItem } from "web3-utils";
 import { CIRCLES_HUB_ABI, ZERO_ADDRESS } from "../consts";
 import type { GnosisSafeProxy } from "../safe/gnosisSafeProxy";
-import { BN } from "ethereumjs-util";
+import BN from "omo-quirks/dist/BN";
 import { Web3Contract } from "../web3Contract";
 import { config } from "../config";
 import {SafeOps} from "omo-models/dist/safe/safeOps";

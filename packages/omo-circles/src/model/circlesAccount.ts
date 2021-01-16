@@ -1,7 +1,6 @@
 import {config} from "../config";
 import {CirclesHub} from "../circles/circlesHub";
-import BN from "bn.js";
-import {Observable, Subject} from "rxjs";
+import BN from "omo-quirks/dist/BN";
 import {CirclesToken} from "./circlesToken";
 import {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
 import {ZERO_ADDRESS} from "../consts";
@@ -9,6 +8,8 @@ import {Erc20Token} from "../token/erc20Token";
 import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 import {CirclesAccount as CirclesAccountModel} from "omo-models/dist/circles/circlesAccount"
 import {SafeOps} from "omo-models/dist/safe/safeOps";
+import {OmoObservable} from "omo-quirks/dist/OmoObservable";
+import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 
 export class CirclesAccount implements CirclesAccountModel
 {
@@ -107,9 +108,9 @@ export class CirclesAccount implements CirclesAccountModel
     return balances;
   }
 
-  subscribeToMyContacts(): Observable<BlockchainEvent>
+  subscribeToMyContacts(): OmoObservable<BlockchainEvent>
   {
-    const subject = new Subject<BlockchainEvent>();
+    const subject = new OmoSubject<BlockchainEvent>();
 
     const myIncomingTrusts = this.hub.queryEvents(CirclesHub.queryPastTrusts(undefined, this.safeAddress));
     myIncomingTrusts.events.subscribe(trustEvent =>

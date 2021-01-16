@@ -1,5 +1,4 @@
-import BN from "bn.js";
-import {Subject} from "rxjs";
+import BN from "omo-quirks/dist/BN";
 import {config} from "../config";
 import {Subscription} from "web3-core-subscriptions";
 import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
@@ -11,6 +10,7 @@ import {BeginSignal} from "omo-events/dist/beginSignal";
 import {ProgressSignal} from "omo-events/dist/progressSignal";
 import {EndSignal} from "omo-events/dist/endSignal";
 import {SystemEvent} from "omo-models/dist/omo-circles/src/interfaces/blockchainEvent";
+import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 
 export class CirclesToken implements CirclesTokenModel
 {
@@ -55,7 +55,7 @@ export class CirclesToken implements CirclesTokenModel
    */
   async feedTransactionHistory(
     mySafeAddress: string,
-    subject: Subject<OmoEvent>,
+    subject: OmoSubject<OmoEvent>,
     tokensByAddress:{[tokenAddress:string]:CirclesToken},
     tokenAddresses: string[],
     fromBlock: number,
@@ -176,7 +176,7 @@ export class CirclesToken implements CirclesTokenModel
   }
 
   subscribeToTransactions(
-      subject:Subject<SystemEvent>,
+      subject:OmoSubject<SystemEvent>,
       mySafeAddress:string,
       tokensByAddress:{[tokenAddress:string]:CirclesToken},
       tokenAddresses:string[])

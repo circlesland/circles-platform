@@ -1,6 +1,5 @@
-import {BehaviorSubject, Subject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {BN} from "ethereumjs-util";
+import BN from "omo-quirks/dist/BN";
 import {OmoSafeState} from "../manifest";
 import {Logger} from "omo-utils/dist/logger";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
@@ -13,6 +12,8 @@ import {config} from "omo-circles/dist/config";
 import {Token} from "omo-models/dist/omo/token";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 
 type TransactionList = {
   [token: string]: {
@@ -23,7 +24,7 @@ type TransactionList = {
 let initMyTransactionLogger:Logger;
 
 // The consumable output of this init step (deduplicated ordered list of transactions)
-const myTransactionsSubject: BehaviorSubject<StatePropagation<CirclesTransaction[]>> = new BehaviorSubject<StatePropagation<CirclesTransaction[]>>({
+const myTransactionsSubject: OmoBehaviorSubject<StatePropagation<CirclesTransaction[]>> = new OmoBehaviorSubject<StatePropagation<CirclesTransaction[]>>({
   payload: []
 });
 
@@ -34,7 +35,7 @@ const myTransactions: TransactionList = {};
 const tokensByAddress: { [address: string]: CirclesToken } = {};
 
 // All incoming raw transactions are passed trough this stream.
-const transactionStream: Subject<CirclesTransaction> = new Subject<CirclesTransaction>();
+const transactionStream: OmoSubject<CirclesTransaction> = new OmoSubject<CirclesTransaction>();
 
 
 function indexTransaction(ct: CirclesTransaction)
@@ -201,7 +202,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, async () =>
 /**
  * Loads the cached transactions from the fission drive and feeds them into the "transactions" stream.
  */
-async function feedCachedTransactions(transactions: Subject<OmoEvent>, tokenAddresses: string[])
+async function feedCachedTransactions(transactions: OmoSubject<OmoEvent>, tokenAddresses: string[])
 {
   await runWithDrive(async fissionDrive =>
   {

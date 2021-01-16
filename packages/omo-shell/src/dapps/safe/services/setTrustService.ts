@@ -1,4 +1,4 @@
-import { BN } from "ethereumjs-util";
+import BN from "omo-quirks/dist/BN";
 import {SetTrustContext} from "../processes/circles/setTrust";
 import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
 

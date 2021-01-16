@@ -9,7 +9,8 @@
   "dependencies": {
     "omo-utils": "1.0.0",
     "omo-events": "1.0.0",
-    "omo-quirks": "1.0.0"
+    "omo-quirks": "1.0.0",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1"
   },
   "author": "",
   "license": "ISC"

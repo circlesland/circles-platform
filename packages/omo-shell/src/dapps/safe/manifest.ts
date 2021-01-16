@@ -15,7 +15,6 @@ import {BN} from "ethereumjs-util";
 import {sendInviteCredits, SendInviteCreditsContext} from "./processes/omo/sendInviteCredits";
 import {deploySafe} from "./processes/safe/deploySafe";
 import {FissionAuthState} from "../fissionauth/manifest";
-import {BehaviorSubject} from "rxjs";
 import {initMyKey} from "./init/myKey";
 import {initXDaiBalances} from "./init/xDaiBalances";
 import {initMyContacts} from "./init/myContacts";
@@ -43,6 +42,7 @@ import {RunProcess} from "omo-process/dist/events/runProcess";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {CloseModal} from "omo-events/dist/shell/closeModal";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface OmoSafeState
 {
@@ -51,10 +51,10 @@ export interface OmoSafeState
   myToken?: CirclesToken,
   myAccountXDaiBalance?: BN,
   mySafeXDaiBalance?: BN,
-  myContacts?: BehaviorSubject<StatePropagation<Contact[]>>,
-  myKnownTokens?: BehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>,
-  myTransactions?: BehaviorSubject<StatePropagation<CirclesTransaction[]>>,
-  myBalances?: BehaviorSubject<StatePropagation<CirclesBalance[]>>
+  myContacts?: OmoBehaviorSubject<StatePropagation<Contact[]>>,
+  myKnownTokens?: OmoBehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>,
+  myTransactions?: OmoBehaviorSubject<StatePropagation<CirclesTransaction[]>>,
+  myBalances?: OmoBehaviorSubject<StatePropagation<CirclesBalance[]>>
 }
 
 const transactionPage = {

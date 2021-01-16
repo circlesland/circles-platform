@@ -1,10 +1,10 @@
-import {Subject} from "rxjs";
 import {useMachine} from "xstate-svelte";
 import {getProcessContext} from "./o";
 import {Process} from "omo-process/dist/process";
 import {ProcessDefinition} from "omo-process/dist/processManifest";
 import {ProcessContext} from "omo-process/dist/processContext";
 import {ProcessEvent} from "omo-process/dist/processEvent";
+import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 
 export const stateMachine = {
   _current: null,
@@ -27,7 +27,7 @@ export const stateMachine = {
           : await getProcessContext()
       });
 
-    const processEvents = new Subject<ProcessEvent>();
+    const processEvents = new OmoSubject<ProcessEvent>();
 
     service.onTransition((state1, event) =>
     {

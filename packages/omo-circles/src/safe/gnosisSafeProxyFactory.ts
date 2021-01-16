@@ -1,7 +1,7 @@
 import type Web3 from "web3";
 import type {AbiItem} from "web3-utils";
 import {GNOSIS_SAFE_ABI, PROXY_FACTORY_ABI, ZERO_ADDRESS} from "../consts";
-import BN from "bn.js";
+import BN from "omo-quirks/dist/BN";
 import {GnosisSafeProxy} from "./gnosisSafeProxy";
 import {Web3Contract} from "../web3Contract";
 

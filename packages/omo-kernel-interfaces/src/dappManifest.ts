@@ -23,7 +23,7 @@ export interface DappManifest<TInternalState extends DappState, TExternalState e
   /**
    * This icon will be displayed in the dapp overview.
    */
-  icon: IconDefinition,
+  icon?: IconDefinition,
   /**
    * This title will be displayed as the dapp name.
    */

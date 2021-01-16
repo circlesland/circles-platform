@@ -1,16 +1,16 @@
-import type { Observable } from "rxjs";
+import {OmoObservable} from "omo-quirks/dist/OmoObservable";
 
 export class EventQuery<TItem>
 {
   readonly execute: () => Promise<number>;
-  readonly events: Observable<TItem & { blockNumber: number }>
+  readonly events: OmoObservable<TItem & { blockNumber: number }>
 
-  constructor(execute: () => Promise<number>, events: Observable<TItem & { blockNumber: number }>) {
+  constructor(execute: () => Promise<number>, events: OmoObservable<TItem & { blockNumber: number }>) {
     this.execute = execute;
     this.events = events;
   }
 
-  pipe<TResult>(pipe: (events: Observable<TItem & { blockNumber: number }>) => Observable<TResult & { blockNumber: number }>): EventQuery<TResult & { blockNumber: number }> {
+  pipe<TResult>(pipe: (events: OmoObservable<TItem & { blockNumber: number }>) => OmoObservable<TResult & { blockNumber: number }>): EventQuery<TResult & { blockNumber: number }> {
     return new EventQuery<TResult & { blockNumber: number }>(this.execute, pipe(this.events));
   }
 

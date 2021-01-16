@@ -1,4 +1,3 @@
-import {BehaviorSubject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
@@ -10,8 +9,9 @@ import {Token} from "omo-models/dist/omo/token";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
-const myKnownTokensSubject: BehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>> = new BehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>({
+const myKnownTokensSubject: OmoBehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>> = new OmoBehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>({
   payload: {}
 });
 const blockIndex = new BlockIndex();

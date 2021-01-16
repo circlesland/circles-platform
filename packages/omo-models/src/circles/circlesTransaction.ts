@@ -1,4 +1,4 @@
-import {BN} from "ethereumjs-util";
+import BN from "omo-quirks/dist/BN";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 
 export interface CirclesTransaction extends OmoEvent

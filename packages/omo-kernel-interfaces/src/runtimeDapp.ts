@@ -2,9 +2,9 @@ import {DappManifest} from "./dappManifest";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {Topic} from "omo-utils/dist/eventBroker";
 import {StatePropagation} from "./statePropagation";
-import {BehaviorSubject} from "rxjs";
 import {DappState} from "./dappState";
 import {Signal} from "omo-events/dist/signal";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface RuntimeDapp<TInternalState extends DappState, TExternalState extends DappState> extends DappManifest<TInternalState, TExternalState>
 {
@@ -23,7 +23,7 @@ export interface RuntimeDapp<TInternalState extends DappState, TExternalState ex
   outEvents?:Topic<OmoEvent>,
 
 
-  state: () => BehaviorSubject<StatePropagation<TExternalState>>
+  state: () => OmoBehaviorSubject<StatePropagation<TExternalState>>
 
   emitSignal: (signal:Signal) => void;
   emitState: (state:DappState) => void;

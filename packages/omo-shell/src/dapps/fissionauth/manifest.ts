@@ -3,15 +3,15 @@ import Auth from "./pages/Auth.svelte";
 import Authenticate from "./pages/Authenticate.svelte";
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/data/actions";
 import { tryGetDappState } from "../../libs/o-os/loader";
-import {BehaviorSubject} from "rxjs";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {FissionDrive} from "omo-fission/dist/fissionDrive";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface FissionAuthState {
   fissionState: any,
-  fission: BehaviorSubject<StatePropagation<FissionDrive>>,
+  fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
   username: string
 }
 

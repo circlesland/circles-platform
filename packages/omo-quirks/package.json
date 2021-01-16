@@ -1,5 +1,5 @@
 {
-  "name": "omo-models",
+  "name": "omo-quirks",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "omo-events": "1.0.0",
-    "omo-quirks": "1.0.0"
+    "rxjs": "^6.6.3",
+    "bn.js": "^5.1.3"
   },
   "author": "",
   "license": "ISC",

@@ -1,4 +1,4 @@
-import { BN } from "ethereumjs-util";
+import BN from "omo-quirks/dist/BN";
 import {TransferCirclesContext} from "../processes/circles/transferCircles";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
@@ -47,7 +47,8 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 
   try {
     const circlesValueInWei = context.web3.utils
-      .toWei(context.data.value.value.toString(), "ether");
+      .toWei(context.data.value.value.toString(), "ether")
+      .toString();
     const oValueInWei = new BN(circlesValueInWei).div(new BN("3"));
     /*
     const pathResult = await sendMessage({

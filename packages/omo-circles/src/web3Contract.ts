@@ -1,21 +1,21 @@
 import type { Contract, PastEventOptions } from "web3-eth-contract";
-import { Subject } from "rxjs";
 import type Web3 from "web3";
-import BN from "bn.js";
+import BN from "omo-quirks/dist/BN";
 import type Common from "ethereumjs-common";
 import { config } from "./config";
 import { Transaction, TxData } from "ethereumjs-tx";
-import { filter, map } from "rxjs/operators";
 import { EventQuery } from "./eventQuery";
 import type { TransactionReceipt } from "web3-core";
 import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
+import {OmoSubject} from "omo-quirks/dist/OmoSubject";
+import {omoRxjsFilter, omoRxjsMap} from "omo-quirks/dist/operators";
 
 export abstract class Web3Contract {
   readonly web3: Web3;
   readonly address: string;
   readonly contract: Contract;
 
-  protected readonly _pastEvents: Subject<any> = new Subject<any>();
+  protected readonly _pastEvents: OmoSubject<any> = new OmoSubject<any>();
 
   constructor(web3: Web3, contractAddress: string, contractInstance: Contract) {
     if (!web3)
@@ -71,8 +71,8 @@ export abstract class Web3Contract {
       () => self.feedPastEvents(options),
       self.events([options.event])
         .pipe(
-          filter(filterPredicate),
-          map((event) => <BlockchainEvent>{
+            omoRxjsFilter(filterPredicate),
+          omoRxjsMap((event) => <BlockchainEvent>{
             type: "blockchain",
             address: event.address,
             blockNumber: event.blockNumber,
@@ -89,7 +89,7 @@ export abstract class Web3Contract {
    * @param events
    */
   events(events: string[]) {
-    const subject = new Subject<any>();
+    const subject = new OmoSubject<any>();
     this._pastEvents.subscribe(next => subject.next(next));
 
     for (let event of events) {
