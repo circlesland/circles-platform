@@ -1,5 +1,5 @@
-import { OmoEvent } from "./omoEvent";
-import { OmoEventTypes } from "./eventTypes";
+import { OmoEvent } from "../omoEvent";
+import { OmoEventTypes } from "../eventTypes";
 
 export class NavigateTo implements OmoEvent {
   type: OmoEventTypes = "shell.navigateTo";

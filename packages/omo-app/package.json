@@ -31,7 +31,9 @@
 		"webnative": "^0.21.2",
 		"workbox-webpack-plugin": "^6.0.2",
 		"omo-utils": "1.0.0",
-		"omo-indexes": "1.0.0"
+		"omo-indexes": "1.0.0",
+		"omo-events": "1.0.0",
+		"omo-circles": "1.0.0"
 	},
 	"devDependencies": {
 		"@fortawesome/free-solid-svg-icons": "^5.15.1",

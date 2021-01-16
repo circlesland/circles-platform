@@ -1,5 +1,5 @@
-import {OmoEvent} from "../dist/omoEvent";
-import {OmoEventTypes} from "../dist/eventTypes";
+import { OmoEvent } from "../omoEvent";
+import { OmoEventTypes } from "../eventTypes";
 
 export abstract class Signal implements OmoEvent
 {

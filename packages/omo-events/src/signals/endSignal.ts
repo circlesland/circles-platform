@@ -1,4 +1,4 @@
-import {OmoEventTypes} from "../dist/eventTypes";
+import { OmoEventTypes } from "../eventTypes";
 import {Signal} from "./signal";
 
 export class EndSignal extends Signal

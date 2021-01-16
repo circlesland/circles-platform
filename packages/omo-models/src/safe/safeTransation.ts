@@ -1,15 +1,14 @@
 import type BN from "bn.js";
-import type { ByteString } from "./byteString";
-import type { Address } from "./address";
+import {SafeOps} from "./safeOps";
 
 export interface SafeTransaction {
-  to: Address;
+  to: string;
   value: BN;
-  data: ByteString;
-  operation: GnosisSafeOps;
+  data: string;
+  operation: SafeOps;
   safeTxGas?: BN;
   baseGas?: BN;
-  gasToken: Address;
-  refundReceiver: Address;
+  gasToken: string;
+  refundReceiver: string;
   nonce?: number;
 }
