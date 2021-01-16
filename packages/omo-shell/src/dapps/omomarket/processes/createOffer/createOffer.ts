@@ -11,6 +11,7 @@ import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse"
 import {file} from "omo-process/dist/artifacts/file";
 import {o} from "omo-process/dist/artifacts/o";
 import {text} from "omo-process/dist/artifacts/text";
+import {location} from "omo-process/dist/artifacts/location";
 import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "omo-process/dist/actions/setError";
 import {setProcessResult} from "omo-process/dist/actions/setProcessResult";

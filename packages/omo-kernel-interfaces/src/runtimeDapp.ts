@@ -23,7 +23,7 @@ export interface RuntimeDapp<TInternalState extends DappState, TExternalState ex
   outEvents?:Topic<OmoEvent>,
 
 
-  state: () => BehaviorSubject<StatePropagation<TExternalState extends DappState>>
+  state: () => BehaviorSubject<StatePropagation<TExternalState>>
 
   emitSignal: (signal:Signal) => void;
   emitState: (state:DappState) => void;
