@@ -1,9 +1,8 @@
 import {entropyToMnemonic, mnemonicToEntropy} from "bip39";
-import {config} from "../../../libs/o-circles-protocol/config";
-import {ByteString} from "../../../libs/o-circles-protocol/interfaces/byteString";
-import {ProcessArtifact} from "../../../libs/o-processes/interfaces/processArtifact";
 import {ImportPrivateKeyContext} from "../processes/omo/importPrivateKey";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
+import {config} from "omo-circles/dist/config";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 
 function isValidKeyPhrase(value: string): string | null {
   try {
@@ -36,7 +35,7 @@ function isValidHexKey(value: string): string | null {
     return null;
 
   try {
-    let hexString: ByteString;
+    let hexString: string;
 
     if (value.startsWith("0x") && value.length == 66) {
       // prefixed hex string
@@ -80,7 +79,7 @@ export const importPrivateKeyService = async (context: ImportPrivateKeyContext) 
       .privateKeyToAccount(privateKey)
       .address;
 
-    if (!context.environment.eth.web3.utils.isAddress(ownerAddress))
+    if (!context.web3.utils.isAddress(ownerAddress))
     {
       throw new Error("The private key seems to be invalid because no address could be derived from it.");
     }

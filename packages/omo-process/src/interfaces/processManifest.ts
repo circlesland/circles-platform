@@ -1,4 +1,6 @@
 import { StateMachine } from "xstate";
+import {ProcessContext} from "./processContext";
+import {OmoEvent} from "omo-events/dist/omoEvent";
 
 export interface ProcessManifest {
   id?: number;
@@ -6,5 +8,5 @@ export interface ProcessManifest {
 }
 
 export interface ProcessDefinition extends ProcessManifest {
-  stateMachine: (() => StateMachine<any, any, any>) | ((args: any) => StateMachine<any, any, any>);
+  stateMachine: (() => StateMachine<ProcessContext, any, OmoEvent>) | ((args: any) => StateMachine<ProcessContext, any, OmoEvent>);
 }

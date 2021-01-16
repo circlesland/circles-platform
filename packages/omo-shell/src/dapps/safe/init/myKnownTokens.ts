@@ -1,15 +1,15 @@
 import {BehaviorSubject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
-import {Token} from "../../../libs/o-fission/entities/token";
-import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
-import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
-import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
+import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {CirclesToken} from "omo-circles/dist/model/circlesToken";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {Token} from "omo-models/dist/omo/token";
+import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
+import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 
 const myKnownTokensSubject: BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>> = new BehaviorSubject<Envelope<{ [safeAddress: string]: CirclesToken }>>({
   payload: {}
@@ -68,11 +68,12 @@ export async function initMyKnownTokens()
         const existingKnownTokens = existingKnownTokensList.entries;
         Object.values(existingKnownTokens).forEach(cachedToken =>
         {
-          const token = new CirclesToken(safeState.mySafeAddress);
-          token.createdInBlockNo = cachedToken.createdInBlockNo;
-          token.tokenAddress = cachedToken.tokenAddress;
-          token.tokenOwner = cachedToken.tokenOwner;
-          token.noTransactionsUntilBlockNo = cachedToken.noTransactionsUntilBlockNo;
+          const token = new CirclesToken(
+            safeState.mySafeAddress,
+            cachedToken.tokenAddress,
+            cachedToken.tokenOwner,
+            cachedToken.createdInBlockNo,
+            cachedToken.noTransactionsUntilBlockNo);
 
           myKnownTokens[token.tokenOwner] = token;
         });

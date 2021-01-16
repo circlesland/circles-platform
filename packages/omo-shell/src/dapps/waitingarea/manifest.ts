@@ -1,10 +1,11 @@
 import WaitingArea from "./pages/WaitingArea.svelte";
-import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
 import {faHourglass} from "@fortawesome/free-solid-svg-icons";
+import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface WaitingAreaState {}
 export const waitingarea : DappManifest<WaitingAreaState,WaitingAreaState> = {
   id: "omo.waitingarea:1",
+  isSingleton: true,
   dependencies: [],
   isHidden: true,
   icon: faHourglass,

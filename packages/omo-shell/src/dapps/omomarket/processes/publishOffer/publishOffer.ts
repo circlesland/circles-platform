@@ -1,15 +1,15 @@
 import { createMachine} from "xstate";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
-import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
-import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {strings} from "../../data/strings";
 import {publishOfferService} from "./services/publishOfferService";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {setError} from "omo-process/dist/actions/setError";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 export interface PublishOfferContext extends ProcessContext {
   data: {

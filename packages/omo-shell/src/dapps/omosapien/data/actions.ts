@@ -1,8 +1,7 @@
 import { faUserCircle, faUserAstronaut, faKey, faCoins, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { RunProcess } from "../../../libs/o-events/runProcess";
-import { createOmoSapien } from "../processes/createOmoSapien/createOmoSapien";
-import { QuickAction } from "../../../libs/o-os/types/quickAction";
 import { updateOmoSapien } from "../processes/updateOmoSapien/updateOmoSapien";
+import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
+import {RunProcess} from "omo-process/dist/events/runProcess";
 
 export const omoSapienDefaultActions: QuickAction[] = [
   {

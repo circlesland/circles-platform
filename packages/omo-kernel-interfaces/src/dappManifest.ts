@@ -1,8 +1,9 @@
 import {IconDefinition} from "@fortawesome/fontawesome-common-types";
 import {PageManifest} from "./pageManifest";
 import {RuntimeDapp} from "./runtimeDapp";
+import {DappState} from "./dappState";
 
-export interface DappManifest<TInternalState, TExternalState>
+export interface DappManifest<TInternalState extends DappState, TExternalState extends DappState>
 {
   /**
    * A unique identifier for this dapp manifest.

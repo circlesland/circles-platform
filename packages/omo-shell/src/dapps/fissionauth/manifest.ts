@@ -1,14 +1,13 @@
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Auth from "./pages/Auth.svelte";
 import Authenticate from "./pages/Authenticate.svelte";
-import { DappManifest } from "../../libs/o-os/interfaces/dappManifest";
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/data/actions";
-import { FissionDrive } from "../../libs/o-fission/fissionDrive";
 import { tryGetDappState } from "../../libs/o-os/loader";
 import {BehaviorSubject} from "rxjs";
-import {RuntimeDapp} from "../../libs/o-os/interfaces/runtimeDapp";
-import {Signal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
-import {Envelope} from "../../libs/o-os/interfaces/envelope";
+import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
+import {FissionDrive} from "omo-fission/dist/fissionDrive";
+import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface FissionAuthState {
   fissionState: any,
@@ -80,6 +79,7 @@ const authPage = {
 
 export const fissionauth: DappManifest<FissionAuthState, FissionAuthState> = {
   id: "omo.fission.auth:1",
+  isSingleton: true,
   dependencies: [],
   isHidden: true,
   isEnabled: false,

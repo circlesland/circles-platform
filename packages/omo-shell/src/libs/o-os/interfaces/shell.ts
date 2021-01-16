@@ -1,9 +1,9 @@
 import {Subject} from "rxjs";
-import {OmoEvent} from "../../o-events/omoEvent";
-import {Process} from "../../o-processes/interfaces/process";
-import {ProcessDefinition} from "../../o-processes/processManifest";
-import {ProcessContext} from "../../o-processes/interfaces/processContext";
 import {Logger} from "omo-utils/dist/logger";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {Process} from "omo-process/dist/process";
+import {ProcessDefinition} from "omo-process/dist/processManifest";
+import {ProcessContext} from "omo-process/dist/processContext";
 
 export interface Shell {
   lastError?: any;
@@ -15,6 +15,5 @@ export interface Shell {
     current(): Process | null,
     cancel(),
     run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<ProcessContext>) => Process
-  },
-  wn: any
+  }
 }

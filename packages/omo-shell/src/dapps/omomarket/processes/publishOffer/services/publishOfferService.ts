@@ -1,5 +1,5 @@
-import {runWithDrive} from "../../../../../libs/o-fission/fissionDrive";
 import {PublishOfferContext} from "../publishOffer";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
 export const publishOfferService = async (context: PublishOfferContext) =>
 {

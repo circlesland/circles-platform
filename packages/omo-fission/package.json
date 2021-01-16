@@ -9,6 +9,7 @@
   "dependencies": {
     "webnative": "^0.21.2",
     "omo-models": "1.0.0",
+    "omo-utils": "1.0.0",
     "omo-kernel-interfaces": "1.0.0",
     "rxjs": "^6.6.3"
   },

@@ -1,13 +1,13 @@
 import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
-import { RunProcess } from "src/libs/o-events/runProcess";
-import {QuickAction} from "../../../libs/o-os/types/quickAction";
 import {requestUbi} from "../processes/circles/requestUbi";
 import {transferCircles} from "../processes/circles/transferCircles";
 import {setTrust, SetTrustContext} from "../processes/circles/setTrust";
 import {sendInviteCredits} from "../processes/omo/sendInviteCredits";
+import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
+import {RunProcess} from "omo-process/dist/events/runProcess";
 
 export const safeDefaultActions: QuickAction[] = [
-  {
+{
     type: "route",
     pos: "1",
     mapping: {

@@ -1,9 +1,9 @@
 import {SignupAtCirclesContext} from "../processes/omo/signupAtCircles";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
+import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 
 export const hubSignupService = async (context: SignupAtCirclesContext) =>
 {
@@ -11,7 +11,7 @@ export const hubSignupService = async (context: SignupAtCirclesContext) =>
   {
     try
     {
-      const web3 = context.environment.eth.web3;
+      const web3 = context.web3;
       const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
       const ownerAddress = web3
         .eth
@@ -21,7 +21,7 @@ export const hubSignupService = async (context: SignupAtCirclesContext) =>
 
       const gnosisSafeProxy = new GnosisSafeProxy(web3, ownerAddress, safeState.mySafeAddress);
 
-      await context.environment.eth.contracts.hub.signup(
+      await context.circlesHub.signup(
         safeState.myKey.privateKey,
         gnosisSafeProxy
       );

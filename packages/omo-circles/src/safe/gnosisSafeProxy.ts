@@ -1,5 +1,5 @@
 import type {AbiItem} from "web3-utils";
-import type Web3 from "web3";
+import Web3 from "web3";
 import {EMPTY_DATA, GNOSIS_SAFE_ABI, ZERO_ADDRESS} from "../consts";
 import {BN} from "ethereumjs-util";
 import {config} from "../config";

@@ -1,6 +1,6 @@
 import {setDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
 export async function initSafeAddress()
 {

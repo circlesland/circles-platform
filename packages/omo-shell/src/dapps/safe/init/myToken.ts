@@ -1,11 +1,11 @@
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
-import {Token} from "../../../libs/o-fission/entities/token";
-import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
 import {BN} from "ethereumjs-util";
-import {ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {Token} from "omo-models/dist/omo/token";
+import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
+import {CirclesToken} from "omo-circles/dist/model/circlesToken";
 
 export async function initMyToken()
 {
@@ -53,12 +53,12 @@ export async function initMyToken()
       if (!myToken)
         return currentState;
 
-      const t = new CirclesToken(safeState.mySafeAddress);
-      t.tokenOwner = myToken.tokenOwner;
-      t.tokenAddress = myToken.tokenAddress;
-      t.balance = new BN("0");
-      t.createdInBlockNo = myToken.createdInBlockNo;
-      t.noTransactionsUntilBlockNo = myToken.noTransactionsUntilBlockNo;
+      const t = new CirclesToken(
+        safeState.mySafeAddress,
+        myToken.tokenAddress,
+        myToken.tokenOwner,
+        myToken.createdInBlockNo,
+        myToken.noTransactionsUntilBlockNo);
 
       return {
         ...currentState,

@@ -4,7 +4,7 @@ import Privacy from 'src/dapps/website/views/pages/Privacy.svelte'
 import TOS from 'src/dapps/website/views/pages/TOS.svelte'
 import Attributions from 'src/dapps/website/views/pages/Attributions.svelte'
 import {faGlobe} from "@fortawesome/free-solid-svg-icons";
-import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
+import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 const homepage = {
   isDefault: true,
@@ -19,6 +19,7 @@ const homepage = {
 export interface OmoWebsiteState {}
 export const omowebsite : DappManifest<OmoWebsiteState,OmoWebsiteState> = {
   id: "omo.website:1",
+  isSingleton: true,
   dependencies: [],
   isHidden: true,
   icon: faGlobe,

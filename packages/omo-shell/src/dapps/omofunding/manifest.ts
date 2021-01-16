@@ -2,13 +2,14 @@ import Featured from './views/pages/Featured.svelte';
 
 import { omofundingDefaultActions, omofundingOverflowActions } from './data/actions';
 import { faPeopleCarry } from "@fortawesome/free-solid-svg-icons";
-import { DappManifest } from "../../libs/o-os/interfaces/dappManifest";
 import { tryGetDappState } from "../../libs/o-os/loader";
 import { FissionAuthState } from "../fissionauth/manifest";
+import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface OmoFundingState { }
 export const omofunding: DappManifest<OmoFundingState, OmoFundingState> = {
   id: "omo.funding:1",
+  isSingleton: true,
   dependencies: [],
   icon: faPeopleCarry,
   title: "OmoFunding",

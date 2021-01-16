@@ -1,24 +1,26 @@
 import {assign, createMachine, send} from "xstate";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import {strings} from "../../data/strings";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {inviteCredits} from "../../../../libs/o-processes/artifacts/inviteCredits";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {transferJumpstartXDaiService} from "../../services/transferJumpstartXDaiService";
 import {getForeignProfileService} from "../../services/getForeignProfile";
-import {Profile} from "../../../../libs/o-fission/entities/profile";
+import Web3 from "web3";
+import {ProcessContext} from "omo-process/dist/processContext";
+import {ProcessArtifact} from "omo-process/dist/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {setError} from "omo-process/dist/actions/setError";
+import {Profile} from "omo-models/dist/omo/profile";
+import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
+import {inviteCredits} from "omo-process/dist/artifacts/inviteCredits";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {ProcessDefinition} from "omo-process/dist/processManifest";
 
 export interface JumpstartContext extends ProcessContext {
+  web3:Web3;
   data: {
     foreignProfileFissionName?: ProcessArtifact,
     foreignProfile?: ProcessArtifact,

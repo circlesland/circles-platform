@@ -1,11 +1,11 @@
 import { BN } from "ethereumjs-util";
 import {TransferCirclesContext} from "../processes/circles/transferCircles";
 import {tryGetDappState} from "../../../libs/o-os/loader";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {OmoSafeState} from "../manifest";
-import {GnosisSafeProxy} from "../../../libs/o-circles-protocol/safe/gnosisSafeProxy";
-import {EndSignal, ProgressSignal} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
-import {CirclesTransaction} from "../../../libs/o-circles-protocol/model/circlesTransaction";
+import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
+import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
+import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+import {EndSignal} from "omo-events/dist/signals/endSignal";
 
 function sendMessage(message) {
   // This wraps the message posting/response in a promise, which will resolve if the response doesn't
@@ -36,8 +36,8 @@ function sendMessage(message) {
 export const transferCirclesService = async (context: TransferCirclesContext) =>
 {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-  const web3 = context.environment.eth.web3;
-  const ownerAddress = context.environment.eth.web3
+  const web3 = context.web3;
+  const ownerAddress = context.web3
     .eth
     .accounts
     .privateKeyToAccount(safeState.myKey.privateKey)
@@ -46,7 +46,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
   const gnosisSafeProxy = new GnosisSafeProxy(web3, ownerAddress, safeState.mySafeAddress);
 
   try {
-    const circlesValueInWei = context.environment.eth.web3.utils
+    const circlesValueInWei = context.web3.utils
       .toWei(context.data.value.value.toString(), "ether");
     const oValueInWei = new BN(circlesValueInWei).div(new BN("3"));
     /*
@@ -96,7 +96,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
       payload: currentTransactionsList.payload
     });
 
-    const transferTroughResult = await context.environment.eth.contracts.hub.transferTrough(
+    const transferTroughResult = await context.circlesHub.transferTrough(
       safeState.myKey.privateKey,
       gnosisSafeProxy,
       tokenOwners,

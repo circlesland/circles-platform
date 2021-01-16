@@ -3,8 +3,10 @@ import {OmoEvent} from "omo-events/dist/omoEvent";
 import {Topic} from "omo-utils/dist/eventBroker";
 import {StatePropagation} from "./statePropagation";
 import {BehaviorSubject} from "rxjs";
+import {DappState} from "./dappState";
+import {Signal} from "omo-events/dist/signal";
 
-export interface RuntimeDapp<TInternalState, TExternalState> extends DappManifest<TInternalState, TExternalState>
+export interface RuntimeDapp<TInternalState extends DappState, TExternalState extends DappState> extends DappManifest<TInternalState, TExternalState>
 {
   runtimeId:string,
   route: string,
@@ -21,5 +23,8 @@ export interface RuntimeDapp<TInternalState, TExternalState> extends DappManifes
   outEvents?:Topic<OmoEvent>,
 
 
-  state: () => BehaviorSubject<StatePropagation<TExternalState>>
+  state: () => BehaviorSubject<StatePropagation<TExternalState extends DappState>>
+
+  emitSignal: (signal:Signal) => void;
+  emitState: (state:DappState) => void;
 }

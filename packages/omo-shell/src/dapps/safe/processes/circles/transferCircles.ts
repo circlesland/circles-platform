@@ -1,22 +1,26 @@
-import { createMachine, send } from "xstate";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
-import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
-import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
+import { createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
-import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import { ethereumAddress } from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import { o } from "../../../../libs/o-processes/artifacts/o";
 import {strings} from "../../data/strings";
 import {transferCirclesService} from "../../services/transferCirclesService";
+import Web3 from "web3";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendPrompt, sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
+import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
+import {o} from "omo-process/dist/artifacts/o";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {setError} from "omo-process/dist/actions/setError";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
 
 export interface TransferCirclesContext extends ProcessContext {
+  web3:Web3;
+  circlesHub:CirclesHub;
   data: {
     recipient?: ProcessArtifact,
     value?: ProcessArtifact

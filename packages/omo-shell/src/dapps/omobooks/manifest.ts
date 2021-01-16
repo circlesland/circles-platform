@@ -1,9 +1,10 @@
 import {faBook} from "@fortawesome/free-solid-svg-icons";
-import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
+import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface OmoBooksState {}
 export const omobooks : DappManifest<OmoBooksState,OmoBooksState> = {
   id: "omo.books:1",
+  isSingleton: true,
   dependencies: [],
   isHidden: false,
   icon: faBook,

@@ -1,10 +1,10 @@
 import { CreateOmoSapienContext } from "../createOmoSapien";
-import { Profile } from "../../../../../libs/o-fission/entities/profile";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
 import {setDappState, tryGetDappState} from "../../../../../libs/o-os/loader";
 import {OmoSapienState} from "../../../manifest";
-import {runWithDrive} from "../../../../../libs/o-fission/fissionDrive";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {Profile} from "omo-models/dist/omo/profile";
 
 export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) =>
 {

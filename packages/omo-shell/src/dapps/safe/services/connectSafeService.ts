@@ -1,13 +1,12 @@
 import { mnemonicToEntropy } from "bip39";
 import { BN } from "ethereumjs-util";
-import {config} from "../../../libs/o-circles-protocol/config";
-import {ByteString} from "../../../libs/o-circles-protocol/interfaces/byteString";
 import {ConnectSafeContext} from "../processes/omo/importCircles";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {OmoSafeState} from "../manifest";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
+import {config} from "omo-circles/dist/config";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 
 
 function isValidKeyPhrase(value: string): string | null {
@@ -41,7 +40,7 @@ function isValidHexKey(value: string): string | null {
     return null;
 
   try {
-    let hexString: ByteString;
+    let hexString: string;
 
     if (value.startsWith("0x") && value.length == 66) {
       // prefixed hex string

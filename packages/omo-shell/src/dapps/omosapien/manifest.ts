@@ -4,21 +4,21 @@ import Keys from 'src/dapps/omosapien/views/pages/Keys.svelte'
 import NoProfile from 'src/dapps/omosapien/views/pages/NoProfile.svelte'
 import {omoSapienDefaultActions, omoSapienOverflowActions} from "./data/actions"
 import {faUserAstronaut} from "@fortawesome/free-solid-svg-icons";
-import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
-import {Profile as ProfileEntity} from "../../libs/o-fission/entities/profile";
-import {RunProcess} from "../../libs/o-events/runProcess";
 import {createOmoSapien} from "./processes/createOmoSapien/createOmoSapien";
 import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
-import {runWithDrive} from "../../libs/o-fission/fissionDrive";
 import {BehaviorSubject} from "rxjs";
-import {Envelope} from "../../libs/o-os/interfaces/envelope";
 import {ProfileIndex, ProfileIndexData} from "omo-indexes/dist/profileIndex";
 import {Logger} from "omo-utils/dist/logger";
+import {Profile} from "omo-models/dist/profile";
+import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {RunProcess} from "omo-process/dist/events/runProcess";
+import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface OmoSapienState
 {
-  myProfile?: ProfileEntity,
+  myProfile?: Profile,
   profileIndex?: BehaviorSubject<Envelope<ProfileIndexData>>
 }
 
@@ -136,6 +136,7 @@ async function initialize(stack, runtimeDapp)
 
 export const omosapien: DappManifest<OmoSapienState, OmoSapienState> = {
   id: "omo.sapien:1",
+  isSingleton: true,
   dependencies: ["omo.fission.auth:1"],
   icon: faUserAstronaut,
   title: "OmoSapien",

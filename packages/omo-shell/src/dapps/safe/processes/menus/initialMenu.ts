@@ -1,17 +1,17 @@
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import {createMachine, send} from "xstate";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {choice} from "../../../../libs/o-processes/artifacts/choice";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
-import {RunProcess} from "../../../../libs/o-events/runProcess";
-import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
 import {strings} from "../../data/strings";
 import {importCircles} from "../omo/importCircles";
 import {signupAtCircles} from "../omo/signupAtCircles";
 import {createPrivateKey} from "../omo/createPrivateKey";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendPrompt, sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {choice} from "omo-process/dist/artifacts/choice";
+import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
+import {RunProcess} from "omo-process/dist/events/runProcess";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 export interface InitialMenuContext extends ProcessContext {
   data: {

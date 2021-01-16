@@ -7,10 +7,10 @@ import {CirclesTokens} from "./directories/circlesTokens";
 import {SessionLogs} from "./directories/logs";
 import {Offers} from "./directories/offers";
 import {BehaviorSubject} from "rxjs";
-import {initAuth} from "./initFission";
-import {tryGetDappState} from "../o-os/loader";
-import {Envelope} from "omo-kernel/dist/interfaces/envelope";
-import {FissionAuthState} from "./state/fissionAuthState";
+// import {initAuth} from "./initFission";
+// import {tryGetDappState} from "../o-os/loader";
+// import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+// import {FissionAuthState} from "./state/fissionAuthState";
 
 export class FissionDrive
 {
@@ -76,6 +76,8 @@ let initializingDrive:boolean = false;
 
 export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>) : Promise<TOut>
 {
+  return <TOut>{};
+  /*
   let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (!fissionAuthState)
   {
@@ -130,6 +132,7 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
         });
     });
   });
+   */
 }
 
 export async function withTimeout<T>(operationName:string, func: () => Promise<T>, timeout?:number) : Promise<T>

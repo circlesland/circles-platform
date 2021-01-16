@@ -1,23 +1,22 @@
 import { createMachine} from "xstate";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
-import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
-import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
-import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
-import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
-import { file } from "../../../../libs/o-processes/artifacts/file";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
 import {strings} from "../../data/strings";
 import {createOfferService} from "./services/createOfferService";
-import {o} from "../../../../libs/o-processes/artifacts/o";
-import {text} from "../../../../libs/o-processes/artifacts/text";
-import {location} from "../../../../libs/o-processes/artifacts/location";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {textLine} from "omo-process/dist/artifacts/textLine";
+import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
+import {file} from "omo-process/dist/artifacts/file";
+import {o} from "omo-process/dist/artifacts/o";
+import {text} from "omo-process/dist/artifacts/text";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {setError} from "omo-process/dist/actions/setError";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 export interface CreateOfferContext extends ProcessContext {
   data: {

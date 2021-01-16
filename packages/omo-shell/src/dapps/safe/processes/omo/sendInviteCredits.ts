@@ -1,23 +1,25 @@
 import {createMachine, send} from "xstate";
-import {ProcessDefinition} from "src/libs/o-processes/processManifest";
 import {strings} from "../../data/strings";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import {storePromptResponse} from "../../../../libs/o-processes/actions/storePromptResponse";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {ethereumAddress} from "../../../../libs/o-processes/artifacts/ethereumAddress";
-import {inviteCredits} from "../../../../libs/o-processes/artifacts/inviteCredits";
 import {sendInviteCreditsService} from "../../services/sendInviteCreditsService";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
+import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
+import {inviteCredits} from "omo-process/dist/artifacts/inviteCredits";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {setError} from "omo-process/dist/actions/setError";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {ProcessDefinition} from "omo-process/dist/processManifest";
+import Web3 from "web3";
 
 export interface SendInviteCreditsContext extends ProcessContext
 {
+  web3: Web3,
   data: {
     recipient?: ProcessArtifact,
     value?: ProcessArtifact
@@ -37,19 +39,21 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     promptRecipient: {
-      entry: sendPrompt((context) => {return{
-        title: str.titleRecipient(),
-        nextButtonTitle: "Next",
-        banner: {
-          component: Banner,
-          data: {
-            text: str.bannerRecipient()
+      entry: sendPrompt((context:SendInviteCreditsContext) => {
+          return {
+            title: str.titleRecipient(),
+            nextButtonTitle: "Next",
+            banner: {
+              component: Banner,
+              data: {
+                text: str.bannerRecipient()
+              }
+            },
+            artifacts: {
+              ...ethereumAddress("recipient", null, false, true)
+            }
           }
-        },
-        artifacts: {
-          ...ethereumAddress("recipient", null, false, true)
-        }
-      }}),
+        }),
       on: {
         "process.continue": {
           actions: storePromptResponse,

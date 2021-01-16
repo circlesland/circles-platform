@@ -1,16 +1,16 @@
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader"
 import {BehaviorSubject} from "rxjs";
-import {CirclesAccount} from "../../../libs/o-circles-protocol/model/circlesAccount";
 import {OmoSafeState} from "../manifest";
-import {Contact} from "../../../libs/o-circles-protocol/model/contact";
-import {CirclesProfile} from "../../../libs/o-circles-protocol/model/circlesProfile";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
-import {BlockchainEvent} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {OmoSapienState} from "../../omosapien/manifest";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
-import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
 import {ProfileIndex} from "omo-indexes/dist/profileIndex";
+import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {Contact} from "omo-models/dist/omo/contact";
+import {CirclesProfile} from "omo-models/dist/circles/circlesProfile";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
+import {BlockchainEvent} from "omo-models/dist/omo-circles/src/interfaces/blockchainEvent";
 
 const myContactsSubject: BehaviorSubject<Envelope<Contact[]>> = new BehaviorSubject<Envelope<Contact[]>>({
   payload: []

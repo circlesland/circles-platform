@@ -1,21 +1,31 @@
-import { createMachine, send } from "xstate";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
+import { createMachine } from "xstate";
 import { strings } from "../../data/strings";
-import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
-import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import { sendSuccessPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import {requestUbiService} from "../../services/requestUbiService";
-import {sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
+import Web3 from "web3";
+import {ProcessContext} from "omo-process/dist/processContext";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {setError} from "omo-process/dist/actions/setError";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {OmoSafeState} from "../../manifest";
+
+
+export interface RequestUbiContext extends ProcessContext {
+  web3:Web3;
+  safeState:OmoSafeState;
+  data: {
+  }
+}
 
 /**
  * Requests UBI
  */
 const str = strings.safe.processes.requestUbi;
-const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
+const processDefinition = () => createMachine<RequestUbiContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {

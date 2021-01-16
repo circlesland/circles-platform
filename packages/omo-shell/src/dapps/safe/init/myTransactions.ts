@@ -1,21 +1,18 @@
 import {BehaviorSubject, Subject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
-import {
-  SystemEvent
-} from "../../../libs/o-circles-protocol/interfaces/blockchainEvent";
 import {BN} from "ethereumjs-util";
 import {OmoSafeState} from "../manifest";
-import {CirclesToken} from "../../../libs/o-circles-protocol/model/circlesToken";
-import {CirclesTransaction} from "../../../libs/o-circles-protocol/model/circlesTransaction";
-import {config} from "../../../libs/o-circles-protocol/config";
-import {CachedTransactions} from "../../../libs/o-fission/entities/cachedTransactions";
-import {Address} from "../../../libs/o-circles-protocol/interfaces/address";
-import {CachedTokens} from "../../../libs/o-fission/entities/cachedTokens";
-import {Token} from "../../../libs/o-fission/entities/token";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
-import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 import {Logger} from "omo-utils/dist/logger";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
+import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
+import {CirclesToken} from "omo-circles/dist/model/circlesToken";
+import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {CachedTransactions} from "omo-models/dist/omo/cachedTransactions";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {config} from "omo-circles/dist/config";
+import {Token} from "omo-models/dist/omo/token";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 
 type TransactionList = {
   [token: string]: {
@@ -169,7 +166,14 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, async () =>
         else
         {
           const block = await web3.eth.getBlock(transaction.blockNo);
-          lastTimestamp = block.timestamp;
+          if (typeof block.timestamp === "string")
+          {
+            lastTimestamp = parseInt(block.timestamp);
+          }
+          else
+          {
+            lastTimestamp = block.timestamp;
+          }
           lastTimestampBlockNo = transaction.blockNo;
         }
       }
@@ -197,7 +201,7 @@ const annotateTimeAndStoreToCacheTrigger = new DelayedTrigger(2500, async () =>
 /**
  * Loads the cached transactions from the fission drive and feeds them into the "transactions" stream.
  */
-async function feedCachedTransactions(transactions: Subject<SystemEvent>, tokenAddresses: Address[])
+async function feedCachedTransactions(transactions: Subject<OmoEvent>, tokenAddresses: string[])
 {
   await runWithDrive(async fissionDrive =>
   {
@@ -283,7 +287,7 @@ const subscribeToTokenEvents = new DelayedTrigger(500, async () =>
   const tokenAddresses = newTokens.map(token => token.tokenAddress);
 
   // Subscribe to the live events of all "tokenAddresses"
-  aToken.subscribeToTransactions(transactionStream, tokensByAddress, tokenAddresses);
+  aToken.subscribeToTransactions(transactionStream, safeState.mySafeAddress, tokensByAddress, tokenAddresses);
 
   // Get all cached events of all "tokenAddresses"
   await feedCachedTransactions(transactionStream, tokenAddresses);
@@ -324,6 +328,7 @@ const subscribeToTokenEvents = new DelayedTrigger(500, async () =>
   pushTransactions.trigger();
 
   await aToken.feedTransactionHistory(
+    safeState.mySafeAddress,
     transactionStream,
     tokensByAddress,
     tokenAddresses,

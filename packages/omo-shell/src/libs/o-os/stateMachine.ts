@@ -1,10 +1,10 @@
 import {Subject} from "rxjs";
 import {useMachine} from "xstate-svelte";
-import {ProcessDefinition} from "../o-processes/processManifest";
-import {ProcessContext} from "../o-processes/interfaces/processContext";
-import {ProcessEvent} from "../o-processes/interfaces/processEvent";
-import {Process} from "../o-processes/interfaces/process";
 import {getProcessContext} from "./o";
+import {Process} from "omo-process/dist/process";
+import {ProcessDefinition} from "omo-process/dist/processManifest";
+import {ProcessContext} from "omo-process/dist/processContext";
+import {ProcessEvent} from "omo-process/dist/processEvent";
 
 export const stateMachine = {
   _current: null,

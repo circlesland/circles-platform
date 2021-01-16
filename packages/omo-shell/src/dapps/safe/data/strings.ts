@@ -1,11 +1,11 @@
-import { ProcessContext } from "../../../libs/o-processes/interfaces/processContext";
 import {SetTrustContext} from "../processes/circles/setTrust";
 import {JumpstartContext} from "../processes/omo/jumpstart";
 import {SendInviteCreditsContext} from "../processes/omo/sendInviteCredits";
 import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {config} from "../../../libs/o-circles-protocol/config";
 import {OmoSapienState} from "../../omosapien/manifest";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {config} from "omo-circles/dist/config";
 
 export const strings = {
   safe: {
@@ -51,8 +51,8 @@ export const strings = {
         introBody: (context: JumpstartContext) => {
           const recipient = context.data.recipient.value;
           const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-          const inviteCreditsLeft = Math.floor(parseFloat(context.environment.eth.web3.utils.fromWei(safeState.mySafeXDaiBalance?.toString() ?? "", 'ether')) * 10);
-          const inviteCreditsInXDai = parseFloat(context.environment.eth.web3.utils.fromWei(safeState.mySafeXDaiBalance?.toString() ?? "", 'ether')).toFixed(2);
+          const inviteCreditsLeft = Math.floor(parseFloat(context.web3.utils.fromWei(safeState.mySafeXDaiBalance?.toString() ?? "", 'ether')) * 10);
+          const inviteCreditsInXDai = parseFloat(context.web3.utils.fromWei(safeState.mySafeXDaiBalance?.toString() ?? "", 'ether')).toFixed(2);
 
           return `You can use your invite credits to invite and unlock the ⦿ time currency of ${recipient}. You still have
                   ${inviteCreditsLeft} invite credits (${inviteCreditsInXDai} xDai) left.<br />

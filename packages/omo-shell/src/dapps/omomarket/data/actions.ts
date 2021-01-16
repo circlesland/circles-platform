@@ -1,7 +1,7 @@
 import { faUserCircle, faCoins, faStar, faStore, faDove } from "@fortawesome/free-solid-svg-icons";
-import { QuickAction } from "../../../libs/o-os/types/quickAction";
 import {createOffer} from "../processes/createOffer/createOffer";
-import {RunProcess} from "../../../libs/o-events/runProcess";
+import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
+import {RunProcess} from "omo-process/dist/events/runProcess";
 
 export const omomarketDefaultActions: QuickAction[] = [
   {

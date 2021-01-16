@@ -1,16 +1,16 @@
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import {assign, createMachine} from "xstate";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
-import {sendPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import {strings} from "../../data/strings";
-import {textLine} from "../../../../libs/o-processes/artifacts/textLine";
-import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
 import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
 import {tryGetDappState} from "../../../../libs/o-os/loader";
-import {config} from "../../../../libs/o-circles-protocol/config";
 import {OmoSafeState} from "../../manifest";
 import {FissionAuthState} from "../../../fissionauth/manifest";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {config} from "omo-circles/dist/config";
+import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {textLine} from "omo-process/dist/artifacts/textLine";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 export interface FundAccountContext extends ProcessContext {
   data: {

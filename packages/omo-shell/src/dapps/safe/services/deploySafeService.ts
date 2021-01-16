@@ -3,25 +3,25 @@ import {DeploySafeContext} from "../processes/safe/deploySafe";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {OmoSapienState} from "../../omosapien/manifest";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
 export const deploySafeService = async (context: DeploySafeContext) =>
 {
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
-  const safeProxy = await context.environment.eth.contracts.safeProxyFactory.deployNewSafeProxy(
+  const safeProxy = await context.safeProxyFactory.deployNewSafeProxy(
     safeState.myKey.privateKey
   );
 
-  const ownerAddress = context.environment.eth.web3
+  const ownerAddress = context.web3
     .eth
     .accounts
     .privateKeyToAccount(safeState.myKey.privateKey)
     .address;
 
   const newAccountXDaiBalance = new BN(
-    await context.environment.eth.web3.eth.getBalance(ownerAddress));
+    await context.web3.eth.getBalance(ownerAddress));
 
   setDappState<OmoSafeState>("omo.safe:1", current => {
     return {

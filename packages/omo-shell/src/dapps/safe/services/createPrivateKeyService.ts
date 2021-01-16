@@ -1,9 +1,9 @@
 import {entropyToMnemonic} from "bip39";
-import {ProcessArtifact} from "../../../libs/o-processes/interfaces/processArtifact";
 import {CreatePrivateKeyContext} from "../processes/omo/createPrivateKey";
 import {setDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {runWithDrive} from "../../../libs/o-fission/fissionDrive";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 
 export const createPrivateKeyService = async (context: CreatePrivateKeyContext) =>
 {
@@ -11,7 +11,7 @@ export const createPrivateKeyService = async (context: CreatePrivateKeyContext) 
   {
     window.o.logger.log("Creating a new account");
 
-    const web3 = context.environment.eth.web3;
+    const web3 = context.web3;
     const newKey = web3.eth.accounts.create();
 
     await fissionDrive.keys.addMyKey({

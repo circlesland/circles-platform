@@ -23,6 +23,7 @@ import NotFound from 'src/libs/o-views/pages/NotFound.svelte'
 import wrap from "svelte-spa-router/wrap";
 import { waitingarea } from "../../dapps/waitingarea/manifest";
 import {EventBroker} from "omo-utils/dist/eventBroker";
+import {Generate} from "omo-utils/dist/generate";
 
 const errorIndicator = ErrorIndicator;
 
@@ -234,15 +235,16 @@ async function loadDapp(stack: RuntimeDapp<any, any>[], dappManifest: DappManife
   let runtimeDapp = <RuntimeDapp<any, any>>{
     ...dappManifest,
     route: appDefaultRoute,
-    id: dappManifest.isSingleton ? dappManifest.id :
+    id: dappManifest.isSingleton
+      ? dappManifest.id
+      : `${dappManifest.id}:${Generate.randomHexString()}`
     // runtimePages: dappManifest.pages.map(pageManifest => {
       // const pageUrl = constructPageUrl(appBaseUrl, pageManifest);
       // return <RuntimePageManifest>{
       //   ...pageManifest,
       //   route: pageUrl
       // };
-    }
-  };
+  }
 
   runtimeDapp = createDappTopics(runtimeDapp);
   return await initializeDapp(stack, runtimeDapp);

@@ -2,9 +2,9 @@ import {BehaviorSubject} from "rxjs";
 import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {BN} from "ethereumjs-util";
 import {OmoSafeState} from "../manifest";
-import {CirclesBalance} from "../../../libs/o-circles-protocol/model/circlesBalance";
-import {Envelope} from "../../../libs/o-os/interfaces/envelope";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
+import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {CirclesBalance} from "omo-models/dist/omo/circlesBalance";
 
 const myCirclesBalancesSubject: BehaviorSubject<Envelope<CirclesBalance[]>> = new BehaviorSubject<Envelope<CirclesBalance[]>>({
   payload: []

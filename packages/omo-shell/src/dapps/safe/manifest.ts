@@ -8,20 +8,12 @@ import NoSafe from "./views/pages/NoSafe.svelte"
 import NoToken from "./views/pages/NoToken.svelte"
 import NoFundsOnSafe from "./views/pages/NoFundsOnSafe.svelte"
 import {safeDefaultActions, safeOverflowActions} from "./data/actions"
-import {QuickAction} from "../../libs/o-os/types/quickAction";
-import {RunProcess} from "../../libs/o-events/runProcess";
 import {faCheck, faPiggyBank, faTimes} from "@fortawesome/free-solid-svg-icons";
-import {ProcessArtifact} from "../../libs/o-processes/interfaces/processArtifact";
-import {CloseModal} from "../../libs/o-events/closeModal";
 import {push} from "svelte-spa-router";
-import {DappManifest} from "../../libs/o-os/interfaces/dappManifest";
-import {RuntimeDapp} from "../../libs/o-os/interfaces/runtimeDapp";
 import {tryGetDappState} from "../../libs/o-os/loader";
 import {BN} from "ethereumjs-util";
 import {sendInviteCredits, SendInviteCreditsContext} from "./processes/omo/sendInviteCredits";
 import {deploySafe} from "./processes/safe/deploySafe";
-import {KeyPair} from "../../libs/o-fission/entities/keyPair";
-import {Address} from "../../libs/o-circles-protocol/interfaces/address";
 import {FissionAuthState} from "../fissionauth/manifest";
 import {BehaviorSubject} from "rxjs";
 import {initMyKey} from "./init/myKey";
@@ -31,22 +23,30 @@ import {initMyKnownTokens} from "./init/myKnownTokens";
 import {initMyTransactions} from "./init/myTransactions";
 import {initSafeAddress} from "./init/safeAddress";
 import {initMyToken} from "./init/myToken";
-import {CirclesToken} from "../../libs/o-circles-protocol/model/circlesToken";
-import {Contact} from "../../libs/o-circles-protocol/model/contact";
-import {CirclesTransaction} from "../../libs/o-circles-protocol/model/circlesTransaction";
-import {CirclesBalance} from "../../libs/o-circles-protocol/model/circlesBalance";
 import {initMyBalances} from "./init/myBalances";
 import {initialMenu} from "./processes/menus/initialMenu";
 import {fundAccountForSafeCreation} from "./processes/omo/fundAccountForSafeCreation";
 import {signupAtCircles} from "./processes/omo/signupAtCircles";
-import {BeginSignal, ProgressSignal, Signal} from "../../libs/o-circles-protocol/interfaces/blockchainEvent";
-import {Envelope} from "../../libs/o-os/interfaces/envelope";
 import {Logger} from "omo-utils/dist/logger";
 import {fundSafe} from "./processes/omo/fundSafe";
+import {KeyPair} from "omo-models/dist/omo/keyPair";
+import {CirclesToken} from "omo-circles/dist/model/circlesToken";
+import {Envelope} from "omo-kernel-interfaces/dist/envelope";
+import {Contact} from "omo-models/dist/omo/contact";
+import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
+import {CirclesBalance} from "omo-models/dist/circles/circlesBalance";
+import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
+import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
+import {BeginSignal} from "omo-events/dist/beginSignal";
+import {ProgressSignal} from "omo-events/dist/progressSignal";
+import {RunProcess} from "omo-process/dist/events/runProcess";
+import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {CloseModal} from "omo-events/dist/shell/closeModal";
 
 export interface OmoSafeState
 {
-  mySafeAddress?: Address,
+  mySafeAddress?: string,
   myKey?: KeyPair,
   myToken?: CirclesToken,
   myAccountXDaiBalance?: BN,
@@ -291,6 +291,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
 
 export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {
   id: "omo.safe:1",
+  isSingleton: true,
   dependencies: ["omo.li:1"],
   icon: faPiggyBank,
   title: "OmoSafe",

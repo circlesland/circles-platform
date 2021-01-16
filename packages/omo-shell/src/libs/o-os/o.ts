@@ -1,16 +1,20 @@
 import { stateMachine } from "./stateMachine";
 import { Shell } from "./interfaces/shell";
-import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
-import Web3 from "web3";
-import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
-import { ProcessContext } from "../o-processes/interfaces/processContext";
-import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
-import {config} from "../o-circles-protocol/config";
-import * as webnative from "libs/webnative";
-import {SessionLog} from "../o-fission/entities/sessionLog";
-import {runWithDrive} from "../o-fission/fissionDrive";
+// import { CirclesHub } from "../o-circles-protocol/circles/circlesHub";
+// import Web3 from "web3";
+// import { GnosisSafeProxyFactory } from "../o-circles-protocol/safe/gnosisSafeProxyFactory";
+// import { ProcessContext } from "../o-processes/interfaces/processContext";
+// import {ProcessEnvironment} from "../o-processes/interfaces/processEnvironment";
+// import {config} from "../o-circles-protocol/config";
+// import * as webnative from "libs/webnative";
+// import {SessionLog} from "../o-fission/entities/sessionLog";
+// import {runWithDrive} from "../o-fission/fissionDrive";
 import {newLogger} from "omo-utils/dist/logger";
+import {ProcessEnvironment} from "omo-process/dist/processEnvironment";
+import {ProcessContext} from "omo-process/dist/processContext";
+import {SessionLog} from "../../../../omo-models/dist/sessionLog";
 
+/*
 export type Ethereum = {
   web3: Web3,
   contracts: {
@@ -18,13 +22,14 @@ export type Ethereum = {
     safeProxyFactory: GnosisSafeProxyFactory
   }
 };
+ */
 
 /**
  * Gets all environment properties like the currently logged-on account, token and profile.
  */
 export async function getEnvironment(): Promise<ProcessEnvironment>
 {
-  const cfg = config.getCurrent();
+  /*const cfg = config.getCurrent();
   const web3 = cfg.web3();
 
   const eth: Ethereum = {
@@ -40,14 +45,15 @@ export async function getEnvironment(): Promise<ProcessEnvironment>
 
   const environment = <ProcessEnvironment>{
     eth: eth
-  };
+  };*/
 
-  return environment;
+  //return environment;
+  return <any>{};
 }
 
 export async function getProcessContext(): Promise<ProcessContext> {
   return <ProcessContext>{
-    environment: await getEnvironment(),
+    // environment: await getEnvironment(),
     data: {}
   };
 }
@@ -56,7 +62,7 @@ let sessionLog:SessionLog = {
   name: Date.now().toString(),
   messages: []
 };
-
+/*
 window.addEventListener('error', async function(event)
 {
   try
@@ -117,17 +123,20 @@ setInterval(async () => {
     console.error(`Couldn't perform the periodic log-publishing to the fission drive:`, e);
   }
 }, 240000);
+ */
 
 const logger = newLogger("o", undefined, message => {
   sessionLog.messages.push(message);
 });
+/*
 webnative.setup.debug({
   enabled: true,
   logger: logger.log
 });
 
+ */
+
 export const o: Shell = {
   stateMachines: <any>stateMachine,
-  wn: webnative,
   logger: logger
 }

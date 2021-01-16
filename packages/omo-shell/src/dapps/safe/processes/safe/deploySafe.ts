@@ -1,23 +1,27 @@
-import {ProcessDefinition} from "../../../../libs/o-processes/processManifest";
-import {ProcessContext} from "../../../../libs/o-processes/interfaces/processContext";
-import {ProcessArtifact} from "../../../../libs/o-processes/interfaces/processArtifact";
 import {assign, createMachine} from "xstate";
-import {OmoEvent} from "../../../../libs/o-events/omoEvent";
 import {strings} from "../../data/strings";
 import {BN} from "ethereumjs-util";
-import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {tryGetDappState} from "../../../../libs/o-os/loader";
 import {OmoSafeState} from "../../manifest";
-import {sendInProgressPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import {setError} from "../../../../libs/o-processes/actions/setError";
-import {setProcessResult} from "../../../../libs/o-processes/actions/setProcessResult";
 import {deploySafeService} from "../../services/deploySafeService";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
-import {NavigateTo} from "../../../../libs/o-events/navigateTo";
+import {GnosisSafeProxyFactory} from "omo-circles/dist/safe/gnosisSafeProxyFactory";
+import Web3 from "web3";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendPrompt, sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {setError} from "omo-process/dist/actions/setError";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {NavigateTo} from "omo-events/dist/shell/navigateTo";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 export interface DeploySafeContext extends ProcessContext {
+  web3:Web3;
+  safeProxyFactory:GnosisSafeProxyFactory;
   data: {
     safeAddress?: ProcessArtifact,
   }
@@ -50,7 +54,7 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
         "process.continue": [{
           cond: (context) => {
             const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-            return safeState.myAccountXDaiBalance?.gte(new BN(context.environment.eth.web3.utils.toWei("0.0097", "ether"))) === true;
+            return safeState.myAccountXDaiBalance?.gte(new BN(context.web3.utils.toWei("0.0097", "ether"))) === true;
           },
           target: "deploySafe"
         }, {

@@ -1,21 +1,21 @@
 import { createMachine} from "xstate";
-import { ProcessDefinition } from "src/libs/o-processes/processManifest";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
-import { OmoEvent } from "../../../../libs/o-events/omoEvent";
-import { ProcessContext } from "../../../../libs/o-processes/interfaces/processContext";
-import { ProcessArtifact } from "../../../../libs/o-processes/interfaces/processArtifact";
-import { storePromptResponse } from "../../../../libs/o-processes/actions/storePromptResponse";
-import { setError } from "../../../../libs/o-processes/actions/setError";
-import { setProcessResult } from "../../../../libs/o-processes/actions/setProcessResult";
-import {sendPrompt, sendShellEvent} from "../../../../libs/o-processes/actions/sendPrompt/sendPrompt";
-import { sendInProgressPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendInProgressPrompt";
-import { sendErrorPrompt } from "../../../../libs/o-processes/actions/sendPrompt/sendErrorPrompt";
 import { strings } from "../../data/strings";
-import { textLine } from "../../../../libs/o-processes/artifacts/textLine";
 import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
-import { file } from "../../../../libs/o-processes/artifacts/file";
-import {sendSuccessPrompt} from "../../../../libs/o-processes/actions/sendPrompt/sendSuccessPrompt";
-import {NavigateTo} from "../../../../libs/o-events/navigateTo";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {OmoEvent} from "omo-events/dist/omoEvent";
+import {sendPrompt, sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {textLine} from "omo-process/dist/artifacts/textLine";
+import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
+import {file} from "omo-process/dist/artifacts/file";
+import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {setError} from "omo-process/dist/actions/setError";
+import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
+import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import {NavigateTo} from "omo-events/dist/shell/navigateTo";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 export interface CreateOmoSapienContext extends ProcessContext {
   data: {

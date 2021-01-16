@@ -20,6 +20,8 @@ export interface FissionAuthState {
  */
 async function initialize(stack:RuntimeDapp<any, any>[], runtimeDapp:RuntimeDapp<any, any>)
 {
+  // TODO: Implement as "kernel module" (singleton) and provide
+  //       the actual fission APIs via the state of this "dapp"
   const authResult = await tryToAuthenticate();
 
   return {
