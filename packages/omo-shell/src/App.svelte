@@ -18,6 +18,8 @@
   import {NavigateTo} from "omo-events/dist/shell/navigateTo";
   import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
   import {Cancel} from "omo-process/dist/events/cancel";
+  import {onMount} from "svelte";
+  import {kernel} from "omo-kernel/dist/kernel";
 
   let actions = [];
 
@@ -36,6 +38,10 @@
     message: string;
     percent: number;
   };
+
+  onMount(async () => {
+    await kernel.boot();
+  })
 
   window.o.events.subscribe(async (event: OmoEvent) =>
   {

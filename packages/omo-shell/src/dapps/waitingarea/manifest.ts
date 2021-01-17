@@ -3,8 +3,8 @@ import {faHourglass} from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface WaitingAreaState {}
-export const waitingarea : DappManifest<WaitingAreaState,WaitingAreaState> = {
-  id: "omo.waitingarea:1",
+export const waitingarea : DappManifest<WaitingAreaState> = {
+  dappId: "omo.waitingarea:1",
   isSingleton: true,
   dependencies: [],
   isHidden: true,

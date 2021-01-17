@@ -7,8 +7,8 @@ import { FissionAuthState } from "../fissionauth/manifest";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface OmoFundingState { }
-export const omofunding: DappManifest<OmoFundingState, OmoFundingState> = {
-  id: "omo.funding:1",
+export const omofunding: DappManifest<OmoFundingState> = {
+  dappId: "omo.funding:1",
   isSingleton: true,
   dependencies: [],
   icon: faPeopleCarry,

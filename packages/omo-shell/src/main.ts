@@ -23,8 +23,7 @@ window.o.logger.log("Starting ..", {
 })
 
 import App from "src/App.svelte";
-const app = new App({
+
+export default new App({
   target: document.body,
 });
-
-export default app;

@@ -9,8 +9,8 @@ import {FissionAuthState} from "../fissionauth/manifest";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface OmoMarketState {}
-export const omomarket : DappManifest<OmoMarketState,OmoMarketState> = {
-  id: "omo.market:1",
+export const omomarket : DappManifest<OmoMarketState> = {
+  dappId: "omo.market:1",
   isSingleton: true,
   dependencies: ["omo.li:1"],
   icon: faPeopleCarry,

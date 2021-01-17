@@ -3,16 +3,14 @@ import Auth from "./pages/Auth.svelte";
 import Authenticate from "./pages/Authenticate.svelte";
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/data/actions";
 import { tryGetDappState } from "../../libs/o-os/loader";
-import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {FissionDrive} from "omo-fission/dist/fissionDrive";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
-import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface FissionAuthState {
   fissionState: any,
-  fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
-  username: string
+  fission?: FissionDrive,
+  username?: string
 }
 
 let fissionAuthLogger;
@@ -23,10 +21,10 @@ let fissionAuthLogger;
  * @param stack
  * @param runtimeDapp
  */
-async function initialize(stack, runtimeDapp:RuntimeDapp<any, any>)
+async function initialize(stack, runtimeDapp:RuntimeDapp<any>)
 {
-  fissionAuthLogger = window.o.logger.newLogger(runtimeDapp.id);
-  const initLogger = fissionAuthLogger.newLogger(`initialize(stack:[${stack.length}], runtimeDapp:${runtimeDapp.id})`)
+  fissionAuthLogger = window.o.logger.newLogger(runtimeDapp.dappId);
+  const initLogger = fissionAuthLogger.newLogger(`initialize(stack:[${stack.length}], runtimeDapp:${runtimeDapp.dappId})`)
   initLogger.log("begin");
 
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
@@ -77,8 +75,8 @@ const authPage = {
   available: []
 };
 
-export const fissionauth: DappManifest<FissionAuthState, FissionAuthState> = {
-  id: "omo.fission.auth:1",
+export const fissionauth: DappManifest<FissionAuthState> = {
+  dappId: "omo.fission.auth:1",
   isSingleton: true,
   dependencies: [],
   isHidden: true,

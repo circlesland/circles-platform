@@ -35,8 +35,8 @@ const dappsPage : PageManifest = {
 };
 
 export interface OmoLiState {}
-export const omoli : DappManifest<OmoLiState,OmoLiState> = {
-  id: "omo.li:1",
+export const omoli : DappManifest<OmoLiState> = {
+  dappId: "omo.li:1",
   isSingleton: true,
   dependencies: ["omo.sapien:1"],
   isHidden: true,

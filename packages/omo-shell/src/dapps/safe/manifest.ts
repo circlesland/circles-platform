@@ -192,7 +192,7 @@ let safeManifestLogger:Logger;
  * @param stack
  * @param runtimeDapp
  */
-async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
+async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
 {
   safeManifestLogger = window.o.logger.newLogger(`initialize()`);
   safeManifestLogger.log("begin")
@@ -289,8 +289,8 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any, any>)
   };
 }
 
-export const omosafe: DappManifest<OmoSafeState, OmoSafeState> = {
-  id: "omo.safe:1",
+export const omosafe: DappManifest<OmoSafeState> = {
+  dappId: "omo.safe:1",
   isSingleton: true,
   dependencies: ["omo.li:1"],
   icon: faPiggyBank,

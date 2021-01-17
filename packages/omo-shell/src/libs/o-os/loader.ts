@@ -27,7 +27,7 @@ import {Generate} from "omo-utils/dist/generate";
 
 const errorIndicator = ErrorIndicator;
 
-export const dapps: DappManifest<any, any>[] = [
+export const dapps: DappManifest<any>[] = [
   omosapien,
   omosafe,
   omomarket,
@@ -43,7 +43,7 @@ export const dapps: DappManifest<any, any>[] = [
   waitingarea
 ];
 
-export const loadedDapps: RuntimeDapp<any, any>[] = [];
+export const loadedDapps: RuntimeDapp<any>[] = [];
 
 export const dappStates: {
   [dappId: string]: any
@@ -61,7 +61,7 @@ export function setDappState<T>(dappId: string, setter: (T) => T) {
   dappStates[dappId] = setter(state);
 }
 
-export function constructAppUrl(dappManifest: DappManifest<any, any>): { appBaseUrl: string, appDefaultRoute: string } {
+export function constructAppUrl(dappManifest: DappManifest<any>): { appBaseUrl: string, appDefaultRoute: string } {
   const appBaseUrl = dappManifest.routeParts.reduce((p, c) => p + "/" + c, "");
   const appDefaultPage = dappManifest.pages.find(o => o.isDefault) ?? dappManifest.pages[0];
   const appDefaultRoute = appDefaultPage?.routeParts.reduce((p, c) => p + "/" + c, appBaseUrl)
@@ -79,11 +79,11 @@ function constructPageUrl(appBaseUrl: string, pageManifest: PageManifest): strin
 
 let logger;
 
-async function getDappEntryPoint(dappManifest:DappManifest<any, any>, pageManifest:PageManifest) {
+async function getDappEntryPoint(dappManifest:DappManifest<any>, pageManifest:PageManifest) {
   logger = window.o.logger.newLogger("loader");
-  const subLogger = logger.newLogger(`getDappEntryPoint(dappManifest: ${dappManifest.id}, pageManifest: ${pageManifest.routeParts.join("/")})`);
+  const subLogger = logger.newLogger(`getDappEntryPoint(dappManifest: ${dappManifest.dappId}, pageManifest: ${pageManifest.routeParts.join("/")})`);
   try {
-    let runtimeDapp = loadedDapps.find(o => o.id == dappManifest.id);
+    let runtimeDapp = loadedDapps.find(o => o.dappId == dappManifest.dappId);
     if (!runtimeDapp) {
       // The dapp isn't yet loaded
       const freshRuntimeDapp = await loadDapp([], dappManifest);
@@ -93,7 +93,7 @@ async function getDappEntryPoint(dappManifest:DappManifest<any, any>, pageManife
 
         if (!freshRuntimeDapp.initialPage) {
           // TODO: Every dapp needs a initial page for all conditions, else the generic loader error is displayed
-          throw new Error("The dapp '" + freshRuntimeDapp.runtimeDapp.id  + "' has no 'initialPage' attribute or its value is null.");
+          throw new Error("The dapp '" + freshRuntimeDapp.runtimeDapp.dappId  + "' has no 'initialPage' attribute or its value is null.");
         }
 
         return freshRuntimeDapp.initialPage.component;
@@ -111,7 +111,7 @@ async function getDappEntryPoint(dappManifest:DappManifest<any, any>, pageManife
   }
 }
 
-function constructRoutes(dappManifests: DappManifest<any, any>[]) {
+function constructRoutes(dappManifests: DappManifest<any>[]) {
   const routes = {};
 
   dappManifests.forEach(dappManifest => {
@@ -136,10 +136,10 @@ function constructRoutes(dappManifests: DappManifest<any, any>[]) {
 
 export const dappEvents = new EventBroker();
 
-function createDappTopics(runtimeDapp: RuntimeDapp<any, any>): RuntimeDapp<any, any> {
-  const inTopic = dappEvents.createTopic<OmoEvent>(runtimeDapp.id, "in");
-  const outTopic = dappEvents.createTopic<OmoEvent>(runtimeDapp.id, "in");
-  return <RuntimeDapp<any, any>>{
+function createDappTopics(runtimeDapp: RuntimeDapp<any>): RuntimeDapp<any> {
+  const inTopic = dappEvents.createTopic<OmoEvent>(runtimeDapp.dappId, "in");
+  const outTopic = dappEvents.createTopic<OmoEvent>(runtimeDapp.dappId, "in");
+  return <RuntimeDapp<any>>{
     ...runtimeDapp,
     shellEvents: shellEvents,
     inEvents: inTopic,
@@ -147,12 +147,12 @@ function createDappTopics(runtimeDapp: RuntimeDapp<any, any>): RuntimeDapp<any, 
   };
 }
 
-async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: RuntimeDapp<any, any>): Promise<{
-  runtimeDapp: RuntimeDapp<any, any>,
+async function initializeDapp(stack: RuntimeDapp<any>[], runtimeDapp: RuntimeDapp<any>): Promise<{
+  runtimeDapp: RuntimeDapp<any>,
   initialPage: PageManifest,
   cancelDependencyLoading: boolean
 }> {
-  const logPrefix = "  ".repeat(stack.length) + "initializeDapp(" + runtimeDapp.id + "): ";
+  const logPrefix = "  ".repeat(stack.length) + "initializeDapp(" + runtimeDapp.dappId + "): ";
 
   let cancelled = false;
   let defaultPage = null;
@@ -160,7 +160,7 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
   // first check if all dependencies are fulfilled
   if (runtimeDapp.dependencies) {
     logger.log(logPrefix + "Initializing " + runtimeDapp.dependencies.length + " dependencies ...");
-    const missingDependencies = runtimeDapp.dependencies.filter(dep => !loadedDapps.find(o => o.id == dep));
+    const missingDependencies = runtimeDapp.dependencies.filter(dep => !loadedDapps.find(o => o.dappId == dep));
     if (missingDependencies.length == 0) {
       // All dependencies are already loaded
       logger.log(logPrefix + "All dependencies are already loaded");
@@ -174,13 +174,13 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
           return;
         }
 
-        const dappManifest = dapps.find(o => o.id == dep);
+        const dappManifest = dapps.find(o => o.dappId == dep);
         if (!dappManifest) {
-          throw new Error(logPrefix + "Couldn't find the manifest for dapp '" + dep + "' (Dependency of '" + runtimeDapp.id + "')");
+          throw new Error(logPrefix + "Couldn't find the manifest for dapp '" + dep + "' (Dependency of '" + runtimeDapp.dappId + "')");
         }
         const loadDappResult = await loadDapp(nextStack, dappManifest);
         if (loadDappResult.cancelDependencyLoading) {
-          logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.id);
+          logger.log(logPrefix + "Loading sequence was cancelled by " + dep + " in " + runtimeDapp.dappId);
           cancelled = true;
           if (loadDappResult.initialPage) {
             defaultPage = loadDappResult.initialPage;
@@ -189,14 +189,14 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
       }));
 
       if (cancelled) {
-        logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.id);
+        logger.log(logPrefix + "Loading sequence was cancelled in " + runtimeDapp.dappId);
         return {
           runtimeDapp,
           cancelDependencyLoading: true,
           initialPage: defaultPage
         };
       } else {
-        logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.id);
+        logger.log(logPrefix + "Loaded all dependencies of " + runtimeDapp.dappId);
       }
     }
   }
@@ -225,19 +225,19 @@ async function initializeDapp(stack: RuntimeDapp<any, any>[], runtimeDapp: Runti
   };
 }
 
-async function loadDapp(stack: RuntimeDapp<any, any>[], dappManifest: DappManifest<any, any>): Promise<{
-  runtimeDapp: RuntimeDapp<any, any>,
+async function loadDapp(stack: RuntimeDapp<any>[], dappManifest: DappManifest<any>): Promise<{
+  runtimeDapp: RuntimeDapp<any>,
   initialPage: PageManifest,
   cancelDependencyLoading: boolean
 }> {
   const { appBaseUrl, appDefaultRoute } = constructAppUrl(dappManifest);
 
-  let runtimeDapp = <RuntimeDapp<any, any>>{
+  let runtimeDapp = <RuntimeDapp<any>>{
     ...dappManifest,
     route: appDefaultRoute,
-    id: dappManifest.isSingleton
-      ? dappManifest.id
-      : `${dappManifest.id}:${Generate.randomHexString()}`
+    dappId: dappManifest.isSingleton
+      ? dappManifest.dappId
+      : `${dappManifest.dappId}:${Generate.randomHexString()}`
     // runtimePages: dappManifest.pages.map(pageManifest => {
       // const pageUrl = constructPageUrl(appBaseUrl, pageManifest);
       // return <RuntimePageManifest>{

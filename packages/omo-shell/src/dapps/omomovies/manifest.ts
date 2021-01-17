@@ -5,8 +5,8 @@ import { faFilm } from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 
 export interface OmoMoviesState { }
-export const omomovies: DappManifest<OmoMoviesState, OmoMoviesState> = {
-  id: "omo.movies:1",
+export const omomovies: DappManifest<OmoMoviesState> = {
+  dappId: "omo.movies:1",
   isSingleton: true,
   dependencies: [],
   icon: faFilm,

@@ -17,8 +17,8 @@ const homepage = {
 };
 
 export interface OmoWebsiteState {}
-export const omowebsite : DappManifest<OmoWebsiteState,OmoWebsiteState> = {
-  id: "omo.website:1",
+export const omowebsite : DappManifest<OmoWebsiteState> = {
+  dappId: "omo.website:1",
   isSingleton: true,
   dependencies: [],
   isHidden: true,

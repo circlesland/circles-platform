@@ -1,14 +1,12 @@
-import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {FissionDrive} from "./fissionDrive";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {tryToAuthenticate} from "./tryToAuthenticate";
-import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface FissionAuthState {
-  fissionState: any,
-  fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
-  username: string
+  fissionState?: any,
+  fission?: FissionDrive,
+  username?: string
 }
 
 /**
@@ -17,7 +15,7 @@ export interface FissionAuthState {
  * @param stack
  * @param runtimeDapp
  */
-async function initialize(stack:RuntimeDapp<any, any>[], runtimeDapp:RuntimeDapp<any, any>)
+async function initialize(stack:RuntimeDapp<any>[], runtimeDapp:RuntimeDapp<any>)
 {
   // TODO: Implement as "kernel module" (singleton) and provide
   //       the actual fission APIs via the state of this "dapp"
@@ -29,8 +27,8 @@ async function initialize(stack:RuntimeDapp<any, any>[], runtimeDapp:RuntimeDapp
   }
 }
 
-export const fission: DappManifest<FissionAuthState, FissionAuthState> = {
-  id: "omo.fission:1",
+export const fission: DappManifest<FissionAuthState> = {
+  dappId: "omo.fission:1",
   isSingleton: true,
   dependencies: [],
   isHidden: true,

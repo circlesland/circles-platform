@@ -31,7 +31,7 @@ const processDefinition = () => createMachine<FundAccountContext, OmoEvent>({
       entry: <any>[assign((context:FundAccountContext, event) =>
       {
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-        const fissionName = fissionAuthState.fission.getValue().payload.username;
+        const fissionName = fissionAuthState.fission.username;
         const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
         const web3 = config.getCurrent().web3();
         const myAccount = web3.eth.accounts.privateKeyToAccount(safeState.myKey.privateKey).address;

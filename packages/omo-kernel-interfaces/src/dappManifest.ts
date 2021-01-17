@@ -3,13 +3,13 @@ import {PageManifest} from "./pageManifest";
 import {RuntimeDapp} from "./runtimeDapp";
 import {DappState} from "./dappState";
 
-export interface DappManifest<TInternalState extends DappState, TExternalState extends DappState>
+export interface DappManifest<TState extends DappState>
 {
   /**
    * A unique identifier for this dapp manifest.
    * This identifier is used as a namespace for all incoming and outgoing events of the dapp.
    */
-  id: string,
+  dappId: string,
 
   /**
    * If 'true' then the 'id' will be used as the 'runtimeId' of a RuntimeDapp
@@ -60,7 +60,7 @@ export interface DappManifest<TInternalState extends DappState, TExternalState e
    * then these steps must be performed in this factory.
    * @param runtimeDapp
    */
-  initialize?: (stack:RuntimeDapp<any, any>[], runtimeDapp: RuntimeDapp<TInternalState, TExternalState>) => Promise<{
+  initialize?: (stack:RuntimeDapp<TState>[], runtimeDapp: RuntimeDapp<TState>) => Promise<{
     initialPage: PageManifest,
     cancelDependencyLoading: boolean,
   }>

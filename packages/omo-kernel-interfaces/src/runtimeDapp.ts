@@ -6,7 +6,7 @@ import {DappState} from "./dappState";
 import {Signal} from "omo-events/dist/signal";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
-export interface RuntimeDapp<TInternalState extends DappState, TExternalState extends DappState> extends DappManifest<TInternalState, TExternalState>
+export interface RuntimeDapp<TState extends DappState> extends DappManifest<TState>
 {
   runtimeId:string,
   route: string,
@@ -23,8 +23,8 @@ export interface RuntimeDapp<TInternalState extends DappState, TExternalState ex
   outEvents?:Topic<OmoEvent>,
 
 
-  state: () => OmoBehaviorSubject<StatePropagation<TExternalState>>
+  state: OmoBehaviorSubject<StatePropagation<TState>>
 
   emitSignal: (signal:Signal) => void;
-  emitState: (state:DappState) => void;
+  emitState: (state:TState) => void;
 }

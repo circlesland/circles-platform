@@ -8,7 +8,6 @@ window.o.logger.log("Starting ..", {
     userAgent: navigator.userAgent
 });
 import App from "src/App.svelte";
-const app = new App({
+export default new App({
     target: document.body,
 });
-export default app;

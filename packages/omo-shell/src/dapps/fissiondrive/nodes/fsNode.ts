@@ -18,7 +18,7 @@ export abstract class FsNode implements TreeNode
   get path() :string
   {
     const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-    const fission = fissionAuthState.fission.getValue().payload;
+    const fission = fissionAuthState.fission;
     if (!fission)
       throw new Error("Your fission drive is not available.")
 

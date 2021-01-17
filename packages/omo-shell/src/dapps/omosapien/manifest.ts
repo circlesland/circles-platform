@@ -134,8 +134,8 @@ async function initialize(stack, runtimeDapp)
   }
 }
 
-export const omosapien: DappManifest<OmoSapienState, OmoSapienState> = {
-  id: "omo.sapien:1",
+export const omosapien: DappManifest<OmoSapienState> = {
+  dappId: "omo.sapien:1",
   isSingleton: true,
   dependencies: ["omo.fission.auth:1"],
   icon: faUserAstronaut,

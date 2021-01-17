@@ -22,8 +22,8 @@ export const defaultActions: QuickAction[] = [
   }
 ];
 
-export const fissiondrive : DappManifest<FissionDriveState,FissionDriveState> = {
-  id: "omo.fission.drive:1",
+export const fissiondrive : DappManifest<FissionDriveState> = {
+  dappId: "omo.fission.drive:1",
   isSingleton: true,
   dependencies: ["omo.li:1"],
   isHidden: false,
