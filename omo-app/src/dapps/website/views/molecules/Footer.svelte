@@ -56,7 +56,7 @@
         <div class="flex flex-col">
           <span class="mb-2 font-bold text-gray-700 uppercase">Follow Us</span>
           <span class="my-2"><a
-              href="https://gihtub.com/omoearth"
+              href="https://github.com/omoearth"
               class="text-secondary text-md hover:text-blue-500">Github</a></span>
           <span class="my-2"><a
               href="https://twitter.com/omoearth"
