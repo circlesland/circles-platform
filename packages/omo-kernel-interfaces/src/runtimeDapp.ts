@@ -3,7 +3,7 @@ import {OmoEvent} from "omo-events/dist/omoEvent";
 import {Topic} from "omo-utils/dist/eventBroker";
 import {StatePropagation} from "./statePropagation";
 import {DappState} from "./dappState";
-import {Signal} from "omo-events/dist/signal";
+import {Signal} from "omo-events/dist/signals/signal";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 
 export interface RuntimeDapp<TState extends DappState> extends DappManifest<TState>

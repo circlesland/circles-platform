@@ -5,11 +5,11 @@ import {CirclesToken} from "./circlesToken";
 import {GnosisSafeProxy} from "../safe/gnosisSafeProxy";
 import {ZERO_ADDRESS} from "../consts";
 import {Erc20Token} from "../token/erc20Token";
-import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 import {CirclesAccount as CirclesAccountModel} from "omo-models/dist/circles/circlesAccount"
 import {SafeOps} from "omo-models/dist/safe/safeOps";
 import {OmoObservable} from "omo-quirks/dist/OmoObservable";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
+import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 
 export class CirclesAccount implements CirclesAccountModel
 {

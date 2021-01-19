@@ -1,9 +1,9 @@
 import {Logger} from "omo-utils/dist/logger";
 import {OmoEvent} from "omo-events/dist/omoEvent";
-import {Process} from "omo-process/dist/process";
-import {ProcessDefinition} from "omo-process/dist/processManifest";
-import {ProcessContext} from "omo-process/dist/processContext";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
+import {Process} from "omo-process/dist/interfaces/process";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 
 export interface Shell {
   lastError?: any;

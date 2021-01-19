@@ -34,8 +34,6 @@ import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
 import {CirclesBalance} from "omo-models/dist/circles/circlesBalance";
 import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
-import {BeginSignal} from "omo-events/dist/beginSignal";
-import {ProgressSignal} from "omo-events/dist/progressSignal";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
@@ -43,11 +41,12 @@ import {CloseModal} from "omo-events/dist/shell/closeModal";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
 import {FissionAuthState} from "omo-fission/dist/manifest";
-import {createOmoSapien} from "../omosapien/processes/createOmoSapien/createOmoSapien";
-import {ProcessContext} from "omo-process/dist/processContext";
 import {config} from "omo-circles/dist/config";
 import {GnosisSafeProxyFactory} from "omo-circles/dist/safe/gnosisSafeProxyFactory";
 import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
+import {BeginSignal} from "omo-events/dist/signals/beginSignal";
+import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 
 export interface OmoSafeState
 {
@@ -201,8 +200,8 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
 {
   safeManifestLogger = window.o.logger.newLogger(`initialize()`);
   safeManifestLogger.log("begin")
-  window.o.publishEvent(new BeginSignal("omo.safe:1:initialize"));
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your safe key ..", 0));
+  window.o.publishEvent(new BeginSignal());
+  window.o.publishEvent(new ProgressSignal("Loading your safe key ..", 0));
   await initMyKey();
 
   let safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
@@ -219,10 +218,10 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
     };
   }
 
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your safe address ..", 0));
+  window.o.publishEvent(new ProgressSignal("Loading your safe address ..", 0));
   await initSafeAddress();
 
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your xDai balances ..", 0));
+  window.o.publishEvent(new ProgressSignal("Loading your xDai balances ..", 0));
   await initXDaiBalances();
 
   safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
@@ -258,7 +257,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
     };
   }
 
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token ..", 0));
+  window.o.publishEvent(new ProgressSignal("Loading your token ..", 0));
   await initMyToken();
 
   safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
@@ -291,16 +290,16 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
     };
   }
 
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts ..", 0));
+  window.o.publishEvent(new ProgressSignal( "Loading your contacts ..", 0));
   await initMyContacts();
 
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts' tokens ..", 0));
+  window.o.publishEvent(new ProgressSignal( "Loading your contacts' tokens ..", 0));
   await initMyKnownTokens();
 
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your transactions ..", 0));
+  window.o.publishEvent(new ProgressSignal( "Loading your transactions ..", 0));
   await initMyTransactions(safeManifestLogger);
 
-  window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your balances ..", 0));
+  window.o.publishEvent(new ProgressSignal("Loading your balances ..", 0));
   await initMyBalances();
 
   safeManifestLogger.log("end")

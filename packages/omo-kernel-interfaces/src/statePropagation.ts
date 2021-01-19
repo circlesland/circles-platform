@@ -1,4 +1,4 @@
-import {Signal} from "omo-events/dist/signal";
+import {Signal} from "omo-events/dist/signals/signal";
 
 /**
  * Can be used with a BehaviorSubject to propagate state changes trough multiple dapps.

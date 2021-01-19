@@ -1,14 +1,13 @@
 import {useMachine} from "xstate-svelte";
 import {getProcessContext} from "./o";
-import {Process} from "omo-process/dist/process";
-import {ProcessDefinition} from "omo-process/dist/processManifest";
-import {ProcessContext} from "omo-process/dist/processContext";
-import {ProcessEvent} from "omo-process/dist/processEvent";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 import LoadingIndicator from "../o-views/atoms/LoadingIndicator.svelte"
 import Success from "../o-views/atoms/Success.svelte"
 import Error from "../o-views/atoms/Error.svelte"
-
+import {Process} from "omo-process/dist/interfaces/process";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessEvent} from "omo-process/dist/interfaces/processEvent";
 
 export const stateMachine = {
   _current: null,

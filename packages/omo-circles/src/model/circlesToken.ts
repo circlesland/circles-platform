@@ -9,6 +9,7 @@ import {Signal} from "omo-events/dist/signals/signal";
 import {BeginSignal} from "omo-events/dist/signals/beginSignal";
 import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {EndSignal} from "omo-events/dist/signals/endSignal";
+import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 
 export class CirclesToken implements CirclesTokenModel
 {
@@ -174,7 +175,7 @@ export class CirclesToken implements CirclesTokenModel
   }
 
   subscribeToTransactions(
-      subject:OmoSubject<SystemEvent>,
+      subject:OmoSubject<OmoEvent>,
       mySafeAddress:string,
       tokensByAddress:{[tokenAddress:string]:CirclesToken},
       tokenAddresses:string[])

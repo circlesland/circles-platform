@@ -7,7 +7,6 @@ import {faUserAstronaut} from "@fortawesome/free-solid-svg-icons";
 import {createOmoSapien, CreateOmoSapienContext} from "./processes/createOmoSapien/createOmoSapien";
 import {ProfileIndex, ProfileIndexData} from "omo-indexes/dist/profileIndex";
 import {Logger} from "omo-utils/dist/logger";
-import {Profile} from "omo-models/dist/profile";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {RunProcess} from "omo-process/dist/events/runProcess";
@@ -17,6 +16,7 @@ import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 import {FissionAuthState} from "omo-fission/dist/manifest";
 import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 import {ReadySignal} from "omo-events/dist/signals/readySignal";
+import {Profile} from "omo-models/dist/omo/profile";
 
 export interface OmoSapienState
 {

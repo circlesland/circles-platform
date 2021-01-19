@@ -8,6 +8,7 @@ import { EventQuery } from "./eventQuery";
 import type { TransactionReceipt } from "web3-core";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 import {omoRxjsFilter, omoRxjsMap} from "omo-quirks/dist/operators";
+import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 
 export abstract class Web3Contract {
   readonly web3: Web3;

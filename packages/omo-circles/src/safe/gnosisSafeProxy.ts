@@ -7,7 +7,7 @@ import EthLibAccount from "eth-lib/lib/account";
 import {Web3Contract} from "../web3Contract";
 import type {TransactionReceipt} from "web3-core";
 import {SafeTransaction} from "omo-models/dist/safe/safeTransation";
-import {SafeOps} from "../../dist/safe/safeOps";
+import {SafeOps} from "omo-models/dist/safe/safeOps";
 
 export class GnosisSafeProxy extends Web3Contract
 {

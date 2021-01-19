@@ -9,10 +9,10 @@ import {Offers} from "./directories/offers";
 import {tryGetDappState} from "../../omo-kernel/dist/kernel";
 import {FissionAuthState} from "./manifest";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
-import {StatePropagation} from "omo-kernel-interfaces/dist/envelope";
-import {BeginSignal} from "../../omo-events/dist/beginSignal";
 import {tryToAuthenticate} from "./tryToAuthenticate";
-import {EndSignal} from "../../omo-events/dist/endSignal";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
+import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
+import {EndSignal} from "omo-events/dist/signals/endSignal";
 
 export class FissionDrive
 {
@@ -103,7 +103,7 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
   if (!fissionAuthState.fission)
   {
     fissionAuthState.fission = new OmoBehaviorSubject<StatePropagation<FissionDrive>>({
-      signal: new BeginSignal(""),
+      signal: new UnavailableSignal(),
       payload: undefined
     });
   }
@@ -126,7 +126,7 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
       }
       //const current = fissionAuthState.fission.getValue();
       fissionAuthState.fission.next({
-        signal: new EndSignal(""),
+        signal: new EndSignal(),
         payload: drive
       });
       const initFsEnd = Date.now();

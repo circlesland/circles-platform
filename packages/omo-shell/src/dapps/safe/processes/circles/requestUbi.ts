@@ -2,7 +2,6 @@ import { createMachine } from "xstate";
 import { strings } from "../../data/strings";
 import {requestUbiService} from "../../services/requestUbiService";
 import Web3 from "omo-quirks/dist/web3";
-import {ProcessContext} from "omo-process/dist/processContext";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "omo-process/dist/actions/setError";
@@ -12,6 +11,7 @@ import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorProm
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 import {OmoSafeState} from "../../manifest";
 import {sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 
 export interface RequestUbiContext extends ProcessContext {
   web3:Web3;

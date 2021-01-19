@@ -5,8 +5,6 @@ import {strings} from "../../data/strings";
 import {transferJumpstartXDaiService} from "../../services/transferJumpstartXDaiService";
 import {getForeignProfileService} from "../../services/getForeignProfile";
 import Web3 from "omo-quirks/dist/web3";
-import {ProcessContext} from "omo-process/dist/processContext";
-import {ProcessArtifact} from "omo-process/dist/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "omo-process/dist/actions/setError";
@@ -17,7 +15,9 @@ import {inviteCredits} from "omo-process/dist/artifacts/inviteCredits";
 import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
-import {ProcessDefinition} from "omo-process/dist/processManifest";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 export interface JumpstartContext extends ProcessContext {
   web3:Web3;

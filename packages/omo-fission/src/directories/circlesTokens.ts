@@ -1,7 +1,7 @@
 import { Directory, DirectoryChangeType } from "./directory";
 import FileSystem from "webnative/fs/filesystem";
-import {Token} from "../../../omo-models/dist/token";
-import {CachedTokens} from "../../../omo-models/dist/cachedTokens";
+import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
+import {Token} from "omo-models/dist/omo/token";
 
 export class CirclesTokens extends Directory<CachedTokens>
 {

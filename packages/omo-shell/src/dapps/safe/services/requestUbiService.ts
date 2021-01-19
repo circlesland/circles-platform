@@ -1,14 +1,14 @@
-import {ProgressSignal} from "omo-events/dist/progressSignal";
+import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {RequestUbiContext} from "../processes/circles/requestUbi";
 import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
-import {EndSignal} from "omo-events/dist/endSignal";
+import {EndSignal} from "omo-events/dist/signals/endSignal";
 
 export const requestUbiService = async (context: RequestUbiContext) =>
 {
   let currentTransactionsList = context.safeState.myTransactions.getValue();
   context.safeState.myTransactions.next({
-    signal: new ProgressSignal("requestUbi", "Harvesting time", 0),
+    signal: new ProgressSignal("Harvesting time", 0),
     payload: currentTransactionsList.payload
   });
 
@@ -25,7 +25,7 @@ export const requestUbiService = async (context: RequestUbiContext) =>
 
   currentTransactionsList = context.safeState.myTransactions.getValue();
   context.safeState.myTransactions.next({
-    signal: new EndSignal("requestUbi"),
+    signal: new EndSignal(),
     payload: currentTransactionsList.payload
   });
 

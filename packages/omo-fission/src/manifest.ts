@@ -3,7 +3,7 @@ import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {tryToAuthenticate} from "./tryToAuthenticate";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
-import {StatePropagation} from "omo-kernel-interfaces/dist/envelope";
+import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 
 export interface FissionAuthState {
   fissionState: any,

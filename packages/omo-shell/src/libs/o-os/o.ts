@@ -10,9 +10,9 @@ import { Shell } from "./interfaces/shell";
 // import {SessionLog} from "../o-fission/entities/sessionLog";
 // import {runWithDrive} from "../o-fission/fissionDrive";
 import {newLogger} from "omo-utils/dist/logger";
-import {ProcessEnvironment} from "omo-process/dist/processEnvironment";
-import {ProcessContext} from "omo-process/dist/processContext";
-import {SessionLog} from "omo-models/dist/sessionLog";
+import {ProcessEnvironment} from "omo-process/dist/interfaces/processEnvironment";
+import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import {SessionLog} from "omo-models/dist/omo/sessionLog";
 
 /*
 export type Ethereum = {
