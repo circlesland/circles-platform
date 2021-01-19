@@ -8,5 +8,5 @@ export interface ProcessManifest {
 }
 
 export interface ProcessDefinition extends ProcessManifest {
-  stateMachine: (() => StateMachine<ProcessContext, any, OmoEvent>) | ((args: any) => StateMachine<ProcessContext, any, OmoEvent>);
+  stateMachine: ((progressView:any, successView:any, errorView:any) => StateMachine<ProcessContext, any, OmoEvent>) | ((args: any) => StateMachine<ProcessContext, any, OmoEvent>);
 }

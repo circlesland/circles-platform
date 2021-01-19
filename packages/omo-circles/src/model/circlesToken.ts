@@ -3,14 +3,12 @@ import {config} from "../config";
 import {Subscription} from "web3-core-subscriptions";
 import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
 import {CirclesToken as CirclesTokenModel} from "omo-models/dist/circles/circlesToken"
-import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 import {OmoEvent} from "omo-events/dist/omoEvent";
-import {Signal} from "omo-events/dist/signal";
-import {BeginSignal} from "omo-events/dist/beginSignal";
-import {ProgressSignal} from "omo-events/dist/progressSignal";
-import {EndSignal} from "omo-events/dist/endSignal";
-import {SystemEvent} from "omo-models/dist/omo-circles/src/interfaces/blockchainEvent";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
+import {Signal} from "omo-events/dist/signals/signal";
+import {BeginSignal} from "omo-events/dist/signals/beginSignal";
+import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
+import {EndSignal} from "omo-events/dist/signals/endSignal";
 
 export class CirclesToken implements CirclesTokenModel
 {
@@ -63,7 +61,7 @@ export class CirclesToken implements CirclesTokenModel
   {
     if (signalCallback)
     {
-      signalCallback(new BeginSignal(""));
+      signalCallback(new BeginSignal());
     }
 
     const partitionSize = 50000;
@@ -93,7 +91,7 @@ export class CirclesToken implements CirclesTokenModel
             const percent = (partitionIdx + 1) * (100 / partitionCount)
 
             signalCallback(new ProgressSignal(
-              "", `Updating your transactions ..`, parseInt(percent.toFixed(0))));
+              `Updating your transactions ..`, parseInt(percent.toFixed(0))));
           }
 
           const f = getFromBlock(partitionIdx);
@@ -147,7 +145,7 @@ export class CirclesToken implements CirclesTokenModel
 
     if (signalCallback)
     {
-      signalCallback(new EndSignal(""));
+      signalCallback(new EndSignal());
     }
   }
 

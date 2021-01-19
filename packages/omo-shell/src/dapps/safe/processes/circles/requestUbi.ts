@@ -5,14 +5,13 @@ import Web3 from "omo-quirks/dist/web3";
 import {ProcessContext} from "omo-process/dist/processContext";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
-import {sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
 import {setError} from "omo-process/dist/actions/setError";
 import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 import {OmoSafeState} from "../../manifest";
-
+import {sendShellEvent} from "omo-process/dist/actions/sendPrompt/sendPrompt";
 
 export interface RequestUbiContext extends ProcessContext {
   web3:Web3;
@@ -25,7 +24,7 @@ export interface RequestUbiContext extends ProcessContext {
  * Requests UBI
  */
 const str = strings.safe.processes.requestUbi;
-const processDefinition = () => createMachine<RequestUbiContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<RequestUbiContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -35,7 +34,7 @@ const processDefinition = () => createMachine<RequestUbiContext, OmoEvent>({
     },
     requestUbi: {
       entry: <any>[
-        sendInProgressPrompt(str.titleProgress),
+        sendInProgressPrompt(progressView , str.titleProgress),
         sendShellEvent({
           type: "shell.closeModal"
         })
@@ -54,7 +53,7 @@ const processDefinition = () => createMachine<RequestUbiContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -64,7 +63,7 @@ const processDefinition = () => createMachine<RequestUbiContext, OmoEvent>({
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

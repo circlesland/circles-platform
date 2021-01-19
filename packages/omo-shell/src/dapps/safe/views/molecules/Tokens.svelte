@@ -4,7 +4,6 @@
   import { BN } from "ethereumjs-util";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
   import { onDestroy, onMount } from "svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
 
   import {OmoSapienState} from "../../../omosapien/manifest";
   import {OmoSafeState} from "../../manifest";
@@ -12,6 +11,7 @@
   import {Contact} from "omo-models/dist/omo/contact";
   import {config} from "omo-circles/dist/config";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   let safeState:OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let balanceSubscriptions: OmoSubscription;

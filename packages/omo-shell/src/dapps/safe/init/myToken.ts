@@ -19,7 +19,7 @@ export async function initMyToken()
     }
     catch (e)
     {
-      window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your token (from the blockchain) ..", 0));
+      window.o.publishEvent(new ProgressSignal("Loading your token (from the blockchain) ..", 0));
     }
 
     if (!myToken)

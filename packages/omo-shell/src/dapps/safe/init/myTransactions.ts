@@ -14,6 +14,7 @@ import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
+import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 
 type TransactionList = {
   [token: string]: {
@@ -25,6 +26,7 @@ let initMyTransactionLogger:Logger;
 
 // The consumable output of this init step (deduplicated ordered list of transactions)
 const myTransactionsSubject: OmoBehaviorSubject<StatePropagation<CirclesTransaction[]>> = new OmoBehaviorSubject<StatePropagation<CirclesTransaction[]>>({
+  signal: new UnavailableSignal(),
   payload: []
 });
 

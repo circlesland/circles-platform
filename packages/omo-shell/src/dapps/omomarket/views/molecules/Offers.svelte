@@ -6,12 +6,12 @@
 
   import Icon from "fa-svelte";
   import {featured, offers} from "../../data/offers";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../../omosapien/manifest";
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
   import {OfferIndex} from "omo-indexes/dist/offerIndex";
   import {Offer, OfferMetadata} from "omo-fission/dist/directories/offers";
   import {IpfsNode} from "omo-indexes/dist/ipfsNode";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   const allOffers = [];
 

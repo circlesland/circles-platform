@@ -3,7 +3,7 @@ import { ProcessContext } from "../../interfaces/processContext";
 import { Prompt } from "../../events/prompt";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 
-export function sendInProgressPrompt<TContext extends ProcessContext>(component:unknown, message?: (context: TContext) => string)
+export function sendInProgressPrompt<TContext extends ProcessContext>(component:object, message?: (context: TContext) => string)
 {
   return send<TContext, OmoEvent>((context: TContext) =>
   {

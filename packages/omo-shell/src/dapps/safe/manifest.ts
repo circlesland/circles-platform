@@ -12,8 +12,7 @@ import {faCheck, faPiggyBank, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {push} from "svelte-spa-router";
 import {BN} from "ethereumjs-util";
 import {sendInviteCredits, SendInviteCreditsContext} from "./processes/omo/sendInviteCredits";
-import {deploySafe} from "./processes/safe/deploySafe";
-import {FissionAuthState} from "../fissionauth/manifest";
+import {deploySafe, DeploySafeContext} from "./processes/safe/deploySafe";
 import {initMyKey} from "./init/myKey";
 import {initXDaiBalances} from "./init/xDaiBalances";
 import {initMyContacts} from "./init/myContacts";
@@ -24,9 +23,9 @@ import {initMyToken} from "./init/myToken";
 import {initMyBalances} from "./init/myBalances";
 import {initialMenu} from "./processes/menus/initialMenu";
 import {fundAccountForSafeCreation} from "./processes/omo/fundAccountForSafeCreation";
-import {signupAtCircles} from "./processes/omo/signupAtCircles";
+import {signupAtCircles, SignupAtCirclesContext} from "./processes/omo/signupAtCircles";
 import {Logger} from "omo-utils/dist/logger";
-import {fundSafe} from "./processes/omo/fundSafe";
+import {fundSafe, FundSafeContext} from "./processes/omo/fundSafe";
 import {KeyPair} from "omo-models/dist/omo/keyPair";
 import {CirclesToken} from "omo-circles/dist/model/circlesToken";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
@@ -43,6 +42,12 @@ import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {CloseModal} from "omo-events/dist/shell/closeModal";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
+import {FissionAuthState} from "omo-fission/dist/manifest";
+import {createOmoSapien} from "../omosapien/processes/createOmoSapien/createOmoSapien";
+import {ProcessContext} from "omo-process/dist/processContext";
+import {config} from "omo-circles/dist/config";
+import {GnosisSafeProxyFactory} from "omo-circles/dist/safe/gnosisSafeProxyFactory";
+import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
 
 export interface OmoSafeState
 {
@@ -204,7 +209,9 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
   if (!safeState.myKey)
   {
     // Safe not connected
-    window.o.publishEvent(new RunProcess(initialMenu));
+    window.o.publishEvent(new RunProcess<ProcessContext>(initialMenu, async processContext => {
+      return processContext;
+    }))
     return {
       cancelDependencyLoading: true,
       initialPage: noKeyPage,
@@ -223,7 +230,9 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
     && (safeState.myAccountXDaiBalance?.lt(new BN("100000")) ?? true))
   {
     // Got an account but no funding to deploy a safe
-    window.o.publishEvent(new RunProcess(fundAccountForSafeCreation));
+    window.o.publishEvent(new RunProcess(fundAccountForSafeCreation, async processContext => {
+      return processContext;
+    }));
     return {
       cancelDependencyLoading: true,
       initialPage: noFundsOnAccountPage,
@@ -234,7 +243,14 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
     && (safeState.myAccountXDaiBalance?.gte(new BN("100000")) ?? false))
   {
     // Got a funded account, ready to deploy the safe
-    window.o.publishEvent(new RunProcess(deploySafe));
+    window.o.publishEvent(new RunProcess<DeploySafeContext>(deploySafe, async processContext => {
+      processContext.web3 = config.getCurrent().web3();
+      processContext.safeProxyFactory = new GnosisSafeProxyFactory(
+        processContext.web3,
+        config.getCurrent().PROXY_FACTORY_ADDRESS,
+        config.getCurrent().GNOSIS_SAFE_ADDRESS);
+      return processContext;
+    }));
     return {
       cancelDependencyLoading: true,
       initialPage: noSafePage,
@@ -251,7 +267,10 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
   if (safeState.mySafeAddress && !safeState.myToken && safeState.mySafeXDaiBalance?.lte(new BN("4600000000000000")))
   {
     // Not yet registered at the circles hub
-    runtimeDapp.outEvents.publish(new RunProcess(fundSafe));
+    runtimeDapp.outEvents.publish(new RunProcess<FundSafeContext>(fundSafe, async processContext => {
+      processContext.web3 = config.getCurrent().web3();
+      return processContext;
+    }));
     return {
       cancelDependencyLoading: true,
       initialPage: noFundsOnSafePage
@@ -261,7 +280,11 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
   if (safeState.mySafeAddress && !safeState.myToken)
   {
     // Not yet registered at the circles hub
-    runtimeDapp.outEvents.publish(new RunProcess(signupAtCircles));
+    runtimeDapp.outEvents.publish(new RunProcess<SignupAtCirclesContext>(signupAtCircles, async processContext => {
+      processContext.web3 = config.getCurrent().web3();
+      processContext.circlesHub = new CirclesHub(processContext.web3, config.getCurrent().HUB_ADDRESS);
+      return processContext;
+    }));
     return {
       cancelDependencyLoading: true,
       initialPage: noTokenPage
@@ -331,6 +354,7 @@ export const omosafe: DappManifest<OmoSafeState> = {
               value: "", // TODO: pre-populate all fields
               isReadonly: true
             };
+            context.web3 = config.getCurrent().web3();
             return context;
           })
         }, {

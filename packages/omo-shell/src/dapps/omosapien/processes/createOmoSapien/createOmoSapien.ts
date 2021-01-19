@@ -31,7 +31,7 @@ export interface CreateOmoSapienContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.omosapien.processes.createOmoSapien;
-const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<CreateOmoSapienContext, OmoEvent>({
   initial: "idle",
   states: {
 
@@ -121,7 +121,7 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
       }
     },
     createOmoSapien: {
-      entry:<any> sendInProgressPrompt(str.bannerProgress),
+      entry:<any> sendInProgressPrompt(progressView, str.bannerProgress),
       invoke: <any>{
         id: 'createOmoSapien',
         src: addOrUpdateMyProfileService,
@@ -136,15 +136,15 @@ const processDefinition = () => createMachine<CreateOmoSapienContext, OmoEvent>(
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
       }
     },
     success: {
-      entry:<any> [
-        sendSuccessPrompt(Success),
+      entry: [
+        <any>sendSuccessPrompt(successView),
         sendShellEvent(new NavigateTo("/safe/transactions"))
       ],
       on: {

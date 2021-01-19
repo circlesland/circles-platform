@@ -2,9 +2,9 @@ import Featured from './views/pages/Featured.svelte';
 
 import { omofundingDefaultActions, omofundingOverflowActions } from './data/actions';
 import { faPeopleCarry } from "@fortawesome/free-solid-svg-icons";
-import { FissionAuthState } from "../fissionauth/manifest";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
+import {FissionAuthState} from "omo-fission/dist/manifest";
 
 export interface OmoFundingState { }
 export const omofunding: DappManifest<OmoFundingState> = {

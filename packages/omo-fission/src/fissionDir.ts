@@ -25,8 +25,10 @@ export abstract class FissionDir
     fs: FileSystem,
     pathParts: string[])
   {
-    //window.o.logger.log("FissionDir.ctor(pathParts:" + pathParts.join(",") + ")")
-
+    if (!fs)
+    {
+      throw new Error("The 'fs' parameter is null or undefined.");
+    }
     this._fissionUser = fissionUser;
     this._pathParts = pathParts;
     this._fs = fs;
@@ -34,21 +36,19 @@ export abstract class FissionDir
 
   getPathFromApp(pathParts: string[]): string
   {
-    if (!this.fs?.appPath)
+    if (!this.fs.appPath)
     {
-      throw new Error(`Call init() first`);
+      throw new Error("The FS's 'appPath' property has no value");
     }
-
     return this.fs.appPath(pathParts);
   }
 
   getPath(pathParts?: string[]): string
   {
-    if (!this.fs?.appPath)
+    if (!this.fs.appPath)
     {
-      throw new Error(`Call init() first`);
+      throw new Error("The FS's 'appPath' property has no value");
     }
-
     return this.fs.appPath(pathParts
       ? this._pathParts.concat(pathParts)
       : this._pathParts);

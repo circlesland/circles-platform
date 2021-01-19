@@ -1,5 +1,5 @@
 import { faUserCircle, faCoins, faStar, faStore, faDove } from "@fortawesome/free-solid-svg-icons";
-import {createOffer} from "../processes/createOffer/createOffer";
+import {createOffer, CreateOfferContext} from "../processes/createOffer/createOffer";
 import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 
@@ -68,7 +68,9 @@ export const omomarketOverflowActions: QuickAction[] = [
         label: "Create new Offer",
       }
     },
-    event: () => new RunProcess(createOffer)
+    event: () => new RunProcess<CreateOfferContext>(createOffer, async ctx => {
+      return ctx;
+    })
   },
   {
     type: "trigger",

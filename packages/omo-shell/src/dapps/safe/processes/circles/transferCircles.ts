@@ -28,7 +28,7 @@ export interface TransferCirclesContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.transferCircles;
-const processDefinition = (maxBalance: number) => createMachine<TransferCirclesContext, OmoEvent>({
+const processDefinition = (maxBalance: number, progressView:any, successView:any, errorView:any) => createMachine<TransferCirclesContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -116,7 +116,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
     },
     transferCircles: {
       entry: <any>[
-        sendInProgressPrompt(str.titleProgress),
+        sendInProgressPrompt(progressView, str.titleProgress),
         sendShellEvent({
           type: "shell.closeModal"
         })
@@ -135,7 +135,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -145,7 +145,7 @@ const processDefinition = (maxBalance: number) => createMachine<TransferCirclesC
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

@@ -1,4 +1,4 @@
-import { createMachine, send } from "xstate";
+import { createMachine } from "xstate";
 import { strings } from "../../data/strings";
 import {hubSignupService} from "../../services/hubSignupService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -11,7 +11,7 @@ import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorProm
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
 const str = strings.safe.processes.signup;
-const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<ProcessContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -20,7 +20,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     signup: {
-      entry: <any>sendInProgressPrompt(() => ""),
+      entry: <any>sendInProgressPrompt(progressView, () => ""),
       invoke:<any> {
         id: 'signup',
         src: hubSignupService,
@@ -35,7 +35,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -45,7 +45,7 @@ const processDefinition = () => createMachine<ProcessContext, OmoEvent>({
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

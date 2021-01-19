@@ -1,7 +1,7 @@
 import {createMachine, send} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {strings} from "../../data/strings";
-import {importCircles} from "../omo/importCircles";
+import {ConnectSafeContext, importCircles} from "../omo/importCircles";
 import {signupAtCircles} from "../omo/signupAtCircles";
 import {createPrivateKey} from "../omo/createPrivateKey";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -13,6 +13,9 @@ import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse"
 import {RunProcess} from "omo-process/dist/events/runProcess";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import {transferCircles} from "../circles/transferCircles";
+import {config} from "omo-circles/dist/config";
+import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
 
 export interface InitialMenuContext extends ProcessContext {
   data: {
@@ -68,7 +71,7 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
     },
     importCircles: {
       entry: <any>[
-        sendShellEvent(new RunProcess(importCircles)),
+        sendShellEvent(new RunProcess<ConnectSafeContext>(importCircles)),
         send({
           type: "process.triggerSelf"
         })

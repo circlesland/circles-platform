@@ -2,9 +2,12 @@
   import { onMount } from "svelte";
   import {push} from "svelte-spa-router";
   import { Jumper } from "svelte-loading-spinners";
-  import {setDappState} from "../../../libs/o-os/loader";
-  import {FissionAuthState} from "../manifest";
   import {tryToAuthenticate} from "omo-fission/dist/tryToAuthenticate";
+  import {setDappState} from "omo-kernel/dist/kernel";
+  import {FissionAuthState} from "omo-fission/dist/manifest";
+  import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+  import {StatePropagation} from "omo-kernel-interfaces/dist/envelope";
+  import {FissionDrive} from "omo-fission/dist/fissionDrive";
 
   // const wn = window.o.wn;
 
@@ -13,7 +16,7 @@
   onMount(async () => {
     const state = await tryToAuthenticate();
 
-    if (state.username ) {
+    if (state.username) {
       // set a marker in the local storage that indicates whether we've already logged-in
       localStorage.setItem("fissionAuth", JSON.stringify({
         username: state.username
@@ -24,7 +27,10 @@
         return {
           username: state.username,
           fissionState: state,
-          fission: null
+          fission: new OmoBehaviorSubject<StatePropagation<FissionDrive>>({
+            signal: undefined,
+            payload: state.fission
+          })
         };
       });
 

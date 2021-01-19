@@ -1,7 +1,5 @@
 import { createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
-import Success from "../../../../libs/o-views/atoms/Success.svelte";
-import Error from "../../../../libs/o-views/atoms/Error.svelte";
 import {strings} from "../../data/strings";
 import {createOfferService} from "./services/createOfferService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -35,10 +33,9 @@ export interface CreateOfferContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.omomarket.processes.createOffer;
-const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<CreateOfferContext, OmoEvent>({
   initial: "idle",
   states: {
-
     idle: {
       on: {
         "process.continue": "promptName"
@@ -208,7 +205,7 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     createOffer: {
-      entry:<any> sendInProgressPrompt(str.bannerProgress),
+      entry:<any> sendInProgressPrompt(progressView, str.bannerProgress),
       invoke: <any>{
         id: 'createOffer',
         src: createOfferService,
@@ -223,14 +220,14 @@ const processDefinition = () => createMachine<CreateOfferContext, OmoEvent>({
       }
     },
     error: {
-      entry: <any>sendErrorPrompt(Error),
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
       }
     },
     success: {
-      entry: <any>sendSuccessPrompt(Success),
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

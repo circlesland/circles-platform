@@ -5,6 +5,6 @@ import {Signal} from "omo-events/dist/signal";
  */
 export interface StatePropagation<TContent>
 {
-  signal?:Signal,
+  signal:Signal,
   payload?:TContent
 }

@@ -21,7 +21,7 @@ export interface PublishOfferContext extends ProcessContext {
  * Connect safe
  */
 const str = strings.omomarket.processes.publishOffer;
-const processDefinition = () => createMachine<PublishOfferContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<PublishOfferContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -30,7 +30,7 @@ const processDefinition = () => createMachine<PublishOfferContext, OmoEvent>({
       }
     },
     publishOffer: {
-      entry: <any>sendInProgressPrompt(str.bannerProgress),
+      entry: <any>sendInProgressPrompt(progressView, str.bannerProgress),
       invoke: <any>{
         id: 'publishOffer',
         src: publishOfferService,
@@ -45,14 +45,14 @@ const processDefinition = () => createMachine<PublishOfferContext, OmoEvent>({
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

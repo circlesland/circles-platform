@@ -11,6 +11,7 @@
   import {ShellEvent} from "omo-process/dist/events/shellEvent";
   import {Back} from "omo-process/dist/events/back";
   import {Cancel} from "omo-process/dist/events/cancel";
+  import {Prompt as PromptEvent} from "omo-process/dist/events/prompt";
   import {Continue} from "omo-process/dist/events/continue";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
 

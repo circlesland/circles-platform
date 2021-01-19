@@ -5,6 +5,10 @@ import {ProcessDefinition} from "omo-process/dist/processManifest";
 import {ProcessContext} from "omo-process/dist/processContext";
 import {ProcessEvent} from "omo-process/dist/processEvent";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
+import LoadingIndicator from "../o-views/atoms/LoadingIndicator.svelte"
+import Success from "../o-views/atoms/Success.svelte"
+import Error from "../o-views/atoms/Error.svelte"
+
 
 export const stateMachine = {
   _current: null,
@@ -19,8 +23,9 @@ export const stateMachine = {
   async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>)
   {
     window.o.logger.log("run", definition.name);
+
     const {service, state, send} = useMachine(
-      (<any>definition).stateMachine(),
+      (<any>definition).stateMachine(LoadingIndicator, Success, Error),
       {
         context: contextModifier
           ? await contextModifier(await getProcessContext())

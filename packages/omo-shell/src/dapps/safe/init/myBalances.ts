@@ -5,8 +5,10 @@ import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {CirclesBalance} from "omo-models/dist/omo/circlesBalance";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
+import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 
 const myCirclesBalancesSubject: OmoBehaviorSubject<StatePropagation<CirclesBalance[]>> = new OmoBehaviorSubject<StatePropagation<CirclesBalance[]>>({
+  signal: new UnavailableSignal(),
   payload: []
 });
 let myBalances: CirclesBalance[] = [];

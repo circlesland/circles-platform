@@ -1,20 +1,17 @@
-import { send } from "xstate";
-// import Success from "../../../o-views/atoms/Success.svelte";
-import { ProcessContext } from "../../interfaces/processContext";
-import { Prompt } from "../../events/prompt";
+import {sendPrompt} from "./sendPrompt";
 
-export const sendSuccessPrompt = (component:unknown) =>  send((context: ProcessContext) => {
-  return <Prompt>{
-    nextButtonTitle: "Close",
-    type: "process.prompt",
-    banner: {
-      // component: Success,
-      component: component,
-      data: {
-        text: context.result?.success
+export const sendSuccessPrompt = (component:object) => sendPrompt(
+  (context) => {
+    return {
+      canGoBack: true,
+      nextButtonTitle: "Close",
+      banner: {
+        component: component,
+        data: {
+          text: context.result?.success
+        }
+      },
+      artifacts: {
       }
-    },
-    hideNextButton: true,
-    data: {}
-  }
-});
+    }
+  });

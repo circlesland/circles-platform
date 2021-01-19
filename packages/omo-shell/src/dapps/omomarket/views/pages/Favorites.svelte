@@ -1,5 +1,4 @@
 <script lang="ts">
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../../omosapien/manifest";
   import ListItem from "../../../../libs/o-views/molecules/ListItem.svelte";
   import {ListItem as IListItem} from "../../../../libs/o-views/interfaces/molecules";
@@ -10,6 +9,7 @@
   import {OfferMetadata} from "omo-fission/dist/directories/offers";
   import {runWithDrive} from "omo-fission/dist/fissionDrive";
   import {RunProcess} from "omo-process/dist/events/runProcess";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   let myOffers: OfferMetadata[] = [];

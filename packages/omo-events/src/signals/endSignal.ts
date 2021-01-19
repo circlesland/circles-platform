@@ -3,11 +3,8 @@ import {Signal} from "./signal";
 
 export class EndSignal extends Signal
 {
-    readonly key: string;
-
-    constructor(key:string)
+    constructor()
     {
-        super(<OmoEventTypes>"signal.end", key);
-        this.key = key;
+        super(<OmoEventTypes>"signal.end");
     }
 }

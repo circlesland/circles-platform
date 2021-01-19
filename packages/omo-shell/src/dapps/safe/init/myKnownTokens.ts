@@ -10,8 +10,10 @@ import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
+import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 
 const myKnownTokensSubject: OmoBehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>> = new OmoBehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>({
+  signal: new UnavailableSignal(),
   payload: {}
 });
 const blockIndex = new BlockIndex();
@@ -86,7 +88,7 @@ export async function initMyKnownTokens()
     }
     catch (e)
     {
-      window.o.publishEvent(new ProgressSignal("omo.safe:1:initialize", "Loading your contacts' tokens (failed) ..", 0));
+      window.o.publishEvent(new ProgressSignal("Loading your contacts' tokens (failed) ..", 0));
     }
 
     // Update the token list whenever the contact list changes.

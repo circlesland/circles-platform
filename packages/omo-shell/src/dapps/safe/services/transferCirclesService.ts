@@ -93,7 +93,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 
     let currentTransactionsList = safeState.myTransactions.getValue();
     safeState.myTransactions.next({
-      signal: new ProgressSignal("transferCircles", "`", 0, dummyTransaction),
+      signal: new ProgressSignal("", 0, dummyTransaction),
       payload: currentTransactionsList.payload
     });
 
@@ -108,7 +108,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
 
     currentTransactionsList = safeState.myTransactions.getValue();
     safeState.myTransactions.next({
-      signal: new EndSignal("transferCircles"),
+      signal: new EndSignal(),
       payload: currentTransactionsList.payload
     });
 

@@ -25,7 +25,7 @@ export interface UpdateOmoSapienContext extends ProcessContext {
 }
 
 const str = strings.omosapien.processes.createOmoSapien;
-const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<UpdateOmoSapienContext, OmoEvent>({
   initial: "idle",
   states: {
 
@@ -115,7 +115,7 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>(
       }
     },
     updateOmoSapien: {
-      entry: <any>sendInProgressPrompt(str.bannerProgress),
+      entry: <any>sendInProgressPrompt(progressView, str.bannerProgress),
       invoke: <any>{
         id: 'updateOmoSapien',
         src: addOrUpdateMyProfileService,
@@ -132,7 +132,7 @@ const processDefinition = () => createMachine<UpdateOmoSapienContext, OmoEvent>(
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

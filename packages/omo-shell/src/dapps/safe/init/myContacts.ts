@@ -11,8 +11,10 @@ import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
+import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 
 const myContactsSubject: OmoBehaviorSubject<StatePropagation<Contact[]>> = new OmoBehaviorSubject<StatePropagation<Contact[]>>({
+  signal: new UnavailableSignal(),
   payload: []
 });
 const blockIndex = new BlockIndex();

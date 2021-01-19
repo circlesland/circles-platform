@@ -26,7 +26,7 @@ export interface UnTrustContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.unTrust;
-const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<UnTrustContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -60,7 +60,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
     },
     setTrust: {
       entry:<any> [
-        sendInProgressPrompt(str.titleWorking),
+        sendInProgressPrompt(progressView, str.titleWorking),
         /*sendShellEvent({
           type: "shell.closeModal"
         })*/
@@ -79,7 +79,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -89,7 +89,7 @@ const processDefinition = () => createMachine<UnTrustContext, OmoEvent>({
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

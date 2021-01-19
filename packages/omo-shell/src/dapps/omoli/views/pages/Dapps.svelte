@@ -1,10 +1,11 @@
 <script lang="ts">
   import DappIcon from "../../../../libs/o-views/molecules/DappIcon.svelte";
-  import {constructAppUrl, dapps, tryGetDappState} from "../../../../libs/o-os/loader";
+  import {constructAppUrl, dapps} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../../omosapien/manifest";
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
-  import {FissionAuthState} from "../../../fissionauth/manifest";
   import {onMount} from "svelte";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import {FissionAuthState} from "omo-fission/dist/manifest";
 
   onMount(async () => {
 

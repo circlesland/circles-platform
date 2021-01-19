@@ -8,6 +8,7 @@ import {Generate} from "omo-utils/dist/generate";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {fission, FissionAuthState} from "omo-fission/dist/manifest";
+import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 
 export const dappStates: {
     [dappId: string]: any
@@ -52,7 +53,10 @@ class Kernel implements KernelInterface
 
         const initialState = await stateFactory(runtimeDappId);
 
-        const stateSubject = new OmoBehaviorSubject<StatePropagation<TState>>(initialState);
+        const stateSubject = new OmoBehaviorSubject<StatePropagation<TState>>({
+            signal: new UnavailableSignal(),
+            payload: initialState
+        });
         const inEventsTopic = new Topic<OmoEvent>(runtimeDappId, "in");
         const outEventsTopic = new Topic<OmoEvent>(runtimeDappId, "out");
 

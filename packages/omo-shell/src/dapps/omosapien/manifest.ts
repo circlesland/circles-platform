@@ -4,8 +4,7 @@ import Keys from 'src/dapps/omosapien/views/pages/Keys.svelte'
 import NoProfile from 'src/dapps/omosapien/views/pages/NoProfile.svelte'
 import {omoSapienDefaultActions, omoSapienOverflowActions} from "./data/actions"
 import {faUserAstronaut} from "@fortawesome/free-solid-svg-icons";
-import {createOmoSapien} from "./processes/createOmoSapien/createOmoSapien";
-import {FissionAuthState} from "../fissionauth/manifest";
+import {createOmoSapien, CreateOmoSapienContext} from "./processes/createOmoSapien/createOmoSapien";
 import {ProfileIndex, ProfileIndexData} from "omo-indexes/dist/profileIndex";
 import {Logger} from "omo-utils/dist/logger";
 import {Profile} from "omo-models/dist/profile";
@@ -15,6 +14,9 @@ import {RunProcess} from "omo-process/dist/events/runProcess";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
+import {FissionAuthState} from "omo-fission/dist/manifest";
+import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
+import {ReadySignal} from "omo-events/dist/signals/readySignal";
 
 export interface OmoSapienState
 {
@@ -54,6 +56,7 @@ async function tryInitOmoDirectory(logger: Logger)
     if (profileIndexData)
     {
       omosapienState.profileIndex = new OmoBehaviorSubject<StatePropagation<ProfileIndexData>>({
+        signal: new ReadySignal(),
         payload: profileIndexData
       });
 
@@ -72,6 +75,13 @@ async function tryInitOmoDirectory(logger: Logger)
         window.o.logger.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ...")
         await ProfileIndex.announceProfile(fissionAuthState.username);
       }
+    }
+    else
+    {
+      omosapienState.profileIndex = new OmoBehaviorSubject<StatePropagation<ProfileIndexData>>({
+        signal: new UnavailableSignal(),
+        payload: profileIndexData
+      });
     }
   }
 }
@@ -116,7 +126,9 @@ async function initialize(stack, runtimeDapp)
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   if (!omosapienState.myProfile)
   {
-    runtimeDapp.shell.publishEvent(new RunProcess(createOmoSapien));
+    runtimeDapp.shell.publisEvent(new RunProcess<CreateOmoSapienContext>(createOmoSapien, async processContext => {
+      return processContext;
+    }));
 
     initLogger.log("end");
     return {

@@ -23,11 +23,11 @@
     transferCircles,
     TransferCirclesContext,
   } from "../../../dapps/safe/processes/circles/transferCircles";
-  import {tryGetDappState} from "../../o-os/loader";
   import {OmoSafeState} from "../../../dapps/safe/manifest";
   import OmosapienAvatar from "../atoms/OmosapienAvatar.svelte";
   import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
   import {RunProcess} from "omo-process/dist/events/runProcess";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   export let showActions: boolean = true;
   export let data = {

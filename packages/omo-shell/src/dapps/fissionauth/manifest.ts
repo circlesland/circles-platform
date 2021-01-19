@@ -3,15 +3,9 @@ import Auth from "./pages/Auth.svelte";
 import Authenticate from "./pages/Authenticate.svelte";
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/data/actions";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
-import {FissionDrive} from "omo-fission/dist/fissionDrive";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
-
-export interface FissionAuthState {
-  fissionState: any,
-  fission?: FissionDrive,
-  username?: string
-}
+import {FissionAuthState} from "omo-fission/dist/state/fissionAuthState";
 
 let fissionAuthLogger;
 

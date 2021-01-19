@@ -2,12 +2,12 @@
   import { BN } from "ethereumjs-util";
 
   import { onDestroy, onMount } from "svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
   import {config} from "omo-circles/dist/config";
   import {OmoEvent} from "omo-events/dist/omoEvent";
   import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   let safeState: OmoSafeState = {};
   let balanceSubscriptions: OmoSubscription;
@@ -64,7 +64,7 @@
   onMount(() => init());
 
   let progressIndicator: { message: string, percent: number };
-  let subscription: Subscription;
+  let subscription: OmoSubscription;
 
 </script>
 

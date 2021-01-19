@@ -9,10 +9,10 @@
     labelRevoked,
   } from "../../data/friends";
   import {onDestroy, onMount} from "svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
   import {Contact} from "omo-models/dist/omo/contact";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   let safeState: OmoSafeState = {};
   let contactsSubscription: OmoSubscription;

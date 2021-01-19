@@ -1,11 +1,9 @@
 <script lang="ts">
-  import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import ProfileField from "src/libs/o-views/molecules/ProfileField.svelte";
-  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSapienState} from "../../manifest";
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
-  import {FissionAuthState} from "../../../fissionauth/manifest";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import {FissionAuthState} from "omo-fission/dist/manifest";
 
   let omosapien = tryGetDappState<OmoSapienState>("omo.sapien:1");
   let fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");

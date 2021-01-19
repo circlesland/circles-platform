@@ -16,8 +16,8 @@ export async function tryToAuthenticate() : Promise<{
         creator: "MamaOmo",
       },
       fs: {
-        privatePaths: [],
-        publicPaths: [],
+        publicPaths: ["omo.sapien"],
+        privatePaths: []
       },
     },
     loadFileSystem: false

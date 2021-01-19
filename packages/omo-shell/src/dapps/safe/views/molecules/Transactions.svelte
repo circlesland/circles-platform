@@ -1,14 +1,15 @@
 <script lang="ts">
   import {Jumper} from "svelte-loading-spinners";
   import {onDestroy, onMount} from "svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
   import TransactionItem from "../atoms/TransactionItem.svelte";
   import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
   import {Signal} from "omo-events/dist/signals/signal";
   import {BeginSignal} from "omo-events/dist/signals/beginSignal";
+  import {EndSignal} from "omo-events/dist/signals/endSignal";
   import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   let safeState: OmoSafeState = {};
   let transactionsSubscription: OmoSubscription;

@@ -1,7 +1,7 @@
 import {TreeNode} from "../interfaces/treeNode";
-import {FissionAuthState} from "../../fissionauth/manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
+import {FissionAuthState} from "omo-fission/dist/manifest";
 
 export abstract class FsNode implements TreeNode
 {
@@ -31,7 +31,7 @@ export abstract class FsNode implements TreeNode
       current = current.parent;
     }
 
-    return fission.fs.appPath(path);
+    return fission.getValue().payload.fs.appPath(path);
   }
 
   constructor(parent: FsNode, name: string)

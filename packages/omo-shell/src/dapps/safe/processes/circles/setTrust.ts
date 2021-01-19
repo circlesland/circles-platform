@@ -31,7 +31,7 @@ export interface SetTrustContext extends ProcessContext {
  * Set trust
  */
 const str = strings.safe.processes.setTrust;
-const processDefinition = (progressView:any) => createMachine<SetTrustContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<SetTrustContext, OmoEvent>({
   initial: "idle",
   states: {
 
@@ -80,7 +80,7 @@ const processDefinition = (progressView:any) => createMachine<SetTrustContext, O
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -90,7 +90,7 @@ const processDefinition = (progressView:any) => createMachine<SetTrustContext, O
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

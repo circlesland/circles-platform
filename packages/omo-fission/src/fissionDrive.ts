@@ -12,11 +12,7 @@ import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {StatePropagation} from "omo-kernel-interfaces/dist/envelope";
 import {BeginSignal} from "../../omo-events/dist/beginSignal";
 import {tryToAuthenticate} from "./tryToAuthenticate";
-//import {BehaviorSubject} from "rxjs";
-// import {initAuth} from "./initFission";
-// import {tryGetDappState} from "../o-os/loader";
-// import {Envelope} from "omo-kernel-interfaces/dist/envelope";
-// import {FissionAuthState} from "./state/fissionAuthState";
+import {EndSignal} from "../../omo-events/dist/endSignal";
 
 export class FissionDrive
 {
@@ -62,6 +58,11 @@ export class FissionDrive
   }
   private _sessionLogs?: SessionLogs;
 
+  get isInitialized(): boolean {
+    return this._isInitialized;
+  }
+  private _isInitialized: boolean = false;
+
   constructor(fissionAuth: AuthSucceeded | Continuation)
   {
     this._fissionAuth = fissionAuth;
@@ -76,6 +77,7 @@ export class FissionDrive
     this._transactions = new CirclesTransactions(this._fissionAuth.username, this._fs);
     this._tokens = new CirclesTokens(this._fissionAuth.username, this._fs);
     this._offers = new Offers(this._fissionAuth.username, this._fs);
+    this._isInitialized = true;
   }
 }
 let initializingDrive:boolean = false;
@@ -107,7 +109,11 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
   }
 
   const existingDrive = fissionAuthState.fission.getValue()?.payload;
-  if (!existingDrive && !initializingDrive)
+  if (existingDrive && !existingDrive.isInitialized)
+  {
+    await existingDrive.init();
+  }
+  else if (!existingDrive && !initializingDrive)
   {
     const initFsBegin = Date.now();
     initializingDrive = true;
@@ -118,9 +124,9 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
       {
         throw new Error("tryGetDappState<FissionAuthState>(\"omo.fission.auth:1\") returned 'null' or 'undefined'. The fission dapp is not correctly initialized.")
       }
-      const current = fissionAuthState.fission.getValue();
+      //const current = fissionAuthState.fission.getValue();
       fissionAuthState.fission.next({
-        signal: current?.signal,
+        signal: new EndSignal(""),
         payload: drive
       });
       const initFsEnd = Date.now();

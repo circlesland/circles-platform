@@ -1,10 +1,10 @@
 import { OmoEventTypes } from "../eventTypes";
 import {Signal} from "./signal";
 
-export class BeginSignal extends Signal
+export class UnavailableSignal extends Signal
 {
     constructor()
     {
-        super(<OmoEventTypes>"signal.begin");
+        super(<OmoEventTypes>"signal.unavailable");
     }
 }

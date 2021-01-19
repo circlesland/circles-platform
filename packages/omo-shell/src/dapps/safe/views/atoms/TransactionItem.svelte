@@ -8,11 +8,11 @@
   import Icon from "fa-svelte";
   import {BN} from "ethereumjs-util";
   import {onMount} from "svelte";
-  import {tryGetDappState} from "../../../../libs/o-os/loader";
   import {OmoSafeState} from "../../manifest";
   import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
   import {Contact} from "omo-models/dist/omo/contact";
   import {config} from "omo-circles/dist/config";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
 
   export let transaction:CirclesTransaction;
 

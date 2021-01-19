@@ -1,10 +1,16 @@
 import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
-import {requestUbi} from "../processes/circles/requestUbi";
-import {transferCircles} from "../processes/circles/transferCircles";
+import {requestUbi, RequestUbiContext} from "../processes/circles/requestUbi";
+import {transferCircles, TransferCirclesContext} from "../processes/circles/transferCircles";
 import {setTrust, SetTrustContext} from "../processes/circles/setTrust";
-import {sendInviteCredits} from "../processes/omo/sendInviteCredits";
+import {sendInviteCredits, SendInviteCreditsContext} from "../processes/omo/sendInviteCredits";
 import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 import {RunProcess} from "omo-process/dist/events/runProcess";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
+import {OmoSafeState} from "../manifest";
+import {config} from "omo-circles/dist/config";
+import {deploySafe} from "../processes/safe/deploySafe";
+import {GnosisSafeProxyFactory} from "omo-circles/dist/safe/gnosisSafeProxyFactory";
+import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
 
 export const safeDefaultActions: QuickAction[] = [
 {
@@ -70,7 +76,11 @@ export const safeOverflowActions = [
         label: "Harvest new time"
       }
     },
-    event: () => new RunProcess(requestUbi)
+    event: () => new RunProcess<RequestUbiContext>(requestUbi, async ctx => {
+      ctx.safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+      ctx.web3 = config.getCurrent().web3();
+      return ctx;
+    })
   },
   {
     type: "trigger",
@@ -83,7 +93,10 @@ export const safeOverflowActions = [
         label: "Send Invite Credits"
       }
     },
-    event: () => new RunProcess(sendInviteCredits)
+    event: () => new RunProcess<SendInviteCreditsContext>(sendInviteCredits, async processContext => {
+      processContext.web3 = config.getCurrent().web3();
+      return processContext;
+    })
   },
   {
     type: "trigger",
@@ -96,7 +109,11 @@ export const safeOverflowActions = [
         label: "Send ⦿"
       }
     },
-    event: () => new RunProcess(transferCircles)
+    event: () => new RunProcess<TransferCirclesContext>(transferCircles, async processContext => {
+      processContext.web3 = config.getCurrent().web3();
+      processContext.circlesHub = new CirclesHub(processContext.web3, config.getCurrent().HUB_ADDRESS);
+      return processContext;
+    })
   },
   {
     type: "trigger",
@@ -109,8 +126,13 @@ export const safeOverflowActions = [
         label: "Add friend",
       }
     },
-    event: () => new RunProcess(setTrust, (context: SetTrustContext) => {
-      return Promise.resolve(context);
+    event: () => new RunProcess(setTrust, async (context: SetTrustContext) => {
+      const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+      context.web3 = config.getCurrent().web3();
+      context.accountPrivateKey = safeState.myKey.privateKey;
+      context.mySafeAddress = safeState.mySafeAddress;
+      context.circlesHub = new CirclesHub(context.web3, config.getCurrent().HUB_ADDRESS);
+      return context;
     })
   },
 
