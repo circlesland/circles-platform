@@ -21,6 +21,10 @@
   import {onMount} from "svelte";
   import {kernel} from "omo-kernel/dist/kernel";
 
+  onMount(async () => {
+    await kernel.boot();
+  });
+
   let actions = [];
 
   let headerElement: HTMLElement;
@@ -38,10 +42,6 @@
     message: string;
     percent: number;
   };
-
-  onMount(async () => {
-    await kernel.boot();
-  })
 
   window.o.events.subscribe(async (event: OmoEvent) =>
   {

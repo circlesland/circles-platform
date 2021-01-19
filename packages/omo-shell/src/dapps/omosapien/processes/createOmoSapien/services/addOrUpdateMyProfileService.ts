@@ -1,10 +1,10 @@
 import { CreateOmoSapienContext } from "../createOmoSapien";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
-import {setDappState, tryGetDappState} from "../../../../../libs/o-os/loader";
 import {OmoSapienState} from "../../../manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Profile} from "omo-models/dist/omo/profile";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) =>
 {

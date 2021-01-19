@@ -10,6 +10,8 @@ const prod = mode === 'production';
 const sveltePath = path.resolve('node_modules', 'svelte')
 
 module.exports = {
+  mode,
+  devtool: prod ? false: 'source-map',
 	entry: {
 		bundle: ['./src/main.ts']
 	},
@@ -80,7 +82,6 @@ module.exports = {
       }
 		]
 	},
-	mode,
 	plugins: [
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
@@ -95,7 +96,6 @@ module.exports = {
 			new TerserPlugin()
 		],
 	},
-	devtool: prod ? false: 'source-map',
   devServer: {
     watchContentBase: true,
     compress: true,

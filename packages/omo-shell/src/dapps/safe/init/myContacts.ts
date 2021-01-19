@@ -1,4 +1,3 @@
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader"
 import {OmoSafeState} from "../manifest";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {OmoSapienState} from "../../omosapien/manifest";
@@ -11,6 +10,7 @@ import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 import {BlockchainEvent} from "omo-events/dist/blockchainEvent";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 const myContactsSubject: OmoBehaviorSubject<StatePropagation<Contact[]>> = new OmoBehaviorSubject<StatePropagation<Contact[]>>({
   payload: []

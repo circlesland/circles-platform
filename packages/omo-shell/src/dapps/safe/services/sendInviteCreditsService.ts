@@ -1,8 +1,8 @@
 import BN from "omo-quirks/dist/BN";
 import {SendInviteCreditsContext} from "../processes/omo/sendInviteCredits";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export const sendInviteCreditsService = async (context: SendInviteCreditsContext) =>
 {

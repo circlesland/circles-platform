@@ -1,9 +1,9 @@
 import {SignupAtCirclesContext} from "../processes/omo/signupAtCircles";
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 export const hubSignupService = async (context: SignupAtCirclesContext) =>
 {

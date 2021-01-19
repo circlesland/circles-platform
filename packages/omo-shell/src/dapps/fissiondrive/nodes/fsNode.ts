@@ -1,7 +1,7 @@
 import {TreeNode} from "../interfaces/treeNode";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export abstract class FsNode implements TreeNode
 {

@@ -1,9 +1,9 @@
 import {entropyToMnemonic} from "bip39";
 import {CreatePrivateKeyContext} from "../processes/omo/createPrivateKey";
-import {setDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
+import {setDappState} from "omo-kernel/dist/kernel";
 
 export const createPrivateKeyService = async (context: CreatePrivateKeyContext) =>
 {
@@ -23,7 +23,10 @@ export const createPrivateKeyService = async (context: CreatePrivateKeyContext) 
     {
       return {
         ...current,
-        myKey: newKey
+        myKey: {
+          name: "me",
+          ...newKey
+        }
       };
     });
 

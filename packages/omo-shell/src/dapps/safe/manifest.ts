@@ -10,7 +10,6 @@ import NoFundsOnSafe from "./views/pages/NoFundsOnSafe.svelte"
 import {safeDefaultActions, safeOverflowActions} from "./data/actions"
 import {faCheck, faPiggyBank, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {push} from "svelte-spa-router";
-import {tryGetDappState} from "../../libs/o-os/loader";
 import {BN} from "ethereumjs-util";
 import {sendInviteCredits, SendInviteCreditsContext} from "./processes/omo/sendInviteCredits";
 import {deploySafe} from "./processes/safe/deploySafe";
@@ -43,6 +42,7 @@ import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {CloseModal} from "omo-events/dist/shell/closeModal";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export interface OmoSafeState
 {

@@ -9,6 +9,22 @@ import {OmoEvent} from "omo-events/dist/omoEvent";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {fission, FissionAuthState} from "omo-fission/dist/manifest";
 
+export const dappStates: {
+    [dappId: string]: any
+} = {};
+
+export function tryGetDappState<T>(dappId: string) {
+    const state = dappStates[dappId];
+    if (!state)
+        return null;
+    return <T>state;
+}
+
+export function setDappState<T>(dappId: string, setter: (arg:T) => T) {
+    const state = dappStates[dappId];
+    dappStates[dappId] = setter(state);
+}
+
 class Kernel implements KernelInterface
 {
     private readonly _runtimeDapps: {

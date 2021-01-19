@@ -2,7 +2,6 @@ import {assign, createMachine} from "xstate";
 import {strings} from "../../data/strings";
 import {BN} from "ethereumjs-util";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
-import {tryGetDappState} from "../../../../libs/o-os/loader";
 import {OmoSafeState} from "../../manifest";
 import {deploySafeService} from "../../services/deploySafeService";
 import {GnosisSafeProxyFactory} from "omo-circles/dist/safe/gnosisSafeProxyFactory";
@@ -18,6 +17,7 @@ import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccess
 import {NavigateTo} from "omo-events/dist/shell/navigateTo";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export interface DeploySafeContext extends ProcessContext {
   web3:Web3;

@@ -1,8 +1,8 @@
 import {FsNode} from "./fsNode";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {FissionAuthState} from "../../fissionauth/manifest";
 import {FileNode} from "./fileNode";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export class DirectoryNode extends FsNode
 {

@@ -5,7 +5,6 @@ import NoProfile from 'src/dapps/omosapien/views/pages/NoProfile.svelte'
 import {omoSapienDefaultActions, omoSapienOverflowActions} from "./data/actions"
 import {faUserAstronaut} from "@fortawesome/free-solid-svg-icons";
 import {createOmoSapien} from "./processes/createOmoSapien/createOmoSapien";
-import {setDappState, tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
 import {ProfileIndex, ProfileIndexData} from "omo-indexes/dist/profileIndex";
 import {Logger} from "omo-utils/dist/logger";
@@ -15,6 +14,7 @@ import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 export interface OmoSapienState
 {

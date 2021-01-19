@@ -1,8 +1,8 @@
 import BN from "omo-quirks/dist/BN";
 import {FundSafeContext} from "../processes/omo/fundSafe";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {Web3Contract} from "omo-circles/dist/web3Contract";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export const fundSafeService = async (context: FundSafeContext) =>
 {

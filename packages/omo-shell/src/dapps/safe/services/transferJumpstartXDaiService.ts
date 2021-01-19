@@ -1,8 +1,8 @@
 import BN from "omo-quirks/dist/BN";
 import {JumpstartContext} from "../processes/omo/jumpstart";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export const transferJumpstartXDaiService = async (context: JumpstartContext) =>
 {

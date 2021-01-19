@@ -1,9 +1,9 @@
 import Dapps from 'src/dapps/omoli/views/pages/Dapps.svelte'
 import {faBoxes, faCoins} from "@fortawesome/free-solid-svg-icons";
-import {tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
 import {PageManifest} from "omo-kernel-interfaces/dist/pageManifest";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 const dappsPage : PageManifest = {
   isDefault: true,

@@ -2,11 +2,13 @@ import {FissionDrive} from "./fissionDrive";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {tryToAuthenticate} from "./tryToAuthenticate";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+import {StatePropagation} from "omo-kernel-interfaces/dist/envelope";
 
 export interface FissionAuthState {
-  fissionState?: any,
-  fission?: FissionDrive,
-  username?: string
+  fissionState: any,
+  fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
+  username: string
 }
 
 /**

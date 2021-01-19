@@ -6,6 +6,12 @@ import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
 import {SessionLogs} from "./directories/logs";
 import {Offers} from "./directories/offers";
+import {tryGetDappState} from "../../omo-kernel/dist/kernel";
+import {FissionAuthState} from "./manifest";
+import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+import {StatePropagation} from "omo-kernel-interfaces/dist/envelope";
+import {BeginSignal} from "../../omo-events/dist/beginSignal";
+import {tryToAuthenticate} from "./tryToAuthenticate";
 //import {BehaviorSubject} from "rxjs";
 // import {initAuth} from "./initFission";
 // import {tryGetDappState} from "../o-os/loader";
@@ -76,22 +82,28 @@ let initializingDrive:boolean = false;
 
 export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>) : Promise<TOut>
 {
-  return <TOut>{};
-  /*
   let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (!fissionAuthState)
   {
-    const initAuthSuccess = await initAuth();
-    if (!initAuthSuccess)
+    const authState = await tryToAuthenticate();
+    if (!authState || !authState.username)
     {
       throw new Error("Cannot access your fission drive: The authorization failed.");
     }
   }
 
   fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  if (!fissionAuthState)
+  {
+    throw new Error("tryGetDappState<FissionAuthState>(\"omo.fission.auth:1\") returned 'null' or 'undefined'. The fission dapp is not correctly initialized.")
+  }
+
   if (!fissionAuthState.fission)
   {
-    fissionAuthState.fission = new BehaviorSubject<StatePropagation<FissionDrive>>(null);
+    fissionAuthState.fission = new OmoBehaviorSubject<StatePropagation<FissionDrive>>({
+      signal: new BeginSignal(""),
+      payload: undefined
+    });
   }
 
   const existingDrive = fissionAuthState.fission.getValue()?.payload;
@@ -102,6 +114,10 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
     // FS is not loaded yet. Load it.
     const drive = new FissionDrive(fissionAuthState.fissionState)
     drive.init().then(() => {
+      if (!fissionAuthState)
+      {
+        throw new Error("tryGetDappState<FissionAuthState>(\"omo.fission.auth:1\") returned 'null' or 'undefined'. The fission dapp is not correctly initialized.")
+      }
       const current = fissionAuthState.fission.getValue();
       fissionAuthState.fission.next({
         signal: current?.signal,
@@ -116,6 +132,10 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
 
   return new Promise((resolve, reject) =>
   {
+    if (!fissionAuthState)
+    {
+      throw new Error("tryGetDappState<FissionAuthState>(\"omo.fission.auth:1\") returned 'null' or 'undefined'. The fission dapp is not correctly initialized.")
+    }
     const sub = fissionAuthState.fission.subscribe(async (fissionDrive:StatePropagation<FissionDrive>) =>
     {
       if (!fissionDrive || !(fissionDrive.payload instanceof FissionDrive))
@@ -132,7 +152,6 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
         });
     });
   });
-   */
 }
 
 export async function withTimeout<T>(operationName:string, func: () => Promise<T>, timeout?:number) : Promise<T>

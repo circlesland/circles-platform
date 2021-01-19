@@ -1,4 +1,3 @@
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {BlockIndex} from "../../../libs/o-os/blockIndex";
 import {DelayedTrigger} from "omo-utils/dist/delayedTrigger";
@@ -10,6 +9,7 @@ import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 const myKnownTokensSubject: OmoBehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>> = new OmoBehaviorSubject<StatePropagation<{ [safeAddress: string]: CirclesToken }>>({
   payload: {}

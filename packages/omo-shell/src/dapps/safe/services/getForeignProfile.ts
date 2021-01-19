@@ -1,6 +1,6 @@
 import {JumpstartContext} from "../processes/omo/jumpstart";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSapienState} from "../../omosapien/manifest";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export const getForeignProfileService = async (context: JumpstartContext) =>
 {

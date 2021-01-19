@@ -1,11 +1,10 @@
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
-import {BN} from "ethereumjs-util";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Token} from "omo-models/dist/omo/token";
 import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 import {CirclesToken} from "omo-circles/dist/model/circlesToken";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 export async function initMyToken()
 {

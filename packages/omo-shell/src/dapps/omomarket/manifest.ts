@@ -4,9 +4,9 @@ import Favorites from 'src/dapps/omomarket/views/pages/Favorites.svelte'
 
 import { omomarketDefaultActions, omomarketOverflowActions } from './data/actions';
 import {faPeopleCarry} from "@fortawesome/free-solid-svg-icons";
-import {tryGetDappState} from "../../libs/o-os/loader";
 import {FissionAuthState} from "../fissionauth/manifest";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export interface OmoMarketState {}
 export const omomarket : DappManifest<OmoMarketState> = {

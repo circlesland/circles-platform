@@ -1,12 +1,12 @@
 import { mnemonicToEntropy } from "bip39";
 import { BN } from "ethereumjs-util";
 import {ConnectSafeContext} from "../processes/omo/importCircles";
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {OmoSafeState} from "../manifest";
 import {config} from "omo-circles/dist/config";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 
 function isValidKeyPhrase(value: string): string | null {

@@ -45,22 +45,6 @@ export const dapps: DappManifest<any>[] = [
 
 export const loadedDapps: RuntimeDapp<any>[] = [];
 
-export const dappStates: {
-  [dappId: string]: any
-} = {};
-
-export function tryGetDappState<T>(dappId: string) {
-  const state = dappStates[dappId];
-  if (!state)
-    return null;
-  return <T>state;
-}
-
-export function setDappState<T>(dappId: string, setter: (T) => T) {
-  const state = dappStates[dappId];
-  dappStates[dappId] = setter(state);
-}
-
 export function constructAppUrl(dappManifest: DappManifest<any>): { appBaseUrl: string, appDefaultRoute: string } {
   const appBaseUrl = dappManifest.routeParts.reduce((p, c) => p + "/" + c, "");
   const appDefaultPage = dappManifest.pages.find(o => o.isDefault) ?? dappManifest.pages[0];

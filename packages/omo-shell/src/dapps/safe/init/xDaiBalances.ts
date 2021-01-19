@@ -1,7 +1,7 @@
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {config} from "omo-circles/dist/config";
 import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 export async function initXDaiBalances()
 {

@@ -2,10 +2,10 @@ import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Auth from "./pages/Auth.svelte";
 import Authenticate from "./pages/Authenticate.svelte";
 import { omoSapienDefaultActions, omoSapienOverflowActions } from "../omosapien/data/actions";
-import { tryGetDappState } from "../../libs/o-os/loader";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {FissionDrive} from "omo-fission/dist/fissionDrive";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export interface FissionAuthState {
   fissionState: any,

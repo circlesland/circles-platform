@@ -1,4 +1,3 @@
-import {setDappState, tryGetDappState} from "../../../libs/o-os/loader";
 import BN from "omo-quirks/dist/BN";
 import {OmoSafeState} from "../manifest";
 import {Logger} from "omo-utils/dist/logger";
@@ -14,6 +13,7 @@ import {OmoEvent} from "omo-events/dist/omoEvent";
 import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {OmoSubject} from "omo-quirks/dist/OmoSubject";
+import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
 
 type TransactionList = {
   [token: string]: {

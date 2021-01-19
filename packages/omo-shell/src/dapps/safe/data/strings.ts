@@ -1,11 +1,11 @@
 import {SetTrustContext} from "../processes/circles/setTrust";
 import {JumpstartContext} from "../processes/omo/jumpstart";
 import {SendInviteCreditsContext} from "../processes/omo/sendInviteCredits";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {OmoSapienState} from "../../omosapien/manifest";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {config} from "omo-circles/dist/config";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export const strings = {
   safe: {

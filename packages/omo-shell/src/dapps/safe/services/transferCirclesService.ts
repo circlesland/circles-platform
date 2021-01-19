@@ -1,11 +1,11 @@
 import BN from "omo-quirks/dist/BN";
 import {TransferCirclesContext} from "../processes/circles/transferCircles";
-import {tryGetDappState} from "../../../libs/o-os/loader";
 import {OmoSafeState} from "../manifest";
 import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
 import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
 import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {EndSignal} from "omo-events/dist/signals/endSignal";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 function sendMessage(message) {
   // This wraps the message posting/response in a promise, which will resolve if the response doesn't

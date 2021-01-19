@@ -1,7 +1,6 @@
 import {assign, createMachine} from "xstate";
 import {strings} from "../../data/strings";
 import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
-import {tryGetDappState} from "../../../../libs/o-os/loader";
 import {OmoSafeState} from "../../manifest";
 import {FissionAuthState} from "../../../fissionauth/manifest";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -11,6 +10,7 @@ import {config} from "omo-circles/dist/config";
 import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
 import {textLine} from "omo-process/dist/artifacts/textLine";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
 
 export interface FundAccountContext extends ProcessContext {
   data: {
