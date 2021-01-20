@@ -1,5 +1,5 @@
 import { Directory, DirectoryChangeType } from "./directory";
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "omo-webnative/dist/fs/filesystem";
 import {CachedTokens} from "omo-models/dist/omo/cachedTokens";
 import {Token} from "omo-models/dist/omo/token";
 

@@ -1,9 +1,0 @@
-export declare const isDefined: <T>(val: T | undefined) => val is T;
-export declare const notNull: <T>(val: T | null) => val is T;
-export declare const isJust: <T>(val: T | null) => val is T;
-export declare const isValue: <T>(val: T | null | undefined) => val is T;
-export declare const isBool: (val: unknown) => val is boolean;
-export declare const isNum: (val: unknown) => val is number;
-export declare const isString: (val: unknown) => val is string;
-export declare const isObject: <T>(val: unknown) => val is Record<string, T>;
-export declare const isBlob: (val: unknown) => val is Blob;

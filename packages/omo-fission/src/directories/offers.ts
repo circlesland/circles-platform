@@ -1,5 +1,5 @@
 import {BinaryFile, Directory, DirectoryChangeType} from "./directory";
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "omo-webnative/dist/fs/filesystem";
 import {withTimeout} from "../fissionDrive";
 import {FissionDir} from "../fissionDir";
 import {Entity} from "omo-models/dist/omo/entity";

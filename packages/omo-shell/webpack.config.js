@@ -89,7 +89,6 @@ module.exports = {
 		}),
 	],
 	optimization: {
-		minimize: true,
 		minimize: prod,
 		minimizer: [
 			new CssMinimizerPlugin(),

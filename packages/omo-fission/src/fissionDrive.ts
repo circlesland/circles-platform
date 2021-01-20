@@ -1,7 +1,7 @@
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "omo-webnative/dist/fs/filesystem";
 import { Profiles } from "./directories/profiles";
 import { Keys } from "./directories/keys";
-import {AuthSucceeded, Continuation, loadFileSystem} from "webnative";
+import {AuthSucceeded, Continuation, loadFileSystem} from "omo-webnative/dist";
 import {CirclesTransactions} from "./directories/circlesTransactions";
 import {CirclesTokens} from "./directories/circlesTokens";
 import {SessionLogs} from "./directories/logs";

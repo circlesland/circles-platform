@@ -1,6 +1,6 @@
-import FileSystem from "webnative/fs/filesystem";
+import FileSystem from "omo-webnative/dist/fs/filesystem";
 import {withTimeout} from "./fissionDrive";
-import {BaseLink} from "webnative/fs/types";
+import {BaseLink} from "omo-webnative/dist/fs/types";
 
 export abstract class FissionDir
 {

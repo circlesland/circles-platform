@@ -27,13 +27,14 @@ export class DirectoryNode extends FsNode
 
       for (let childFsNode of Object.values(childFsNodes))
       {
-        if (childFsNode.isFile)
+        const c:any = childFsNode;
+        if (c.isFile)
         {
-          children.push(new FileNode(this, childFsNode.name));
+          children.push(new FileNode(this, c.name));
         }
         else
         {
-          children.push(new DirectoryNode(this, childFsNode.name));
+          children.push(new DirectoryNode(this, c.name));
         }
       }
 

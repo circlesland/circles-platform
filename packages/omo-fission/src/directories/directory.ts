@@ -1,8 +1,8 @@
-import FileSystem from "webnative/fs/filesystem";
-import {CID} from "webnative/ipfs";
+import FileSystem from "omo-webnative/dist/fs/filesystem";
+import {CID} from "omo-webnative/dist//ipfs";
 import {withTimeout} from "../fissionDrive";
 import {FissionDir} from "../fissionDir";
-import {Entity} from "../../../omo-models/dist/omo/entity";
+import {Entity} from "omo-models/dist/omo/entity";
 
 export type DirectoryChangeType = "add" | "update" | "remove";
 

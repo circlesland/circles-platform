@@ -1,15 +1,20 @@
-import * as webnative from "webnative";
 import {FissionDrive} from "./fissionDrive";
+import {initialise, redirectToLobby, Scenario, State} from "omo-webnative/dist";
+import {configure} from "omo-webnative/dist/setup";
+
+configure({
+  enableDebugMode: true
+})
 
 export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = true) : Promise<{
-  fissionState: webnative.State,
+  fissionState: State,
   username: string,
   fission: FissionDrive,
   throughLobby: boolean,
   newUser: boolean
 }|undefined>
 {
-  const state = await webnative.initialise({
+  const state = await initialise({
     permissions: {
       app: {
         name: "OmoSapien",
@@ -25,8 +30,8 @@ export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = tru
 
   switch (state.scenario)
   {
-    case webnative.Scenario.AuthSucceeded:
-    case webnative.Scenario.Continuation:
+    case Scenario.AuthSucceeded:
+    case Scenario.Continuation:
       try
       {
         // State:
@@ -49,10 +54,10 @@ export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = tru
         console.error("Something went wrong during the authentication process: ", e);
         return undefined;
       }
-    case webnative.Scenario.NotAuthorised:
+    case Scenario.NotAuthorised:
       if (redirectToLobbyIfNecessary)
       {
-        await webnative.redirectToLobby(state.permissions);
+        await redirectToLobby(state.permissions);
       }
       else
       {
