@@ -35,7 +35,7 @@ export interface JumpstartContext extends ProcessContext {
  * Transfer jumpstart xDai
  */
 const str = strings.safe.processes.jumpstart;
-const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<JumpstartContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -46,7 +46,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     getForeignProfile: {
-      entry: <any>sendInProgressPrompt(str.loadingForeignProfile),
+      entry: <any>sendInProgressPrompt(progressView, str.loadingForeignProfile),
       invoke: <any>{
         id: 'getForeignProfile',
         src: getForeignProfileService,
@@ -113,7 +113,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     transferJumpstartXDai: {
-      entry: <any>sendInProgressPrompt(str.titleProgress),
+      entry: <any>sendInProgressPrompt(progressView, str.titleProgress),
       invoke: <any>{
         id: 'transferJumpstartXDai',
         src: transferJumpstartXDaiService,
@@ -128,7 +128,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -138,7 +138,7 @@ const processDefinition = () => createMachine<JumpstartContext, OmoEvent>({
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

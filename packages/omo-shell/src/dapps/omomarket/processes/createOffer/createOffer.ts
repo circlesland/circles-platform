@@ -59,7 +59,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
       }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptPicture"
         },
         "process.cancel": "stop"
@@ -87,7 +87,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
           target: "promptName"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptPrice"
         },
         "process.cancel": "stop"
@@ -115,7 +115,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
           target: "promptPicture"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptDescription"
         },
         "process.cancel": "stop"
@@ -143,7 +143,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
           target: "promptPrice"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptLocation"
         },
         "process.cancel": "stop"
@@ -171,7 +171,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
           target: "promptDescription"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "summarize"
         },
         "process.cancel": "stop"

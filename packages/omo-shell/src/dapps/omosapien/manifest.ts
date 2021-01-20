@@ -126,9 +126,13 @@ async function initialize(stack, runtimeDapp)
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
   if (!omosapienState.myProfile)
   {
-    runtimeDapp.shell.publisEvent(new RunProcess<CreateOmoSapienContext>(createOmoSapien, async processContext => {
+    window.o.publishEvent(new RunProcess<CreateOmoSapienContext>(createOmoSapien, async processContext => {
       return processContext;
     }));
+
+    /*runtimeDapp.shell.publishEvent(new RunProcess<CreateOmoSapienContext>(createOmoSapien, async processContext => {
+      return processContext;
+    }));*/
 
     initLogger.log("end");
     return {

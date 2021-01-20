@@ -1,7 +1,7 @@
 import * as webnative from "webnative";
 import {FissionDrive} from "./fissionDrive";
 
-export async function tryToAuthenticate() : Promise<{
+export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = true) : Promise<{
   fissionState: webnative.State,
   username: string,
   fission: FissionDrive,
@@ -49,6 +49,16 @@ export async function tryToAuthenticate() : Promise<{
         console.error("Something went wrong during the authentication process: ", e);
         return undefined;
       }
+    case webnative.Scenario.NotAuthorised:
+      if (redirectToLobbyIfNecessary)
+      {
+        await webnative.redirectToLobby(state.permissions);
+      }
+      else
+      {
+        return undefined;
+      }
+      break;
     default:
       return undefined;
   }

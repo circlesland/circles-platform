@@ -52,7 +52,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
       }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptLastName"
         },
         "process.cancel": "stop"
@@ -80,7 +80,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
           target: "promptFirstName"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptAvatar"
         },
         "process.cancel": "stop"
@@ -108,7 +108,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
           target: "promptLastName"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "updateOmoSapien"
         },
         "process.cancel": "stop"

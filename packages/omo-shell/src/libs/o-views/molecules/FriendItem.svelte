@@ -28,6 +28,9 @@
   import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
   import {RunProcess} from "omo-process/dist/events/runProcess";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import {BN} from "ethereumjs-util";
+  import {config} from "omo-circles/dist/config";
+  import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
 
   export let showActions: boolean = true;
   export let data = {
@@ -71,62 +74,54 @@
 
   async function runTransferCircles(recipientAddress: string)
   {
-    const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-    const myBalance = safeState.myBalances.getValue().payload.map(o => parseFloat(o.balance)).reduce((p, c) => p + c, 0).toFixed(2);
-
-    const contextInitializer = async (context: TransferCirclesContext) =>
-    {
-      context.data.recipient = <ProcessArtifact>{
-        key: "recipient",
-        type: "ethereumAddress",
-        value: recipientAddress,
-      };
-      return context;
-    };
+    // const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
+    // const myBalance = safeState.myBalances.getValue().payload.map(o => o.balance).reduce((p, c) => p.add(c), new BN(""));
 
     window.o.publishEvent(
-      new RunProcess(
-        {
-          id: transferCircles.id,
-          name: transferCircles.name,
-          stateMachine: () =>
-          {
-            return transferCircles.stateMachine(myBalance);
-          },
-        },
-        contextInitializer
-      )
+      new RunProcess<TransferCirclesContext>(transferCircles, async ctx => {
+        // ctx.myBalance = myBalance;
+        ctx.web3 = config.getCurrent().web3();
+        ctx.circlesHub = new CirclesHub(ctx.web3, config.getCurrent().HUB_ADDRESS);
+        ctx.data.recipient = <ProcessArtifact>{
+          key: "recipient",
+          type: "ethereumAddress",
+          value: recipientAddress,
+        };
+        return ctx;
+      })
     );
   }
 
   function runTrust(recipientAddress: string)
   {
-    const contextInitializer = async (context: SetTrustContext) =>
+    window.o.publishEvent(new RunProcess<SetTrustContext>(setTrust, async (ctx: SetTrustContext) =>
     {
-      context.data.trustReceiver = {
+      ctx.web3 = config.getCurrent().web3();
+      ctx.circlesHub = new CirclesHub(ctx.web3, config.getCurrent().HUB_ADDRESS);
+      ctx.data.trustReceiver = {
         type: "ethereumAddress",
         isReadonly: true,
         key: "trustReceiver",
         value: recipientAddress,
       };
-      return context;
-    };
-    window.o.publishEvent(new RunProcess(setTrust, contextInitializer));
+      return ctx;
+    }));
   }
 
   function runUntrust(recipientAddress: string)
   {
-    const contextInitializer = async (context: UnTrustContext) =>
+    window.o.publishEvent(new RunProcess<UnTrustContext>(unTrust, async (ctx: UnTrustContext) =>
     {
-      context.data.trustReceiver = {
+      ctx.web3 = config.getCurrent().web3();
+      ctx.circlesHub = new CirclesHub(ctx.web3, config.getCurrent().HUB_ADDRESS);
+      ctx.data.trustReceiver = {
         type: "ethereumAddress",
         isReadonly: true,
         key: "trustReceiver",
         value: recipientAddress,
       };
-      return context;
-    };
-    window.o.publishEvent(new RunProcess(unTrust, contextInitializer));
+      return ctx;
+    }));
   }
 
   const sendMoney = {

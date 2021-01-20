@@ -28,7 +28,7 @@ export interface ConnectSafeContext extends ProcessContext {
 
 
 const str = strings.safe.processes.initializeApp;
-const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<ConnectSafeContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -54,7 +54,7 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptPrivateKey"
         },
         "process.cancel": "stop"
@@ -85,14 +85,14 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
           target: "promptSafeAddress"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "connectSafe"
         },
         "process.cancel": "stop"
       }
     },
     connectSafe: {
-      entry: <any>sendInProgressPrompt(str.titleProgress),
+      entry: <any>sendInProgressPrompt(progressView, str.titleProgress),
       invoke: <any>{
         id: 'connectSafe',
         src: connectSafeService,
@@ -107,14 +107,14 @@ const processDefinition = () => createMachine<ConnectSafeContext, OmoEvent>({
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

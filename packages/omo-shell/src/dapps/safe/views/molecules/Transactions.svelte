@@ -44,22 +44,9 @@
           }
           else if (signal instanceof ProgressSignal)
           {
-            if (signal.key === "")
-            {
-              dummyTransaction = <any>{
-                subject: "updating your transactions (" + signal.percent + " % complete) ...",
-              };
-            }
-            else if (signal.key === "requestUbi")
-            {
-              dummyTransaction = <any>{
-                subject: "harvesting time ...",
-              };
-            }
-            else if (signal.key === "transferCircles")
-            {
-              dummyTransaction = signal.dummy;
-            }
+            dummyTransaction = <any>{
+              subject: signal.message +  " (" + signal.percent + " % complete)" // "updating your transactions (" + signal.percent + " % complete) ...",
+            };
           }
           else if (signal instanceof EndSignal)
           {

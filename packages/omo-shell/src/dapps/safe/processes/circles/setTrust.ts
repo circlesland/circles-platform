@@ -20,8 +20,6 @@ import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 export interface SetTrustContext extends ProcessContext {
   web3:Web3;
   circlesHub:CirclesHub;
-  accountPrivateKey:string;
-  mySafeAddress:string;
   data: {
     trustReceiver: ProcessArtifact
   }
@@ -58,7 +56,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
       }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "setTrust"
         },
         "process.cancel": "stop"

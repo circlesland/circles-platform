@@ -23,7 +23,7 @@ export interface SignupAtCirclesContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.initializeApp;
-const processDefinition = () => createMachine<SignupAtCirclesContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<SignupAtCirclesContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -53,7 +53,7 @@ A small amount of the credits you received from your invite will be used to do t
       }
     },
     hubSignup: {
-      entry: <any>sendInProgressPrompt(str.progressHubSignup),
+      entry: <any>sendInProgressPrompt(progressView, str.progressHubSignup),
       invoke: <any>{
         id: 'hubSignup',
         src: hubSignupService,
@@ -69,7 +69,7 @@ A small amount of the credits you received from your invite will be used to do t
     },
     success: {
       entry:<any> [
-        sendSuccessPrompt,
+        sendSuccessPrompt(successView),
         sendShellEvent(new NavigateTo("/safe/tokens"))
       ],
       on: {
@@ -81,7 +81,7 @@ A small amount of the credits you received from your invite will be used to do t
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

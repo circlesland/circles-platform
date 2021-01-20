@@ -30,7 +30,7 @@ export interface SendInviteCreditsContext extends ProcessContext
  * Transfer xDai
  */
 const str = strings.safe.processes.sendInviteCredits;
-const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<SendInviteCreditsContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -56,7 +56,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
         }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptValue"
         },
         "process.cancel": "stop"
@@ -82,7 +82,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
           target: "promptRecipient"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "summarize"
         },
         "process.cancel": "stop"
@@ -113,7 +113,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     transferXDai: {
-      entry: <any>sendInProgressPrompt(str.titleProgress),
+      entry: <any>sendInProgressPrompt(progressView, str.titleProgress),
       invoke: <any>{
         id: 'transferXDai',
         src: sendInviteCreditsService,
@@ -128,7 +128,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     success: {
-      entry: sendSuccessPrompt,
+      entry: <any>sendSuccessPrompt(successView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
@@ -138,7 +138,7 @@ const processDefinition = () => createMachine<SendInviteCreditsContext, OmoEvent
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

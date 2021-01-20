@@ -127,10 +127,7 @@ export const safeOverflowActions = [
       }
     },
     event: () => new RunProcess(setTrust, async (context: SetTrustContext) => {
-      const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
       context.web3 = config.getCurrent().web3();
-      context.accountPrivateKey = safeState.myKey.privateKey;
-      context.mySafeAddress = safeState.mySafeAddress;
       context.circlesHub = new CirclesHub(context.web3, config.getCurrent().HUB_ADDRESS);
       return context;
     })

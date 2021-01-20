@@ -19,7 +19,7 @@ export interface FundSafeContext extends ProcessContext
 }
 
 const str = strings.safe.processes.jumpstart;
-const processDefinition = () => createMachine<FundSafeContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<FundSafeContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -30,7 +30,7 @@ const processDefinition = () => createMachine<FundSafeContext, OmoEvent>({
       }
     },
     fundSafe: {
-      entry: <any>sendInProgressPrompt(str.titleProgress),
+      entry: <any>sendInProgressPrompt(progressView, str.titleProgress),
       invoke: <any>{
         id: 'fundSafe',
         src: fundSafeService,

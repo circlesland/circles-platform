@@ -28,7 +28,7 @@ export interface DeploySafeContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.initializeApp;
-const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<DeploySafeContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -71,7 +71,7 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
       }
     },
     deploySafe: {
-      entry: <any>sendInProgressPrompt(str.progressCreatePrivateKey),
+      entry: <any>sendInProgressPrompt(progressView, str.progressCreatePrivateKey),
       invoke: <any>{
         id: 'deploySafe',
         src: deploySafeService,
@@ -87,7 +87,7 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
     },
     success: {
       entry: <any>[
-        sendSuccessPrompt,
+        sendSuccessPrompt(successView),
         sendShellEvent(new NavigateTo("/safe/tokens"))
       ],
       on: {
@@ -99,7 +99,7 @@ const processDefinition = () => createMachine<DeploySafeContext, OmoEvent>({
       }
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

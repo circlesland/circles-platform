@@ -20,6 +20,7 @@ import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
 
 export interface TransferCirclesContext extends ProcessContext {
   web3:Web3;
+  //  myBalance: BN;
   circlesHub:CirclesHub;
   data: {
     recipient?: ProcessArtifact,
@@ -54,7 +55,7 @@ const processDefinition = (maxBalance: number, progressView:any, successView:any
       }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "promptValue"
         },
         "process.cancel": "stop"
@@ -82,7 +83,7 @@ const processDefinition = (maxBalance: number, progressView:any, successView:any
           target: "promptRecipient"
         },
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "summarize"
         },
         "process.cancel": "stop"

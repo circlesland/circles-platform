@@ -6,8 +6,8 @@
   import {setDappState} from "omo-kernel/dist/kernel";
   import {FissionAuthState} from "omo-fission/dist/manifest";
   import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
-  import {StatePropagation} from "omo-kernel-interfaces/dist/envelope";
   import {FissionDrive} from "omo-fission/dist/fissionDrive";
+  import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 
   // const wn = window.o.wn;
 
@@ -16,7 +16,7 @@
   onMount(async () => {
     const state = await tryToAuthenticate();
 
-    if (state.username) {
+    if (state?.username) {
       // set a marker in the local storage that indicates whether we've already logged-in
       localStorage.setItem("fissionAuth", JSON.stringify({
         username: state.username
@@ -48,7 +48,8 @@
         push("#/omosapien/profile");
       }
     }
-    else {
+    else
+    {
       throw new Error("Not authenticated")
     }
     // await initAuth();

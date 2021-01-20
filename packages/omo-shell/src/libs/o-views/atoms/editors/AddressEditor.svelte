@@ -65,33 +65,37 @@
       contactsBySafeAddress = {};
     }
     const omoSapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-    Object.values(omoSapienState.profileIndex.getValue().payload.byFissionName).forEach((omo:Entry) =>
+    const directory = omoSapienState.profileIndex.getValue();
+    if (directory.payload)
     {
-      if (omo.circlesSafe && !contactsBySafeAddress[omo.circlesSafe])
+      Object.values(omoSapienState.profileIndex.getValue().payload.byFissionName).forEach((omo: Entry) =>
       {
-        contactsBySafeAddress[omo.circlesSafe] = <Contact>{
-          safeAddress: omo.circlesSafe,
-          circlesProfile: null,
-          trust: {
-            out: 0,
-            in: 0
-          },
-          lastBlockNo: 0,
-          omoProfile: {
-            profile: {
-              firstName: omo.firstName,
-              lastName: omo.lastName,
-              fissionName: omo.fissionName,
-              avatarCid: omo.avatarUrl,
-              name: "",
-              circlesAddress: omo.circlesSafe
+        if (omo.circlesSafe && !contactsBySafeAddress[omo.circlesSafe])
+        {
+          contactsBySafeAddress[omo.circlesSafe] = <Contact>{
+            safeAddress: omo.circlesSafe,
+            circlesProfile: null,
+            trust: {
+              out: 0,
+              in: 0
             },
-            avatar: ""
+            lastBlockNo: 0,
+            omoProfile: {
+              profile: {
+                firstName: omo.firstName,
+                lastName: omo.lastName,
+                fissionName: omo.fissionName,
+                avatarCid: omo.avatarUrl,
+                name: "",
+                circlesAddress: omo.circlesSafe
+              },
+              avatar: ""
+            }
           }
         }
-      }
-    });
-    lookupContacts = Object.values(contactsBySafeAddress);
+      });
+      lookupContacts = Object.values(contactsBySafeAddress);
+    }
   }
 
   onMount(() =>

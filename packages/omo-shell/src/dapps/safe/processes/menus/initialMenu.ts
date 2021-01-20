@@ -3,7 +3,7 @@ import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {strings} from "../../data/strings";
 import {ConnectSafeContext, importCircles} from "../omo/importCircles";
 import {signupAtCircles} from "../omo/signupAtCircles";
-import {createPrivateKey} from "../omo/createPrivateKey";
+import {createPrivateKey, CreatePrivateKeyContext} from "../omo/createPrivateKey";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";
@@ -24,7 +24,7 @@ export interface InitialMenuContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.intiialMenu;
-const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<InitialMenuContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -53,7 +53,7 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
       on: {
         "process.continue": {
           actions: [
-            storePromptResponse,
+            <any>storePromptResponse,
             send({
               type: "process.triggerSelf"
             })
@@ -82,7 +82,10 @@ const processDefinition = () => createMachine<InitialMenuContext, OmoEvent>({
     },
     signupAtCircles: {
       entry:<any> [
-        sendShellEvent(new RunProcess(createPrivateKey)),
+        sendShellEvent(new RunProcess<CreatePrivateKeyContext>(createPrivateKey, async ctx => {
+          ctx.web3 = config.getCurrent().web3();
+          return ctx;
+        })),
         send({
           type: "process.triggerSelf"
         })

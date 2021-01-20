@@ -19,7 +19,7 @@ export interface FundAccountContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.initializeApp;
-const processDefinition = () => createMachine<FundAccountContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<FundAccountContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {

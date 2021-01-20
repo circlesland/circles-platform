@@ -1,9 +1,11 @@
 <script lang="ts">
+  import {onMount} from "svelte";
+
   export let data: {
     error: Error
   };
 
-  let error:Error;
+  let error:any;
 
   $: {
     window.o.logger.log(`An error occurred during the execution of a workflow:`, data);
@@ -12,6 +14,28 @@
       error = data.error;
     }
   }
+/*
+  onMount(() => {
+    window.o.logger.log(`An error occurred during the execution of a workflow:`, data);
+    if (data)
+    {
+      error = data.error;
+    }
+    window.mapStackTrace(data.error.stack, function(mappedStack) {
+      // do what you want with mappedStack here
+      error = {
+        message: error.message,
+        stack: mappedStack
+      }
+    }, {
+      filter: function (line) {
+        // process only sources containing `spec.js`
+        return /(spec\.js)/.test(line);
+      }
+    });
+  });
+
+ */
 </script>
 
 <div class="bg-danger p-5 overflow-y-scroll max-w-full" style="max-height: 24em">

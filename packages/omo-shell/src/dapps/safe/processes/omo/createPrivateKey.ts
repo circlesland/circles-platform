@@ -25,7 +25,7 @@ export interface CreatePrivateKeyContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.initializeApp;
-const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<CreatePrivateKeyContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -34,7 +34,7 @@ const processDefinition = () => createMachine<CreatePrivateKeyContext, OmoEvent>
       }
     },
     createPrivateKey: {
-      entry: <any>sendInProgressPrompt(str.progressCreatePrivateKey),
+      entry: <any>sendInProgressPrompt(progressView, str.progressCreatePrivateKey),
       invoke: <any>{
         id: 'createPrivateKey',
         src: createPrivateKeyService,

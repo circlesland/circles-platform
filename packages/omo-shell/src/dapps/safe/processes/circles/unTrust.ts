@@ -52,7 +52,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
       }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "setTrust"
         },
         "process.cancel": "stop"

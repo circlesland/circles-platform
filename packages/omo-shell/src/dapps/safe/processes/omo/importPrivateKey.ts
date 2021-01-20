@@ -25,7 +25,7 @@ export interface ImportPrivateKeyContext extends ProcessContext {
 }
 
 const str = strings.safe.processes.initializeApp;
-const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>({
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<ImportPrivateKeyContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -55,14 +55,14 @@ const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>
       }),
       on: {
         "process.continue": {
-          actions: storePromptResponse,
+          actions: <any>storePromptResponse,
           target: "importAccount"
         },
         "process.cancel": "stop"
       }
     },
     importAccount: {
-      entry:<any> sendInProgressPrompt(str.progressImportAccount),
+      entry:<any> sendInProgressPrompt(progressView, str.progressImportAccount),
       invoke: <any>{
         id: 'importAccount',
         src: importPrivateKeyService,
@@ -84,7 +84,7 @@ const processDefinition = () => createMachine<ImportPrivateKeyContext, OmoEvent>
       },
     },
     error: {
-      entry: sendErrorPrompt,
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
