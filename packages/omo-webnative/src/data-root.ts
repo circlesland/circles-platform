@@ -20,12 +20,13 @@ const EMPTY_CID = 'Qmc5m94Gu7z62RC8waSKkZUrCCBJPyHbkpmGzEePxy2oXJ'
 
 /**
  * Get the CID of a user's data root.
+ *
  * First check Fission server, then check DNS
  *
  * @param username The username of the user that we want to get the data root of.
  */
 export async function lookup(
-  username: string
+    username: string
 ): Promise<CID | null> {
   const maybeRoot = await lookupOnFisson(username)
   if(maybeRoot === EMPTY_CID) return null
@@ -46,7 +47,7 @@ export async function lookup(
  * @param username The username of the user that we want to get the data root of.
  */
 export async function lookupOnFisson(
-  username: string
+    username: string
 ): Promise<CID | null> {
   const logger = debug.newLogger("lookupOnFisson()");
   if (setup.additionalDnsLinkResolver)
@@ -63,8 +64,8 @@ export async function lookupOnFisson(
   }
   try {
     const resp = await fetch(
-      `${setup.endpoints.api}/user/data/${username}`,
-      { cache: 'reload' } // don't use cache
+        `${setup.endpoints.api}/user/data/${username}`,
+        { cache: 'reload' } // don't use cache
     )
     const cid = await resp.json()
     if (!check.isCID(cid)) {
@@ -86,8 +87,8 @@ export async function lookupOnFisson(
  * @param proof The proof to use in the UCAN sent to the API.
  */
 export async function update(
-  cid: CID | string,
-  proof: string
+    cid: CID | string,
+    proof: string
 ): Promise<void> {
   const logger = debug.newLogger(`DataRoot.update(cid: ${cid.toString()})`);
   logger.log("begin");
@@ -99,6 +100,7 @@ export async function update(
   // Cancel previous updates
   if (fetchController) fetchController.abort()
   fetchController = new AbortController()
+  const signal = fetchController.signal
 
   const jwt = await ucan.build({
     audience: await api.did(),
@@ -136,14 +138,20 @@ export async function update(
 
   }, {
     method: 'PATCH',
-    signal: fetchController.signal
+    signal
+
   }).then((response: Response) => {
-    if (response.status < 300) logger.log("🚀 DNSLink updated:", cid)
-    else logger.log("💥  Failed to update DNSLink for:", cid)
+    if (response.status < 300) logger.log("🪴 DNSLink updated:", cid)
+    else logger.log("🔥 Failed to update DNSLink for:", cid)
 
   }).catch(err => {
-    logger.log("💥  Failed to update DNSLink for:", cid)
-    console.error(err)
+    if (signal.aborted) {
+      logger.log("⛄️ Cancelling DNSLink update for:", cid)
+    } else {
+      logger.log("🔥 Failed to update DNSLink for:", cid)
+      console.error(err)
+    }
+
   })
 }
 
@@ -161,10 +169,10 @@ type RetryOptions = {
 
 
 async function fetchWithRetry(
-  url: string,
-  retryOptions: RetryOptions,
-  fetchOptions: RequestInit,
-  retry = 0
+    url: string,
+    retryOptions: RetryOptions,
+    fetchOptions: RequestInit,
+    retry = 0
 ): Promise<Response> {
   const headers = await retryOptions.headers()
   const response = await fetch(url, {
@@ -175,8 +183,8 @@ async function fetchWithRetry(
   if (retryOptions.retryOn.includes(response.status)) {
     if (retry < retryOptions.retries) {
       return await new Promise((resolve, reject) => setTimeout(
-        () => fetchWithRetry(url, retryOptions, fetchOptions, retry + 1).then(resolve, reject),
-        retryOptions.retryDelay
+          () => fetchWithRetry(url, retryOptions, fetchOptions, retry + 1).then(resolve, reject),
+          retryOptions.retryDelay
       ))
     } else {
       throw new Error("Too many retries for fetch")
