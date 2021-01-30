@@ -61,11 +61,11 @@ cd .. || exit
 echo "Building 'omo-indexes' .."
 cd omo-indexes || exit
 npx --no-install tsc || exit
-cd .. || exit
+cd ../.. || exit
 
 echo "Building 'omo-shell' .."
 cd omo-shell || exit
 npm run build
-cd ../.. || exit
+cd .. || exit
 
 npx --no-install lerna bootstrap
