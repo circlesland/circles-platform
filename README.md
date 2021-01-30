@@ -42,8 +42,10 @@ Start
 ```bash
 cd packages/omo-shell
 npm run dev
+# or
+npm run dev-https
 ```
-Go to your browser and open https://0.0.0.0:5000
+Go to your browser and open https://localhost:5000
 
 
 ### Building for production
