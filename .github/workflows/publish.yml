@@ -19,8 +19,9 @@ jobs:
         uses: actions/setup-node@v2
       - name: Build
         run: ./build.sh
-      - name: Publish
+      - name: cd
         working-directory: ./omo-shell
+      - name: Publish
         uses: fission-suite/publish-action@v1
         with:
           machine_key: ${{ secrets.MACHINE_KEY }}
