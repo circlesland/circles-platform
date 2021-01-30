@@ -14,9 +14,8 @@ jobs:
       - name: Generate Fission App
         run: ./generate_fission_yml.sh
       - name: Switch App Path
-          working-directory: ./omo-shell
+        working-directory: ./omo-shell
       - name: Publish
         uses: fission-suite/publish-action@v1
         with:
           machine_key: ${{ secrets.MACHINE_KEY }}
-
