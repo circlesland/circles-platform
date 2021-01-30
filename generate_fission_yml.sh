@@ -5,4 +5,4 @@ if [ $branch_name == "main" ]; then
 else
   echo "url: ${branch_name}-omo.fission.app" >> omo-shell/fission.yaml
 fi
-echo "build: ./public" >> omo-shell/fission.yaml
+echo "build: ./omo-shell//public" >> omo-shell/fission.yaml
