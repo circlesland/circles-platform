@@ -32,18 +32,15 @@ Building with Omo.Li a lightweight and hostless decentralized wallet and marketp
 Clone Repo 
 `git clone https://github.com/omoearth/omo-li.git`
 
-Enter directory 
-```bash
-cd omo-li
-```
 
 Install with npm
 ```bash
-npm i
+./build.sh
 ```
 
 Start
 ```bash
+cd packages/omo-shell
 npm run dev
 ```
 Go to your browser and open https://0.0.0.0:5000
