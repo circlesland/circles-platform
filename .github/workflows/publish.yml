@@ -13,11 +13,9 @@ jobs:
         run: ./build.sh
       - name: Generate Fission App
         run: ./generate_fission_yml.sh
-      - name: List files
-        working-directory: ./omo-shell
-        run: cat fission.yaml
       - name: Publish
-        working-directory: ./omo-shell
+        run:
+          working-directory: ./omo-shell
         uses: fission-suite/publish-action@v1
         with:
           machine_key: ${{ secrets.MACHINE_KEY }}
