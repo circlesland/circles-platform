@@ -26,7 +26,7 @@ export const fissiondrive : DappManifest<FissionDriveState> = {
   dappId: "omo.fission.drive:1",
   isSingleton: true,
   dependencies: ["omo.li:1"],
-  isHidden: false,
+  isHidden: true,
   icon: faSave,
   title: "Fission Drive",
   routeParts: ["fissiondrive"],

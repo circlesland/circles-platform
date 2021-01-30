@@ -7,7 +7,6 @@
 
 {#if mapping.design.type == 'disabled'}
   <a
-    href="{mapping.action.route}"
     class="flex items-center justify-center h-full p-6 text-center bg-white border border-gray-200 cursor-not-allowed rounded-xl text-light-300">
     <div class="">
       <Icon icon={mapping.design.icon} class="text-4xl md:text-5xl" />
