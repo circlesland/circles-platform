@@ -21,6 +21,7 @@ jobs:
         run: ./build.sh
       - name: cd
         working-directory: ./omo-shell
+        run: npm -v
       - name: Publish
         uses: fission-suite/publish-action@v1
         with:
