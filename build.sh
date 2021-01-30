@@ -2,7 +2,7 @@
 
 echo "Installing build dependencies .."
 npm i
-lerna bootstrap
+npx lerna bootstrap
 
 echo "Building 'webnative' .."
 cd packages/omo-webnative || exit
@@ -11,7 +11,7 @@ yarn build
 npx --no-install tsc
 
 cd ../..
-lerna bootstrap
+npx lerna bootstrap
 
 echo "Building 'omo-quirks' .."
 cd packages/omo-quirks || exit
@@ -68,4 +68,4 @@ cd omo-shell || exit
 npm run build
 cd ../.. || exit
 
-lerna bootstrap
+npx lerna bootstrap
