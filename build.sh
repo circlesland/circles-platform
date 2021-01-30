@@ -6,8 +6,8 @@ npx --no-install lerna bootstrap || exit
 
 echo "Building 'webnative' .."
 cd packages/omo-webnative || exit
-yarn install
-yarn build
+npm install
+npm build
 npx --no-install tsc
 
 cd ../..
