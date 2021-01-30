@@ -13,6 +13,9 @@
     "omo-fission": "1.0.0",
     "omo-kernel-interfaces": "1.0.0"
   },
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  },
   "author": "",
   "license": "ISC"
 }

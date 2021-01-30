@@ -13,6 +13,9 @@
     "xstate-svelte": "^1.0.1",
     "@xstate/fsm": "^1.5.2"
   },
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  },
   "author": "",
   "license": "ISC"
 }
