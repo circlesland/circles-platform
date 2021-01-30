@@ -1,0 +1,22 @@
+server {
+	root /var/www/html;
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name directory.omo.earth;
+
+	location /profiles {
+		proxy_pass http://localhost:5009/profiles;
+	}
+
+  location /offers {
+    proxy_pass http://localhost:5009/offers;
+  }
+
+  location ~ /update/profiles/(?<fissionname>.*) {
+    proxy_pass http://localhost:5009/update/profiles/$fissionname;
+  }
+
+  location ~ /update/offers/(?<fissionname>.*) {
+    proxy_pass http://localhost:5009/update/offers/$fissionname;
+  }
+}

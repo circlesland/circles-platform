@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "packages/*",
+    "omo-shell"
+  ],
+  "version": "0.0.1"
+}
