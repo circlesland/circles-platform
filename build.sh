@@ -13,6 +13,21 @@ npm build
 npx --no-install tsc
 
 cd ../..
+
+echo "Cleaning all 'omo-*/dist' directories  .."
+rm -r omo-shell/dist
+rm -r packages/omo-circles/dist
+rm -r packages/omo-directory/dist
+rm -r packages/omo-events/dist
+rm -r packages/omo-fission/dist
+rm -r packages/omo-indexes/dist
+rm -r packages/omo-kernel/dist
+rm -r packages/omo-kernel-interfaces/dist
+rm -r packages/omo-models/dist
+rm -r packages/omo-quirks/dist
+rm -r packages/omo-process/dist
+rm -r packages/omo-utils/dist
+
 npx lerna bootstrap
 
 echo "Building 'omo-quirks' .."
@@ -50,13 +65,13 @@ cd omo-kernel-interfaces || exit
 npx --no-install tsc || exit
 cd .. || exit
 
-echo "Building 'omo-fission' .."
-cd omo-fission || exit
+echo "Building 'omo-kernel' .."
+cd omo-kernel || exit
 npx --no-install tsc || exit
 cd .. || exit
 
-echo "Building 'omo-kernel' .."
-cd omo-kernel || exit
+echo "Building 'omo-fission' .."
+cd omo-fission || exit
 npx --no-install tsc || exit
 cd .. || exit
 

@@ -7,7 +7,6 @@ import {Topic} from "omo-utils/dist/eventBroker";
 import {Generate} from "omo-utils/dist/generate";
 import {OmoEvent} from "omo-events/dist/omoEvent";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
-import {fission, FissionAuthState} from "omo-fission/dist/manifest";
 import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 
 export const dappStates: {
@@ -34,9 +33,12 @@ class Kernel implements KernelInterface
 
     async boot()
     {
+        /*
         await this.load<FissionAuthState>(fission, async (id:string) => {
            return <FissionAuthState>{}
         });
+
+         */
     }
 
     async load<TState extends DappState>(dappManifest: DappManifest<TState>, stateFactory:(runtimeDappId:string) => Promise<TState>)
