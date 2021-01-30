@@ -16,10 +16,8 @@ jobs:
       - name: List files
         working-directory: ./omo-shell
         run: cat fission.yaml
-      - name: cd
-        working-directory: ./omo-shell
-        run: npm -v
       - name: Publish
+        working-directory: ./omo-shell
         uses: fission-suite/publish-action@v1
         with:
           machine_key: ${{ secrets.MACHINE_KEY }}
