@@ -119,3 +119,5 @@ bundle.js.LICENSE.txt
 
 fission.yaml
 /omo-directory/node_modules/
+
+node_modules

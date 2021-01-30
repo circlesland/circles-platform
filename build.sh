@@ -48,13 +48,13 @@ cd omo-kernel-interfaces || exit
 npx --no-install tsc || exit
 cd .. || exit
 
-echo "Building 'omo-kernel' .."
-cd omo-kernel || exit
+echo "Building 'omo-fission' .."
+cd omo-fission || exit
 npx --no-install tsc || exit
 cd .. || exit
 
-echo "Building 'omo-fission' .."
-cd omo-fission || exit
+echo "Building 'omo-kernel' .."
+cd omo-kernel || exit
 npx --no-install tsc || exit
 cd .. || exit
 
