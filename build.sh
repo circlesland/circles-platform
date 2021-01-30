@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 echo "Installing build dependencies .."
 npm i
 npx --no-install lerna bootstrap || exit
