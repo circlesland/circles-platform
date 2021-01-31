@@ -1,6 +1,7 @@
-import { createMachine} from "xstate";
+import {assign, createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {strings} from "../../data/strings";
+import {findTransitivePath, TransitivePath} from "../../services/findTransitivePath";
 import {transferCirclesService} from "../../services/transferCirclesService";
 import Web3 from "omo-quirks/dist/web3";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -20,10 +21,10 @@ import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
 
 export interface TransferCirclesContext extends ProcessContext {
   web3:Web3;
-  //  myBalance: BN;
   circlesHub:CirclesHub;
   data: {
     recipient?: ProcessArtifact,
+    pathToRecipient?: ProcessArtifact,
     value?: ProcessArtifact
   }
 }
@@ -112,7 +113,31 @@ const processDefinition = (maxBalance: number, progressView:any, successView:any
           target: "promptValue"
         },
         "process.cancel": "stop",
-        "process.continue": "transferCircles"
+        "process.continue": "findTransitivePath"
+      }
+    },
+    findTransitivePath: {
+      entry: <any>[
+        sendInProgressPrompt(progressView, str.titleProgress)
+      ],
+      invoke: <any>{
+        id: 'findTransitivePath',
+        src: findTransitivePath,
+        onError: {
+          actions: setError,
+          target: "error"
+        },
+        onDone: {
+          actions: assign((ctx:any, event:any) => {
+              ctx.data.pathToRecipient = {
+                key: "pathToRecipient",
+                type: "object",
+                value: <TransitivePath>event.data
+              };
+              return ctx;
+          }),
+          target: "transferCircles"
+        }
       }
     },
     transferCircles: {

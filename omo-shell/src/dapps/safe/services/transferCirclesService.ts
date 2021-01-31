@@ -6,6 +6,7 @@ import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
 import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
 import {EndSignal} from "omo-events/dist/signals/endSignal";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
+import {TransitivePath} from "./findTransitivePath";
 
 function sendMessage(message) {
   // This wraps the message posting/response in a promise, which will resolve if the response doesn't
@@ -61,20 +62,24 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
     });
 
     window.o.logger.log(pathResult);
-*/
     const tokenOwners = [safeState.mySafeAddress];
     const sources = [safeState.mySafeAddress];
     const destinations = [context.data.recipient.value];
     const values = [oValueInWei];
-    /*
-        (<any>pathResult).data.transfers.forEach(transfer =>
-        {
-          tokenOwners.push(transfer.tokenOwner);
-          sources.push(transfer.from);
-          destinations.push(transfer.to);
-          values.push(transfer.value);
-        });
-    */
+*/
+    const tokenOwners = [];
+    const sources = [];
+    const destinations = [];
+    const values = [];
+
+    const path = <TransitivePath>context.data.pathToRecipient.value;
+    path.transfers.forEach(transfer =>
+    {
+      tokenOwners.push(transfer.tokenOwner);
+      sources.push(transfer.from);
+      destinations.push(transfer.to);
+      values.push(new BN(transfer.value));
+    });
 
     const dummyTransaction:CirclesTransaction = {
       from: safeState.mySafeAddress,

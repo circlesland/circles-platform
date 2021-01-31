@@ -10,6 +10,8 @@ export type TForeignProfile = {
 
 export abstract class Index
 {
+  // Can be called multiple times by different callers for different values
+  // but will only ever call the wrapped action once per unique parameter no matter how many callers ask.
   static fissionNameResolver: AsyncBroadcast<string, string> = new AsyncBroadcast<string, string>(async (fissionUser:string) =>
   {
     const dnsLink = `https://ipfs.io/api/v0/dns?arg=${fissionUser}.fission.name`;
@@ -24,6 +26,10 @@ export abstract class Index
     return dnsLinkResultObj.Path;
   });
 
+  /**
+   * Resolves the current CID of the fission user's fs.
+   * @param fissionUser
+   */
   static async tryGetUserFsRoot(fissionUser: string): Promise<string | null>
   {
     return Index.fissionNameResolver.subscribeToResult(fissionUser);
