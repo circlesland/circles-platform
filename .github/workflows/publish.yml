@@ -1,13 +1,5 @@
 name: Publish
-on:
-  # Trigger the workflow on push or pull request,
-  # but only for the main branch
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 jobs:
   publish_job:
     name: "Publish"
@@ -19,9 +11,8 @@ jobs:
         uses: actions/setup-node@v2
       - name: Build
         run: ./build.sh
-      - name: cd
-        working-directory: ./omo-shell
-        run: npm -v
+      - name: Generate Fission App
+        run: ./generate_fission_yml.sh
       - name: Publish
         uses: fission-suite/publish-action@v1
         with:
