@@ -41,7 +41,7 @@ chmod +x ./build.sh
 
 Start
 ```bash
-cd packages/omo-shell
+cd omo-shell
 npm run dev
 # or
 npm run dev-https
