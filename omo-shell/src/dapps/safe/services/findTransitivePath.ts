@@ -39,7 +39,7 @@ export const findTransitivePath = async (context: TransferCirclesContext) : Prom
       body: raw
     };
 
-    const response = await fetch("http://18.194.182.180/flow", requestOptions)
+    const response = await fetch("https://pathfinder.exinto.de/flow", requestOptions)
     const result = await response.json();
 
     window.o.logger.log("Transitive path is: ", result);

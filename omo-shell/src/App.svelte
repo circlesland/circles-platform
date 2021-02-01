@@ -61,8 +61,8 @@
     if (event.type == "shell.runProcess")
     {
       runningProcess = await window.o.stateMachines.run(
-        (<RunProcess>event).definition,
-        (<RunProcess>event).contextModifier
+        (<RunProcess<any>>event).definition,
+        (<RunProcess<any>>event).contextModifier
       );
       isOpen = true;
     }

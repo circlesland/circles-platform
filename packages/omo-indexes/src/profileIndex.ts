@@ -51,29 +51,36 @@ export class ProfileIndex extends Index
     const profileIndexCid = await profileIndexCidResponse.text();
     const profileIndexDataBuffer = await Index.catCid(profileIndexCid);
     const profileIndexDataJson = profileIndexDataBuffer.toString();
-    const profileIndex: ProfileIndexData = JSON.parse(profileIndexDataJson);
+    const profileIndex:{
+        [fissionName: string]: ProfileIndexEntry
+    } = JSON.parse(profileIndexDataJson);
 
-    if (!profileIndex || !profileIndex.byFissionName)
+    if (!profileIndex /*|| !profileIndex.byFissionName*/)
     {
       return null;
     }
 
-    Object.values(profileIndex.byFissionName)
+    const pi:ProfileIndexData = {
+        byFissionName: profileIndex,
+        byCirclesSafe: {}
+    }
+
+    Object.values(pi.byFissionName)
         .forEach((o: ProfileIndexEntry) =>
         {
-          if (!o.circlesSafe)
-          {
-            return;
-          }
-          if (!profileIndex.byCirclesSafe)
-          {
-            profileIndex.byCirclesSafe = {};
-          }
+            if (!o.circlesSafe)
+            {
+                return;
+            }
 
-          profileIndex.byCirclesSafe[o.circlesSafe] = o;
+            if (!pi.byCirclesSafe)
+            {
+                pi.byCirclesSafe = {};
+            }
+            pi.byCirclesSafe[o.circlesSafe] = o;
         });
 
-    return profileIndex;
+    return pi;
   }
 
   static async tryReadPublicProfile(fissionUser: string): Promise<TForeignProfile | null>
