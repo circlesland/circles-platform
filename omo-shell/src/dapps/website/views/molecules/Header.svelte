@@ -30,7 +30,7 @@
       <a
         href="#/visionpaper"
         class="px-3 uppercase font-title text-secondary hover:text-tertiary"
-        >vision</a
+        >visionpaper</a
       >
     </nav>
     <button
@@ -38,7 +38,7 @@
       class="inline-flex items-center px-2 py-1 mt-4 text-base font-bold text-white lowercase border-0 rounded-full bg-secondary focus:outline-none hover:bg-white hover:text-secondary hover:border hover:border-light-300 md:mt-0"
     >
       <img src="logos/logo_dark.svg" alt="omo" class="w-6 h-6" />
-      <span class="px-2">login as omo</span>
+      <span class="px-2">login</span>
     </button>
   </div>
 </header>
