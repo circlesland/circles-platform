@@ -37,10 +37,10 @@ export interface ProfileIndexData
 export class ProfileIndex extends Index
 {
   static async announceProfile(fissionUser: string): Promise<void>
-  {
+  {/*
     await fetch("https://directory.omo.earth/update/profiles/:fissionName" + fissionUser, {
       method: "POST"
-    });
+    });*/
   }
 
   static async tryGetProfileIndex(): Promise<ProfileIndexData | null>
