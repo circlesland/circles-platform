@@ -9,14 +9,9 @@
   import Video from "../molecules/Video.svelte";
   import Steps from "../molecules/Steps.svelte";
   import Details from "../molecules/Details.svelte";
-  import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
   onMount(async () => {
-    runWithDrive(async drive => {
 
-    }).then(() => {
-      console.log("Initialized drive:");
-    });
   });
 </script>
 
@@ -39,18 +34,6 @@
       </div>
       <Projects />
     </div> -->
-    <div
-      class="flex flex-col items-center w-full px-5 py-24 mx-auto bg-light-100">
-      <h2
-        class="my-5 text-base font-bold tracking-wide uppercase text-tertiary">
-        Omo Marketplace
-      </h2>
-      <h3
-        class="max-w-4xl px-5 pb-12 mt-2 text-3xl font-black leading-loose tracking-wide text-center uppercase font-title text-primary sm:mt-0 sm:px-0 md:text-5xl">
-        <div>Enjoy the growth<br />of your own economy</div>
-      </h3>
-      <Offers />
-    </div>
     <Details />
     <Pricing />
     <!-- <Testimonials /> -->
