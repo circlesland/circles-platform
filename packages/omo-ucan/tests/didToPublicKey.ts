@@ -10,7 +10,7 @@ describe('didToPublicKey', function()
     {
         for (let did of dids)
         {
-            const publicKey = await didToPublicKey.didToPublicKey(did);
+            const publicKey = await didHelper.didToPublicKey(did);
 
             expect(publicKey);
             expect(publicKey.type === "public");
