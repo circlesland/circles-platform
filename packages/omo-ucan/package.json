@@ -1,0 +1,31 @@
+{
+  "name": "omo-ucan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json",
+    "coverage": "nyc -r text -e .ts -x \"tests/*.test.ts\" npm run test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jwt-decode": "^3.1.0",
+    "jwt-decode": "^3.1.2"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^3.6.3",
+    "i": "^0.3.6",
+    "jasmine": "^3.6.4",
+    "karma": "^6.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-firefox-launcher": "^2.1.0",
+    "karma-jasmine": "^4.0.1",
+    "nyc": "^15.1.0",
+    "ts-node": "^9.1.1",
+    "typescriptnpm": "^1.0.1"
+  }
+}
