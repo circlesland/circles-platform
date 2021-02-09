@@ -2,7 +2,7 @@
  * Given a list of UCANs, generate a dictionary.
  * The key will be in the form of `${resourceKey}:${resourceValue}`
  */
-import {Ucan} from "./types";
+import {Ucan, UcanPayload} from "./types";
 
 export function makeUrlUnsafe(a: string): string {
     return a.replace(/_/g, "/").replace(/-/g, "+")
@@ -10,6 +10,20 @@ export function makeUrlUnsafe(a: string): string {
 
 export function makeUrlSafe(a: string): string {
     return a.replace(/\//g, "_").replace(/\+/g, "-").replace(/=+$/, "")
+}
+
+export function findRootIssuer(ucan: string, level = 0): string {
+    const p = extractPayload(ucan, level)
+    if (p.prf) return findRootIssuer(p.prf, level + 1)
+    return p.iss
+}
+
+function extractPayload(ucan: string, level: number): UcanPayload {
+    try {
+        return decodeUcan(ucan).payload
+    } catch (_) {
+        throw new Error(`Invalid UCAN (${level} level${level === 1 ? "" : "s"} deep): \`${ucan}\``)
+    }
 }
 
 /**

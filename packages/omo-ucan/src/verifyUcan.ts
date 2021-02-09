@@ -1,13 +1,7 @@
-import {KeyFormat} from "crypto";
-
-const {subtle} = require('crypto').webcrypto;
-const crypto = require("crypto");
-import jwt_decode from "jwt-decode";
 import {UcanHeader, UcanPayload} from "./types";
 import {didToPublicKey} from "./didToPublicKey";
-import {decodeUcan, makeUrlUnsafe} from "./decodeUcan";
-// import {RSA_WRITE_ALG, SALT_LENGTH} from "./consts";
-export type Msg = ArrayBuffer | string | Uint8Array;
+import {decodeUcan, findRootIssuer, makeUrlUnsafe} from "./decodeUcan";
+import crypto from "crypto";
 
 export async function verifyUcan(ucan:string, myDid:string) : Promise<string[]>
 {
@@ -79,16 +73,15 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<string[]>
         errors.push(`Invalid audience. I'm '${myDid}', you wanted '${aud}'.`);
     }
 
-    const rootIss = rootIssuer(ucan);
+    const rootIss = findRootIssuer(ucan);
     if (iss !== rootIss)
     {
         // TODO: Check if the "prf" is valid
 
-        let rootIssuerPublicKey: CryptoKey|null = null;
+        let rootIssuerPublicKey: Buffer|null = null;
         try
         {
             rootIssuerPublicKey = await didToPublicKey(rootIss);
-            const exportedKey = await subtle.exportKey("spki", rootIssuerPublicKey);
         }
         catch (e)
         {
@@ -96,7 +89,7 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<string[]>
         }
     }
 
-    let issuerPublicKey: CryptoKey|null = null;
+    let issuerPublicKey: Buffer|null = null;
     try
     {
         issuerPublicKey = await didToPublicKey(iss);
@@ -112,8 +105,7 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<string[]>
     }
     else
     {
-        const exportedKey = await subtle.exportKey("spki", issuerPublicKey);
-        const exportedKeyPem = formatAsPem(Buffer.from(exportedKey).toString("base64"));
+        const exportedKeyPem = formatAsPem(issuerPublicKey.toString("base64"));
 
         const verifySigResult = await verifySignaturePemKey(
             Buffer.from(exportedKeyPem),
@@ -129,7 +121,17 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<string[]>
     return errors;
 }
 
-function formatAsPem(str:string) {
+
+export function stripPem(pem:string)
+{
+    pem = pem.replace("-----BEGIN PUBLIC KEY-----", "")
+    pem = pem.replace("-----END PUBLIC KEY-----", "")
+    pem = pem.replace("-----BEGIN PRIVATE KEY-----", "")
+    pem = pem.replace("-----END PRIVATE KEY-----", "")
+    return pem.split("\n").join("");
+}
+
+export function formatAsPem(str:string) {
     var finalString = '-----BEGIN PUBLIC KEY-----\n';
 
     while(str.length > 0) {
@@ -156,30 +158,4 @@ async function verifySignaturePemKey(publicKey:Buffer, msg:Buffer, signature:Buf
     );
 
     return verificationResult;
-}
-/*
-async function verifySignature(publicKey:CryptoKey, msg:Buffer, signature:Buffer) : Promise<boolean>
-{
-    const verificationResult = await subtle.verify(
-        { name: RSA_WRITE_ALG, saltLength: SALT_LENGTH },
-        publicKey,
-        signature,
-        msg
-    );
-
-    return verificationResult;
-}*/
-
-function rootIssuer(ucan: string, level = 0): string {
-    const p = extractPayload(ucan, level)
-    if (p.prf) return rootIssuer(p.prf, level + 1)
-    return p.iss
-}
-
-function extractPayload(ucan: string, level: number): UcanPayload {
-    try {
-        return jwt_decode(ucan)
-    } catch (_) {
-        throw new Error(`Invalid UCAN (${level} level${level === 1 ? "" : "s"} deep): \`${ucan}\``)
-    }
 }

@@ -1,5 +1,4 @@
 const verifyUcan = require("../dist/verifyUcan");
-
 const jwts = [""];
 const myDid = "";
 

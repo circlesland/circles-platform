@@ -2,17 +2,13 @@ import {
     BASE58_DID_PREFIX,
     base58Alphabet,
     CryptoSystem,
-    DEFAULT_HASH_ALG,
     ECC_DID_PREFIX,
     RSA_DID_PREFIX,
-    RSA_WRITE_ALG
 } from "./consts";
 import {decodeBaseN, encodeBaseN} from "./baseN";
-const {subtle} = require('crypto').webcrypto;
 
 export function publicKeyToDid(
-    publicKey: string,
-    type: CryptoSystem
+    publicKey: string
 ): string {
     const pubKeyBuf = Buffer.from(publicKey, "base64");
     // Prefix public-write key
@@ -23,7 +19,7 @@ export function publicKeyToDid(
     return BASE58_DID_PREFIX + encodeBaseN(new Uint8Array(prefixedBuf), base58Alphabet);
 }
 
-export async function didToPublicKey(did: string): Promise<CryptoKey>
+export async function didToPublicKey(did: string): Promise<Buffer>
 {
     if (!did.startsWith(BASE58_DID_PREFIX))
     {
@@ -42,13 +38,7 @@ export async function didToPublicKey(did: string): Promise<CryptoKey>
         throw new Error("NotSupported. Only RSA is supported at the moment.")
     }
 
-    return subtle.importKey(
-        'spki',
-        keyBuffer,
-        {name: RSA_WRITE_ALG, hash: {name: DEFAULT_HASH_ALG}},
-        true,
-        ['verify']
-    );
+    return Buffer.from(keyBuffer);
 }
 
 const parseMagicBytes = (prefixedKey: ArrayBuffer): {

@@ -20,11 +20,10 @@
  *
  */
 import {Resource} from "./types";
-import {decodeUcan, makeUrlSafe, makeUrlUnsafe} from "./decodeUcan";
-import {RSA_WRITE_ALG} from "./consts";
-const {subtle} = require('crypto').webcrypto;
+import {decodeUcan, makeUrlSafe} from "./decodeUcan";
+import crypto from "crypto";
 
-export async function buildUcan(signingKey:CryptoKeyPair, {
+export async function buildUcan(signingKey:string, {
                                 audience,
                                 facts = [],
                                 issuer,
@@ -78,14 +77,11 @@ export async function buildUcan(signingKey:CryptoKeyPair, {
     const encodedPayload = makeUrlSafe(Buffer.from(JSON.stringify(payload), "ascii").toString("base64"));
 
     // Signature
-    const signed = await subtle.sign(
-        RSA_WRITE_ALG,
-        signingKey.privateKey,
-        Buffer.from(`${encodedHeader}.${encodedPayload}`,
-        "ascii"));
+    const signature = crypto.sign("RSA-SHA256", Buffer.from(`${encodedHeader}.${encodedPayload}`), {
+        key: signingKey
+    });
 
-    const encodedSignatureUrlUnsafe = Buffer.from(signed).toString("base64")
-    const encodedSignatureUrlSafe = makeUrlSafe(Buffer.from(signed).toString("base64"))
+    const encodedSignatureUrlSafe = makeUrlSafe(signature.toString("base64"))
 
     // Make JWT
     return encodedHeader + '.' +

@@ -13,8 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/jwt-decode": "^3.1.0",
-    "jwt-decode": "^3.1.2"
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.3",
