@@ -1,16 +1,14 @@
 # UCANs for NodeJS
-Provides functions to create and validate UCANs.  
+Provides dependency-free functions to create and validate UCANs in NodeJS.  
 
 *Warning: This is still work in progress (It doesn't yet validate the 'fct', 'rsc', 'prf' and 'ptc' claims and it's RSA only).*
 ### Create a UCAN
 ```typescript
-const crypto = require('crypto');
-const {stripPem} = require("omo-ucan/verifyUcan");
-const didHelper = require("omo-ucan/didHelper");
-const buildUcan = require("omo-ucan/buildUcan");
+const {generateKeyPairSync} = require('crypto');
+const {stripPem, publicKeyToDid, buildUcan} = require("omo-ucan/dist/index");
 
 // Create a KeyPair
-const keyPair = crypto.generateKeyPairSync('rsa', {
+const keyPair = generateKeyPairSync('rsa', {
     modulusLength: 2048,
     publicKeyEncoding: {
         type: 'spki',
@@ -26,11 +24,11 @@ const keyPair = crypto.generateKeyPairSync('rsa', {
 const pub = stripPem(keyPair.publicKey);
 
 // Create a did from the public key
-const iss = didHelper.publicKeyToDid(pub);
+const iss = publicKeyToDid(pub);
 const aud = "AUDIENCE DID GOES HERE";
 
 // Create the UCAN with a PEM formatted signing key
-const ucan = await buildUcan.buildUcan(keyPair.privateKey, {
+const ucan = await buildUcan(keyPair.privateKey, {
     issuer: iss,
     potency: "APPEND",
     audience: aud,
@@ -44,10 +42,11 @@ console.log(ucan);
 
 ### Validate a UCAN
 ```typescript
-const verifyUcan = require("omo-ucan/verifyUcan");
-const aud = "AUDIENCE DID GOES HERE";
+const {verifyUcan} = require("omo-ucan/dist/index");
 
-const validationErrors = await verifyUcan.verifyUcan(ucan, aud);
+// This is your DID. The validated UCAN must contain it as 'aud' claim 
+const aud = "AUDIENCE DID GOES HERE";
+const validationErrors = await verifyUcan(ucan, aud);
 
 if (validationErrors.length === 0)
     console.log("The UCAN is valid")
