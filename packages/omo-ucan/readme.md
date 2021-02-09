@@ -1,7 +1,7 @@
 # UCANs for NodeJS
 Provides functions to create and validate UCANs.  
 
-*Warning: This is still work in progress (It doesn't yet validate the 'fct', 'rsc', 'prf' and 'ptc' claims).*
+*Warning: This is still work in progress (It doesn't yet validate the 'fct', 'rsc', 'prf' and 'ptc' claims and it's RSA only).*
 ### Create a UCAN
 ```typescript
 const crypto = require('crypto');

@@ -1,7 +1,6 @@
 import {
     BASE58_DID_PREFIX,
     base58Alphabet,
-    CryptoSystem,
     ECC_DID_PREFIX,
     RSA_DID_PREFIX,
 } from "./consts";
@@ -33,7 +32,7 @@ export async function didToPublicKey(did: string): Promise<Buffer>
 
     const {keyBuffer, type} = parseMagicBytes(magicalBuf)
 
-    if (type === CryptoSystem.ECC)
+    if (type === "ecc")
     {
         throw new Error("NotSupported. Only RSA is supported at the moment.")
     }
@@ -43,7 +42,7 @@ export async function didToPublicKey(did: string): Promise<Buffer>
 
 const parseMagicBytes = (prefixedKey: ArrayBuffer): {
     keyBuffer: ArrayBuffer
-    type: CryptoSystem
+    type: string
 } =>
 {
     if (hasPrefix(prefixedKey, RSA_DID_PREFIX))
@@ -51,7 +50,7 @@ const parseMagicBytes = (prefixedKey: ArrayBuffer): {
         // RSA
         return {
             keyBuffer: prefixedKey.slice(RSA_DID_PREFIX.byteLength),
-            type: CryptoSystem.RSA
+            type: "rsa"
         }
     }
     else if (hasPrefix(prefixedKey, ECC_DID_PREFIX))
@@ -59,7 +58,7 @@ const parseMagicBytes = (prefixedKey: ArrayBuffer): {
         // ECC
         return {
             keyBuffer: prefixedKey.slice(ECC_DID_PREFIX.byteLength),
-            type: CryptoSystem.ECC
+            type: "ecc"
         }
     }
 
