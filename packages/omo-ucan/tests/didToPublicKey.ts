@@ -1,4 +1,4 @@
-const didToPublicKeyTest = require("../dist/didToPublicKey");
+const didHelper = require("../dist/didHelper");
 
 const dids = [
     ""
@@ -10,7 +10,7 @@ describe('didToPublicKey', function()
     {
         for (let did of dids)
         {
-            const publicKey = await didToPublicKeyTest.didToPublicKey(did);
+            const publicKey = await didToPublicKey.didToPublicKey(did);
 
             expect(publicKey);
             expect(publicKey.type === "public");

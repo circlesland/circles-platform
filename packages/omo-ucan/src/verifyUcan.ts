@@ -1,5 +1,5 @@
 import {UcanHeader, UcanPayload} from "./types";
-import {didToPublicKey} from "./didToPublicKey";
+import {didToPublicKey} from "./didHelper";
 import {decodeUcan, findRootIssuer, makeUrlUnsafe} from "./decodeUcan";
 import crypto from "crypto";
 

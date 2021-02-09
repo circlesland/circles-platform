@@ -1,5 +1,5 @@
 const {stripPem} = require("../dist/verifyUcan");
-const didToPublicKey = require("../dist/didToPublicKey");
+const didHelper = require("../dist/didHelper");
 const buildUcan = require("../dist/buildUcan");
 const verifyUcan = require("../dist/verifyUcan");
 const crypto = require('crypto');
@@ -22,14 +22,8 @@ describe('buildUcan', function()
         });
 
         const pub = stripPem(keyPair.publicKey);
-        const priv = stripPem(keyPair.privateKey);
 
-        console.log("pub:", pub);
-        console.log("priv:", priv);
-
-        const iss = didToPublicKey.publicKeyToDid(pub);
-
-
+        const iss = didHelper.publicKeyToDid(pub);
         const ucan = await buildUcan.buildUcan(keyPair.privateKey, {
             issuer: iss,
             potency: "APPEND",
