@@ -1,4 +1,4 @@
-# webnative SDK
+# Webnative SDK
 
 [![NPM](https://img.shields.io/npm/v/webnative)](https://www.npmjs.com/package/webnative)
 [![Build Status](https://travis-ci.org/fission-suite/webnative.svg?branch=master)](https://travis-ci.org/fission-suite/webnative)
@@ -12,7 +12,8 @@ Fission helps developers build and scale their apps. We’re building a web nati
 
 ---
 
-**[Read the Guide for extended documentation and getting started information »](https://guide.fission.codes/webnative-sdk/getting-started-webnative-sdk)**
+**[Read the Guide for extended documentation and getting started information](https://guide.fission.codes/developers/webnative)**.  
+The API reference can be found at [webnative.fission.app](https://webnative.fission.app)
 
 ---
 
@@ -33,10 +34,6 @@ import * as wn from 'webnative'
 // Browser/UMD build
 const wn = globalThis.webnative
 ```
-
-See [`docs/`](docs/) for more detailed documentation based on the source code.
-
-
 
 # Authentication
 
