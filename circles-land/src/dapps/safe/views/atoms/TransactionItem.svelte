@@ -100,12 +100,12 @@
               : ""}
             {transaction.subject}
           {:else if transaction.from}
-            Harvested Time
+            Harvested basic income
           {/if}
         </b>
         <p class="text-gray-500 text-xxs md:text-xs">
           {#if !transaction.timestamp}
-            ...
+            ... loading
           {:else}{dayjs(new Date(transaction.timestamp * 1000)).fromNow()}{/if}
           {#if transaction.direction === "in"}
             {#if transaction.from !== "0x0000000000000000000000000000000000000000"}

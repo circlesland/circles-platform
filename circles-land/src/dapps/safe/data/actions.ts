@@ -22,7 +22,7 @@ export const safeDefaultActions: QuickAction[] = [
         icon: faPiggyBank
       },
       data: {
-        label: "Safe"
+        label: "Transactions"
       }
     },
     route: "#/safe/transactions"
