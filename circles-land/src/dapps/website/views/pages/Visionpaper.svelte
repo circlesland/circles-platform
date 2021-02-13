@@ -19,16 +19,19 @@
     rows="1fr"
     columns="1fr"
     tw="bg-white w-full md:border md:border-light-200 md:rounded-xl"
-    overflowY>
+    overflowY
+  >
     <div class="p-8 md:p-16">
       <div
-        class="text-4xl font-black text-center uppercase md:text-6xl font-title text-primary">
-        The Omo Vision
+        class="text-4xl font-black text-center uppercase md:text-6xl font-title text-primary"
+      >
+        The Circles Vision
       </div>
 
       <div class="py-4 text-gray-600 text">
         <div
-          class="py-12 text-3xl font-thin text-center text-tertiary font-primary">
+          class="py-12 text-3xl font-thin text-center text-tertiary font-primary"
+        >
           "Our vision is to empower every human to spark their joyfull passion
           towards an eventful, manifold and fullfilled life"
         </div>
@@ -52,7 +55,7 @@
     </div> -->
 
     <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'The history of money' } }} />
+      <Title mapping={{ data: { title: "The history of money" } }} />
 
       <div class="py-4 text-gray-600 text">
         In the history, money has always been connected to other references of
@@ -69,7 +72,10 @@
       </div>
       <div class="py-16">
         <Title
-          mapping={{ data: { title: 'Our clock of life, a true store of value' } }} />
+          mapping={{
+            data: { title: "Our clock of life, a true store of value" },
+          }}
+        />
         <div class="py-4 text-gray-600 text">
           To regain the characteristics of a global, decentralized and as stable
           as possible trusted store of value, Omo Sapiens found their solution
@@ -87,12 +93,13 @@
           lineOptions={chartHoursAlive1Week.design.lineOptions}
           barOptions={chartHoursAlive1Week.design.barOptions}
           axisOptions={chartHoursAlive1Week.design.axisOptions}
-          colors={chartHoursAlive1Week.design.colors} />
+          colors={chartHoursAlive1Week.design.colors}
+        />
       </div>
     </div>
 
     <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'Connecting money to time' } }} />
+      <Title mapping={{ data: { title: "Connecting money to time" } }} />
 
       <div class="py-4 text-gray-600 text">
         Omo Sapiens tightly connect their money, they use to trade and barter
@@ -111,12 +118,13 @@
           lineOptions={chartHoursAlive1WeekPlusOMoney.design.lineOptions}
           barOptions={chartHoursAlive1WeekPlusOMoney.design.barOptions}
           axisOptions={chartHoursAlive1WeekPlusOMoney.design.axisOptions}
-          colors={chartHoursAlive1WeekPlusOMoney.design.colors} />
+          colors={chartHoursAlive1WeekPlusOMoney.design.colors}
+        />
       </div>
     </div>
 
     <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'Decay of lazy money' } }} />
+      <Title mapping={{ data: { title: "Decay of lazy money" } }} />
 
       <div class="py-4 text-gray-600 text">
         While your ⦿ money keeps on growing continuously, instead of being
@@ -137,13 +145,17 @@
           lineOptions={chartHoursAliveMinusDecayOver1Year.design.lineOptions}
           barOptions={chartHoursAliveMinusDecayOver1Year.design.barOptions}
           axisOptions={chartHoursAliveMinusDecayOver1Year.design.axisOptions}
-          colors={chartHoursAliveMinusDecayOver1Year.design.colors} />
+          colors={chartHoursAliveMinusDecayOver1Year.design.colors}
+        />
       </div>
     </div>
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: 'When the growth rate is higher than the decay rate' } }} />
+        mapping={{
+          data: { title: "When the growth rate is higher than the decay rate" },
+        }}
+      />
 
       <div class="py-4 text-gray-600 text">
         You might now argue, that the decay rate is stil quite high and a huge
@@ -166,12 +178,13 @@
           lineOptions={chartHoursAliveMinusDecayOver10Years.design.lineOptions}
           barOptions={chartHoursAliveMinusDecayOver10Years.design.barOptions}
           axisOptions={chartHoursAliveMinusDecayOver10Years.design.axisOptions}
-          colors={chartHoursAliveMinusDecayOver10Years.design.colors} />
+          colors={chartHoursAliveMinusDecayOver10Years.design.colors}
+        />
       </div>
     </div>
 
     <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'The golden middle at 125.000⦿' } }} />
+      <Title mapping={{ data: { title: "The golden middle at 125.000⦿" } }} />
 
       <div class="py-4 text-gray-600 text">
         The growth rate of your time alive is always higher than the decay rate
@@ -199,12 +212,13 @@
           lineOptions={chartOTimeGrowth100Years.design.lineOptions}
           barOptions={chartOTimeGrowth100Years.design.barOptions}
           axisOptions={chartOTimeGrowth100Years.design.axisOptions}
-          colors={chartOTimeGrowth100Years.design.colors} />
+          colors={chartOTimeGrowth100Years.design.colors}
+        />
       </div>
     </div>
 
     <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'Fading away through Death' } }} />
+      <Title mapping={{ data: { title: "Fading away through Death" } }} />
 
       <div class="py-4 text-gray-600 text">
         ...work in progress, coming soon...
@@ -220,13 +234,20 @@
           lineOptions={chartOTimeDeath.design.lineOptions}
           barOptions={chartOTimeDeath.design.barOptions}
           axisOptions={chartOTimeDeath.design.axisOptions}
-          colors={chartOTimeDeath.design.colors} />
+          colors={chartOTimeDeath.design.colors}
+        />
       </div>
     </div>
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: 'Counterbalancing the decay rate with the service oriented economy' } }} />
+        mapping={{
+          data: {
+            title:
+              "Counterbalancing the decay rate with the service oriented economy",
+          },
+        }}
+      />
 
       <div class="py-4 text-gray-600">
         For investors, entrepreneurs and businesses, which can not harvest ⦿
@@ -249,7 +270,10 @@
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: 'Comparing € money supply to the ⦿ supply' } }} />
+        mapping={{
+          data: { title: "Comparing € money supply to the ⦿ supply" },
+        }}
+      />
 
       <div class="py-4 text-gray-600 text">
         Since the introduction of the €uro 20 years ago, the money supply has
@@ -271,7 +295,8 @@
           lineOptions={chartMonetaryMass.design.lineOptions}
           barOptions={chartMonetaryMass.design.barOptions}
           axisOptions={chartMonetaryMass.design.axisOptions}
-          colors={chartMonetaryMass.design.colors} />
+          colors={chartMonetaryMass.design.colors}
+        />
       </div>
     </div>
     <!-- 
@@ -309,7 +334,13 @@
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: 'Difference between Circles (nominal units) and ⦿ money (relative units)' } }} />
+        mapping={{
+          data: {
+            title:
+              "Difference between Circles (nominal units) and ⦿ money (relative units)",
+          },
+        }}
+      />
 
       <div class="py-4 text-gray-600 text">
         Our ⦿ is building on top of the CirclesUBI protocol and is actually
@@ -343,18 +374,21 @@
           lineOptions={chartCirclesVsOTime.design.lineOptions}
           barOptions={chartCirclesVsOTime.design.barOptions}
           axisOptions={chartCirclesVsOTime.design.axisOptions}
-          colors={chartCirclesVsOTime.design.colors} />
+          colors={chartCirclesVsOTime.design.colors}
+        />
       </div>
     </div>
 
     <div
-      class="text-4xl font-bold text-center uppercase md:text-6xl text-primary font-title">
+      class="text-4xl font-bold text-center uppercase md:text-6xl text-primary font-title"
+    >
       The technical layer
     </div>
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: 'A new generation of personal moneys' } }} />
+        mapping={{ data: { title: "A new generation of personal moneys" } }}
+      />
 
       <div class="py-4 text-gray-600 text">
         On Omo Earth every Omo Sapien is creating and using their own personal
@@ -368,7 +402,10 @@
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: 'Transacting with Omo strangers you dont know' } }} />
+        mapping={{
+          data: { title: "Transacting with Omo strangers you dont know" },
+        }}
+      />
 
       <div class="py-4 text-gray-600 text">
         You might now think, but how can I use my money with Omo's I am not
@@ -400,7 +437,7 @@
     <img src="illustrations/visionpaper/fake.png" alt="trust" />
 
     <div class="p-8 md:p-16">
-      <Title mapping={{ data: { title: 'The limits of web-of-trust' } }} />
+      <Title mapping={{ data: { title: "The limits of web-of-trust" } }} />
       <div class="py-4 text-gray-600 text">
         When Omo's are not well connected to others they can not use their money
         properly. We can see in the following example a very happy OmoAlice, who
@@ -415,7 +452,13 @@
 
     <div class="p-8 md:p-16">
       <Title
-        mapping={{ data: { title: "Federated identification for lonely Omo's and business accounts" } }} />
+        mapping={{
+          data: {
+            title:
+              "Federated identification for lonely Omo's and business accounts",
+          },
+        }}
+      />
       <div class="py-4 text-gray-600 text">
         ...work in progress, coming soon... (explaining the federated 2nd layer
         identification with autoident algorithms and shared open source

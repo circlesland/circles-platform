@@ -3,9 +3,7 @@
   import { location } from "svelte-spa-router";
   import { createEventDispatcher } from "svelte";
   import Compose from "../atoms/Compose.svelte";
-  import Icon from "fa-svelte";
 
-  import { faPlus } from "@fortawesome/free-solid-svg-icons";
   import { QuickAction } from "omo-kernel-interfaces/dist/quickAction";
 
   const dispatch = createEventDispatcher();
@@ -52,7 +50,7 @@
 
         <button
           on:click={onActionButtonClick}
-          class="w-16 h-16 mx-auto text-white border-blue-300 rounded-full bg-light-100 hover:bg-light-200"
+          class="w-16 h-16 mx-auto text-white rounded-full bordr border-light-300 bg-light-100 hover:bg-light-200"
         >
           <div class="flex items-center justify-center">
             <img src="logos/circles.svg" alt="+" class="p-2" />

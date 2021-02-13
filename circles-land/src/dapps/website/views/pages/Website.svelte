@@ -9,18 +9,28 @@
   import Video from "../molecules/Video.svelte";
   import Steps from "../molecules/Steps.svelte";
   import Details from "../molecules/Details.svelte";
+  import Login from "../molecules/Login.svelte";
 
-  onMount(async () => {
-
-  });
+  onMount(async () => {});
 </script>
 
 <Compose rows="1fr" columns="1fr">
   <div class="w-full overflow-x-hidden antialiased">
     <Header />
     <Video />
-    <Hero />
-    <Steps />
+    <div
+      id="features"
+      class="relative w-full px-8 py-10 bg-light-100 md:py-16 lg:py-24 xl:py-40 xl:px-0"
+    >
+      <div
+        class="container flex flex-col items-center justify-between h-full max-w-6xl mx-auto"
+      >
+        <Login size="2xl" />
+      </div>
+    </div>
+
+    <!-- <Hero />
+    <Steps /> -->
     <!-- <div class="bg-gray-50">
       <div class="flex flex-col items-center w-full px-5 py-24 mx-auto ">
         <h2
@@ -34,8 +44,8 @@
       </div>
       <Projects />
     </div> -->
-    <Details />
-    <Pricing />
+    <!-- <Details />
+    <Pricing /> -->
     <!-- <Testimonials /> -->
     <Footer />
   </div>

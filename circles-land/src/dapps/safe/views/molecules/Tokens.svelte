@@ -24,21 +24,21 @@
     safeState.myKey.privateKey
   ).address;
 
-  // let accountxDai = {
-  //   data: {
-  //     image: "logos/xdai.svg",
-  //     title: "Transaction Credits",
-  //     subtitle: "Estimated transactions you have left",
-  //     balance:
-  //       "~" +
-  //       Math.floor(
-  //         parseFloat(web3.utils.fromWei(safeState.myAccountXDaiBalance)) * 20000
-  //       ),
-  //     description:
-  //       "xDai balance: " +
-  //       parseFloat(web3.utils.fromWei(safeState.myAccountXDaiBalance)),
-  //   },
-  // };
+  let accountxDai = {
+    data: {
+      image: "logos/xdai.svg",
+      title: "Transaction Credits",
+      subtitle: "Estimated transactions you have left",
+      balance:
+        "~" +
+        Math.floor(
+          parseFloat(web3.utils.fromWei(safeState.myAccountXDaiBalance)) * 20000
+        ),
+      description:
+        "xDai balance on your safe owner key: " +
+        parseFloat(web3.utils.fromWei(safeState.myAccountXDaiBalance)),
+    },
+  };
 
   let safexDai = {
     data: {
@@ -49,14 +49,14 @@
       ),
       subtitle: "1 xDai ~ 1 USD",
       description:
-        "xDai balance: " +
+        "xDai balance on safe: " +
         parseFloat(web3.utils.fromWei(safeState.mySafeXDaiBalance)),
     },
   };
 
   let safeCirclesBalance = {
     data: {
-      image: "logos/circles.svg",
+      image: "logos/circles.png",
       title: "Circles",
       description: "Address: " + safeState.mySafeAddress,
       balance: "0",
