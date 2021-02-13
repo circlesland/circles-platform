@@ -2,6 +2,7 @@
   import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
   import { push } from "svelte-spa-router";
   import Icon from "fa-svelte";
+  import Login from "./Login.svelte";
 </script>
 
 <header class="text-primary font-primary">
@@ -12,7 +13,7 @@
       href="/"
       class="flex items-center mb-4 font-medium title-font text-primary md:mb-0"
     >
-      <img src="logos/logo_alpha.svg" alt="OMO" class="h-12" />
+      <img src="logos/circles.png" alt="Circles" class="h-12" />
     </a>
     <nav
       class="flex flex-wrap items-center justify-center text-base md:ml-auto"
@@ -33,12 +34,6 @@
         >visionpaper</a
       >
     </nav>
-    <button
-      on:click={() => push("#/omoli/dapps")}
-      class="inline-flex items-center px-2 py-1 mt-4 text-base font-bold text-white lowercase border-0 rounded-full bg-secondary focus:outline-none hover:bg-white hover:text-secondary hover:border hover:border-light-300 md:mt-0"
-    >
-      <img src="logos/logo_dark.svg" alt="omo" class="w-6 h-6" />
-      <span class="px-2">login</span>
-    </button>
+    <Login size="lg" />
   </div>
 </header>
