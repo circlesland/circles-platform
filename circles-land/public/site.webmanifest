@@ -1,6 +1,6 @@
 {
-    "name": "Omo Earth",
-    "short_name": "Omo Li",
+    "name": "Circles Land",
+    "short_name": "Circles Land",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -8,8 +8,8 @@
             "type": "image/png"
         },
         {
-            "src": "/android-chrome-512x512.png",
-            "sizes": "512x512",
+            "src": "/android-chrome-256x256.png",
+            "sizes": "256x256",
             "type": "image/png"
         }
     ],
