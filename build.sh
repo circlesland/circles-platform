@@ -80,8 +80,8 @@ cd omo-indexes || exit
 npx --no-install tsc || exit
 cd ../.. || exit
 
-echo "Building 'omo-shell' .."
-cd omo-shell || exit
+echo "Building 'circles-land' .."
+cd circles-land || exit
 npm run build
 cd .. || exit
 

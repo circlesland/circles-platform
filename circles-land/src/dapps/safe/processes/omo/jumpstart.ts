@@ -1,26 +1,26 @@
-import {assign, createMachine, send} from "xstate";
+import { assign, createMachine, send } from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import JumpstartIntro from "../../views/molecules/JumpstartIntro.svelte";
-import {strings} from "../../data/strings";
-import {transferJumpstartXDaiService} from "../../services/transferJumpstartXDaiService";
-import {getForeignProfileService} from "../../services/getForeignProfile";
+import { strings } from "../../data/strings";
+import { transferJumpstartXDaiService } from "../../services/transferJumpstartXDaiService";
+import { getForeignProfileService } from "../../services/getForeignProfile";
 import Web3 from "omo-quirks/dist/web3";
-import {OmoEvent} from "omo-events/dist/omoEvent";
-import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
-import {setError} from "omo-process/dist/actions/setError";
-import {Profile} from "omo-models/dist/omo/profile";
-import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
-import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
-import {inviteCredits} from "omo-process/dist/artifacts/inviteCredits";
-import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
-import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
-import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
-import {ProcessContext} from "omo-process/dist/interfaces/processContext";
-import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
-import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import { OmoEvent } from "omo-events/dist/omoEvent";
+import { sendInProgressPrompt } from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
+import { setError } from "omo-process/dist/actions/setError";
+import { Profile } from "omo-models/dist/omo/profile";
+import { sendPrompt } from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import { ethereumAddress } from "omo-process/dist/artifacts/ethereumAddress";
+import { inviteCredits } from "omo-process/dist/artifacts/inviteCredits";
+import { setProcessResult } from "omo-process/dist/actions/setProcessResult";
+import { sendSuccessPrompt } from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
+import { sendErrorPrompt } from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
+import { ProcessContext } from "omo-process/dist/interfaces/processContext";
+import { ProcessArtifact } from "omo-process/dist/interfaces/processArtifact";
+import { ProcessDefinition } from "omo-process/dist/interfaces/processManifest";
 
 export interface JumpstartContext extends ProcessContext {
-  web3:Web3;
+  web3: Web3;
   data: {
     foreignProfileFissionName?: ProcessArtifact,
     foreignProfile?: ProcessArtifact,
@@ -29,13 +29,12 @@ export interface JumpstartContext extends ProcessContext {
   }
 }
 
-
 // TODO: Add checks to prevent from answering the same request twice
 /**
  * Transfer jumpstart xDai
  */
 const str = strings.safe.processes.jumpstart;
-const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<JumpstartContext, OmoEvent>({
+const processDefinition = (progressView: any, successView: any, errorView: any) => createMachine<JumpstartContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
@@ -55,11 +54,11 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
           target: "error"
         },
         onDone: {
-          actions: assign((context:JumpstartContext, event:any) => {
-            context.data.foreignProfile  = {
-                key: "foreignProfile",
-                type: "omo.sapien:1:profile",
-                value: <Profile>event.data
+          actions: assign((context: JumpstartContext, event: any) => {
+            context.data.foreignProfile = {
+              key: "foreignProfile",
+              type: "omo.sapien:1:profile",
+              value: <Profile>event.data
             };
             return context;
           }),
@@ -92,7 +91,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
       entry: <any>sendPrompt((context: JumpstartContext) => {
         return {
           title: str.titleSummary(),
-          nextButtonTitle: "Use 1 invite credit",
+          nextButtonTitle: "Send xDai",
           canGoBack: true,
           banner: {
             component: Banner,

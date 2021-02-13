@@ -6,15 +6,15 @@
     faPlus,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "fa-svelte";
-  import {BN} from "ethereumjs-util";
-  import {onMount} from "svelte";
-  import {OmoSafeState} from "../../manifest";
-  import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
-  import {Contact} from "omo-models/dist/omo/contact";
-  import {config} from "omo-circles/dist/config";
-  import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import { BN } from "ethereumjs-util";
+  import { onMount } from "svelte";
+  import { OmoSafeState } from "../../manifest";
+  import { CirclesTransaction } from "omo-models/dist/circles/circlesTransaction";
+  import { Contact } from "omo-models/dist/omo/contact";
+  import { config } from "omo-circles/dist/config";
+  import { tryGetDappState } from "omo-kernel/dist/kernel";
 
-  export let transaction:CirclesTransaction;
+  export let transaction: CirclesTransaction;
 
   let safeState: OmoSafeState = {};
   let contacts: { [safeAddress: string]: Contact } = {};
@@ -23,18 +23,15 @@
   onMount(() => {
     contacts = {};
     safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-    safeState.myContacts.subscribe((contactList) =>
-    {
+    safeState.myContacts.subscribe((contactList) => {
       const newContacts = contactList.payload.filter(
         (contact) => !contacts[contact.safeAddress]
       );
-      if (newContacts.length == 0)
-      {
+      if (newContacts.length == 0) {
         return;
       }
 
-      newContacts.forEach((contact) =>
-      {
+      newContacts.forEach((contact) => {
         contacts[contact.safeAddress] = contact;
       });
 
@@ -42,70 +39,65 @@
     });
   });
 
-  function formatBN(bn: BN)
-  {
+  function formatBN(bn: BN) {
     return parseFloat(web3.utils.fromWei(bn)).toFixed(2);
   }
 
-  function formatBN2(bn: BN)
-  {
+  function formatBN2(bn: BN) {
     const digits = parseFloat(web3.utils.fromWei(bn)).toFixed(0).length;
     const bnStr = bn.toString();
     return bnStr.substring(0, digits) + "." + bnStr.substring(digits);
   }
 
-  function getProfile(safeAddress: string)
-  {
+  function getProfile(safeAddress: string) {
     const contact = contacts[safeAddress];
     const profile = {
       title: "",
-      image: ""
-    }
+      image: "",
+    };
 
-    if (contact && contact.omoProfile)
-    {
-      if (contact.omoProfile.avatarCid)
-      {
+    if (contact && contact.omoProfile) {
+      if (contact.omoProfile.avatarCid) {
         profile.image = contact.omoProfile.avatarCid;
       }
-      profile.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`
-    }
-    else if (contact && contact.circlesProfile)
-    {
+      profile.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`;
+    } else if (contact && contact.circlesProfile) {
       profile.image = contact.circlesProfile?.avatarUrl;
       profile.title = contact.circlesProfile.username;
-    }
-    else
-    {
+    } else {
       profile.title = safeAddress ? safeAddress.slice(0, 8) : "";
     }
 
-    if (!profile.image)
-    {
-      profile.image = "https://avatars.dicebear.com/api/avataaars/" + safeAddress + ".svg"
+    if (!profile.image) {
+      profile.image =
+        "https://avatars.dicebear.com/api/avataaars/" + safeAddress + ".svg";
     }
 
     return profile;
   }
 </script>
+
 <div class="mb-1">
   <div
     class="flex items-center w-full bg-white border rounded-xl border-light-200"
-    on:click={() => (transaction.openDetail = !transaction.openDetail)}>
-    <div
-      class="flex items-center justify-center w-10 text-sm text-light-400 ">
+    on:click={() => (transaction.openDetail = !transaction.openDetail)}
+  >
+    <div class="flex items-center justify-center w-10 text-sm text-light-400 ">
       {#if !transaction.openDetail}
         <Icon icon={faPlus} />
       {:else if transaction.openDetail}
         <Icon icon={faMinus} />
       {/if}
     </div>
-    <div
-      class="flex items-center flex-1 w-2/3 pb-1 pr-2 md:pb-2 md:pt-1">
+    <div class="flex items-center flex-1 w-2/3 pb-1 pr-2 md:pb-2 md:pt-1">
       <div>
         <b class="text-xs md:text-sm text-primary">
-          {#if transaction.from !== '0x0000000000000000000000000000000000000000'}
-            {transaction.direction === 'in' ? 'Incoming' : transaction.direction === 'out' ? 'Outgoing' : ""}
+          {#if transaction.from !== "0x0000000000000000000000000000000000000000"}
+            {transaction.direction === "in"
+              ? "Incoming"
+              : transaction.direction === "out"
+              ? "Outgoing"
+              : ""}
             {transaction.subject}
           {:else if transaction.from}
             Harvested Time
@@ -115,12 +107,12 @@
           {#if !transaction.timestamp}
             ...
           {:else}{dayjs(new Date(transaction.timestamp * 1000)).fromNow()}{/if}
-          {#if transaction.direction === 'in'}
-            {#if transaction.from !== '0x0000000000000000000000000000000000000000'}
+          {#if transaction.direction === "in"}
+            {#if transaction.from !== "0x0000000000000000000000000000000000000000"}
               from
               {getProfile(transaction.from).title}
             {:else}
-              from MamaOmo
+              from Circles
             {/if}
           {:else if transaction.direction === "out"}
             to
@@ -130,35 +122,40 @@
       </div>
     </div>
     <div class="flex items-center pt-1">
-      {#if transaction.direction === 'out'}
+      {#if transaction.direction === "out"}
         <div
-          class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-primary">
-          <span>-{formatBN(transaction.amount.mul(new BN(3)))}</span>
+          class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-primary"
+        >
+          <span>-{formatBN(transaction.amount)}</span>
         </div>
       {:else if transaction.direction === "in"}
         <div
-          class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-action">
-          {formatBN(transaction.amount.mul(new BN(3)))}
+          class="w-1/3 px-3 text-2xl font-light text-right md:text-3xl text-action"
+        >
+          {formatBN(transaction.amount)}
         </div>
       {/if}
     </div>
   </div>
   {#if transaction.openDetail}
     <div
-      class="flex max-w-full p-4 mx-4 text-gray-500 bg-white text-xxs md:text-sm">
+      class="flex max-w-full p-4 mx-4 text-gray-500 bg-white text-xxs md:text-sm"
+    >
       <div class="max-w-full text-gray-500 ">
         <div class="flex items-center mb-2">
           <div class="flex items-center justify-center">
-            {#if transaction.from === '0x0000000000000000000000000000000000000000'}
+            {#if transaction.from === "0x0000000000000000000000000000000000000000"}
               <img
-                src="symbols/o.svg"
+                src="logos/circles.svg"
                 alt="profile"
-                class="h-12 rounded-xl" />
+                class="h-12 rounded-xl"
+              />
             {:else if transaction.from}
               <img
                 src={getProfile(transaction.from).image}
                 alt="profile"
-                class="h-12 rounded-xl" />
+                class="h-12 rounded-xl"
+              />
             {/if}
           </div>
 
@@ -169,35 +166,33 @@
             <img
               src={getProfile(transaction.to).image}
               alt="profile"
-              class="h-12 rounded-xl" />
+              class="h-12 rounded-xl"
+            />
           </div>
         </div>
         <div class="max-w-full text-gray-500 ">
           Date:
           <span class=" text-primary">
-                    {dayjs(new Date(transaction.timestamp * 1000)).format('YYYY D. MMM HH:MM')}</span>
+            {dayjs(new Date(transaction.timestamp * 1000)).format(
+              "YYYY D. MMM HH:MM"
+            )}</span
+          >
         </div>
         <div>
           Sender:
           <span class=" text-primary">
-                    {getProfile(transaction.from).title}
-                  </span>
+            {getProfile(transaction.from).title}
+          </span>
         </div>
         <div class="max-w-full text-gray-500 ">
           Receiver:
           <span class=" text-primary">
-                    {getProfile(transaction.to).title}
-                  </span>
+            {getProfile(transaction.to).title}
+          </span>
         </div>
         <div class="max-w-full text-gray-500 ">
           Amount in circles:
           <span class=" text-primary">{formatBN2(transaction.amount)} CRC</span>
-        </div>
-        <div class="max-w-full text-gray-500 ">
-          Amount in ⦿:
-          <span
-            class=" text-primary">{formatBN2(transaction.amount.mul(new BN(3)))}
-            ⦿</span>
         </div>
       </div>
     </div>

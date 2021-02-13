@@ -1,11 +1,10 @@
 import BN from "omo-quirks/dist/BN";
-import {JumpstartContext} from "../processes/omo/jumpstart";
-import {OmoSafeState} from "../manifest";
-import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
-import {tryGetDappState} from "omo-kernel/dist/kernel";
+import { JumpstartContext } from "../processes/omo/jumpstart";
+import { OmoSafeState } from "../manifest";
+import { GnosisSafeProxy } from "omo-circles/dist/safe/gnosisSafeProxy";
+import { tryGetDappState } from "omo-kernel/dist/kernel";
 
-export const transferJumpstartXDaiService = async (context: JumpstartContext) =>
-{
+export const transferJumpstartXDaiService = async (context: JumpstartContext) => {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
   const web3 = context.web3;
@@ -17,6 +16,6 @@ export const transferJumpstartXDaiService = async (context: JumpstartContext) =>
 
   return await gnosisSafeProxy.transferEth(
     safeState.myKey.privateKey,
-    new BN(web3.utils.toWei((context.data.value.value / 100).toString(), "ether")),
+    new BN(web3.utils.toWei((context.data.value.value).toString(), "ether")),
     context.data.recipient.value);
 }

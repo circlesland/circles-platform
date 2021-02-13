@@ -1,11 +1,10 @@
 import BN from "omo-quirks/dist/BN";
-import {UnTrustContext} from "../processes/circles/unTrust";
-import {OmoSafeState} from "../manifest";
-import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
-import {tryGetDappState} from "omo-kernel/dist/kernel";
+import { UnTrustContext } from "../processes/circles/unTrust";
+import { OmoSafeState } from "../manifest";
+import { GnosisSafeProxy } from "omo-circles/dist/safe/gnosisSafeProxy";
+import { tryGetDappState } from "omo-kernel/dist/kernel";
 
-export const unTrustService = async (context: UnTrustContext) =>
-{
+export const unTrustService = async (context: UnTrustContext) => {
   const web3 = context.web3;
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const ownerAddress = context.web3

@@ -1,12 +1,12 @@
 import BN from "omo-quirks/dist/BN";
-import {TransferCirclesContext} from "../processes/circles/transferCircles";
-import {OmoSafeState} from "../manifest";
-import {GnosisSafeProxy} from "omo-circles/dist/safe/gnosisSafeProxy";
-import {CirclesTransaction} from "omo-models/dist/circles/circlesTransaction";
-import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
-import {EndSignal} from "omo-events/dist/signals/endSignal";
-import {tryGetDappState} from "omo-kernel/dist/kernel";
-import {TransitivePath} from "./findTransitivePath";
+import { TransferCirclesContext } from "../processes/circles/transferCircles";
+import { OmoSafeState } from "../manifest";
+import { GnosisSafeProxy } from "omo-circles/dist/safe/gnosisSafeProxy";
+import { CirclesTransaction } from "omo-models/dist/circles/circlesTransaction";
+import { ProgressSignal } from "omo-events/dist/signals/progressSignal";
+import { EndSignal } from "omo-events/dist/signals/endSignal";
+import { tryGetDappState } from "omo-kernel/dist/kernel";
+import { TransitivePath } from "./findTransitivePath";
 
 function sendMessage(message) {
   // This wraps the message posting/response in a promise, which will resolve if the response doesn't
@@ -34,8 +34,7 @@ function sendMessage(message) {
 }
 
 
-export const transferCirclesService = async (context: TransferCirclesContext) =>
-{
+export const transferCirclesService = async (context: TransferCirclesContext) => {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   const web3 = context.web3;
   const ownerAddress = context.web3
@@ -50,7 +49,7 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
     const circlesValueInWei = context.web3.utils
       .toWei(context.data.value.value.toString(), "ether")
       .toString();
-    const oValueInWei = new BN(circlesValueInWei).div(new BN("3"));
+    const oValueInWei = new BN(circlesValueInWei);
     /*
     const pathResult = await sendMessage({
       call: "findPath",
@@ -73,15 +72,14 @@ export const transferCirclesService = async (context: TransferCirclesContext) =>
     const values = [];
 
     const path = <TransitivePath>context.data.pathToRecipient.value;
-    path.transfers.forEach(transfer =>
-    {
+    path.transfers.forEach(transfer => {
       tokenOwners.push(transfer.tokenOwner);
       sources.push(transfer.from);
       destinations.push(transfer.to);
       values.push(new BN(transfer.value));
     });
 
-    const dummyTransaction:CirclesTransaction = {
+    const dummyTransaction: CirclesTransaction = {
       from: safeState.mySafeAddress,
       to: context.data.recipient.value,
       direction: "out",

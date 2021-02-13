@@ -1,19 +1,20 @@
-import { faCoins, faUserCircle, faPiggyBank, faUserFriends } from "@fortawesome/free-solid-svg-icons";
-import {requestUbi, RequestUbiContext} from "../processes/circles/requestUbi";
-import {transferCircles, TransferCirclesContext} from "../processes/circles/transferCircles";
-import {setTrust, SetTrustContext} from "../processes/circles/setTrust";
-import {sendInviteCredits, SendInviteCreditsContext} from "../processes/omo/sendInviteCredits";
-import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
-import {RunProcess} from "omo-process/dist/events/runProcess";
-import {tryGetDappState} from "omo-kernel/dist/kernel";
-import {OmoSafeState} from "../manifest";
-import {config} from "omo-circles/dist/config";
-import {deploySafe} from "../processes/safe/deploySafe";
-import {GnosisSafeProxyFactory} from "omo-circles/dist/safe/gnosisSafeProxyFactory";
-import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
+import { faCoins, faUserCircle, faPiggyBank, faUserFriends, faHome } from "@fortawesome/free-solid-svg-icons";
+import { requestUbi, RequestUbiContext } from "../processes/circles/requestUbi";
+import { transferCircles, TransferCirclesContext } from "../processes/circles/transferCircles";
+import { setTrust, SetTrustContext } from "../processes/circles/setTrust";
+import { sendInviteCredits, SendInviteCreditsContext } from "../processes/omo/sendInviteCredits";
+import { QuickAction } from "omo-kernel-interfaces/dist/quickAction";
+import { RunProcess } from "omo-process/dist/events/runProcess";
+import { tryGetDappState } from "omo-kernel/dist/kernel";
+import { OmoSafeState } from "../manifest";
+import { config } from "omo-circles/dist/config";
+import { deploySafe } from "../processes/safe/deploySafe";
+import { GnosisSafeProxyFactory } from "omo-circles/dist/safe/gnosisSafeProxyFactory";
+import { CirclesHub } from "omo-circles/dist/circles/circlesHub";
+import { push } from "svelte-spa-router";
 
 export const safeDefaultActions: QuickAction[] = [
-{
+  {
     type: "route",
     pos: "1",
     mapping: {
@@ -73,7 +74,7 @@ export const safeOverflowActions = [
         icon: faCoins
       },
       data: {
-        label: "Harvest new time"
+        label: "Harvest new basic income"
       }
     },
     event: () => new RunProcess<RequestUbiContext>(requestUbi, async ctx => {
@@ -90,7 +91,7 @@ export const safeOverflowActions = [
         icon: faCoins
       },
       data: {
-        label: "Send Invite Credits"
+        label: "Send xDai"
       }
     },
     event: () => new RunProcess<SendInviteCreditsContext>(sendInviteCredits, async processContext => {
@@ -106,7 +107,7 @@ export const safeOverflowActions = [
         icon: faCoins
       },
       data: {
-        label: "Send ⦿"
+        label: "Send Circles"
       }
     },
     event: () => new RunProcess<TransferCirclesContext>(transferCircles, async processContext => {
@@ -132,5 +133,17 @@ export const safeOverflowActions = [
       return context;
     })
   },
-
+  {
+    type: "trigger",
+    pos: "overflow",
+    mapping: {
+      design: {
+        icon: faHome,
+      },
+      data: {
+        label: "Back to home",
+      }
+    },
+    event: () => push("#/omoli/dapps")
+  },
 ];
