@@ -8,22 +8,24 @@
     "node": ">=12.19.0"
   },
   "scripts": {
-    "prisma-generate": "npx prisma generate --schema src/schema.prisma",
+    "prisma-generate": "npx prisma generate --schema schema.prisma",
     "graphql-generate": "npx graphql-codegen"
   },
   "author": "https://github.com/jaensen",
   "license": "AGPL-3",
   "dependencies": {
     "@prisma/client": "^2.16.1",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "apollo-server": "^2.21.0",
+    "graphql": "^15.5.0",
+    "graphql-import": "^1.0.2",
+    "omo-ucan": "0.1.212"
   },
   "devDependencies": {
     "omo-ucan": "0.1.212",
-    "@graphql-codegen/cli": "^1.20.1",
-    "@graphql-codegen/typescript": "^1.20.2",
-    "@graphql-codegen/typescript-resolvers": "^1.18.1",
+    "@graphql-codegen/cli": "^1.17.8",
+    "@graphql-codegen/introspection": "^1.18.1",
+    "@graphql-codegen/typescript": "^1.21.0",
+    "@graphql-codegen/typescript-resolvers": "^1.18.2",
     "@types/node": "^14.0.1",
     "prisma": "^2.16.1",
     "ts-node": "^9.1.1",
