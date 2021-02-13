@@ -1,7 +1,7 @@
-import { CreateOmoSapienContext } from "../createOmoSapien";
+import { CreateOmoSapienContext } from "../processes/createOmoSapien/createOmoSapien";
 import Avatars from "@dicebear/avatars";
 import sprites from "@dicebear/avatars-avataaars-sprites";
-import {OmoSapienState} from "../../../manifest";
+import {OmoSapienState} from "../manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Profile} from "omo-models/dist/omo/profile";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
@@ -21,18 +21,18 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
     const fissionUsername = fissionDrive.username;
 
     const hasAvatar = await fissionDrive.fs.exists(fissionDrive.profiles.getPath(["me.png"]));
-    let avatarDataUrl = context.data.avatar ? context.data.avatar.value : null
+    let avatarBytes = context.data.avatar ? context.data.avatar.value : null
 
-    if (!hasAvatar && !avatarDataUrl) {
+    if (!hasAvatar && !avatarBytes) {
       let avatars = new Avatars(sprites);
       let svg = avatars.create(fissionUsername);
       let dataUri = `data:image/svg+xml;base64,${btoa(svg)}`;
-      avatarDataUrl = dataUri;
+      avatarBytes = dataUri;
     }
 
-    if (avatarDataUrl)
+    if (avatarBytes)
     {
-      const avatarBuffer = Buffer.from(avatarDataUrl.split(",")[1], 'base64');
+      const avatarBuffer = Buffer.from(avatarBytes);
       await fissionDrive.profiles.addOrUpdateMyAvatar(avatarBuffer, false);
     }
 

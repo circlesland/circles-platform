@@ -1,0 +1,32 @@
+{
+  "name": "omo-central",
+  "version": "1.0.0",
+  "description": "A directory service that keeps track of profile and offer CIDs",
+  "main": "dist/index.js",
+  "prepublish": "tsc",
+  "engines": {
+    "node": ">=12.19.0"
+  },
+  "scripts": {
+    "prisma-generate": "npx prisma generate --schema src/schema.prisma",
+    "graphql-generate": "npx graphql-codegen"
+  },
+  "author": "https://github.com/jaensen",
+  "license": "AGPL-3",
+  "dependencies": {
+    "@prisma/client": "^2.16.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "omo-ucan": "0.1.212",
+    "@graphql-codegen/cli": "^1.20.1",
+    "@graphql-codegen/typescript": "^1.20.2",
+    "@graphql-codegen/typescript-resolvers": "^1.18.1",
+    "@types/node": "^14.0.1",
+    "prisma": "^2.16.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  }
+}

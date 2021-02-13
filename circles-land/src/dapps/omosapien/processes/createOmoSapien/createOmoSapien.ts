@@ -2,7 +2,7 @@ import { createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import Success from "../../../../libs/o-views/atoms/Success.svelte"
 import { strings } from "../../data/strings";
-import { addOrUpdateMyProfileService } from "./services/addOrUpdateMyProfileService";
+import { addOrUpdateMyProfileService } from "../../services/addOrUpdateMyProfileService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";

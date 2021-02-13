@@ -1,7 +1,7 @@
 {
   "packages": [
     "packages/*",
-    "omo-shell"
+    "circles-land"
   ],
   "version": "0.0.1"
 }

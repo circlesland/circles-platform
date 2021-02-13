@@ -1,0 +1,22 @@
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://postgres:postgres@localhost:5432/omo-central?schema=public"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Profile {
+  // TODO: Is this always the same? Even for different devices?
+  // did String
+  fissionName String
+  fissionRoot String
+  circlesAddress String
+  omoFirstName String
+  omoLastName String
+  omoAvatarCID String
+  // @@unique([did], name:"UX_Profile_did")
+  @@unique([fissionName], name:"UX_Profile_fissionName")
+  @@unique([circlesAddress], name:"UX_Profile_circlesAddress")
+}
