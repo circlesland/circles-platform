@@ -10,7 +10,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
       - name: Build
-        run: ./build.sh
+        run: chmod +x ./build.sh && ./build.sh
       - name: Generate Fission App
         run: ./generate_fission_yml.sh
       - name: Publish
