@@ -1,0 +1,10 @@
+mutation updateProfile($jwt:String! $data:UpdateProfileFields!) {
+    updateProfile(jwt: $jwt data: $data) {
+        circlesAddress
+        fissionName
+        fissionRoot
+        omoAvatarCID
+        omoFirstName
+        omoLastName
+    }
+}

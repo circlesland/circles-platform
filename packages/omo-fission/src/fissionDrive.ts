@@ -82,7 +82,7 @@ export class FissionDrive
 }
 let initializingDrive:boolean = false;
 
-export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>) : Promise<TOut>
+export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>, authenticateIfNecessary:boolean = true) : Promise<TOut>
 {
   let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   if (!fissionAuthState)
@@ -102,10 +102,16 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
 
   if (!fissionAuthState.fission)
   {
-    fissionAuthState.fission = new OmoBehaviorSubject<StatePropagation<FissionDrive>>({
-      signal: new UnavailableSignal(),
-      payload: undefined
-    });
+    if (authenticateIfNecessary) {
+      fissionAuthState.fission = new OmoBehaviorSubject<StatePropagation<FissionDrive>>({
+        signal: new UnavailableSignal(),
+        payload: undefined
+      });
+    }
+    else
+    {
+      throw new Error(`Not authenticated`)
+    }
   }
 
   const existingDrive = fissionAuthState.fission.getValue()?.payload;

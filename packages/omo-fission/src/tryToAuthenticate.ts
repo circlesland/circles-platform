@@ -1,9 +1,37 @@
-import {FissionDrive} from "./fissionDrive";
+import {FissionDrive, runWithDrive} from "./fissionDrive";
 import {initialise, redirectToLobby, Scenario, State} from "omo-webnative/dist";
 import {configure} from "omo-webnative/dist/setup";
+import {omoCentralClient} from "omo-central-client/dist/omoCentralClient";
 
 configure({
-  enableDebugMode: true
+  enableDebugMode: true,
+  additionalDnsLinkResolver:async  fissionUsername => {
+    const cid = await omoCentralClient.fissionRoot({
+      fields: {
+        fissionName: fissionUsername
+      }
+    });
+
+    return cid.data?.fissionRoot ?? "";
+  },
+  additionalDnsLinkUpdater: async (jwt, cid) => {
+    runWithDrive(async drive => {
+      const myProfile = await drive.profiles?.tryGetMyProfile();
+      if (!myProfile)
+        return;
+
+      omoCentralClient.updateProfile({
+        jwt: jwt,
+        data: {
+          circlesAddress: myProfile.circlesAddress,
+          fissionRoot: cid,
+          omoAvatarCID: "",
+          omoFirstName: myProfile.firstName,
+          omoLastName: myProfile.lastName
+        }
+      })
+    }, false);
+  }
 })
 
 export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = true) : Promise<{

@@ -40,6 +40,10 @@
 		"omo-quirks": "1.0.0"
 	},
 	"devDependencies": {
+		"@graphql-codegen/cli": "^1.17.10",
+		"@graphql-codegen/typescript": "^1.17.10",
+		"@graphql-codegen/typescript-graphql-request": "^2.0.1",
+		"@graphql-codegen/typescript-operations": "^1.17.8",
 		"@fortawesome/free-solid-svg-icons": "^5.15.1",
 		"@tsconfig/svelte": "^1.0.10",
 		"@types/web3": "^1.2.2",

@@ -1,6 +1,6 @@
 type Omo {
     # Omo's DID
-    did:String
+    did:String!
 }
 
 type Profile {
@@ -56,12 +56,12 @@ type Query
     omo : Omo
     # Queries the directory for profiles that match one or more of the given field values.
     # All fields except "did" and "circlesAddress" are matched with 'startsWith'.
-    profiles(fields:ProfileQueryFields) : [Profile!]!
+    profiles(fields:ProfileQueryFields!) : [Profile!]!
     # Gets the root fs CID for a unique profile
-    fissionRoot(fields:UniqueProfileFields) : String
+    fissionRoot(fields:UniqueProfileFields!) : String!
 }
 
 type Mutation
 {
-    updateProfile(jwt:String, data:UpdateProfileFields):Profile
+    updateProfile(jwt:String!, data:UpdateProfileFields!):Profile!
 }

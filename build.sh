@@ -9,13 +9,12 @@ npx --no-install lerna bootstrap || exit
 echo "Building 'webnative' .."
 cd packages/omo-webnative || exit
 npm install
-npm build
-npx --no-install tsc
+npm run build
 
 cd ../..
 
 echo "Cleaning all 'omo-*/dist' directories  .."
-rm -r omo-shell/dist
+rm -r circles-land/dist
 rm -r packages/omo-circles/dist
 rm -r packages/omo-directory/dist
 rm -r packages/omo-events/dist

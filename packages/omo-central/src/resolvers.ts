@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import {Profile, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
+import {QueryProfilesArgs, RequireFields, Resolvers} from "./types";
 import {verifyUcan} from "omo-ucan/dist/index";
 
 const prisma = new PrismaClient()
