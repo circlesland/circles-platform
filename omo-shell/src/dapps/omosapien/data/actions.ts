@@ -1,7 +1,9 @@
-import { faUserCircle, faUserAstronaut, faKey, faCoins, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { updateOmoSapien } from "../processes/updateOmoSapien/updateOmoSapien";
+import {faUserCircle, faUserAstronaut, faKey, faCoins, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {updateOmoSapien, UpdateOmoSapienContext} from "../processes/updateOmoSapien/updateOmoSapien";
 import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 import {RunProcess} from "omo-process/dist/events/runProcess";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
+import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 
 export const omoSapienDefaultActions: QuickAction[] = [
   {
@@ -66,6 +68,29 @@ export const omoSapienOverflowActions: QuickAction[] = [{
       label: "Update Profile",
     }
   },
-  event: () => new RunProcess(updateOmoSapien)
-},
-];
+  event: () => new RunProcess<UpdateOmoSapienContext>(updateOmoSapien, async (ctx) => {
+    await runWithDrive(async fissionDrive => {
+      const existingProfile = await fissionDrive.profiles.tryGetMyProfile();
+      if (!existingProfile) {
+        return;
+      }
+      ctx.data.firstName = <ProcessArtifact>{
+        key: "firstName",
+        type: "string",
+        value: existingProfile.firstName
+      };
+      ctx.data.lastName = <ProcessArtifact>{
+        key: "lastName",
+        type: "string",
+        value: existingProfile.lastName
+      };
+      const myAvatar = await fissionDrive.profiles.tryGetMyAvatarAsBuffer();
+      ctx.data.avatar = <ProcessArtifact>{
+        key: "lastName",
+        type: "string",
+        value: myAvatar
+      };
+    });
+    return ctx;
+  })
+}];

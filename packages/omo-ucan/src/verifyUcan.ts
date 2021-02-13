@@ -1,9 +1,13 @@
-import {UcanHeader, UcanPayload} from "./types";
+import {Ucan, UcanHeader, UcanPayload} from "./types";
 import {didToPublicKey} from "./didHelper";
 import {decodeUcan, findRootIssuer, makeUrlUnsafe} from "./decodeUcan";
 import crypto from "crypto";
 
-export async function verifyUcan(ucan:string, myDid:string) : Promise<string[]>
+export async function verifyUcan(ucan:string, myDid:string) : Promise<{
+    isValid: boolean
+    errors: string[]
+    decoded: Ucan
+}>
 {
     const decodedUcan = decodeUcan(ucan)
     if (typeof decodedUcan !== "object")
@@ -118,7 +122,11 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<string[]>
         }
     }
 
-    return errors;
+    return {
+        isValid: errors.length == 0,
+        errors: errors,
+        decoded: decodedUcan,
+    };
 }
 
 

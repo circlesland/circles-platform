@@ -23,7 +23,7 @@
     {
       if (fissionDrive.username == fissionUsername)
       {
-        dataUrl = await fissionDrive.profiles.tryGetMyAvatar();
+        dataUrl = await fissionDrive.profiles.tryGetMyAvatarDataUrl();
       }
       else
       {
