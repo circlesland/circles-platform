@@ -12,7 +12,7 @@ jobs:
       - name: Build
         run: chmod +x ./build.sh && ./build.sh
       - name: Generate Fission App
-        run: ./generate_fission_yml.sh
+        run: chmod +x ./generate_fission_yml.sh && ./generate_fission_yml.sh
       - name: Publish
         uses: fission-suite/publish-action@v1
         with:
