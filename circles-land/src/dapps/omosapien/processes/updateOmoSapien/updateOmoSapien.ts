@@ -1,7 +1,7 @@
-import { createMachine, send } from "xstate";
+import {assign, createMachine, send} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte"
 import { strings } from "../../data/strings";
-import { addOrUpdateMyProfileService } from "../createOmoSapien/services/addOrUpdateMyProfileService";
+import { addOrUpdateMyProfileService } from "../../services/addOrUpdateMyProfileService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";
@@ -14,6 +14,7 @@ import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 import {file} from "omo-process/dist/artifacts/file";
+import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
 export interface UpdateOmoSapienContext extends ProcessContext {
   data: {
@@ -28,7 +29,6 @@ const str = strings.omosapien.processes.createOmoSapien;
 const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<UpdateOmoSapienContext, OmoEvent>({
   initial: "idle",
   states: {
-
     idle: {
       on: {
         "process.continue": "promptFirstName"
@@ -46,7 +46,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
             }
           },
           artifacts: {
-            ...textLine("firstName", undefined, undefined, false)
+            ...textLine("firstName", undefined, undefined, false, context.data.firstName.value)
           }
         }
       }),
@@ -71,7 +71,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
             }
           },
           artifacts: {
-            ...textLine("lastName", undefined, undefined, true)
+            ...textLine("lastName", undefined, undefined, true, context.data.lastName.value)
           }
         }
       }),

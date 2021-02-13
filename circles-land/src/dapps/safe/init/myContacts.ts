@@ -72,7 +72,8 @@ const augmentOmoProfiles = new DelayedTrigger(30, async () =>
           {
             o.omoProfile = {
               profile: omosapienState.myProfile,
-              avatarCid: await fissionDrive.profiles.tryGetMyAvatar()
+              // TODO: Get my own avatar CID
+              avatarCid: await fissionDrive.profiles.tryGetMyAvatarDataUrl()
             };
           }
           else

@@ -20,6 +20,7 @@
 
   $: {
     if (processArtifact) {
+      console.log("StringEditor.processArtifact:", processArtifact);
       validate();
     }
   }

@@ -12,7 +12,18 @@ export class Profiles extends Directory<Profile>
     return await this.tryGetEntityByName("me");
   }
 
-  async tryGetMyAvatar(): Promise<string | null>
+  async tryGetMyAvatarDataUrl(): Promise<string | null>
+  {
+    const data = await this.tryGetMyAvatarAsBuffer();
+    if (Buffer.isBuffer(data))
+    {
+      return `data:image/png;base64,${data.toString('base64')}`;
+    } else {
+      throw new Error("Returned data is not a Buffer.");
+    }
+  }
+
+  async tryGetMyAvatarAsBuffer(): Promise<Buffer | null>
   {
     const path = this.getPath(["me.png"]);
     if (!(await this.fs.exists(path)))
@@ -22,7 +33,7 @@ export class Profiles extends Directory<Profile>
     const data = await this.fs.cat(path);
     if (Buffer.isBuffer(data))
     {
-      return `data:image/png;base64,${data.toString('base64')}`;
+      return data;
     } else {
       throw new Error("Returned data is not a Buffer.");
     }

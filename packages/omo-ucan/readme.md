@@ -1,6 +1,8 @@
 # UCANs for NodeJS
 Provides dependency-free functions to create and validate UCANs in NodeJS.  
 
+Whats a UCAN? See Fission's Blog post: [UCAN: Authorizing Users Without a Back End](https://blog.fission.codes/auth-without-backend/)
+
 *Warning: This is still work in progress (It doesn't yet validate the 'fct', 'rsc', 'prf' and 'ptc' claims and it's RSA only).*
 ### Create a UCAN
 ```typescript
