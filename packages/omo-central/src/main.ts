@@ -7,10 +7,12 @@ import {Resolvers} from "./types";
 import {RequestContext} from "./requestContext";
 
 const corsOrigins = [
-    "localhost",
-    "omo.local",
-    "omo.li",
-    "circles.land"
+    "http://localhost:5000",
+    "https://localhost:5000",
+    "http://omo.local:5000",
+    "https://omo.local:5000",
+    "https://omo.li",
+    "https://circles.land"
 ];
 
 export class Main

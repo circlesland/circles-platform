@@ -4,7 +4,7 @@ query omo {
     }
 }
 
-query profiles($fields:ProfileQueryFields) {
+query profiles($fields:ProfileQueryFields!) {
     profiles(fields: $fields) {
         circlesAddress
         fissionName
@@ -15,6 +15,6 @@ query profiles($fields:ProfileQueryFields) {
     }
 }
 
-query fissionRoot($fields:UniqueProfileFields) {
+query fissionRoot($fields:UniqueProfileFields!) {
     fissionRoot(fields: $fields)
 }

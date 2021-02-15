@@ -21,7 +21,7 @@ export type Scalars = {
 
 export type Omo = {
   __typename?: 'Omo';
-  did?: Maybe<Scalars['String']>;
+  did: Scalars['String'];
 };
 
 export type Profile = {
@@ -58,28 +58,28 @@ export type Query = {
   __typename?: 'Query';
   omo?: Maybe<Omo>;
   profiles: Array<Profile>;
-  fissionRoot?: Maybe<Scalars['String']>;
+  fissionRoot: Scalars['String'];
 };
 
 
 export type QueryProfilesArgs = {
-  fields?: Maybe<ProfileQueryFields>;
+  fields: ProfileQueryFields;
 };
 
 
 export type QueryFissionRootArgs = {
-  fields?: Maybe<UniqueProfileFields>;
+  fields: UniqueProfileFields;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  updateProfile?: Maybe<Profile>;
+  updateProfile: Profile;
 };
 
 
 export type MutationUpdateProfileArgs = {
-  jwt?: Maybe<Scalars['String']>;
-  data?: Maybe<UpdateProfileFields>;
+  jwt: Scalars['String'];
+  data: UpdateProfileFields;
 };
 
 export enum CacheControlScope {
@@ -96,10 +96,10 @@ export type UpdateProfileMutationVariables = Exact<{
 
 export type UpdateProfileMutation = (
   { __typename?: 'Mutation' }
-  & { updateProfile?: Maybe<(
+  & { updateProfile: (
     { __typename?: 'Profile' }
     & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCID' | 'omoFirstName' | 'omoLastName'>
-  )> }
+  ) }
 );
 
 export type OmoQueryVariables = Exact<{ [key: string]: never; }>;
@@ -114,7 +114,7 @@ export type OmoQuery = (
 );
 
 export type ProfilesQueryVariables = Exact<{
-  fields?: Maybe<ProfileQueryFields>;
+  fields: ProfileQueryFields;
 }>;
 
 
@@ -127,7 +127,7 @@ export type ProfilesQuery = (
 );
 
 export type FissionRootQueryVariables = Exact<{
-  fields?: Maybe<UniqueProfileFields>;
+  fields: UniqueProfileFields;
 }>;
 
 
@@ -157,7 +157,7 @@ export const OmoDocument = gql`
 }
     `;
 export const ProfilesDocument = gql`
-    query profiles($fields: ProfileQueryFields) {
+    query profiles($fields: ProfileQueryFields!) {
   profiles(fields: $fields) {
     circlesAddress
     fissionName
@@ -169,7 +169,7 @@ export const ProfilesDocument = gql`
 }
     `;
 export const FissionRootDocument = gql`
-    query fissionRoot($fields: UniqueProfileFields) {
+    query fissionRoot($fields: UniqueProfileFields!) {
   fissionRoot(fields: $fields)
 }
     `;
@@ -186,10 +186,10 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     omo(variables?: OmoQueryVariables): Promise<{ data?: OmoQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<OmoQuery>(print(OmoDocument), variables));
     },
-    profiles(variables?: ProfilesQueryVariables): Promise<{ data?: ProfilesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+    profiles(variables: ProfilesQueryVariables): Promise<{ data?: ProfilesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ProfilesQuery>(print(ProfilesDocument), variables));
     },
-    fissionRoot(variables?: FissionRootQueryVariables): Promise<{ data?: FissionRootQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+    fissionRoot(variables: FissionRootQueryVariables): Promise<{ data?: FissionRootQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<FissionRootQuery>(print(FissionRootDocument), variables));
     }
   };

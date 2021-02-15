@@ -70,7 +70,7 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
       entry: <any>sendPrompt((context: JumpstartContext) => {
         return {
           title: str.titleIntro(),
-          nextButtonTitle: `Empower ${context.data.foreignProfile.value.profile.firstName} ${context.data.foreignProfile.value.profile.lastName}`,
+          nextButtonTitle: `Empower ${context.data.foreignProfile.value.firstName} ${context.data.foreignProfile.value.lastName}`,
           banner: {
             component: JumpstartIntro,
             data: {

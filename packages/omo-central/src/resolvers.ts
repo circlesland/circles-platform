@@ -28,7 +28,7 @@ function createWhereObject(args: RequireFields<QueryProfilesArgs, never>) {
     return q;
 }
 
-const serverDid = "did:key:z13V3Sog2YaUKhdGCmgx9UZuW1o1ShFJYc6DvGYe7NTt689NoL3BXcUQBZ85Rhs2NFwee4cjCvPSuf3aHu7DHzg5MCZnFwZ5ae2aeCEyatEK8bZwdMHfTgHqeoAjCkYYsq6QGtDfjNDxoqRwv4zFqvQDf7qWmJpxWVae75fmZY6kSSnGzsTmmzPBAbF6zqT5p6Xr4GXypQUBmHrwW7M5wpBFs8RsUQdF7n3JbCAwzBWsQGgrvdyFm6hQCN7qyBpgsh3jjnVi32uQkUu98ZCPTT5DWni2mynFNFMXKP3Rqv8a1doM19JPNu6HyxwupGZ7tyqrRZvQvRQStEMPsDBvsbxmJhwEmq69it7V6Y4fi8VwBrrK4gfBW2AMJpa1qfHHUP9ZBWVYYGwuSMPJ4c19Xe8";
+const serverDid = "did:key:zStEZpzSMtTt9k2vszgvCwF4fLQQSyA15W5AQ4z3AR6Bx4eFJ5crJFbuGxKmbma4";
 
 export const resolvers : Resolvers = {
     Query: {
@@ -84,10 +84,16 @@ export const resolvers : Resolvers = {
                 throw new Error(`Invalid ucan.`);
             }
 
-            const fissionNameFromUcan = verifyResult.decoded.payload.rsc.toString();
+            const fissionNameFromUcan = <Record<string,string>>verifyResult.decoded.payload.rsc;
+            const fissionUsername = fissionNameFromUcan["username"];
+            if (!fissionUsername || fissionUsername.trim() == "")
+            {
+                throw new Error("No fission username was included in the UCAN's 'rsc'-claim. The 'rsc' claim must contain an object with 'username' property.")
+            }
+
             let profile = await prisma.profile.findUnique({
                 where:{
-                    fissionName: fissionNameFromUcan
+                    fissionName: fissionUsername
                 },
                 select: {
                     fissionName: true,
@@ -103,7 +109,7 @@ export const resolvers : Resolvers = {
             {
                 profile = {
                     circlesAddress: args.data.circlesAddress ?? "",
-                    fissionName: verifyResult.decoded.payload.rsc.toString(),
+                    fissionName: fissionUsername,
                     fissionRoot: args.data.fissionRoot ?? null,
                     omoAvatarCID: args.data.omoAvatarCID ?? null,
                     omoFirstName: args.data.omoFirstName ?? null,

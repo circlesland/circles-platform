@@ -6,6 +6,7 @@ import * as ucan from './ucan'
 import { CID } from './ipfs'
 import { Maybe, api } from './common'
 import { setup } from './setup/internal'
+import {authenticatedUsername} from "./auth";
 
 /**
  * CID representing an empty string. We use to to speed up DNS propagation
@@ -49,13 +50,20 @@ export async function lookupOnFisson(
     try
     {
       logger.log("A custom 'additionalDnsLinkResolver' was provided. Calling it now for: ", username)
-      await setup.additionalDnsLinkResolver(username)
+      const cid = await setup.additionalDnsLinkResolver(username)
+      if (cid !== "" && !cid)
+      {
+        logger.log("Using the result of 'additionalDnsLinkResolver':", cid)
+        return cid;
+      }
     }
     catch (e)
     {
       logger.log("ERROR: The custom 'additionalDnsLinkResolver' failed to execute: ", e)
     }
   }
+
+  logger.log("The 'additionalDnsLinkResolver' didn't return a cid. Using the default lookupOnFission logic ..");
   try {
     const resp = await fetch(
       `${setup.endpoints.api}/user/data/${username}`,
@@ -91,7 +99,6 @@ export async function update(
   // Debug
   logger.log("🚀 Updating your DNSLink:", cid)
 
-
   const jwt = await ucan.build({
     audience: await api.did(),
     issuer: await did.ucan(),
@@ -101,6 +108,29 @@ export async function update(
     //       Should be `username.fission.name/*`
     resource: ucan.decode(proof).payload.rsc
   });
+
+  const customJwt = await ucan.build({
+    audience: await api.did(),
+    issuer: await did.ucan(),
+    potency: "APPEND",
+    proof,
+    resource: {
+      "username": (await authenticatedUsername()) ?? ""
+    }
+  });
+
+  if (setup.additionalDnsLinkUpdater)
+  {
+    try
+    {
+      logger.log("A custom 'additionalDnsLinkUpdater' was provided. Calling it now for: ", cid)
+      setup.additionalDnsLinkUpdater(customJwt, cid)
+    }
+    catch (e)
+    {
+      logger.log("ERROR: The custom 'additionalDnsLinkUpdater' failed to execute: ", e)
+    }
+  }
 
   // Make API call
   await fetchWithRetry(`${apiEndpoint}/user/data/${cid}`, {
@@ -120,20 +150,6 @@ export async function update(
     logger.log("🔥 Failed to update DNSLink for:", cid)
     console.error(err)
   });
-
-
-  if (setup.additionalDnsLinkUpdater)
-  {
-    try
-    {
-      logger.log("A custom 'additionalDnsLinkUpdater' was provided. Calling it now for: ", cid)
-      await setup.additionalDnsLinkUpdater(jwt, cid)
-    }
-    catch (e)
-    {
-      logger.log("ERROR: The custom 'additionalDnsLinkUpdater' failed to execute: ", e)
-    }
-  }
 }
 
 // ㊙️

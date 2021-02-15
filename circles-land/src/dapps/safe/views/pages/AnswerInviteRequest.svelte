@@ -6,6 +6,7 @@
   import {jumpstart, JumpstartContext} from "../../processes/omo/jumpstart";
   import {CloseModal} from "omo-events/dist/shell/closeModal";
   import {RunProcess} from "omo-process/dist/events/runProcess";
+  import {config} from "omo-circles/dist/config";
 
   export let params: {
     from?:string
@@ -45,6 +46,7 @@
           isReadonly: true,
           value: params.name
         };
+        context.web3 = config.getCurrent().web3();
         return context;
       }));
     }, 10);

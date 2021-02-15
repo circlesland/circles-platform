@@ -6,7 +6,8 @@ import crypto from "crypto";
 export async function verifyUcan(ucan:string, myDid:string) : Promise<{
     isValid: boolean
     errors: string[]
-    decoded: Ucan
+    decoded: Ucan,
+
 }>
 {
     const decodedUcan = decodeUcan(ucan)

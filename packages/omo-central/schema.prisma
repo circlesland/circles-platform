@@ -18,5 +18,4 @@ model Profile {
   omoAvatarCID String?
   // @@unique([did], name:"UX_Profile_did")
   @@unique([fissionName], name:"UX_Profile_fissionName")
-  @@unique([circlesAddress], name:"UX_Profile_circlesAddress")
 }
