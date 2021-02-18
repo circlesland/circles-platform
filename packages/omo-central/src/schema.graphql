@@ -21,6 +21,21 @@ type Profile {
     omoAvatarCID:String
 }
 
+type Offer {
+    id: Int!
+    createdBy: Profile!
+    publishedAt: String!
+    unpublishedAt: String
+    title: String!
+    price: String!
+    deliveryTerms: String!
+    pictures: [OfferPicture!]!
+}
+
+type OfferPicture {
+    pictureCid: String!
+}
+
 input UniqueProfileFields
 {
     #did: String
@@ -51,6 +66,23 @@ input UpdateProfileFields
     omoAvatarCID:String
 }
 
+input OfferPictureInput
+{
+    pictureCid:String!
+}
+
+input CreateOfferFields
+{
+    title:String!
+    price:String!
+    deliveryTerms:String!
+    description:String
+    category:String
+    country:String
+    city:String
+    pictures:[OfferPictureInput!]!
+}
+
 type Query
 {
     omo : Omo
@@ -64,4 +96,5 @@ type Query
 type Mutation
 {
     updateProfile(jwt:String!, data:UpdateProfileFields!):Profile!
+    createOffer(jwt:String!, data:CreateOfferFields):Offer!
 }

@@ -1,0 +1,15 @@
+name: Prisma
+on: [push, pull_request]
+jobs:
+  prisma_job:
+    name: "Prisma"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+      - name: Build
+        run: ./deploy_prisma.sh
+        env:
+          DO_PGSQL_CONNECTIONSTRING: ${{ secrets.DO_PGSQL_CONNECTIONSTRING }}

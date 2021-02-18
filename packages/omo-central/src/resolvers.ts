@@ -84,6 +84,8 @@ export const resolvers : Resolvers = {
                 throw new Error(`Invalid ucan.`);
             }
 
+            console.log(verifyResult.decoded);
+
             const fissionNameFromUcan = <Record<string,string>>verifyResult.decoded.payload.rsc;
             const fissionUsername = fissionNameFromUcan["username"];
             if (!fissionUsername || fissionUsername.trim() == "")

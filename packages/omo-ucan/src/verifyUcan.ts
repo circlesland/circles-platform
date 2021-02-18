@@ -78,11 +78,11 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<{
         errors.push(`Invalid audience. I'm '${myDid}', you wanted '${aud}'.`);
     }
 
+
     const rootIss = findRootIssuer(ucan);
     if (iss !== rootIss)
     {
         // TODO: Check if the "prf" is valid
-
         let rootIssuerPublicKey: Buffer|null = null;
         try
         {
@@ -92,6 +92,8 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<{
         {
             errors.push(`Couldn't extract the public key of the root issuer from the 'prf' claim:` + e.message);
         }
+
+
     }
 
     let issuerPublicKey: Buffer|null = null;
@@ -141,7 +143,7 @@ export function stripPem(pem:string)
 }
 
 export function formatAsPem(str:string) {
-    var finalString = '-----BEGIN PUBLIC KEY-----\n';
+    let finalString = '-----BEGIN PUBLIC KEY-----\n';
 
     while(str.length > 0) {
         finalString += str.substring(0, 64) + '\n';

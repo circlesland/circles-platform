@@ -1,6 +1,6 @@
 datasource db {
     provider = "postgresql"
-    url      = "postgresql://postgres:postgres@localhost:5432/omo-central?schema=public"
+    url = "123"
 }
 
 generator client {
@@ -8,14 +8,39 @@ generator client {
 }
 
 model Profile {
-  // TODO: Is this always the same? Even for different devices?
-  // did String
-  fissionName String
-  fissionRoot String?
-  circlesAddress String?
-  omoFirstName String?
-  omoLastName String?
-  omoAvatarCID String?
-  // @@unique([did], name:"UX_Profile_did")
-  @@unique([fissionName], name:"UX_Profile_fissionName")
+    // TODO: Is this always the same? Even for different devices?
+    // did String
+    fissionName String
+    fissionRoot String?
+    circlesAddress String?
+    omoFirstName String?
+    omoLastName String?
+    offers Offer[]
+    @@unique([fissionName], name:"UX_Profile_fissionName")
+}
+
+model Offer {
+    id Int @id @default(autoincrement())
+    createdBy Profile @relation(name: "OfferCreatedBy", fields: [createdByFissionName], references: [fissionName])
+    createdByFissionName String
+
+    publishedAt DateTime
+    unpublishedAt DateTime?
+
+    title String
+    price String            // price in wei
+    deliveryTerms String    // pickup, delivery etc.
+    pictures OfferPicture[]
+
+    description String?
+    category String?
+    country String?
+    city String?
+}
+
+model OfferPicture {
+    offer Offer  @relation(name: "PictureOfOffer", fields: [offerId], references: [id])
+    offerId Int
+    pictureCid String
+    @@unique([offerId, pictureCid], name:"UX_OfferPicture")
 }
