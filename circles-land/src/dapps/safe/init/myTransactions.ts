@@ -259,7 +259,7 @@ const pushTransactions = new DelayedTrigger(35, async () => {
  * Is triggered whenever the list of known tokens changed (after 500 ms delay).
  *
  * Filters the list of all known tokens for new ones, then subscribes
- * to alle Transfer events of the new tokens and reads all history
+ * to all Transfer events of the new tokens and reads all history
  * transactions regarding the new tokens.
  *
  * All events are fed into the "transactionStream" from which they

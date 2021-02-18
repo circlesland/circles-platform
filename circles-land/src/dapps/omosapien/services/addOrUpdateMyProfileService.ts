@@ -5,7 +5,7 @@ import {OmoSapienState} from "../manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Profile} from "omo-models/dist/omo/profile";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
-import {omoCentralClient} from "../../../../../packages/omo-central-client/src/omoCentralClient";
+import {omoCentralClient} from "omo-central-client/src/omoCentralClient";
 
 export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) =>
 {
@@ -17,7 +17,7 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
     profile.name = "me";
     profile.firstName = context.data.firstName.value;
     profile.lastName = context.data.lastName ? context.data.lastName.value : null;
-    // profile.avatar = fissionAuthState.fission.profiles.getPath(["me.png"]);
+    //profile.avatar = fissionAuthState.fission.profiles.getPath(["me.png"]);
 
     const fissionUsername = fissionDrive.username;
 

@@ -49,6 +49,7 @@ export class Profiles extends Directory<Profile>
       return await this.fs.publish();
     }
 
+
     return null;
   }
 
