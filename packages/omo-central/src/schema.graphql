@@ -19,6 +19,17 @@ type Profile {
     omoLastName:String
     # The CID of the omo avatar image
     omoAvatarCID:String
+    # A inbox for notifications
+    notifications:[Notification!]!
+}
+
+type Notification {
+    createdAt:String!
+    readAt:String
+    senderFissionName:ID!
+    recipientFissionName:ID!
+    type:String!
+    cid:String!
 }
 
 type Offer {

@@ -16,6 +16,10 @@ model Profile {
     omoFirstName String?
     omoLastName String?
     offers Offer[]
+
+    sentMessages Message[] @relation(name: "MessageSender")
+    receivedMessages Message[] @relation(name: "MessageRecipient")
+
     @@unique([fissionName], name:"UX_Profile_fissionName")
 }
 
@@ -43,4 +47,14 @@ model OfferPicture {
     offerId Int
     pictureCid String
     @@unique([offerId, pictureCid], name:"UX_OfferPicture")
+}
+
+model Message {
+    id Int @id @default(autoincrement())
+    sender Profile @relation(name: "MessageSender", fields: [sentByFissionName], references: [fissionName])
+    sentByFissionName String
+    recipient Profile @relation(name: "MessageRecipient", fields: [receivedByFissionName], references: [fissionName])
+    receivedByFissionName String
+    type String
+    cid String
 }

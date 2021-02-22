@@ -8,7 +8,7 @@
     "node": ">=12.19.0"
   },
   "scripts": {
-    "prisma-generate": "npx prisma generate --schema schema.prisma",
+    "prisma-generate": "npx prisma generate --schema schema_template.prisma",
     "graphql-generate": "npx graphql-codegen"
   },
   "author": "https://github.com/jaensen",
