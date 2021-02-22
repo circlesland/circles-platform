@@ -11,5 +11,3 @@ jobs:
         uses: actions/setup-node@v2
       - name: Build
         run: ./deploy_omo_central.sh
-        env:
-          DO_PGSQL_CONNECTIONSTRING: ${{ secrets.DO_PGSQL_CONNECTIONSTRING }}
