@@ -1,5 +1,5 @@
 name: Omo_Central
-on: []
+on: workflow_dispatch
 jobs:
   prisma_job:
     name: "Omo Central"
