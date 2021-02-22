@@ -1,5 +1,5 @@
 name: Omo_Central
-on: [push, pull_request]
+on: []
 jobs:
   prisma_job:
     name: "Omo Central"
