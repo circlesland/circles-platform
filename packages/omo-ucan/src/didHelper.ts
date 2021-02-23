@@ -18,7 +18,7 @@ export function publicKeyToDid(
     return BASE58_DID_PREFIX + encodeBaseN(new Uint8Array(prefixedBuf), base58Alphabet);
 }
 
-export async function didToPublicKey(did: string): Promise<Buffer>
+export function didToPublicKey(did: string): Buffer
 {
     if (!did.startsWith(BASE58_DID_PREFIX))
     {

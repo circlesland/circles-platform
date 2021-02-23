@@ -18,18 +18,29 @@ type Profile {
     # The last name as entered for omosapien
     omoLastName:String
     # The CID of the omo avatar image
-    omoAvatarCID:String
-    # A inbox for notifications
-    notifications:[Notification!]!
+    omoAvatarCid:String
+    # All market offers of this profile
+    offers:[Offer!]
+    # All messages that have been sent by this profile
+    sentMessages:[Message!]
+    # All messages that have been received by this profile
+    receivedMessages:[Message!]
 }
 
-type Notification {
+type Message {
+    id: Int!
     createdAt:String!
     readAt:String
-    senderFissionName:ID!
-    recipientFissionName:ID!
     type:String!
     cid:String!
+
+    senderFissionName:ID!
+    recipientFissionName:ID!
+}
+input SendMessageInput {
+    toFissionName: String!
+    type: String!
+    cid: String!
 }
 
 type Offer {
@@ -37,24 +48,63 @@ type Offer {
     createdBy: Profile!
     publishedAt: String!
     unpublishedAt: String
+
     title: String!
     price: String!
+    description: String
+    category: String
+    country: String
+    city: String
     deliveryTerms: String!
-    pictures: [OfferPicture!]!
+
+    pictures: [File!]
+}
+input CreateOfferInput
+{
+    title:String!
+    price:String!
+    deliveryTerms:String!
+    description:String
+    category:String
+    country:String
+    city:String
+    pictures:[CreateFileInput!]!
+}
+input QueryOfferInput {
+    title:String
+    price_lt:String
+    price_gt:String
+    deliveryTerms:String
+    description:String
+    category:String
+    country:String
+    city:String
+    publishedAt_lt:String
+    publishedAt_gt:String
+    unpublishedAt_lt:String
+    unpublishedAt_gt:String
 }
 
-type OfferPicture {
-    pictureCid: String!
+type File {
+    size: Int,
+    mimeType: String,
+    cid: String!
+}
+input CreateFileInput
+{
+    size:Int
+    mimeType:String
+    cid:String!
 }
 
-input UniqueProfileFields
+input QueryUniqueProfileInput
 {
     #did: String
     fissionName: String
-    circlesAddress:String
+    fissionRoot:String
 }
 
-input ProfileQueryFields
+input QueryProfileInput
 {
     #did: String
     fissionName: String
@@ -63,7 +113,7 @@ input ProfileQueryFields
     circlesAddress:String
 }
 
-input UpdateProfileFields
+input UpdateProfileInput
 {
     # The last known fission FS root CID or null
     fissionRoot:String
@@ -74,38 +124,32 @@ input UpdateProfileFields
     # The last name as entered for omosapien or null
     omoLastName:String
     # The CID of the omo avatar image or null
-    omoAvatarCID:String
-}
-
-input OfferPictureInput
-{
-    pictureCid:String!
-}
-
-input CreateOfferFields
-{
-    title:String!
-    price:String!
-    deliveryTerms:String!
-    description:String
-    category:String
-    country:String
-    city:String
-    pictures:[OfferPictureInput!]!
+    omoAvatarCid:String
 }
 
 type Query
 {
     omo : Omo
+    # Gets the root fs CID for a unique profile
+    fissionRoot(query:QueryUniqueProfileInput!) : String!
+    # Gets a fully populated profile object
+    profile(query:QueryUniqueProfileInput!) : Profile!
     # Queries the directory for profiles that match one or more of the given field values.
     # All fields except "did" and "circlesAddress" are matched with 'startsWith'.
-    profiles(fields:ProfileQueryFields!) : [Profile!]!
-    # Gets the root fs CID for a unique profile
-    fissionRoot(fields:UniqueProfileFields!) : String!
+    profiles(query:QueryProfileInput!) : [Profile!]!
+    # Queries all offers with a wide variety of filter properties
+    offers(query:QueryOfferInput!) : [Offer!]!
 }
 
 type Mutation
 {
-    updateProfile(jwt:String!, data:UpdateProfileFields!):Profile!
-    createOffer(jwt:String!, data:CreateOfferFields):Offer!
+    upsertProfile(data:UpdateProfileInput!):Profile!
+    createOffer(data:CreateOfferInput!):Offer!
+    unpublishOffer(offerId:Int!):Boolean!
+    sendMessage(data:SendMessageInput!):Message!
+    markMessageAsRead(messageId:Int!):Boolean!
+}
+
+type Subscription {
+    messages: Message
 }

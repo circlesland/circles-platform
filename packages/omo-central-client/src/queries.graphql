@@ -4,17 +4,55 @@ query omo {
     }
 }
 
-query profiles($fields:ProfileQueryFields!) {
-    profiles(fields: $fields) {
+query fissionRoot($fields:QueryUniqueProfileInput!) {
+    fissionRoot(query: $fields)
+}
+
+query profile($query:QueryUniqueProfileInput!) {
+    profile(query: $query) {
         circlesAddress
         fissionName
         fissionRoot
-        omoAvatarCID
+        omoAvatarCid
         omoFirstName
         omoLastName
     }
 }
 
-query fissionRoot($fields:UniqueProfileFields!) {
-    fissionRoot(fields: $fields)
+query profiles($query:QueryProfileInput!) {
+    profiles(query: $query) {
+        circlesAddress
+        fissionName
+        fissionRoot
+        omoAvatarCid
+        omoFirstName
+        omoLastName
+    }
+}
+
+query offers($query:QueryOfferInput!) {
+    offers(query: $query) {
+        id
+        publishedAt
+        unpublishedAt
+        createdBy {
+            circlesAddress
+            fissionName
+            omoAvatarCid
+            omoFirstName
+            omoLastName
+        }
+        title
+        description
+        price
+        category
+        country
+        city
+        deliveryTerms
+        pictures {
+            size
+            mimeType
+            cid
+        }
+    }
 }

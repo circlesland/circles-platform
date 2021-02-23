@@ -3,13 +3,11 @@ import {didToPublicKey} from "./didHelper";
 import {decodeUcan, findRootIssuer, makeUrlUnsafe} from "./decodeUcan";
 import crypto from "crypto";
 
-export async function verifyUcan(ucan:string, myDid:string) : Promise<{
+export function verifyUcan(ucan:string, myDid:string) : {
     isValid: boolean
     errors: string[]
-    decoded: Ucan,
-
-}>
-{
+    decoded: Ucan
+} {
     const decodedUcan = decodeUcan(ucan)
     if (typeof decodedUcan !== "object")
     {
@@ -78,7 +76,6 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<{
         errors.push(`Invalid audience. I'm '${myDid}', you wanted '${aud}'.`);
     }
 
-
     const rootIss = findRootIssuer(ucan);
     if (iss !== rootIss)
     {
@@ -86,20 +83,18 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<{
         let rootIssuerPublicKey: Buffer|null = null;
         try
         {
-            rootIssuerPublicKey = await didToPublicKey(rootIss);
+            rootIssuerPublicKey = didToPublicKey(rootIss);
         }
         catch (e)
         {
             errors.push(`Couldn't extract the public key of the root issuer from the 'prf' claim:` + e.message);
         }
-
-
     }
 
     let issuerPublicKey: Buffer|null = null;
     try
     {
-        issuerPublicKey = await didToPublicKey(iss);
+        issuerPublicKey = didToPublicKey(iss);
     }
     catch (e)
     {
@@ -114,7 +109,7 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<{
     {
         const exportedKeyPem = formatAsPem(issuerPublicKey.toString("base64"));
 
-        const verifySigResult = await verifySignaturePemKey(
+        const verifySigResult = verifySignaturePemKey(
             Buffer.from(exportedKeyPem),
             Buffer.from(signedDataUrlUnsafe),
             Buffer.from(decodedUcan.signature, "base64"));
@@ -131,7 +126,6 @@ export async function verifyUcan(ucan:string, myDid:string) : Promise<{
         decoded: decodedUcan,
     };
 }
-
 
 export function stripPem(pem:string)
 {
@@ -155,8 +149,7 @@ export function formatAsPem(str:string) {
     return finalString;
 }
 
-
-async function verifySignaturePemKey(publicKey:Buffer, msg:Buffer, signature:Buffer) : Promise<boolean>
+function verifySignaturePemKey(publicKey:Buffer, msg:Buffer, signature:Buffer) : boolean
 {
     const hashingAlgorithm = 'rsa-sha256'
     const verificationResult = crypto.verify(

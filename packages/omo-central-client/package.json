@@ -8,9 +8,17 @@
 	"author": "https://github.com/jaensen",
 	"license": "AGPL-3",
 	"dependencies": {
-		"@prisma/client": "^2.16.1"
+		"apollo-cache-inmemory": "^1.6.6",
+		"apollo-client": "^2.6.10",
+		"apollo-link": "^1.2.14",
+		"apollo-link-http": "^1.5.17",
+		"apollo-link-ws": "^1.0.20",
+		"cross-fetch": "^3.0.4",
+		"ws": "^7.4.3",
+		"omo-utils": "1.0.0"
 	},
 	"devDependencies": {
+		"@types/ws": "^7.4.0",
 		"@graphql-codegen/cli": "^1.17.10",
 		"@graphql-codegen/typescript": "^1.17.10",
 		"@graphql-codegen/typescript-graphql-request": "^2.0.1",

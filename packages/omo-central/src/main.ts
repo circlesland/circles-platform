@@ -4,7 +4,7 @@ import {resolvers} from "./resolvers";
 // TODO: Migrate to GraphQL-tools: https://www.graphql-tools.com/docs/migration-from-import/
 import {importSchema} from "graphql-import";
 import {Resolvers} from "./types";
-import {RequestContext} from "./requestContext";
+import {Context} from "./context";
 
 const corsOrigins = [
     "http://localhost:5000",
@@ -28,7 +28,7 @@ export class Main
         console.log("cors origins: ", corsOrigins);
 
         this._server = new ApolloServer({
-            context: RequestContext.create,
+            context: Context.create,
             typeDefs: apiSchemaTypeDefs,
             resolvers: this._resolvers,
             cors: {
@@ -42,6 +42,8 @@ export class Main
     {
         await this._server.listen({
             port: parseInt("8989")
+        }).then(o => {
+            console.log("listening at port 8989")
         });
     }
 }

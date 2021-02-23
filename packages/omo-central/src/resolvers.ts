@@ -1,15 +1,19 @@
-import { PrismaClient } from '@prisma/client'
-import {QueryProfilesArgs, RequireFields, Resolvers} from "./types";
-import {verifyUcan} from "omo-ucan/dist/index";
+import {PrismaClient} from '@prisma/client'
+import {QueryOffersArgs, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
+import {serverDid} from "./consts";
+import {EventBroker} from "omo-utils/dist/eventBroker";
+import {from} from 'ix/asynciterable';
+import {map} from 'ix/asynciterable/operators';
 
 const prisma = new PrismaClient()
+const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
 
-function createWhereObject(args: RequireFields<QueryProfilesArgs, never>) {
+function whereProfile(args: RequireFields<QueryProfilesArgs, never>) {
     const q: { [key: string]: any } = {};
-    if (!args.fields) {
+    if (!args.query) {
         throw new Error(`No query fields have been specified`);
     }
-    Object.keys(args.fields ?? {})
+    Object.keys(args.query ?? {})
         .map(key => {
             return {
                 key: key,
@@ -28,25 +32,127 @@ function createWhereObject(args: RequireFields<QueryProfilesArgs, never>) {
     return q;
 }
 
-const serverDid = "did:key:zStEZpzSMtTt9k2vszgvCwF4fLQQSyA15W5AQ4z3AR6Bx4eFJ5crJFbuGxKmbma4";
+function whereOffer(args: RequireFields<QueryOffersArgs, never>) {
+    const q: { [key: string]: any } = {};
+    if (!args.query) {
+        throw new Error(`No query fields have been specified`);
+    }
+    Object.keys(args.query ?? {})
+        .filter(key => !key.endsWith("_lt") && !key.endsWith("_gt"))
+        .map(key => {
+            return {
+                key: key,
+                // @ts-ignore
+                value: args.fields[key]
+            }
+        })
+        .filter(kv => kv.value)
+        .forEach(kv => {
+            q[kv.key] = kv.value;
+        });
 
-export const resolvers : Resolvers = {
+    if (args.query.publishedAt_gt || args.query.publishedAt_lt)
+    {
+        q.publishedAt = {};
+        if (args.query.publishedAt_gt) {
+            q.publishedAt.gt = Date.parse(args.query.publishedAt_gt)
+        }
+        if (args.query.publishedAt_lt) {
+            q.publishedAt.lt = Date.parse(args.query.publishedAt_lt)
+        }
+    }
+    if (args.query.unpublishedAt_gt || args.query.unpublishedAt_lt)
+    {
+        q.unpublishedAt = {};
+        if (args.query.unpublishedAt_gt) {
+            q.unpublishedAt.gt = Date.parse(args.query.unpublishedAt_gt)
+        }
+        if (args.query.unpublishedAt_lt) {
+            q.unpublishedAt.lt = Date.parse(args.query.unpublishedAt_lt)
+        }
+    }
+
+    if (Object.keys(q).length === 0) {
+        throw new Error(`At least one query field must be specified.`);
+    }
+
+    return q;
+}
+
+export const resolvers: Resolvers = {
     Query: {
         omo: (parent, args) => {
             return {
                 did: serverDid
             };
         },
-        profiles: async (parent, args) => {
-            const q = createWhereObject(args);
-            return await prisma.profile.findMany({
+        profile: async (parent, args, context) => {
+            const q = whereProfile(args);
+            const fissionName = context.verifyJwt();
+            const profile = await prisma.profile.findUnique({
+                where: {
+                    ...q
+                },
+                include: {
+                    receivedMessages: {
+                        where: {
+                            recipientFissionName: fissionName
+                        }
+                    },
+                    sentMessages: {
+                        where: {
+                            senderFissionName: fissionName
+                        }
+                    },
+                    offers: {
+                        include: {
+                            createdBy: true,
+                            pictures: true
+                        }
+                    }
+                }
+            });
+
+            if (!profile) {
+                throw new Error(`Couldn't find a profile with the provided arguments.`)
+            }
+
+            return {
+                ...profile,
+                sentMessages: profile.sentMessages.map(m => {
+                    return {
+                        ...m,
+                        createdAt: m.createdAt.toJSON(),
+                        readAt: m.readAt?.toJSON(),
+                    }
+                }),
+                receivedMessages: profile.receivedMessages.map(m => {
+                    return {
+                        ...m,
+                        createdAt: m.createdAt.toJSON(),
+                        readAt: m.readAt?.toJSON(),
+                    }
+                }),
+                offers: profile.offers.map(o => {
+                    return {
+                        ...o,
+                        publishedAt: o.publishedAt.toJSON(),
+                        unpublishedAt: o.unpublishedAt?.toJSON()
+                    };
+                })
+            };
+        },
+        profiles: async (parent, args, context) => {
+            const q = whereProfile(args);
+            const profiles = await prisma.profile.findMany({
                 where: {
                     ...q
                 }
             });
+            return profiles;
         },
-        fissionRoot: async (parent, args) => {
-            const q = createWhereObject(args);
+        fissionRoot: async (parent, args, context) => {
+            const q = whereProfile(args);
             const result = await prisma.profile.findUnique({
                 where: {
                     ...q
@@ -56,120 +162,152 @@ export const resolvers : Resolvers = {
                 }
             });
 
-            if (!result?.fissionRoot)
-            {
-                throw new Error("");
+            if (!result?.fissionRoot) {
+                throw new Error(`Couldn't find a fission root with the provided arguments.`);
             }
             return result.fissionRoot;
-        }
-    },
-    Mutation: {
-        updateProfile: async (parent, args) =>
-        {
-            if (!args.jwt || args.jwt == "")
-            {
-                throw new Error("No jwt was supplied");
-            }
-
-            if (!args.data)
-            {
-                throw new Error(`No arguments.`)
-            }
-
-            const verifyResult = await verifyUcan(args.jwt, serverDid);
-            if (!verifyResult.isValid)
-            {
-                console.log(`Invalid ucan '${args.jwt}'.`);
-                verifyResult.errors.forEach((message:string) => console.log("Verification problem: ", message));
-                throw new Error(`Invalid ucan.`);
-            }
-
-            console.log(verifyResult.decoded);
-
-            const fissionNameFromUcan = <Record<string,string>>verifyResult.decoded.payload.rsc;
-            const fissionUsername = fissionNameFromUcan["username"];
-            if (!fissionUsername || fissionUsername.trim() == "")
-            {
-                throw new Error("No fission username was included in the UCAN's 'rsc'-claim. The 'rsc' claim must contain an object with 'username' property.")
-            }
-
-            let profile = await prisma.profile.findUnique({
-                where:{
-                    fissionName: fissionUsername
+        },
+        offers: async (parent, args, context) => {
+            const q = whereOffer(args);
+            const result = await prisma.offer.findMany({
+                where: {
+                    ...q
                 },
-                select: {
-                    fissionName: true,
-                    circlesAddress: true,
-                    omoAvatarCID: true,
-                    fissionRoot: true,
-                    omoFirstName: true,
-                    omoLastName: true
+                include: {
+                    createdBy: {
+                        select: {
+                            fissionName: true
+                        }
+                    }
                 }
             });
 
-            if (!profile)
-            {
-                profile = {
-                    circlesAddress: args.data.circlesAddress ?? "",
-                    fissionName: fissionUsername,
-                    fissionRoot: args.data.fissionRoot ?? null,
-                    omoAvatarCID: args.data.omoAvatarCID ?? null,
-                    omoFirstName: args.data.omoFirstName ?? null,
-                    omoLastName: args.data.omoLastName ?? null
-                };
-                profile = await prisma.profile.create({
-                    data: profile
-                });
-            }
-            else
-            {
-                profile = {
-                    ...profile,
-                    ...args.data
+            return result.map(offer => {
+                return {
+                    ...offer,
+                    publishedAt: offer.publishedAt.toJSON(),
+                    unpublishedAt: offer.unpublishedAt?.toJSON()
                 }
-                profile = await prisma.profile.update({
-                    where:{
-                        fissionName: profile.fissionName
-                    },
-                    data: profile
-                });
-            }
+            });
+        }
+    },
+    Mutation: {
+        upsertProfile: async (parent, args, context) => {
+            const fissionUsername = context.verifyJwt();
+
+            const profile = await prisma.profile.upsert({
+                create: {
+                    circlesAddress: args.data.circlesAddress,
+                    fissionName: fissionUsername,
+                    fissionRoot: args.data.fissionRoot,
+                    omoAvatarCid: args.data.omoAvatarCid,
+                    omoFirstName: args.data.omoFirstName,
+                    omoLastName: args.data.omoLastName
+                },
+                update: {
+                    ...args.data
+                },
+                where: {
+                    fissionName: fissionUsername
+                }
+            });
 
             return profile
+        },
+        createOffer: async (parent, args, context) => {
+            const fissionUsername = context.verifyJwt();
+            const offer = await prisma.offer.create({
+                data: {
+                    createdBy: {
+                        connect: {
+                            fissionName: fissionUsername
+                        }
+                    },
+                    publishedAt: new Date(),
+                    category: args.data?.category,
+                    city: args.data?.city,
+                    country: args.data?.country,
+                    deliveryTerms: args.data?.deliveryTerms,
+                    description: args.data?.description,
+                    price: args.data?.price,
+                    title: args.data?.title,
+                    pictures: {
+                        create: args.data.pictures
+                    }
+                },
+                include: {
+                    createdBy: true
+                }
+            });
+            return {
+                ...offer,
+                publishedAt: offer.publishedAt.toJSON(),
+                unpublishedAt: offer.unpublishedAt?.toJSON()
+            };
+        },
+        unpublishOffer: async (parent, args, context) => {
+            const fissionUsername = context.verifyJwt();
+            const result = await prisma.offer.updateMany({
+                where: {
+                    id: args.offerId,
+                    createdByFissionName: fissionUsername
+                },
+                data: {
+                    unpublishedAt: new Date()
+                }
+            });
+
+            return result.count > 0;
+        },
+        sendMessage: async (parent, args, context) => {
+            const fissionUsername = context.verifyJwt();
+            const message = await prisma.message.create({
+                data: {
+                    senderFissionName: fissionUsername,
+                    createdAt: new Date(),
+                    recipientFissionName: args.data.toFissionName,
+                    type: args.data.type,
+                    cid: args.data.cid
+                }
+            });
+
+            return {
+                ...message,
+                createdAt: message.createdAt.toJSON(),
+                readAt: message.readAt?.toJSON()
+            };
+        },
+        markMessageAsRead: async (parent, args, context) => {
+            const fissionUsername = context.verifyJwt();
+            const result = await prisma.message.updateMany({
+                where: {
+                    id: args.messageId,
+                    recipientFissionName: fissionUsername
+                },
+                data: {
+                    readAt: new Date()
+                }
+            });
+            return result.count > 0;
         }
     },
-    Omo: {
-        __isTypeOf: (obj) => {
-            return obj.did === serverDid;
-        },
-        did: (parent, args) => {
-            return serverDid;
-        }
-    },
-    Profile: {
-        __isTypeOf: obj => {
-            return obj.fissionName !== 'undefined';
-        },
-        /*did: (parent, args) => {
-            return <any>"";
-        },*/
-        circlesAddress: (parent, args) => {
-            return parent.circlesAddress ?? "";
-        },
-        fissionName: (parent, args) => {
-            return parent.fissionName ?? "";
-        },
-        fissionRoot: (parent, args) => {
-            return parent.fissionRoot ?? "";
-        },
-        omoAvatarCID: (parent, args) => {
-            return parent.omoAvatarCID ?? "";
-        },
-        omoFirstName: (parent, args) => {
-            return parent.omoFirstName ?? "";
-        },
-        omoLastName: (parent, args) => {
-            return parent.omoLastName ?? "";
+    Subscription: {
+        messages: {
+            subscribe: async (root, args, context) => {
+                const fissionName = context.verifyJwt();
+                let topic = eventBroker.tryGetTopic(fissionName, "messages");
+                if (!topic) {
+                    topic = eventBroker.createTopic(fissionName, "messages");
+                }
+
+                const iterator = from(topic.observable).pipe(map(event => {
+                    return {
+                        message: event
+                    }
+                }));
+
+                return iterator;
+            },
         }
     }
 };

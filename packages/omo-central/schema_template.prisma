@@ -15,46 +15,54 @@ model Profile {
     circlesAddress String?
     omoFirstName String?
     omoLastName String?
+    omoAvatarCid String?
+
     offers Offer[]
 
     sentMessages Message[] @relation(name: "MessageSender")
     receivedMessages Message[] @relation(name: "MessageRecipient")
 
     @@unique([fissionName], name:"UX_Profile_fissionName")
+    @@unique([fissionRoot], name:"UX_Profile_fissionRoot")
 }
 
 model Offer {
     id Int @id @default(autoincrement())
     createdBy Profile @relation(name: "OfferCreatedBy", fields: [createdByFissionName], references: [fissionName])
     createdByFissionName String
-
     publishedAt DateTime
     unpublishedAt DateTime?
 
     title String
     price String            // price in wei
-    deliveryTerms String    // pickup, delivery etc.
-    pictures OfferPicture[]
-
     description String?
     category String?
     country String?
     city String?
+    deliveryTerms String    // pickup, delivery etc.
+
+    pictures File[]
 }
 
-model OfferPicture {
-    offer Offer  @relation(name: "PictureOfOffer", fields: [offerId], references: [id])
+model File {
+    offer Offer  @relation(name: "OfferPictures", fields: [offerId], references: [id])
     offerId Int
-    pictureCid String
-    @@unique([offerId, pictureCid], name:"UX_OfferPicture")
+    size Int?
+    mimeType String?
+    cid String
+    @@unique([offerId, cid], name:"UX_OfferPictures")
 }
 
 model Message {
     id Int @id @default(autoincrement())
-    sender Profile @relation(name: "MessageSender", fields: [sentByFissionName], references: [fissionName])
-    sentByFissionName String
-    recipient Profile @relation(name: "MessageRecipient", fields: [receivedByFissionName], references: [fissionName])
-    receivedByFissionName String
+    createdAt DateTime
+    readAt DateTime?
     type String
     cid String
+
+    sender Profile @relation(name: "MessageSender", fields: [senderFissionName], references: [fissionName])
+    senderFissionName String
+
+    recipient Profile @relation(name: "MessageRecipient", fields: [recipientFissionName], references: [fissionName])
+    recipientFissionName String
 }

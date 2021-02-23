@@ -1,0 +1,11 @@
+subscription messages {
+    messages {
+        id
+        type
+        createdAt
+        readAt
+        senderFissionName
+        recipientFissionName
+        cid
+    }
+}

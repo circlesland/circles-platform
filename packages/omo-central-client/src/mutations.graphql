@@ -1,10 +1,57 @@
-mutation updateProfile($jwt:String! $data:UpdateProfileFields!) {
-    updateProfile(jwt: $jwt data: $data) {
+mutation upsertProfile($data:UpdateProfileInput!) {
+    upsertProfile(data: $data) {
         circlesAddress
         fissionName
         fissionRoot
-        omoAvatarCID
+        omoAvatarCid
         omoFirstName
         omoLastName
     }
+}
+
+mutation createOffer($data:CreateOfferInput!) {
+    createOffer(data: $data) {
+        category
+        city
+        country
+        createdBy {
+            fissionName
+            omoAvatarCid
+            circlesAddress
+            omoFirstName
+            omoLastName
+        }
+        deliveryTerms
+        description
+        id
+        pictures {
+            size
+            mimeType
+            cid
+        }
+        price
+        publishedAt
+        title
+        unpublishedAt
+    }
+}
+
+mutation unpublishOffer($offerId:Int!) {
+    unpublishOffer(offerId: $offerId)
+}
+
+mutation sendMessage($data:SendMessageInput!) {
+    sendMessage(data: $data) {
+        id
+        createdAt
+        readAt
+        type
+        senderFissionName
+        recipientFissionName
+        cid
+    }
+}
+
+mutation markMessageAsRead($messageId:Int!) {
+    markMessageAsRead(messageId: $messageId)
 }

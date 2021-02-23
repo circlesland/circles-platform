@@ -18,7 +18,10 @@
     "apollo-server": "^2.21.0",
     "graphql": "^15.5.0",
     "graphql-import": "^1.0.2",
-    "omo-ucan": "0.1.212"
+    "omo-ucan": "0.1.212",
+    "subscriptions-transport-ws": "^0.9.18",
+    "omo-utils": "1.0.0",
+    "ix": "^4.2.0"
   },
   "devDependencies": {
     "omo-ucan": "0.1.212",
