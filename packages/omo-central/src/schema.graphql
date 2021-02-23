@@ -137,6 +137,8 @@ type Query
     # Queries the directory for profiles that match one or more of the given field values.
     # All fields except "did" and "circlesAddress" are matched with 'startsWith'.
     profiles(query:QueryProfileInput!) : [Profile!]!
+    # Gets a fully populated offer object
+    offer(offerId:Int!) : Offer!
     # Queries all offers with a wide variety of filter properties
     offers(query:QueryOfferInput!) : [Offer!]!
 }

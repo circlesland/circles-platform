@@ -1,35 +1,59 @@
 import {FissionDrive, runWithDrive} from "./fissionDrive";
-import {initialise, redirectToLobby, Scenario, State} from "omo-webnative/dist";
+import {buildUcan, initialise, redirectToLobby, Scenario, State} from "omo-webnative/dist";
 import {configure} from "omo-webnative/dist/setup";
-import {omoCentralClient} from "omo-central-client/dist/omoCentralClient";
+import {Client, omoCentralUrl} from "omo-central-client/dist/omoCentralClient";
+import {decodeUcan} from "../../omo-ucan/dist/decodeUcan";
+
+let omoCentralClient:Client|undefined;
+let ucanValidTo:number|undefined;
+let ucanIssuer:string|undefined;
+let ucanAudience:string|undefined;
+
+async function ensureOmoCentralConnection(jwt: string)
+{
+  const decodedJwt = decodeUcan(jwt);
+  const connectionCredentialsExpireSoon = ucanValidTo && ucanValidTo < Date.now() / 1000 - 120;
+  const issuerChanged = ucanIssuer !== decodedJwt.payload.iss;
+  const audienceChanged = ucanAudience !== decodedJwt.payload.aud;
+  const changedOrExpiresSoon = connectionCredentialsExpireSoon || issuerChanged || audienceChanged;
+
+  if (omoCentralClient && !changedOrExpiresSoon) {
+    return;
+  }
+
+  if (omoCentralClient && changedOrExpiresSoon) {
+    omoCentralClient.close();
+  }
+
+  console.log("Connecting to omo-central ...")
+  ucanValidTo = decodedJwt.payload.exp;
+  ucanIssuer = decodedJwt.payload.iss;
+  ucanAudience = decodedJwt.payload.aud;
+  omoCentralClient = await Client.connect(omoCentralUrl, jwt);
+}
 
 configure({
   enableDebugMode: true,
   additionalDnsLinkResolver:async  fissionUsername => {
-    const cid = await omoCentralClient.fissionRoot({
-      fields: {
-        fissionName: fissionUsername
-      }
-    });
-
-    return cid.data?.fissionRoot ?? "";
+    const cid = await Client.fissionRoot(fissionUsername);
+    return cid ?? "";
   },
-  additionalDnsLinkUpdater: async (jwt, cid) => {
+  additionalDnsLinkUpdater: async (jwt, cid) =>
+  {
+    await ensureOmoCentralConnection(jwt);
+
     runWithDrive(async drive => {
       const myProfile = await drive.profiles?.tryGetMyProfile();
       if (!myProfile)
         return;
 
-      omoCentralClient.updateProfile({
-        jwt: jwt,
-        data: {
-          circlesAddress: myProfile.circlesAddress,
-          fissionRoot: cid,
-          omoAvatarCID: "",
-          omoFirstName: myProfile.firstName,
-          omoLastName: myProfile.lastName
-        }
-      })
+      await omoCentralClient?.upsertProfile({
+        circlesAddress: myProfile.circlesAddress,
+        fissionRoot: cid,
+        omoAvatarCid: "",
+        omoFirstName: myProfile.firstName,
+        omoLastName: myProfile.lastName
+      });
     }, false);
   }
 })
@@ -60,6 +84,9 @@ export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = tru
   {
     case Scenario.AuthSucceeded:
     case Scenario.Continuation:
+      const ucan = await buildUcan();
+      await ensureOmoCentralConnection(ucan);
+
       try
       {
         // State:

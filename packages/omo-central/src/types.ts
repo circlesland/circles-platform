@@ -129,6 +129,7 @@ export type Query = {
   fissionRoot: Scalars['String'];
   profile: Profile;
   profiles: Array<Profile>;
+  offer: Offer;
   offers: Array<Offer>;
 };
 
@@ -145,6 +146,11 @@ export type QueryProfileArgs = {
 
 export type QueryProfilesArgs = {
   query: QueryProfileInput;
+};
+
+
+export type QueryOfferArgs = {
+  offerId: Scalars['Int'];
 };
 
 
@@ -371,6 +377,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   fissionRoot?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryFissionRootArgs, 'query'>>;
   profile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<QueryProfileArgs, 'query'>>;
   profiles?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfilesArgs, 'query'>>;
+  offer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<QueryOfferArgs, 'offerId'>>;
   offers?: Resolver<Array<ResolversTypes['Offer']>, ParentType, ContextType, RequireFields<QueryOffersArgs, 'query'>>;
 }>;
 

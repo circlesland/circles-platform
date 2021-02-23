@@ -18,8 +18,8 @@ import {Message, MessagesDocument, MessagesSubscriptionVariables} from "./genera
 import {EventBroker, Topic} from "omo-utils/dist/eventBroker";
 import {Observable} from "rxjs";
 
-const apiEndpointUrl = "http://localhost:8989/graphql"
-const client = new GraphQLClient(apiEndpointUrl);
+export const omoCentralUrl = "http://localhost:8989/graphql"
+const client = new GraphQLClient(omoCentralUrl);
 const omoCentralClient = getSdk(client);
 const isBrowser = typeof window !== "undefined";
 
@@ -56,7 +56,7 @@ export class Client
         return this._client;
     }
 
-    public constructor(apiEndpointUrl: string, link: ApolloLink, client: ApolloClient<NormalizedCacheObject>)
+    private constructor(apiEndpointUrl: string, link: ApolloLink, client: ApolloClient<NormalizedCacheObject>)
     {
         this._apiEndpointUrl = apiEndpointUrl;
         this._link = link;
@@ -64,7 +64,14 @@ export class Client
         this.defaultTopic = this._eventBroker.createTopic("","");
     }
 
-    public async connect(apiEndpointUrl: string, ucan:string)
+    close() {
+        if (this._eventsSubscription) {
+            this._eventsSubscription.unsubscribe();
+        }
+        this._client.stop();
+    }
+
+    static async connect(apiEndpointUrl: string, ucan:string)
     {
         const httpLink = new HttpLink({
             fetch: fetch,
@@ -101,7 +108,7 @@ export class Client
         );
 
         const apolloClient = new ApolloClient({
-            link: this._link,
+            link: link,
             cache: new InMemoryCache(),
             defaultOptions: Client._defaultOptions
         });

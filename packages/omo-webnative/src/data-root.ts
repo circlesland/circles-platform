@@ -7,6 +7,7 @@ import { CID } from './ipfs'
 import { Maybe, api } from './common'
 import { setup } from './setup/internal'
 import {authenticatedUsername} from "./auth";
+import {buildUcan} from "./index";
 
 /**
  * CID representing an empty string. We use to to speed up DNS propagation
@@ -109,27 +110,14 @@ export async function update(
     resource: ucan.decode(proof).payload.rsc
   });
 
-  const customJwt = await ucan.build({
-    audience: await api.did(),
-    issuer: await did.ucan(),
-    potency: "APPEND",
-    proof,
-    resource: {
-      "username": (await authenticatedUsername()) ?? ""
-    }
-  });
+  const customJwt = await buildUcan(proof);
 
   if (setup.additionalDnsLinkUpdater)
   {
-    try
-    {
       logger.log("A custom 'additionalDnsLinkUpdater' was provided. Calling it now for: ", cid)
-      setup.additionalDnsLinkUpdater(customJwt, cid)
-    }
-    catch (e)
-    {
-      logger.log("ERROR: The custom 'additionalDnsLinkUpdater' failed to execute: ", e)
-    }
+      setup.additionalDnsLinkUpdater(customJwt, cid).catch(e => {
+        logger.log("ERROR: The custom 'additionalDnsLinkUpdater' failed to execute: ", e)
+      });
   }
 
   // Make API call

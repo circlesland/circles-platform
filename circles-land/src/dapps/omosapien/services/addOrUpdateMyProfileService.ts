@@ -5,7 +5,6 @@ import {OmoSapienState} from "../manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Profile} from "omo-models/dist/omo/profile";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
-import {omoCentralClient} from "omo-central-client/src/omoCentralClient";
 
 export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) =>
 {

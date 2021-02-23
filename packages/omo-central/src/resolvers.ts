@@ -189,11 +189,14 @@ export const resolvers: Resolvers = {
                     unpublishedAt: offer.unpublishedAt?.toJSON()
                 }
             });
+        },
+        offer: (parent, args, context) => {
+
         }
     },
     Mutation: {
         upsertProfile: async (parent, args, context) => {
-            const fissionUsername = context.verifyJwt();
+            const fissionUsername = await context.verifyJwt();
 
             const profile = await prisma.profile.upsert({
                 create: {

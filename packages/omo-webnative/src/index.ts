@@ -3,8 +3,11 @@ import localforage from 'localforage'
 import * as common from './common'
 import * as keystore from './keystore'
 import * as ucan from './ucan/internal'
+import * as ucan2 from './ucan'
+import * as did from './did'
+import {authenticatedUsername} from "./auth";
 
-import { READ_KEY_FROM_LOBBY_NAME, USERNAME_STORAGE_KEY, Maybe } from './common'
+import { READ_KEY_FROM_LOBBY_NAME, USERNAME_STORAGE_KEY, Maybe, api } from './common'
 import { Permissions } from './ucan/permissions'
 import { loadFileSystem } from './filesystem'
 
@@ -74,6 +77,19 @@ export type Continuation = {
 }
 
 
+export async function buildUcan(proof?: string) {
+  return await ucan2.build({
+    audience: await api.did(),
+    issuer: await did.ucan(),
+    potency: "APPEND",
+    proof,
+    resource: {
+      "username": (await authenticatedUsername()) ?? ""
+    },
+    lifetimeInSeconds: 3600
+  });
+}
+
 
 // ERRORS
 
@@ -89,7 +105,6 @@ export type Continuation = {
 
 
 // INTIALISE
-
 
 /**
  * Check if we're authenticated, process any lobby query-parameters present in the URL,
