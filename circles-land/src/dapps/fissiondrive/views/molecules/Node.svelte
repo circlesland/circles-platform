@@ -6,10 +6,10 @@
   import {faFile} from "@fortawesome/free-solid-svg-icons";
   import Menu from "./Menu.svelte";
   import MenuOption from "./MenuOptions.svelte";
-  import { Jumper } from "svelte-loading-spinners";
   import {FsNode} from "../../nodes/fsNode";
   import {createEventDispatcher} from "svelte";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
+  import LoadingSpinner from "../../../../libs/o-views/atoms/LoadingSpinner.svelte";
 
   const dispatcher = createEventDispatcher();
 
@@ -28,27 +28,21 @@
     title = treeNode.title;
     icon = treeNode.icon;
 
-    if (sub)
-    {
+    if (sub) {
       sub.unsubscribe();
       sub = null;
     }
   }
 
-  async function onExpandIndicatorClick(e)
-  {
-    if (e)
-    {
+  async function onExpandIndicatorClick(e) {
+    if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    if (!isExpanded)
-    {
+    if (!isExpanded) {
       console.log("Node: onExpand()");
       await treeNode.onExpand();
-    }
-    else
-    {
+    } else {
       console.log("Node: onCollapse()");
       await treeNode.onCollapse()
     }
@@ -62,41 +56,35 @@
     await onExpandIndicatorClick(null);
   }
 
-  function onItemClick(e:MouseEvent)
-  {
-    if (e.button == 1)
-    {
+  function onItemClick(e: MouseEvent) {
+    if (e.button == 1) {
       openMenu(e)
     }
   }
 
-  function onItemDblClick(e)
-  {
+  function onItemDblClick(e) {
     onExpandIndicatorClick(e)
   }
 
-  let pos = { x: 0, y: 0 };
+  let pos = {x: 0, y: 0};
   let showMenu = false;
 
-  function openMenu(e)
-  {
+  function openMenu(e) {
     if (working)
       return;
 
     e.preventDefault();
     e.stopPropagation();
 
-    pos = { x: e.clientX, y: e.clientY };
+    pos = {x: e.clientX, y: e.clientY};
     showMenu = true;
   }
 
-  async function onDelete()
-  {
+  async function onDelete() {
     working = true;
     await treeNode.delete();
 
-    if (treeNode.parent)
-    {
+    if (treeNode.parent) {
       dispatcher("reloadParent");
     }
 
@@ -129,7 +117,7 @@
   <!-- Entity icon -->
     <span class="inline-block w-6 h-6 max-w-6 max-h-6" on:click={onItemClick}>
       {#if working}
-        <Jumper size="24" color="#071D69" unit="px" /><br />
+        <LoadingSpinner />
       {:else}
         {#if treeNode.type === "directory"}
           <span on:click={onExpandIndicatorClick} class="inline-block w-8 h-6 max-w-8">

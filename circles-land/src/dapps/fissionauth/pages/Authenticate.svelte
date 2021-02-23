@@ -1,15 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import {onMount} from "svelte";
   import {push} from "svelte-spa-router";
-  import { Jumper } from "svelte-loading-spinners";
   import {tryToAuthenticate} from "omo-fission/dist/tryToAuthenticate";
   import {setDappState} from "omo-kernel/dist/kernel";
   import {FissionAuthState} from "omo-fission/dist/manifest";
   import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
   import {FissionDrive} from "omo-fission/dist/fissionDrive";
   import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
-
-  // const wn = window.o.wn;
+  import LoadingSpinner from "../../../libs/o-views/atoms/LoadingSpinner.svelte";
 
   export let params;
 
@@ -22,8 +20,7 @@
         username: state.username
       }));
 
-      setDappState<FissionAuthState>("omo.fission.auth:1", current =>
-      {
+      setDappState<FissionAuthState>("omo.fission.auth:1", current => {
         return {
           username: state.username,
           fissionState: state,
@@ -34,113 +31,24 @@
         };
       });
 
-      if (params && params.redirectTo)
-      {
+      if (params && params.redirectTo) {
         window.o.redirectTo = params.redirectTo;
       }
 
-      if (window.o.redirectTo)
-      {
+      if (window.o.redirectTo) {
         push("#/waiting-area/please-wait");
-      }
-      else
-      {
+      } else {
         push("#/omosapien/profile");
       }
-    }
-    else
-    {
+    } else {
       throw new Error("Not authenticated")
     }
-    // await initAuth();
   });
-
-  /*
-async function initAuth()
-{
-  try
-  {
-    const state = await wn.initialise({
-      permissions: {
-        // Will ask the user permission to store
-        // your apps data in `private/Apps/{creator}}/{name}`
-        app: {
-          name: "OmoSapien",
-          creator: "MamaOmo",
-        },
-        fs: {
-          publicPaths: ["omo.sapien"],
-        },
-      },
-      loadFileSystem: false
-    });
-
-    switch (state.scenario)
-    {
-      case wn.Scenario.AuthCancelled:
-        break;
-
-      case wn.Scenario.AuthSucceeded:
-      case wn.Scenario.Continuation:
-
-        try
-        {
-          // State:
-          // state.authenticated    -  Will always be `true` in these scenarios
-          // state.newUser          -  If the user is new to Fission
-          // state.throughLobby     -  If the user authenticated through the lobby, or just came back.
-          // state.username         -  The user's username.
-          //
-          // ☞ We can now interact with our file system (more on that later)
-          setDappState<FissionAuthState>("omo.fission.auth:1", current =>
-          {
-            return {
-              username: state.username,
-              fissionState: state,
-              fission: null
-            };
-          });
-
-          // set a marker in the local storage that indicates whether we've already logged-in
-          localStorage.setItem("fissionAuth", JSON.stringify({
-            username: state.username
-          }));
-
-          if (params && params.redirectTo)
-          {
-            window.o.redirectTo = params.redirectTo;
-          }
-
-          if (window.o.redirectTo)
-          {
-            push("#/waiting-area/please-wait");
-          }
-          else
-          {
-            push("#/omosapien/profile");
-          }
-        }
-        catch (e)
-        {
-          console.error("Something went wrong during the authentication process: ", e);
-        }
-        break;
-
-      case wn.Scenario.NotAuthorised:
-        wn.redirectToLobby(state.permissions);
-        break;
-    }
-  }
-  catch (e)
-  {
-    console.error("Something went wrong during the authentication process: ", e);
-  }
-}*/
 </script>
 
 <div class="flex items-center justify-center">
   <div>
-    <Jumper size="150" color="#071D69" unit="px" /><br />
+    <LoadingSpinner />
     <div class="text-sm text-center text-primary foont-primary">
       authenticating ...
     </div>

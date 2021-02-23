@@ -10,46 +10,38 @@
   import {ProgressSignal} from "omo-events/dist/signals/progressSignal";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import LoadingSpinner from "../../../../libs/o-views/atoms/LoadingSpinner.svelte";
 
   let safeState: OmoSafeState = {};
   let transactionsSubscription: OmoSubscription;
   let transactions: CirclesTransaction[] = [];
   let signal: Signal;
-  let dummyTransaction:CirclesTransaction;
+  let dummyTransaction: CirclesTransaction;
 
-  function init()
-  {
-    if (transactionsSubscription)
-    {
+  function init() {
+    if (transactionsSubscription) {
       transactionsSubscription.unsubscribe();
       transactionsSubscription = null;
     }
 
     safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
-    if (safeState.myTransactions)
-    {
+    if (safeState.myTransactions) {
       transactionsSubscription = safeState.myTransactions.subscribe(
-        (transactionList) =>
-        {
+        (transactionList) => {
           signal = transactionList.signal;
           transactions = transactionList.payload;
 
-          if (signal instanceof BeginSignal)
-          {
+          if (signal instanceof BeginSignal) {
             /*
             dummyTransaction = <any>{
               subject: "updating ..."
             };
              */
-          }
-          else if (signal instanceof ProgressSignal)
-          {
+          } else if (signal instanceof ProgressSignal) {
             dummyTransaction = <any>{
-              subject: signal.message +  " (" + signal.percent + " % complete)" // "updating your transactions (" + signal.percent + " % complete) ...",
+              subject: signal.message + " (" + signal.percent + " % complete)" // "updating your transactions (" + signal.percent + " % complete) ...",
             };
-          }
-          else if (signal instanceof EndSignal)
-          {
+          } else if (signal instanceof EndSignal) {
             dummyTransaction = null;
           }
         }
@@ -57,8 +49,7 @@
     }
   }
 
-  onDestroy(() =>
-  {
+  onDestroy(() => {
     if (!transactionsSubscription) return;
 
     transactionsSubscription.unsubscribe();
@@ -86,7 +77,7 @@
     </div>
   {:else}
     <div class="flex items-center justify-center h-full mx-auto">
-      <Jumper size="150" color="#071D69" unit="px" />
+      <LoadingSpinner />
     </div>
   {/if}
 </div>

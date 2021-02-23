@@ -13,33 +13,29 @@
   import {Contact} from "omo-models/dist/omo/contact";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import LoadingSpinner from "../../../../libs/o-views/atoms/LoadingSpinner.svelte";
 
   let safeState: OmoSafeState = {};
   let contactsSubscription: OmoSubscription;
   let contacts: Contact[] = [];
 
-  function init()
-  {
-    if (contactsSubscription)
-    {
+  function init() {
+    if (contactsSubscription) {
       contactsSubscription.unsubscribe();
       contactsSubscription = null;
     }
 
     safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 
-    if (safeState.myContacts)
-    {
-      contactsSubscription = safeState.myContacts.subscribe(async contactList =>
-      {
+    if (safeState.myContacts) {
+      contactsSubscription = safeState.myContacts.subscribe(async contactList => {
         contacts = contactList.payload.filter(o => o.safeAddress !== safeState.mySafeAddress);
       });
     }
   }
 
-  function mapToListItem(contact: Contact)
-  {
-    const listItem:{
+  function mapToListItem(contact: Contact) {
+    const listItem: {
       image: string,
       title: string,
       detail: {
@@ -53,29 +49,22 @@
       actions: string[]
     } = {};
 
-    let fissionUsername:string = null;
+    let fissionUsername: string = null;
 
-    if (contact.omoProfile)
-    {
-      if (contact.omoProfile.avatarCid)
-      {
+    if (contact.omoProfile) {
+      if (contact.omoProfile.avatarCid) {
         listItem.image = contact.omoProfile.avatarCid;
       }
       listItem.title = `${contact.omoProfile.profile.firstName} ${contact.omoProfile.profile.lastName}`
       fissionUsername = contact.omoProfile.profile.fissionName;
-    }
-    else if (contact.circlesProfile)
-    {
+    } else if (contact.circlesProfile) {
       listItem.image = contact.circlesProfile?.avatarUrl;
       listItem.title = contact.circlesProfile.username;
-    }
-    else
-    {
+    } else {
       listItem.title = contact.safeAddress.slice(0, 8);
     }
 
-    if (!listItem.image)
-    {
+    if (!listItem.image) {
       listItem.image = "https://avatars.dicebear.com/api/avataaars/" + contact.safeAddress + ".svg"
     }
 
@@ -92,16 +81,14 @@
     return listItem;
   }
 
-  onDestroy(() =>
-  {
+  onDestroy(() => {
     if (!contactsSubscription) return;
 
     contactsSubscription.unsubscribe();
     contactsSubscription = null;
   });
 
-  onMount(() =>
-  {
+  onMount(() => {
     init();
   });
 </script>
@@ -109,7 +96,7 @@
 <div class="h-full">
   {#if !contacts}
     <div class="flex items-center justify-center h-full">
-      <Jumper size="150" color="#071D69" unit="px"/>
+      <LoadingSpinner />
     </div>
   {:else if contacts.length == 0}
     <div class="mb-4 space-y-2">

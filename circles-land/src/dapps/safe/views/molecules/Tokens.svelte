@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { Jumper } from "svelte-loading-spinners";
   import TokenItem from "src/libs/o-views/molecules/TokenItem.svelte";
-  import { BN } from "ethereumjs-util";
+  import {BN} from "ethereumjs-util";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import { onDestroy, onMount } from "svelte";
+  import {onDestroy, onMount} from "svelte";
 
-  import { OmoSapienState } from "../../../omosapien/manifest";
-  import { OmoSafeState } from "../../manifest";
-  import { CirclesToken } from "omo-circles/dist/model/circlesToken";
-  import { Contact } from "omo-models/dist/omo/contact";
-  import { config } from "omo-circles/dist/config";
-  import { OmoSubscription } from "omo-quirks/dist/OmoSubscription";
-  import { tryGetDappState } from "omo-kernel/dist/kernel";
+  import {OmoSapienState} from "../../../omosapien/manifest";
+  import {OmoSafeState} from "../../manifest";
+  import {CirclesToken} from "omo-circles/dist/model/circlesToken";
+  import {Contact} from "omo-models/dist/omo/contact";
+  import {config} from "omo-circles/dist/config";
+  import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import LoadingSpinner from "../../../../libs/o-views/atoms/LoadingSpinner.svelte";
 
   let safeState: OmoSafeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   let balanceSubscriptions: OmoSubscription;
@@ -222,7 +222,7 @@
       {/each}
     {:else}
       <div class="flex items-center justify-center h-full mx-auto">
-        <Jumper size="150" color="#071D69" unit="px" />
+        <LoadingSpinner />
       </div>
     {/if}
   </div>

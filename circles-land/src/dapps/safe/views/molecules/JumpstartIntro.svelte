@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Jumper } from "svelte-loading-spinners";
+  import {Jumper} from "svelte-loading-spinners";
+  import LoadingSpinner from "../../../../libs/o-views/atoms/LoadingSpinner.svelte";
 
-  export let data:{
-    header:string,
-    subHeader:string,
-    body:string
+  export let data: {
+    header: string,
+    subHeader: string,
+    body: string
   }
 
 </script>
@@ -19,7 +20,7 @@
       {@html data.body}
     {:else}
       <div class="">
-        <Jumper size="60" color="#fff" unit="px" />
+        <LoadingSpinner />
       </div>
     {/if}
   </div>
