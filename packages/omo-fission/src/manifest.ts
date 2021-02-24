@@ -4,9 +4,19 @@ import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
 import {tryToAuthenticate} from "./tryToAuthenticate";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
+import {State} from "omo-webnative/dist";
+import {BehaviorSubject} from "rxjs";
+import {Client} from "omo-central-client/dist/omoCentralClient";
 
 export interface FissionAuthState {
-  fissionState: any,
+  fissionState: {
+    fissionState: State,
+    username: string,
+    fission: FissionDrive,
+    throughLobby: boolean,
+    newUser: boolean,
+    omoCentralClientSubject: BehaviorSubject<Client | undefined>
+  },
   fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
   username: string
 }

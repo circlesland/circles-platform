@@ -1,4 +1,4 @@
-import {UnpublishOfferContext} from "../unpublishOffer";
+import {UnpublishOfferContext} from "../processes/unpublishOffer";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 
 export const unpublishOfferService = async (context: UnpublishOfferContext) =>

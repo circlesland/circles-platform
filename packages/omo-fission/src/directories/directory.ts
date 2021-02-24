@@ -6,10 +6,6 @@ import {Entity} from "omo-models/dist/omo/entity";
 
 export type DirectoryChangeType = "add" | "update" | "remove";
 
-export interface BinaryFile extends Entity
-{
-}
-
 export abstract class Directory<TEntity extends Entity> extends FissionDir
 {
     private readonly _entityFactory?: (data: string) => Promise<TEntity>;
@@ -23,8 +19,6 @@ export abstract class Directory<TEntity extends Entity> extends FissionDir
         entitySerializer?: (entity: TEntity) => Promise<string>)
     {
         super(fissionUser, fs, pathParts);
-
-        //window.o.logger.log("Directory.ctor(pathParts:" + pathParts.join(",") + ")")
 
         this._entityFactory = entityFactory;
         this._entitySerializer = entitySerializer;
@@ -56,14 +50,11 @@ export abstract class Directory<TEntity extends Entity> extends FissionDir
     {
         return withTimeout(`tryGetByName(${this.getPath([entityName])})`, async () =>
         {
-            //window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "')");
             if (!await this.exists([entityName]))
             {
-                //window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Doesn't exist");
                 return undefined;
             }
 
-            //window.o.logger.log("Fission dir '" + this.getPath() + "': tryGetByName(entityName: '" + entityName + "') -> Exists");
             const contents = await this.fs.cat(this.getPath([entityName]));
 
             if (this._entityFactory)
@@ -75,7 +66,11 @@ export abstract class Directory<TEntity extends Entity> extends FissionDir
         }, Directory.defaultTimeout);
     }
 
-    async addOrUpdateEntity(entity: TEntity, publish = true, indexHint?: string): Promise<boolean>
+    async addOrUpdateEntity(entity: TEntity, publish = true, indexHint?: string): Promise<{
+        updated: boolean
+        published: boolean
+        fsRootCid?:string
+    }>
     {
         const result = await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () =>
         {
@@ -98,24 +93,28 @@ export abstract class Directory<TEntity extends Entity> extends FissionDir
         }, Directory.defaultTimeout);
 
         await withTimeout(`addOrUpdate(${this.getPath([entity.name])}, publish: ${publish})`, async () =>
-            {
-                await this.maintainIndexes(
-                    result.added ? "add" : "update",
-                    entity,
-                    indexHint);
-            }
-            , Directory.defaultTimeout);
-
-        if (publish)
         {
-            await this.fs.publish();
+            await this.maintainIndexes(
+                result.added ? "add" : "update",
+                entity,
+                indexHint);
         }
+        , Directory.defaultTimeout);
 
-        return result.added
+        const cid = publish
+            ? await this.fs.publish()
+            : undefined;
+
+        return {
+            updated: !result.added,
+            published: publish,
+            fsRootCid: cid
+        };
     }
 
     async tryRemove(entityName: string, publish = true, indexHint?: string): Promise<{
-        cid: CID | null,
+        published: boolean
+        fsRootCid?: string
         entity: TEntity
     } | null>
     {
@@ -140,10 +139,11 @@ export abstract class Directory<TEntity extends Entity> extends FissionDir
 
         const cid = publish
             ? await this.fs.publish()
-            : null;
+            : undefined;
 
         return {
-            cid: cid,
+            published: publish,
+            fsRootCid: cid,
             entity: entity
         };
     }

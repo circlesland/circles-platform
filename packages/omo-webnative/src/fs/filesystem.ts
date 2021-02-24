@@ -194,62 +194,45 @@ export class FileSystem {
   }
 
   async add(path: string, content: FileContent, options: MutationOptions = {}): Promise<this> {
-    const logger = debug.newLogger(`FileSystem.add(path:${path})`);
-    logger.log("begin");
     await this.runOnTree(path, true, (tree, relPath) => {
       return tree.add(relPath, content)
     })
     if(options.publish) {
       await this.publish()
     }
-    logger.log(`end`);
     return this
   }
 
   async cat(path: string): Promise<FileContent> {
-    const logger = debug.newLogger(`FileSystem.cat(path:${path})`);
-    logger.log("begin");
     const result = await this.runOnTree(path, false, (tree, relPath) => {
       return tree.cat(relPath)
     })
-    logger.log(`end`);
     return result;
   }
 
   async exists(path: string): Promise<boolean> {
-    const logger = debug.newLogger(`FileSystem.exists(path:${path})`);
-    logger.log("begin");
     const result = await this.runOnTree(path, false, (tree, relPath) => {
       return tree.exists(relPath)
     })
-    logger.log(`end`);
     return result;
   }
 
   async rm(path: string): Promise<this> {
-    const logger = debug.newLogger(`FileSystem.rm(path:${path})`);
-    logger.log("begin");
     await this.runOnTree(path, true, (tree, relPath) => {
       return tree.rm(relPath)
     })
-    logger.log(`end`);
     return this
   }
 
   async get(path: string): Promise<Tree | File | null> {
-    const logger = debug.newLogger(`FileSystem.get(path:${path})`);
-    logger.log("begin");
     const result = await this.runOnTree(path, false, (tree, relPath) => {
       return tree.get(relPath)
     })
-    logger.log(`end`);
     return result;
   }
 
   // This is only implemented on the same tree for now and will error otherwise
   async mv(from: string, to: string): Promise<this> {
-    const logger = debug.newLogger(`FileSystem.mv(from:${from}, to:${to})`);
-    logger.log("begin");
     const sameTree = pathUtil.sameParent(from, to)
     if (!sameTree) {
       throw new Error("`mv` is only supported on the same tree for now")
@@ -261,23 +244,16 @@ export class FileSystem {
       const { nextPath } = pathUtil.takeHead(to)
       return tree.mv(relPath, nextPath || '')
     })
-    logger.log(`end`);
     return this
   }
 
   async read(path: string): Promise<FileContent | null> {
-    const logger = debug.newLogger(`FileSystem.read(path:${path})`);
-    logger.log("begin");
     const result = await this.cat(path)
-    logger.log("end");
     return result;
   }
 
   async write(path: string, content: FileContent, options: MutationOptions = {}): Promise<this> {
-    const logger = debug.newLogger(`FileSystem.write(path:${path})`);
-    logger.log("begin");
     const result = await this.add(path, content, options)
-    logger.log("end");
     return result;
   }
 
@@ -290,8 +266,6 @@ export class FileSystem {
    * updates your data root, and returns the root CID.
    */
   async publish(): Promise<CID> {
-    const logger = debug.newLogger(`FileSystem.publish()`);
-    logger.log(`FileSystem.publish() ...`);
     const proofs = Array.from(Object.entries(this.proofs))
     this.proofs = {}
 
@@ -301,7 +275,6 @@ export class FileSystem {
       const encodedProof = ucan.encode(proof)
       this.publishHooks.forEach(hook => hook(cid, encodedProof))
     })
-    logger.log(`FileSystem.publish() -> DONE`);
     return cid
   }
 

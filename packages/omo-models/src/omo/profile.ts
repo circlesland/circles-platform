@@ -21,4 +21,6 @@ export interface Profile extends Entity {
    * The user's last name
    */
   lastName?: string;
+
+  omoAvatarCid?: string;
 }

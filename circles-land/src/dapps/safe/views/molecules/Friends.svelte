@@ -1,7 +1,6 @@
 <script lang="ts">
   import FriendItem from "src/libs/o-views/molecules/FriendItem.svelte";
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import {Jumper} from "svelte-loading-spinners";
   import {
     labelTrusted,
     labelMutual,

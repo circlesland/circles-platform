@@ -16,6 +16,24 @@ query profile($query:QueryUniqueProfileInput!) {
         omoAvatarCid
         omoFirstName
         omoLastName
+        receivedMessages {
+            id
+            createdAt
+            readAt
+            senderFissionName
+            recipientFissionName
+            topic
+            cid
+        }
+        sentMessages {
+            id
+            createdAt
+            readAt
+            senderFissionName
+            recipientFissionName
+            topic
+            cid
+        }
     }
 }
 

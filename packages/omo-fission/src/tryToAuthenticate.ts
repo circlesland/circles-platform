@@ -3,8 +3,9 @@ import {buildUcan, initialise, redirectToLobby, Scenario, State} from "omo-webna
 import {configure} from "omo-webnative/dist/setup";
 import {Client, omoCentralUrl} from "omo-central-client/dist/omoCentralClient";
 import {decodeUcan} from "../../omo-ucan/dist/decodeUcan";
+import {BehaviorSubject} from "rxjs";
 
-let omoCentralClient:Client|undefined;
+const omoCentralClientSubject = new BehaviorSubject<Client | undefined>(undefined);
 let ucanValidTo:number|undefined;
 let ucanIssuer:string|undefined;
 let ucanAudience:string|undefined;
@@ -17,19 +18,20 @@ async function ensureOmoCentralConnection(jwt: string)
   const audienceChanged = ucanAudience !== decodedJwt.payload.aud;
   const changedOrExpiresSoon = connectionCredentialsExpireSoon || issuerChanged || audienceChanged;
 
-  if (omoCentralClient && !changedOrExpiresSoon) {
+  const currentConnection = omoCentralClientSubject.getValue();
+  if (currentConnection && !changedOrExpiresSoon) {
     return;
-  }
-
-  if (omoCentralClient && changedOrExpiresSoon) {
-    omoCentralClient.close();
   }
 
   console.log("Connecting to omo-central ...")
   ucanValidTo = decodedJwt.payload.exp;
   ucanIssuer = decodedJwt.payload.iss;
   ucanAudience = decodedJwt.payload.aud;
-  omoCentralClient = await Client.connect(omoCentralUrl, jwt);
+  const nextConnection = await Client.connect(omoCentralUrl, jwt);
+  if (currentConnection && changedOrExpiresSoon) {
+    currentConnection.close();
+  }
+  omoCentralClientSubject.next(nextConnection);
 }
 
 configure({
@@ -47,7 +49,7 @@ configure({
       if (!myProfile)
         return;
 
-      await omoCentralClient?.upsertProfile({
+      await omoCentralClientSubject.getValue()?.upsertProfile({
         circlesAddress: myProfile.circlesAddress,
         fissionRoot: cid,
         omoAvatarCid: "",
@@ -63,7 +65,8 @@ export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = tru
   username: string,
   fission: FissionDrive,
   throughLobby: boolean,
-  newUser: boolean
+  newUser: boolean,
+  omoCentralClientSubject: BehaviorSubject<Client | undefined>
 }|undefined>
 {
   const state = await initialise({
@@ -101,7 +104,8 @@ export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = tru
           username: state.username,
           fission: new FissionDrive(state),
           throughLobby: state.throughLobby,
-          newUser: state.newUser
+          newUser: state.newUser,
+          omoCentralClientSubject: omoCentralClientSubject
         };
       }
       catch (e)

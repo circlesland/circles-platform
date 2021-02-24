@@ -57,7 +57,7 @@ model Message {
     id Int @id @default(autoincrement())
     createdAt DateTime
     readAt DateTime?
-    type String
+    topic String
     cid String
 
     sender Profile @relation(name: "MessageSender", fields: [senderFissionName], references: [fissionName])

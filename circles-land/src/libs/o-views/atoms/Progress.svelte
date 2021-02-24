@@ -1,5 +1,4 @@
 <script lang="ts">
-  import {Jumper} from "svelte-loading-spinners";
   import LoadingSpinner from "./LoadingSpinner.svelte";
 
   export let data: { text: string };

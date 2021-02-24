@@ -20,6 +20,7 @@
   import {Cancel} from "omo-process/dist/events/cancel";
   import {onMount} from "svelte";
   import {kernel} from "omo-kernel/dist/kernel";
+  import {faHome} from "@fortawesome/free-solid-svg-icons";
 
   onMount(async () => {
     await kernel.boot();
@@ -124,11 +125,27 @@
       return actionAt;
     });
 
-    overflowActions = actions
+    const defaultActions:{data: {label: string}, design: {icon: any, type: string}, event: () => Promise<void>, type: string, pos: string}[] = [{
+      data: {
+        label: "",
+      },
+      design: {
+        type: "primary",
+        icon: faHome
+      },
+      event: async () => {
+        push("#/omoli/dapps");
+        isOpen = false;
+      },
+      type: "trigger",
+      pos: "overflow",
+    }];
+
+    const dynamicOverflowActions = actions
       .filter((o) => !o.pos || o.pos === "overflow")
       .map((item) =>
       {
-        return {
+        return <{data: {label: string}, design: {icon: any, type: string}, event: () => Promise<void>, type: string, pos: string}>{
           data: {
             label: item.mapping.data.label,
           },
@@ -139,7 +156,10 @@
           type: item.type,
           pos: item.pos,
         };
-      });
+      })
+      .concat(defaultActions);
+
+    overflowActions = dynamicOverflowActions;
   }
 
   function toggleOpen()

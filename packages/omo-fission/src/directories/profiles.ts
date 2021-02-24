@@ -39,18 +39,22 @@ export class Profiles extends Directory<Profile>
     }
   }
 
-  async addOrUpdateMyAvatar(imageData:Buffer, publish:boolean) : Promise<string|null>
+  async addOrUpdateMyAvatar(imageData:Buffer, publish:boolean) : Promise<{
+    published:boolean
+    fsRootCid?:string
+  }>
   {
     await this.fs.add(this.getPath(["me.png"]), imageData);
     await this.fs.add("public/Apps/MamaOmo/OmoSapien/profiles/me.png", imageData);
 
-    if (publish)
-    {
-      return await this.fs.publish();
+    const cid = publish
+        ? await this.fs.publish()
+        : undefined;
+
+    return {
+      published: publish,
+      fsRootCid: cid
     }
-
-
-    return null;
   }
 
   async addOrUpdateMyProfile(myProfile: Profile) {

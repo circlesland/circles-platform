@@ -34,15 +34,6 @@ export abstract class FissionDir
     this._fs = fs;
   }
 
-  getPathFromApp(pathParts: string[]): string
-  {
-    if (!this.fs.appPath)
-    {
-      throw new Error("The FS's 'appPath' property has no value");
-    }
-    return this.fs.appPath(pathParts);
-  }
-
   getPath(pathParts?: string[]): string
   {
     if (!this.fs.appPath)
@@ -54,11 +45,17 @@ export abstract class FissionDir
       : this._pathParts);
   }
 
-  async copyDirectory(fromPath:string, toPath:string, publish:boolean = true)
+  /**
+   * Recursively copies the contents of the "from" directory into the "to" directory.
+   * @param fromPath The contents of this directory should be copied to 'toPath'
+   * @param toPath The contents from the 'from' directory should be copied into this directory.
+   * @param publish Publish the changes?
+   */
+  async copyDirectory(fromPath:string, toPath:string, publish:boolean = true) : Promise<{
+    published: boolean
+    fsRootCid?: string
+  }>
   {
-    // const logger = window.o.logger.newLogger(`copyDirectory(from: ${fromPath}, to: ${toPath})`);
-    // logger.log("begin");
-
     if (fromPath.endsWith("/"))
     {
       throw new Error(`The 'fromPath' must not end with a slash: '${fromPath}'`);
@@ -96,13 +93,11 @@ export abstract class FissionDir
 
       if (current.baseLink.isFile)
       {
-        // logger.log(`creating target file ${currentTargetPath} ..`);
         const sourceFileContents = await this.fs.cat(currentSourcePath);
         await this.fs.add(currentTargetPath, sourceFileContents, {publish: false});
       }
       else
       {
-        // logger.log(`creating target directory ${currentTargetPath} ..`);
         await this.fs.mkdir(currentTargetPath, {publish: false});
 
         const contents = await this.fs.ls(currentSourcePath);
@@ -117,13 +112,14 @@ export abstract class FissionDir
       }
     }
 
-    if (publish)
-    {
-      // logger.log(`publishing changes to fs ..`);
-      await this.fs.publish();
-    }
+    const cid = publish
+        ? await this.fs.publish()
+        : undefined;
 
-    // logger.log("end");
+    return  {
+      published: publish,
+      fsRootCid: cid
+    };
   }
 
   async exists(pathParts?: string[]): Promise<boolean>
@@ -193,22 +189,30 @@ export abstract class FissionDir
     return await this.tryGetFileByPath([name]);
   }
 
-  async addOrUpdateFile(name:string, data:Buffer, publish:boolean = true, indexHint?:string) : Promise<boolean>
+  async addOrUpdateFile(name:string, data:Buffer, publish:boolean = true, indexHint?:string) : Promise<{
+    updated:boolean,
+    published:boolean,
+    fsRootCid?:string
+  }>
   {
+    const path = this.getPath([name]);
     const exists = await withTimeout(`addOrUpdateFile(${this.getPath([name])}, data: ${data.length} bytes, publish: ${publish})`, async () =>
     {
       const exists = await this.exists([name]);
       await this.ensureDirectoryExists(undefined, publish);
-      await this.fs.add(this.getPath([name]), data);
+      await this.fs.add(path, data);
 
       return exists;
     }, FissionDir.defaultTimeout);
 
-    if (publish)
-    {
-      await this.fs.publish();
-    }
+    const cid = publish
+        ? await this.fs.publish()
+        : undefined;
 
-    return !exists
+    return {
+      updated: exists,
+      published: publish,
+      fsRootCid: cid
+    }
   }
 }

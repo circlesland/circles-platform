@@ -1,7 +1,18 @@
 import {GraphQLClient} from "graphql-request";
 import {
     getSdk,
+    OffersDocument,
+    OffersQuery,
+    OffersQueryVariables,
+    ProfileDocument,
+    ProfileQuery,
+    ProfileQueryVariables, ProfilesDocument, ProfilesQuery, ProfilesQueryVariables, SendMessageDocument,
+    SendMessageInput, SendMessageMutation, SendMessageMutationVariables,
     UpdateProfileInput,
+    UpsertOfferDocument,
+    UpsertOfferInput,
+    UpsertOfferMutation,
+    UpsertOfferMutationVariables,
     UpsertProfileDocument,
     UpsertProfileMutation,
     UpsertProfileMutationVariables
@@ -125,6 +136,7 @@ export class Client
             query: MessagesDocument
         }).subscribe(next =>
         {
+            console.log("Received event:", next);
             const newEvent = <Message>(<any>next.data).event;
             this.defaultTopic.publish(newEvent);
         });
@@ -145,6 +157,74 @@ export class Client
             mutation: UpsertProfileDocument,
             variables: {
                 data
+            }
+        });
+    }
+
+    async upsertOffer(data: UpsertOfferInput) {
+        return await this._client.mutate<UpsertOfferMutation, UpsertOfferMutationVariables>({
+            mutation: UpsertOfferDocument,
+            variables: {
+                data
+            }
+        });
+    }
+
+    async queryProfile(fissionUsername:string) {
+        return await this._client.query<ProfileQuery, ProfileQueryVariables>({
+            query: ProfileDocument,
+            variables: {
+                query: {
+                    fissionName: fissionUsername
+                }
+            }
+        })
+    }
+
+    async queryProfileByCirclesAddress(circlesAddress:string) {
+        const result = await this._client.query<ProfilesQuery, ProfilesQueryVariables>({
+            query: ProfilesDocument,
+            variables: {
+                query: {
+                    circlesAddress: circlesAddress
+                }
+            }
+        });
+        if (result.errors){
+            console.error(result.errors);
+            throw new Error(`An error occurred by querying circles address ${circlesAddress}: ${result.errors.map(o => o.message).join(`\n`)}`);
+        }
+
+        return result.data.profiles.length > 0 ? result.data.profiles[0] : undefined;
+    }
+
+    async queryOffersOfUser(fissionUsername:string) {
+        return await this._client.query<OffersQuery, OffersQueryVariables>({
+            query: OffersDocument,
+            variables: {
+                query: {
+                    createdByFissionName: fissionUsername
+                }
+            }
+        })
+    }
+
+    async queryRecentOffers() {
+        return await this._client.query<OffersQuery, OffersQueryVariables>({
+            query: OffersDocument,
+            variables: {
+                query: {
+                    publishedAt_gt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toJSON()
+                }
+            }
+        })
+    }
+
+    async sendMessage(input:SendMessageInput) {
+        return await this._client.mutate<SendMessageMutation, SendMessageMutationVariables>({
+            mutation: SendMessageDocument,
+            variables: {
+                data: input
             }
         });
     }

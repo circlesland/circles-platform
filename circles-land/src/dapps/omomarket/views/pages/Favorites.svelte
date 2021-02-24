@@ -1,41 +1,33 @@
 <script lang="ts">
-  import {OmoSapienState} from "../../../omosapien/manifest";
   import ListItem from "../../../../libs/o-views/molecules/ListItem.svelte";
   import {ListItem as IListItem} from "../../../../libs/o-views/interfaces/molecules";
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
-  import {faEdit, faGlobe, faHome} from "@fortawesome/free-solid-svg-icons";
-  import {publishOffer, PublishOfferContext} from "../../processes/publishOffer/publishOffer";
-  import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer/unpublishOffer";
-  import {OfferMetadata} from "omo-fission/dist/directories/offers";
+  import {faEdit, faHome} from "@fortawesome/free-solid-svg-icons";
+  import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer";
   import {runWithDrive} from "omo-fission/dist/fissionDrive";
   import {RunProcess} from "omo-process/dist/events/runProcess";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import {Offer} from "omo-central-client/dist/generated";
+  import {FissionAuthState} from "omo-fission/dist/manifest";
 
-  const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
-  let myOffers: OfferMetadata[] = [];
+  const fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  let myOffers: Offer[] = [];
 
   async function init()
   {
-    if (omosapienState)
-    {
-      await runWithDrive(async fissiondrive =>
-      {
-        const itemNames = await fissiondrive.offers.listNames();
-        const offers:OfferMetadata[] = await Promise.all(itemNames.map(async itemName => {
-          const offerMetadataBuffer = await fissiondrive.offers.tryGetFileByPath([itemName, "metadata"]);
-          const offerMetadataJson = offerMetadataBuffer.toString();
-          const offerMetadata:OfferMetadata = JSON.parse(offerMetadataJson);
-          return offerMetadata;
-        }));
-
-        myOffers = offers;
-      });
-    }
+    fissionAuth.fissionState.omoCentralClientSubject.subscribe(async api => {
+      const result = await api.queryOffersOfUser(fissionAuth.username);
+      if (result.errors) {
+        console.error(result.errors);
+        throw new Error("The API returned an error")
+      }
+      myOffers = result.data.offers;
+    });
   }
 
   init();
 
-  function mapToListItem(offer: OfferMetadata)
+  function mapToListItem(offer: Offer)
   {
     console.log("MyOffer:", offer);
 
@@ -50,52 +42,33 @@
       }
     }];
 
-    if (!offer.description.isPublished)
-    {
-      actions.push({
-        icon: faGlobe,
-        title: "Publish offer",
-        action: () =>
-        {
-          window.o.publishEvent(new RunProcess(publishOffer, async (processContext:PublishOfferContext) => {
-            processContext.data.offerName = {
-              key: "offerName",
-              isValid: true,
-              value: offer.description.productName,
-              type: "string"
-            };
-            return processContext;
-          }));
-        }
-      });
-    } else {
-      actions.push({
-        icon: faHome,
-        title: "Unpublish offer",
-        action: () =>
-        {
-          window.o.publishEvent(new RunProcess(unpublishOffer, async (processContext:UnpublishOfferContext) => {
-            processContext.data.offerName = {
-              key: "offerName",
-              isValid: true,
-              value: offer.description.productName,
-              type: "string"
-            };
-            return processContext;
-          }));
-        }
-      });
-    }
+    actions.push({
+      icon: faHome,
+      title: "Unpublish offer",
+      action: () =>
+      {
+        window.o.publishEvent(new RunProcess(unpublishOffer, async (processContext:UnpublishOfferContext) => {
+          processContext.data.offerName = {
+            key: "offerName",
+            isValid: true,
+            value: offer.title,
+            type: "string"
+          };
+          return processContext;
+        }));
+      }
+    });
+
 
     // const locationParts = offer.productLocation.display_name.split(",");
     // const country = locationParts[locationParts.length - 1];
     const offerItem: IListItem = <IListItem>{
       data: {
-        title: offer.description.productName,
-        image: "", // offer.productPicture,
-        description: offer.description.productDescription,
-        balance: offer.description.productPrice,
-        subtitle: offer.description.productLocation.display_name,
+        title: offer.title,
+        image: offer.pictures?.length > 0 ? "https://ipfs.io/ipfs/" + offer.pictures[0].cid : undefined,
+        description: offer.description,
+        balance: offer.price,
+        subtitle: offer.city,
         actions: actions
       }
     };

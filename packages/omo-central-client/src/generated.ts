@@ -42,7 +42,7 @@ export type Message = {
   id: Scalars['Int'];
   createdAt: Scalars['String'];
   readAt?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  topic: Scalars['String'];
   cid: Scalars['String'];
   senderFissionName: Scalars['ID'];
   recipientFissionName: Scalars['ID'];
@@ -50,7 +50,7 @@ export type Message = {
 
 export type SendMessageInput = {
   toFissionName: Scalars['String'];
-  type: Scalars['String'];
+  topic: Scalars['String'];
   cid: Scalars['String'];
 };
 
@@ -70,7 +70,8 @@ export type Offer = {
   pictures?: Maybe<Array<File>>;
 };
 
-export type CreateOfferInput = {
+export type UpsertOfferInput = {
+  id?: Maybe<Scalars['Int']>;
   title: Scalars['String'];
   price: Scalars['String'];
   deliveryTerms: Scalars['String'];
@@ -82,6 +83,7 @@ export type CreateOfferInput = {
 };
 
 export type QueryOfferInput = {
+  createdByFissionName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   price_lt?: Maybe<Scalars['String']>;
   price_gt?: Maybe<Scalars['String']>;
@@ -135,6 +137,7 @@ export type Query = {
   fissionRoot: Scalars['String'];
   profile: Profile;
   profiles: Array<Profile>;
+  offer: Offer;
   offers: Array<Offer>;
 };
 
@@ -154,6 +157,11 @@ export type QueryProfilesArgs = {
 };
 
 
+export type QueryOfferArgs = {
+  offerId: Scalars['Int'];
+};
+
+
 export type QueryOffersArgs = {
   query: QueryOfferInput;
 };
@@ -161,7 +169,7 @@ export type QueryOffersArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   upsertProfile: Profile;
-  createOffer: Offer;
+  upsertOffer: Offer;
   unpublishOffer: Scalars['Boolean'];
   sendMessage: Message;
   markMessageAsRead: Scalars['Boolean'];
@@ -173,8 +181,8 @@ export type MutationUpsertProfileArgs = {
 };
 
 
-export type MutationCreateOfferArgs = {
-  data: CreateOfferInput;
+export type MutationUpsertOfferArgs = {
+  data: UpsertOfferInput;
 };
 
 
@@ -216,14 +224,14 @@ export type UpsertProfileMutation = (
   ) }
 );
 
-export type CreateOfferMutationVariables = Exact<{
-  data: CreateOfferInput;
+export type UpsertOfferMutationVariables = Exact<{
+  data: UpsertOfferInput;
 }>;
 
 
-export type CreateOfferMutation = (
+export type UpsertOfferMutation = (
   { __typename?: 'Mutation' }
-  & { createOffer: (
+  & { upsertOffer: (
     { __typename?: 'Offer' }
     & Pick<Offer, 'category' | 'city' | 'country' | 'deliveryTerms' | 'description' | 'id' | 'price' | 'publishedAt' | 'title' | 'unpublishedAt'>
     & { createdBy: (
@@ -255,7 +263,7 @@ export type SendMessageMutation = (
   { __typename?: 'Mutation' }
   & { sendMessage: (
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'type' | 'senderFissionName' | 'recipientFissionName' | 'cid'>
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'topic' | 'senderFissionName' | 'recipientFissionName' | 'cid'>
   ) }
 );
 
@@ -300,6 +308,13 @@ export type ProfileQuery = (
   & { profile: (
     { __typename?: 'Profile' }
     & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
+    & { receivedMessages?: Maybe<Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'cid'>
+    )>>, sentMessages?: Maybe<Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'cid'>
+    )>> }
   ) }
 );
 
@@ -343,7 +358,7 @@ export type MessagesSubscription = (
   { __typename?: 'Subscription' }
   & { messages?: Maybe<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'type' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'cid'>
+    & Pick<Message, 'id' | 'topic' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'cid'>
   )> }
 );
 
@@ -360,9 +375,9 @@ export const UpsertProfileDocument = gql`
   }
 }
     `;
-export const CreateOfferDocument = gql`
-    mutation createOffer($data: CreateOfferInput!) {
-  createOffer(data: $data) {
+export const UpsertOfferDocument = gql`
+    mutation upsertOffer($data: UpsertOfferInput!) {
+  upsertOffer(data: $data) {
     category
     city
     country
@@ -399,7 +414,7 @@ export const SendMessageDocument = gql`
     id
     createdAt
     readAt
-    type
+    topic
     senderFissionName
     recipientFissionName
     cid
@@ -432,6 +447,24 @@ export const ProfileDocument = gql`
     omoAvatarCid
     omoFirstName
     omoLastName
+    receivedMessages {
+      id
+      createdAt
+      readAt
+      senderFissionName
+      recipientFissionName
+      topic
+      cid
+    }
+    sentMessages {
+      id
+      createdAt
+      readAt
+      senderFissionName
+      recipientFissionName
+      topic
+      cid
+    }
   }
 }
     `;
@@ -479,7 +512,7 @@ export const MessagesDocument = gql`
     subscription messages {
   messages {
     id
-    type
+    topic
     createdAt
     readAt
     senderFissionName
@@ -498,8 +531,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     upsertProfile(variables: UpsertProfileMutationVariables): Promise<{ data?: UpsertProfileMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<UpsertProfileMutation>(print(UpsertProfileDocument), variables));
     },
-    createOffer(variables: CreateOfferMutationVariables): Promise<{ data?: CreateOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<CreateOfferMutation>(print(CreateOfferDocument), variables));
+    upsertOffer(variables: UpsertOfferMutationVariables): Promise<{ data?: UpsertOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<UpsertOfferMutation>(print(UpsertOfferDocument), variables));
     },
     unpublishOffer(variables: UnpublishOfferMutationVariables): Promise<{ data?: UnpublishOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<UnpublishOfferMutation>(print(UnpublishOfferDocument), variables));

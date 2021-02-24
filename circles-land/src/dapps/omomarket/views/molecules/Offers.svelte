@@ -5,44 +5,33 @@
   } from "@fortawesome/free-solid-svg-icons";
 
   import Icon from "fa-svelte";
-  import {featured, offers} from "../../data/offers";
   import {OmoSapienState} from "../../../omosapien/manifest";
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
-  import {OfferIndex} from "omo-indexes/dist/offerIndex";
-  import {Offer, OfferMetadata} from "omo-fission/dist/directories/offers";
-  import {IpfsNode} from "omo-indexes/dist/ipfsNode";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import {Offer} from "omo-central-client/dist/generated";
+  import {FissionAuthState} from "omo-fission/dist/manifest";
 
   const allOffers = [];
 
   const omosapienState = tryGetDappState<OmoSapienState>("omo.sapien:1");
+  const fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   let myOffers: Offer[] = [];
 
   async function init()
   {
-    const offerDirectoryCidResponse = await fetch("https://directory.omo.earth/offers");
-    const offerDirectoryCid = await offerDirectoryCidResponse.text();
-
-    OfferIndex.tryReadPublicOffers("")
-
-    await IpfsNode.runWithIPFS(async (ipfs) => {
-
+    fissionAuth.fissionState.omoCentralClientSubject.subscribe(async api => {
+      const result = await api.queryRecentOffers();
+      if (result.errors) {
+        console.error(result.errors);
+        throw new Error("The API returned an error")
+      }
+      myOffers = result.data.offers;
     });
-
-    /*
-    if (omosapienState)
-    {
-      await runWithDrive(async fissiondrive =>
-      {
-        myOffers = await fissiondrive.offers.listItems();
-      });
-    }
-    */
   }
 
   init();
 
-  function mapToListItem(offer: OfferMetadata)
+  function mapToListItem(offer: Offer)
   {
     // const locationParts = offer.productLocation.display_name.split(",");
     // const country = locationParts[locationParts.length - 1];
@@ -69,7 +58,7 @@
     };
     if (omosapienState?.profileIndex)
     {
-      const offeredBy = omosapienState.profileIndex.getValue().payload.byFissionName[offer.owner];
+      const offeredBy = omosapienState.profileIndex.getValue().payload.byFissionName[offer.createdBy.fissionName];
       if (offeredBy)
       {
         offerItem.data.offeredBy = {
@@ -88,6 +77,7 @@
 
 <section class="w-full p-4 mx-auto md:p-8">
   <div class="grid grid-cols-1 gap-8 pb-12 lg:grid-cols-2">
+    <!--
     {#each featured as item}
       <div
         class="flex flex-col overflow-hidden bg-white border hover:shadow-xl rounded-xl border-light-200">
@@ -174,9 +164,10 @@
         </div>
       </div>
     {/each}
+    -->
   </div>
   <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-    {#each myOffers.map(o => mapToListItem(o)).concat(offers) as item(item.name)}
+    {#each myOffers.map(o => mapToListItem(o)) as item(item.name)}
       {#if item.data}
       <div
         class="flex flex-col overflow-hidden bg-white border hover:shadow-xl rounded-xl border-light-200">

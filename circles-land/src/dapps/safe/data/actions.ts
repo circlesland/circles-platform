@@ -133,17 +133,4 @@ export const safeOverflowActions = [
       return context;
     })
   },
-  {
-    type: "trigger",
-    pos: "overflow",
-    mapping: {
-      design: {
-        icon: faHome,
-      },
-      data: {
-        label: "Back to home",
-      }
-    },
-    event: () => push("#/omoli/dapps")
-  },
 ];

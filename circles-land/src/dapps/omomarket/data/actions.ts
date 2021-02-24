@@ -1,5 +1,5 @@
 import { faUserCircle, faCoins, faStar, faStore, faDove } from "@fortawesome/free-solid-svg-icons";
-import {createOffer, CreateOfferContext} from "../processes/createOffer/createOffer";
+import {createOffer, CreateOfferContext} from "../processes/createOffer";
 import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 

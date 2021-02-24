@@ -18,7 +18,7 @@ function whereProfile(args: RequireFields<QueryProfilesArgs, never>) {
             return {
                 key: key,
                 // @ts-ignore
-                value: args.fields[key]
+                value: args.query[key]
             }
         })
         .filter(kv => kv.value)
@@ -43,7 +43,7 @@ function whereOffer(args: RequireFields<QueryOffersArgs, never>) {
             return {
                 key: key,
                 // @ts-ignore
-                value: args.fields[key]
+                value: args.query[key]
             }
         })
         .filter(kv => kv.value)
@@ -55,20 +55,20 @@ function whereOffer(args: RequireFields<QueryOffersArgs, never>) {
     {
         q.publishedAt = {};
         if (args.query.publishedAt_gt) {
-            q.publishedAt.gt = Date.parse(args.query.publishedAt_gt)
+            q.publishedAt.gt = new Date(args.query.publishedAt_gt)
         }
         if (args.query.publishedAt_lt) {
-            q.publishedAt.lt = Date.parse(args.query.publishedAt_lt)
+            q.publishedAt.lt = new Date(args.query.publishedAt_lt)
         }
     }
     if (args.query.unpublishedAt_gt || args.query.unpublishedAt_lt)
     {
         q.unpublishedAt = {};
         if (args.query.unpublishedAt_gt) {
-            q.unpublishedAt.gt = Date.parse(args.query.unpublishedAt_gt)
+            q.unpublishedAt.gt = new Date(args.query.unpublishedAt_gt)
         }
         if (args.query.unpublishedAt_lt) {
-            q.unpublishedAt.lt = Date.parse(args.query.unpublishedAt_lt)
+            q.unpublishedAt.lt = new Date(args.query.unpublishedAt_lt)
         }
     }
 
@@ -88,7 +88,7 @@ export const resolvers: Resolvers = {
         },
         profile: async (parent, args, context) => {
             const q = whereProfile(args);
-            const fissionName = context.verifyJwt();
+            const fissionName = await context.verifyJwt();
             const profile = await prisma.profile.findUnique({
                 where: {
                     ...q
@@ -178,7 +178,8 @@ export const resolvers: Resolvers = {
                         select: {
                             fissionName: true
                         }
-                    }
+                    },
+                    pictures: true
                 }
             });
 
@@ -217,8 +218,8 @@ export const resolvers: Resolvers = {
 
             return profile
         },
-        createOffer: async (parent, args, context) => {
-            const fissionUsername = context.verifyJwt();
+        upsertOffer: async (parent, args, context) => {
+            const fissionUsername = await context.verifyJwt();
             const offer = await prisma.offer.create({
                 data: {
                     createdBy: {
@@ -249,7 +250,7 @@ export const resolvers: Resolvers = {
             };
         },
         unpublishOffer: async (parent, args, context) => {
-            const fissionUsername = context.verifyJwt();
+            const fissionUsername = await context.verifyJwt();
             const result = await prisma.offer.updateMany({
                 where: {
                     id: args.offerId,
@@ -263,17 +264,20 @@ export const resolvers: Resolvers = {
             return result.count > 0;
         },
         sendMessage: async (parent, args, context) => {
-            const fissionUsername = context.verifyJwt();
+            const fissionUsername = await context.verifyJwt();
             const message = await prisma.message.create({
                 data: {
                     senderFissionName: fissionUsername,
                     createdAt: new Date(),
                     recipientFissionName: args.data.toFissionName,
-                    type: args.data.type,
+                    topic: args.data.topic,
                     cid: args.data.cid
                 }
             });
-
+            let topic = eventBroker.tryGetTopic(args.data.toFissionName, "messages");
+            if (topic) {
+                topic.publish(message);
+            }
             return {
                 ...message,
                 createdAt: message.createdAt.toJSON(),
@@ -281,7 +285,7 @@ export const resolvers: Resolvers = {
             };
         },
         markMessageAsRead: async (parent, args, context) => {
-            const fissionUsername = context.verifyJwt();
+            const fissionUsername = await context.verifyJwt();
             const result = await prisma.message.updateMany({
                 where: {
                     id: args.messageId,
@@ -297,7 +301,7 @@ export const resolvers: Resolvers = {
     Subscription: {
         messages: {
             subscribe: async (root, args, context) => {
-                const fissionName = context.verifyJwt();
+                const fissionName = await context.verifyJwt();
                 let topic = eventBroker.tryGetTopic(fissionName, "messages");
                 if (!topic) {
                     topic = eventBroker.createTopic(fissionName, "messages");
@@ -305,7 +309,7 @@ export const resolvers: Resolvers = {
 
                 const iterator = from(topic.observable).pipe(map(event => {
                     return {
-                        message: event
+                        messages: event
                     }
                 }));
 

@@ -31,7 +31,7 @@ type Message {
     id: Int!
     createdAt:String!
     readAt:String
-    type:String!
+    topic:String!
     cid:String!
 
     senderFissionName:ID!
@@ -39,7 +39,7 @@ type Message {
 }
 input SendMessageInput {
     toFissionName: String!
-    type: String!
+    topic: String!
     cid: String!
 }
 
@@ -59,8 +59,9 @@ type Offer {
 
     pictures: [File!]
 }
-input CreateOfferInput
+input UpsertOfferInput
 {
+    id: Int
     title:String!
     price:String!
     deliveryTerms:String!
@@ -71,6 +72,7 @@ input CreateOfferInput
     pictures:[CreateFileInput!]!
 }
 input QueryOfferInput {
+    createdByFissionName:String
     title:String
     price_lt:String
     price_gt:String
@@ -146,7 +148,7 @@ type Query
 type Mutation
 {
     upsertProfile(data:UpdateProfileInput!):Profile!
-    createOffer(data:CreateOfferInput!):Offer!
+    upsertOffer(data:UpsertOfferInput!):Offer!
     unpublishOffer(offerId:Int!):Boolean!
     sendMessage(data:SendMessageInput!):Message!
     markMessageAsRead(messageId:Int!):Boolean!

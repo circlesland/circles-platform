@@ -1,6 +1,6 @@
 import { createMachine} from "xstate";
-import {strings} from "../../data/strings";
-import {unpublishOfferService} from "./services/unpublishOfferService";
+import {strings} from "../data/strings";
+import {unpublishOfferService} from "../services/unpublishOfferService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import {Jumper} from "svelte-loading-spinners";
   import {onDestroy, onMount} from "svelte";
   import {OmoSafeState} from "../../manifest";
   import TransactionItem from "../atoms/TransactionItem.svelte";

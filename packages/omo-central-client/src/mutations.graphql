@@ -9,8 +9,8 @@ mutation upsertProfile($data:UpdateProfileInput!) {
     }
 }
 
-mutation createOffer($data:CreateOfferInput!) {
-    createOffer(data: $data) {
+mutation upsertOffer($data:UpsertOfferInput!) {
+    upsertOffer(data: $data) {
         category
         city
         country
@@ -45,7 +45,7 @@ mutation sendMessage($data:SendMessageInput!) {
         id
         createdAt
         readAt
-        type
+        topic
         senderFissionName
         recipientFissionName
         cid

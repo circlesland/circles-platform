@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Button } from "./../interfaces/atoms";
+  import Icon from "fa-svelte";
 
   export let mapping: Button;
 </script>
@@ -17,7 +18,10 @@
 {:else if mapping.design.type == 'primary'}
   <div
     class="text-white cursor-pointer button border-secondary bg-secondary hover:border-secondary-lighter hover:bg-secondary-lighter">
-    {mapping.data.label}
+    {#if mapping.design.icon}
+    <Icon icon={mapping.design.icon} />
+    {/if}
+   {mapping.data.label}
   </div>
 {:else if mapping.design.type == 'secondary'}
   <div

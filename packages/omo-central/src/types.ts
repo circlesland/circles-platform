@@ -36,7 +36,7 @@ export type Message = {
   id: Scalars['Int'];
   createdAt: Scalars['String'];
   readAt?: Maybe<Scalars['String']>;
-  type: Scalars['String'];
+  topic: Scalars['String'];
   cid: Scalars['String'];
   senderFissionName: Scalars['ID'];
   recipientFissionName: Scalars['ID'];
@@ -44,7 +44,7 @@ export type Message = {
 
 export type SendMessageInput = {
   toFissionName: Scalars['String'];
-  type: Scalars['String'];
+  topic: Scalars['String'];
   cid: Scalars['String'];
 };
 
@@ -64,7 +64,8 @@ export type Offer = {
   pictures?: Maybe<Array<File>>;
 };
 
-export type CreateOfferInput = {
+export type UpsertOfferInput = {
+  id?: Maybe<Scalars['Int']>;
   title: Scalars['String'];
   price: Scalars['String'];
   deliveryTerms: Scalars['String'];
@@ -76,6 +77,7 @@ export type CreateOfferInput = {
 };
 
 export type QueryOfferInput = {
+  createdByFissionName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   price_lt?: Maybe<Scalars['String']>;
   price_gt?: Maybe<Scalars['String']>;
@@ -161,7 +163,7 @@ export type QueryOffersArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   upsertProfile: Profile;
-  createOffer: Offer;
+  upsertOffer: Offer;
   unpublishOffer: Scalars['Boolean'];
   sendMessage: Message;
   markMessageAsRead: Scalars['Boolean'];
@@ -173,8 +175,8 @@ export type MutationUpsertProfileArgs = {
 };
 
 
-export type MutationCreateOfferArgs = {
-  data: CreateOfferInput;
+export type MutationUpsertOfferArgs = {
+  data: UpsertOfferInput;
 };
 
 
@@ -284,7 +286,7 @@ export type ResolversTypes = ResolversObject<{
   Int: ResolverTypeWrapper<Scalars['Int']>;
   SendMessageInput: SendMessageInput;
   Offer: ResolverTypeWrapper<Offer>;
-  CreateOfferInput: CreateOfferInput;
+  UpsertOfferInput: UpsertOfferInput;
   QueryOfferInput: QueryOfferInput;
   File: ResolverTypeWrapper<File>;
   CreateFileInput: CreateFileInput;
@@ -307,7 +309,7 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int'];
   SendMessageInput: SendMessageInput;
   Offer: Offer;
-  CreateOfferInput: CreateOfferInput;
+  UpsertOfferInput: UpsertOfferInput;
   QueryOfferInput: QueryOfferInput;
   File: File;
   CreateFileInput: CreateFileInput;
@@ -342,7 +344,7 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   readAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  topic?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   senderFissionName?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   recipientFissionName?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -383,7 +385,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   upsertProfile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationUpsertProfileArgs, 'data'>>;
-  createOffer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<MutationCreateOfferArgs, 'data'>>;
+  upsertOffer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<MutationUpsertOfferArgs, 'data'>>;
   unpublishOffer?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUnpublishOfferArgs, 'offerId'>>;
   sendMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'data'>>;
   markMessageAsRead?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMarkMessageAsReadArgs, 'messageId'>>;

@@ -37,6 +37,7 @@
 		"omo-models": "1.0.0",
 		"omo-kernel-interfaces": "1.0.0",
 		"omo-kernel": "1.0.0",
+		"omo-webnative": "0.21.4",
 		"omo-quirks": "1.0.0"
 	},
 	"devDependencies": {
