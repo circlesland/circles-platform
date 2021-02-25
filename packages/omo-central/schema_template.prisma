@@ -16,11 +16,12 @@ model Profile {
     omoFirstName String?
     omoLastName String?
     omoAvatarCid String?
+    omoAvatarMimeType String?
 
     offers Offer[]
 
-    sentMessages Message[] @relation(name: "MessageSender")
-    receivedMessages Message[] @relation(name: "MessageRecipient")
+    sentMessages Message[] @relation(name: "Message_Sender")
+    receivedMessages Message[] @relation(name: "Message_Recipient")
 
     @@unique([fissionName], name:"UX_Profile_fissionName")
     @@unique([fissionRoot], name:"UX_Profile_fissionRoot")
@@ -28,10 +29,11 @@ model Profile {
 
 model Offer {
     id Int @id @default(autoincrement())
-    createdBy Profile @relation(name: "OfferCreatedBy", fields: [createdByFissionName], references: [fissionName])
+    createdBy Profile @relation(name: "Offer_CreatedBy", fields: [createdByFissionName], references: [fissionName])
     createdByFissionName String
     publishedAt DateTime
     unpublishedAt DateTime?
+    purchasedAt DateTime?
 
     title String
     price String            // price in wei
@@ -44,25 +46,46 @@ model Offer {
     pictures File[]
 }
 
+enum PurchaseStatus {
+  INVALID
+  ITEM_LOCKED
+  PAYMENT_PROVEN
+}
+
+model Purchase {
+    id Int @id @default(autoincrement())
+    purchasedBy Profile @relation(name: "Purchase_CreatedBy", fields: [purchasedByFissionName], references: [fissionName])
+    purchasedByFissionName String
+    purchasedAt DateTime
+    purchasedProvenAt DateTime?
+    purchasedItem Offer @relation(name: "Purchase_PurchasedItem", fields: [purchasedItemId], references: [id])
+    purchasedItemId Int
+    status PurchaseStatus
+}
+
 model File {
-    offer Offer  @relation(name: "OfferPictures", fields: [offerId], references: [id])
+    offer Offer  @relation(name: "File_Offer", fields: [offerId], references: [id])
     offerId Int
     size Int?
     mimeType String?
     cid String
-    @@unique([offerId, cid], name:"UX_OfferPictures")
+    @@unique([offerId, cid], name:"UX_File_Offer")
 }
 
 model Message {
     id Int @id @default(autoincrement())
     createdAt DateTime
     readAt DateTime?
+
+    namespace String
     topic String
+
+    preview String
     cid String
 
-    sender Profile @relation(name: "MessageSender", fields: [senderFissionName], references: [fissionName])
+    sender Profile @relation(name: "Message_Sender", fields: [senderFissionName], references: [fissionName])
     senderFissionName String
 
-    recipient Profile @relation(name: "MessageRecipient", fields: [recipientFissionName], references: [fissionName])
+    recipient Profile @relation(name: "Message_Recipient", fields: [recipientFissionName], references: [fissionName])
     recipientFissionName String
 }

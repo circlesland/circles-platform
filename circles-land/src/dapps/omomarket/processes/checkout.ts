@@ -1,34 +1,76 @@
 import { createMachine} from "xstate";
-import Banner from "../../../libs/o-views/atoms/Banner.svelte"
 import {strings} from "../data/strings";
-import {createOfferService} from "../services/createOfferService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
-import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";
-import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
-import {textLine} from "omo-process/dist/artifacts/textLine";
-import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
-import {file} from "omo-process/dist/artifacts/file";
-import {o} from "omo-process/dist/artifacts/o";
-import {text} from "omo-process/dist/artifacts/text";
-import {location} from "omo-process/dist/artifacts/location";
-import {sendInProgressPrompt} from "omo-process/dist/actions/sendPrompt/sendInProgressPrompt";
 import {setError} from "omo-process/dist/actions/setError";
 import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
+import {Offer} from "omo-central-client/dist/generated";
+import {tryGetDappState} from "omo-kernel/dist/kernel";
+import {FissionAuthState} from "omo-fission/dist/manifest";
+import {transferCirclesService} from "../../safe/services/transferCirclesService";
+import {config} from "omo-circles/dist/config";
+import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
+import {TransferCirclesContext} from "../../safe/processes/circles/transferCircles";
+import {findTransitivePathService} from "../../safe/services/findTransitivePathService";
+import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
+import Banner from "../../../libs/o-views/atoms/Banner.svelte";
+import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
+import {o} from "omo-process/dist/artifacts/o";
+import {textLine} from "omo-process/dist/artifacts/textLine";
+import BN from "omo-quirks/dist/BN";
 
 export interface CheckoutContext extends ProcessContext {
+  offer: Offer,
+  paymentProof?:{
+    tokenOwners:string[],
+    sources:string[],
+    destinations:string[],
+    values:string[]
+  },
   data: {
-    offeredByFissionName: ProcessArtifact;
-    productId: ProcessArtifact;
-    productPicture: ProcessArtifact;
-    productPrice: ProcessArtifact;
-    productDescription: ProcessArtifact;
-    productLocation: ProcessArtifact;
   }
 }
+
+/*
+
+[showOffer]
+Display the offer
+  -Next-> [confirmPayment]
+  -Cancel-> [finish]
+[confirmPayment]
+Display the amount and receiver and a notice that you legally buy the item with the transfer
+  -Next-> [lock]
+  -Cancel-> [finish]
+[lock]
+Put a lock on the marketplace item
+  -On:Done-> [pay]
+  -On:Error-> [errorCantLock]
+[pay]
+Transfer the circles to the item vendor and keep the receipt
+  -On:Done-> [provePayment]
+  -On:Error-> [errorCantPay]
+[provePayment]
+Use the transfer receipt to prove the payment
+  -On:Done-> [success]
+  -On:Error-> [errorCantProve]
+[success]
+Display a success message
+  -On:Enter-> set the market item to sold (prove it with the receipt)
+  -Next-> [finish]
+[errorCantLock]
+Display an error message and inform the user that the purchase wasn't completed
+  -Next-> [finish]
+[errorCantPay]
+Display an error message and inform the user that the purchase wasn't completed
+  -Next-> [finish]
+[errorCantProve]
+Display an error message and inform the user that the purchase was completed but an error occurred when telling this to the server
+  -Next-> [finish]
+
+ */
 
 /**
  * Connect safe
@@ -39,150 +81,34 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   states: {
     idle: {
       on: {
-        "process.continue": "promptName"
+        "process.continue": "showOffer"
       }
     },
-    promptName: {
+    showOffer:{
       entry: <any>sendPrompt((context) => {
         return {
-          title: str.titleProductName(),
-          nextButtonTitle: str.buttonProductName(),
-          banner: {
-            component: Banner,
-            data: {
-              text: str.bannerProductName()
-            }
-          },
-          artifacts: {
-            ...textLine("productName", undefined, undefined, false)
-          }
-        }
-      }),
-      on: {
-        "process.continue": {
-          actions: <any>storePromptResponse,
-          target: "promptPicture"
-        },
-        "process.cancel": "stop"
-      }
-    },
-    promptPicture: {
-      entry: <any>sendPrompt((context) => {
-        return {
-          canGoBack: true,
-          title: str.titleProductPicture(),
-          nextButtonTitle: str.buttonProductPicture(),
-          banner: {
-            component: Banner,
-            data: {
-              text: str.bannerProductPicture()
-            }
-          },
-          artifacts: {
-            ...file("productPicture", undefined, undefined, true)
-          }
-        }
-      }),
-      on: {
-        "process.back": {
-          target: "promptName"
-        },
-        "process.continue": {
-          actions: <any>storePromptResponse,
-          target: "promptPrice"
-        },
-        "process.cancel": "stop"
-      }
-    },
-    promptPrice: {
-      entry: <any>sendPrompt((context) => {
-        return {
-          title: str.titleProductPrice(),
-          nextButtonTitle: str.buttonProductPrice(),
+          title: "Product",
+          nextButtonTitle: "Next",
           canGoBack: true,
           banner: {
             component: Banner,
             data: {
-              text: str.bannerProductPrice()
+              text: "Banner text"
             }
           },
-          artifacts: {
-            ...o("productPrice")
-          }
+          artifacts: {}
         }
       }),
       on: {
-        "process.back": {
-          target: "promptPicture"
-        },
-        "process.continue": {
-          actions: <any>storePromptResponse,
-          target: "promptDescription"
-        },
+        "process.continue": "confirmPayment",
         "process.cancel": "stop"
       }
     },
-    promptDescription: {
-      entry: <any>sendPrompt((context) => {
-        return {
-          title: str.titleProductDescription(),
-          nextButtonTitle: str.buttonProductDescription(),
-          canGoBack: true,
-          banner: {
-            component: Banner,
-            data: {
-              text: str.bannerProductDescription()
-            }
-          },
-          artifacts: {
-            ...text("productDescription", undefined, undefined, false)
-          }
-        }
-      }),
-      on: {
-        "process.back": {
-          target: "promptPrice"
-        },
-        "process.continue": {
-          actions: <any>storePromptResponse,
-          target: "promptLocation"
-        },
-        "process.cancel": "stop"
-      }
-    },
-    promptLocation: {
-      entry: <any>sendPrompt((context) => {
-        return {
-          title: str.titleProductLocation(),
-          nextButtonTitle: str.buttonProductLocation(),
-          canGoBack: true,
-          banner: {
-            component: Banner,
-            data: {
-              text: str.bannerProductLocation()
-            }
-          },
-          artifacts: {
-            ...location("productLocation", undefined, undefined, false)
-          }
-        }
-      }),
-      on: {
-        "process.back": {
-          target: "promptDescription"
-        },
-        "process.continue": {
-          actions: <any>storePromptResponse,
-          target: "summarize"
-        },
-        "process.cancel": "stop"
-      }
-    },
-    summarize: {
-      entry: <any>sendPrompt((context: CheckoutContext) => {
+    confirmPayment:{
+      entry: <any>sendPrompt((context:CheckoutContext) => {
         return {
           title: str.titleSummary(),
-          nextButtonTitle: str.buttonSummary(),
+          nextButtonTitle: "Transfer ⦿",
           canGoBack: true,
           banner: {
             component: Banner,
@@ -191,44 +117,138 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
             }
           },
           artifacts: {
-            ...textLine("productName", undefined, true),
-            ...file("productPicture", undefined, true),
-            ...o("productPrice", undefined, true),
-            ...text("productDescription", undefined, true),
-            ...location("productLocation", undefined, true),
+            ...textLine("product", "Product", true, true, context.offer.title),
+            ...ethereumAddress("recipient", "Payment recipient", true, false, context.offer.createdBy.circlesAddress),
+            ...o("value", "Price", true, undefined, new BN(context.offer.price))
           }
         }
       }),
       on: {
-        "process.back": "promptLocation",
-        "process.cancel": "stop",
-        "process.continue": "createOffer"
+        "process.continue": "lock",
+        "process.cancel": "stop"
       }
     },
-    createOffer: {
-      entry:<any> sendInProgressPrompt(progressView, str.bannerProgress),
+    lock:{
       invoke: <any>{
-        id: 'createOffer',
-        src: createOfferService,
+        id: 'lock',
+        src: async (context:CheckoutContext) => {
+          await new Promise((resolve, reject) => {
+            const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+            fissionAuthState.fissionState.omoCentralClientSubject.subscribe(async api => {
+              api.lockOffer({
+                offerId: context.offer.id
+              })
+                .then(() => resolve(undefined))
+                .catch(e => reject(e));
+            });
+          });
+        },
         onError: {
           actions: setError,
-          target: "error"
+          target: "errorCantLock"
         },
         onDone: {
-          actions: setProcessResult(strings.omomarket.processes.createOffer.successMessage),
+          actions: setProcessResult(str.successMessage),
+          target: "pay"
+        }
+      }
+    },
+    pay:{
+      invoke: <any>{
+        id: 'pay',
+        src: async (context:CheckoutContext) => {
+          const transferCirclesContext:TransferCirclesContext = <any>{};
+          transferCirclesContext.web3 = config.getCurrent().web3();
+          transferCirclesContext.circlesHub = new CirclesHub(transferCirclesContext.web3, config.getCurrent().HUB_ADDRESS);
+          transferCirclesContext.data = {
+            recipient: <any>{
+              value: context.offer.createdBy.circlesAddress,
+            },
+            value: <any>{
+               value: context.offer.price
+            }
+          };
+
+          const path = await findTransitivePathService(transferCirclesContext);
+          transferCirclesContext.data.pathToRecipient = <any>{
+            value: path
+          };
+
+          await transferCirclesService(transferCirclesContext);
+
+          context.paymentProof = {
+            destinations: [],
+            sources: [],
+            tokenOwners: [],
+            values: []
+          };
+
+          path.transfers.forEach(transfer => {
+            context.paymentProof.destinations.push(transfer.to);
+            context.paymentProof.sources.push(transfer.from);
+            context.paymentProof.tokenOwners.push(transfer.tokenOwner);
+            context.paymentProof.values.push(transfer.value);
+          });
+        },
+        onError: {
+          actions: setError,
+          target: "errorCantPay"
+        },
+        onDone: {
+          actions: setProcessResult(str.successMessage),
+          target: "provePayment"
+        }
+      }
+    },
+    provePayment:{
+      invoke: <any>{
+        id: 'provePayment',
+        src: async (context:CheckoutContext) => {
+          await new Promise((resolve, reject) => {
+            const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+            fissionAuthState.fissionState.omoCentralClientSubject.subscribe(async api => {
+              api.provePayment({
+                forOfferId: context.offer.id,
+                ...context.paymentProof
+              })
+                .then(() => resolve(undefined))
+                .catch(e => reject(e));
+            });
+          });
+        },
+        onError: {
+          actions: setError,
+          target: "errorCantProve"
+        },
+        onDone: {
+          actions: setProcessResult(str.successMessage),
           target: "success"
         }
       }
     },
-    error: {
+    success:{
+      entry: <any>sendSuccessPrompt(successView),
+      on: {
+        "process.continue": "stop",
+        "process.cancel": "stop"
+      }
+    },
+    errorCantLock:{
       entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"
       }
     },
-    success: {
-      entry: <any>sendSuccessPrompt(successView),
+    errorCantPay:{
+      entry: <any>sendErrorPrompt(errorView),
+      on: {
+        "process.continue": "stop",
+        "process.cancel": "stop"
+      }
+    },
+    errorCantProve:{
+      entry: <any>sendErrorPrompt(errorView),
       on: {
         "process.continue": "stop",
         "process.cancel": "stop"

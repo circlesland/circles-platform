@@ -4,19 +4,21 @@ mutation upsertProfile($data:UpdateProfileInput!) {
         fissionName
         fissionRoot
         omoAvatarCid
+        omoAvatarMimeType
         omoFirstName
         omoLastName
     }
 }
 
-mutation upsertOffer($data:UpsertOfferInput!) {
-    upsertOffer(data: $data) {
+mutation createOffer($data:CreateOfferInput!) {
+    createOffer(data: $data) {
         category
         city
         country
         createdBy {
             fissionName
             omoAvatarCid
+            omoAvatarMimeType
             circlesAddress
             omoFirstName
             omoLastName
@@ -54,4 +56,17 @@ mutation sendMessage($data:SendMessageInput!) {
 
 mutation markMessageAsRead($messageId:Int!) {
     markMessageAsRead(messageId: $messageId)
+}
+
+mutation lockOffer($data:LockOfferInput!) {
+    lockOffer(data: $data) {
+        success
+        lockedUntil
+    }
+}
+
+mutation provePayment($data:PaymentProof!) {
+    provePayment(data: $data) {
+        success
+    }
 }

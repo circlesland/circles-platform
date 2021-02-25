@@ -1,7 +1,7 @@
 import {assign, createMachine} from "xstate";
 import Banner from "../../../../libs/o-views/atoms/Banner.svelte";
 import {strings} from "../../data/strings";
-import {findTransitivePath, TransitivePath} from "../../services/findTransitivePath";
+import {findTransitivePathService, TransitivePath} from "../../services/findTransitivePathService";
 import {transferCirclesService} from "../../services/transferCirclesService";
 import Web3 from "omo-quirks/dist/web3";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
@@ -122,7 +122,7 @@ const processDefinition = (maxBalance: number, progressView:any, successView:any
       ],
       invoke: <any>{
         id: 'findTransitivePath',
-        src: findTransitivePath,
+        src: findTransitivePathService,
         onError: {
           actions: setError,
           target: "error"

@@ -2,6 +2,8 @@
   import {createEventDispatcher} from "svelte";
   import Cropper from '../svelte-easy-crop/Cropper.svelte' ;
   import Dropzone from "libs/svelte-dropzone";
+  import Icon from "fa-svelte";
+  import {faTimes} from "@fortawesome/free-solid-svg-icons";
   import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 
   const addedfile = file => {
@@ -15,8 +17,6 @@
     });
     reader.readAsArrayBuffer(file);
   }
-  const drop = event => console.log(event.target);
-  const init = () => console.log("dropzone init ! 😍");
 
   let crop = { x: 0, y: 0 }
   let zoom = 1
@@ -26,13 +26,19 @@
 
   let files = [];
 
+  function clearImage()
+  {
+    processArtifact.value = null;
+    files = [];
+  }
+
   function loadImageIntoCanvas()
   {
     const canvas:HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('cropCanvas');
     const ctx = canvas.getContext('2d');
 
     const image = new Image();
-    image.src = `data:image/png;base64,${processArtifact.value.toString('base64')}`;
+    image.src = `data:image/*;base64,${processArtifact.value.toString('base64')}`;
 
     image.onload = function(){
       ctx.drawImage(image,
@@ -67,6 +73,9 @@
 <!--<input bind:files type="file" accept="image/*" />-->
 <canvas style="visibility: hidden; position:absolute; left:-8096px; top:-8096px;" id="cropCanvas" width="300" height="300"></canvas>
 {#if processArtifact.value}
+  <a on:click={() => clearImage()} style="float: right; cursor: pointer;">
+    <Icon icon={faTimes} /> clear
+  </a>
   <Cropper
     image={`data:image/png;base64,${processArtifact.value.toString('base64')}`}
     bind:crop
@@ -78,8 +87,8 @@
     dropzoneClass="dropzone"
     hooveringClass="hooveringClass"
     id="id"
-    dropzoneEvents={{ addedfile, drop, init }}
-    options={{ clickable: true, acceptedFiles: 'image/png,image/jpeg,image/jpg', maxFilesize: 1024 * 5, init }}>
+    dropzoneEvents={{ addedfile }}
+    options={{ clickable: true, acceptedFiles: 'image/png,image/jpeg,image/jpg', maxFilesize: 1024 * 5 }}>
     <p>Drop files here to upload</p>
   </Dropzone>
 {/if}

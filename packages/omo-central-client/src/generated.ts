@@ -32,6 +32,7 @@ export type Profile = {
   omoFirstName?: Maybe<Scalars['String']>;
   omoLastName?: Maybe<Scalars['String']>;
   omoAvatarCid?: Maybe<Scalars['String']>;
+  omoAvatarMimeType?: Maybe<Scalars['String']>;
   offers?: Maybe<Array<Offer>>;
   sentMessages?: Maybe<Array<Message>>;
   receivedMessages?: Maybe<Array<Message>>;
@@ -42,24 +43,44 @@ export type Message = {
   id: Scalars['Int'];
   createdAt: Scalars['String'];
   readAt?: Maybe<Scalars['String']>;
+  namespace: Scalars['String'];
   topic: Scalars['String'];
+  preview: Scalars['String'];
   cid: Scalars['String'];
-  senderFissionName: Scalars['ID'];
-  recipientFissionName: Scalars['ID'];
+  sender: Profile;
+  senderFissionName: Scalars['String'];
+  recipient: Profile;
+  recipientFissionName: Scalars['String'];
 };
 
 export type SendMessageInput = {
   toFissionName: Scalars['String'];
+  namespace: Scalars['String'];
   topic: Scalars['String'];
+  preview: Scalars['String'];
   cid: Scalars['String'];
+};
+
+export type QueryInboxInput = {
+  senderFissionName?: Maybe<Scalars['String']>;
+  createdAt_lt?: Maybe<Scalars['String']>;
+  createdAt_gt?: Maybe<Scalars['String']>;
+};
+
+export type QueryOutboxInput = {
+  recipientFissionName?: Maybe<Scalars['String']>;
+  createdAt_lt?: Maybe<Scalars['String']>;
+  createdAt_gt?: Maybe<Scalars['String']>;
 };
 
 export type Offer = {
   __typename?: 'Offer';
   id: Scalars['Int'];
   createdBy: Profile;
+  createdByFissionName: Scalars['String'];
   publishedAt: Scalars['String'];
   unpublishedAt?: Maybe<Scalars['String']>;
+  purchasedAt?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   price: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -70,7 +91,7 @@ export type Offer = {
   pictures?: Maybe<Array<File>>;
 };
 
-export type UpsertOfferInput = {
+export type CreateOfferInput = {
   id?: Maybe<Scalars['Int']>;
   title: Scalars['String'];
   price: Scalars['String'];
@@ -129,6 +150,30 @@ export type UpdateProfileInput = {
   omoFirstName?: Maybe<Scalars['String']>;
   omoLastName?: Maybe<Scalars['String']>;
   omoAvatarCid?: Maybe<Scalars['String']>;
+  omoAvatarMimeType?: Maybe<Scalars['String']>;
+};
+
+export type LockOfferInput = {
+  offerId: Scalars['Int'];
+};
+
+export type LockOfferResult = {
+  __typename?: 'LockOfferResult';
+  success: Scalars['Boolean'];
+  lockedUntil?: Maybe<Scalars['String']>;
+};
+
+export type PaymentProof = {
+  forOfferId: Scalars['Int'];
+  tokenOwners: Array<Scalars['String']>;
+  sources: Array<Scalars['String']>;
+  destinations: Array<Scalars['String']>;
+  values: Array<Scalars['String']>;
+};
+
+export type ProvePaymentResult = {
+  __typename?: 'ProvePaymentResult';
+  success: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -139,6 +184,8 @@ export type Query = {
   profiles: Array<Profile>;
   offer: Offer;
   offers: Array<Offer>;
+  inbox: Array<Message>;
+  outbox: Array<Message>;
 };
 
 
@@ -166,13 +213,25 @@ export type QueryOffersArgs = {
   query: QueryOfferInput;
 };
 
+
+export type QueryInboxArgs = {
+  query?: Maybe<QueryInboxInput>;
+};
+
+
+export type QueryOutboxArgs = {
+  query?: Maybe<QueryOutboxInput>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   upsertProfile: Profile;
-  upsertOffer: Offer;
+  createOffer: Offer;
   unpublishOffer: Scalars['Boolean'];
   sendMessage: Message;
   markMessageAsRead: Scalars['Boolean'];
+  lockOffer: LockOfferResult;
+  provePayment: ProvePaymentResult;
 };
 
 
@@ -181,8 +240,8 @@ export type MutationUpsertProfileArgs = {
 };
 
 
-export type MutationUpsertOfferArgs = {
-  data: UpsertOfferInput;
+export type MutationCreateOfferArgs = {
+  data: CreateOfferInput;
 };
 
 
@@ -198,6 +257,16 @@ export type MutationSendMessageArgs = {
 
 export type MutationMarkMessageAsReadArgs = {
   messageId: Scalars['Int'];
+};
+
+
+export type MutationLockOfferArgs = {
+  data: LockOfferInput;
+};
+
+
+export type MutationProvePaymentArgs = {
+  data: PaymentProof;
 };
 
 export type Subscription = {
@@ -220,23 +289,23 @@ export type UpsertProfileMutation = (
   { __typename?: 'Mutation' }
   & { upsertProfile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
+    & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
   ) }
 );
 
-export type UpsertOfferMutationVariables = Exact<{
-  data: UpsertOfferInput;
+export type CreateOfferMutationVariables = Exact<{
+  data: CreateOfferInput;
 }>;
 
 
-export type UpsertOfferMutation = (
+export type CreateOfferMutation = (
   { __typename?: 'Mutation' }
-  & { upsertOffer: (
+  & { createOffer: (
     { __typename?: 'Offer' }
     & Pick<Offer, 'category' | 'city' | 'country' | 'deliveryTerms' | 'description' | 'id' | 'price' | 'publishedAt' | 'title' | 'unpublishedAt'>
     & { createdBy: (
       { __typename?: 'Profile' }
-      & Pick<Profile, 'fissionName' | 'omoAvatarCid' | 'circlesAddress' | 'omoFirstName' | 'omoLastName'>
+      & Pick<Profile, 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'circlesAddress' | 'omoFirstName' | 'omoLastName'>
     ), pictures?: Maybe<Array<(
       { __typename?: 'File' }
       & Pick<File, 'size' | 'mimeType' | 'cid'>
@@ -277,6 +346,32 @@ export type MarkMessageAsReadMutation = (
   & Pick<Mutation, 'markMessageAsRead'>
 );
 
+export type LockOfferMutationVariables = Exact<{
+  data: LockOfferInput;
+}>;
+
+
+export type LockOfferMutation = (
+  { __typename?: 'Mutation' }
+  & { lockOffer: (
+    { __typename?: 'LockOfferResult' }
+    & Pick<LockOfferResult, 'success' | 'lockedUntil'>
+  ) }
+);
+
+export type ProvePaymentMutationVariables = Exact<{
+  data: PaymentProof;
+}>;
+
+
+export type ProvePaymentMutation = (
+  { __typename?: 'Mutation' }
+  & { provePayment: (
+    { __typename?: 'ProvePaymentResult' }
+    & Pick<ProvePaymentResult, 'success'>
+  ) }
+);
+
 export type OmoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -307,14 +402,7 @@ export type ProfileQuery = (
   { __typename?: 'Query' }
   & { profile: (
     { __typename?: 'Profile' }
-    & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
-    & { receivedMessages?: Maybe<Array<(
-      { __typename?: 'Message' }
-      & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'cid'>
-    )>>, sentMessages?: Maybe<Array<(
-      { __typename?: 'Message' }
-      & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'cid'>
-    )>> }
+    & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
   ) }
 );
 
@@ -327,7 +415,47 @@ export type ProfilesQuery = (
   { __typename?: 'Query' }
   & { profiles: Array<(
     { __typename?: 'Profile' }
-    & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
+    & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+  )> }
+);
+
+export type InboxQueryVariables = Exact<{
+  query?: Maybe<QueryInboxInput>;
+}>;
+
+
+export type InboxQuery = (
+  { __typename?: 'Query' }
+  & { inbox: Array<(
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'preview' | 'cid'>
+    & { sender: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
+    ), recipient: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    ) }
+  )> }
+);
+
+export type OutboxQueryVariables = Exact<{
+  query?: Maybe<QueryOutboxInput>;
+}>;
+
+
+export type OutboxQuery = (
+  { __typename?: 'Query' }
+  & { outbox: Array<(
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'preview' | 'cid'>
+    & { sender: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    ), recipient: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    ) }
   )> }
 );
 
@@ -343,7 +471,7 @@ export type OffersQuery = (
     & Pick<Offer, 'id' | 'publishedAt' | 'unpublishedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
     & { createdBy: (
       { __typename?: 'Profile' }
-      & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
+      & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
     ), pictures?: Maybe<Array<(
       { __typename?: 'File' }
       & Pick<File, 'size' | 'mimeType' | 'cid'>
@@ -370,20 +498,22 @@ export const UpsertProfileDocument = gql`
     fissionName
     fissionRoot
     omoAvatarCid
+    omoAvatarMimeType
     omoFirstName
     omoLastName
   }
 }
     `;
-export const UpsertOfferDocument = gql`
-    mutation upsertOffer($data: UpsertOfferInput!) {
-  upsertOffer(data: $data) {
+export const CreateOfferDocument = gql`
+    mutation createOffer($data: CreateOfferInput!) {
+  createOffer(data: $data) {
     category
     city
     country
     createdBy {
       fissionName
       omoAvatarCid
+      omoAvatarMimeType
       circlesAddress
       omoFirstName
       omoLastName
@@ -426,6 +556,21 @@ export const MarkMessageAsReadDocument = gql`
   markMessageAsRead(messageId: $messageId)
 }
     `;
+export const LockOfferDocument = gql`
+    mutation lockOffer($data: LockOfferInput!) {
+  lockOffer(data: $data) {
+    success
+    lockedUntil
+  }
+}
+    `;
+export const ProvePaymentDocument = gql`
+    mutation provePayment($data: PaymentProof!) {
+  provePayment(data: $data) {
+    success
+  }
+}
+    `;
 export const OmoDocument = gql`
     query omo {
   omo {
@@ -445,26 +590,9 @@ export const ProfileDocument = gql`
     fissionName
     fissionRoot
     omoAvatarCid
+    omoAvatarMimeType
     omoFirstName
     omoLastName
-    receivedMessages {
-      id
-      createdAt
-      readAt
-      senderFissionName
-      recipientFissionName
-      topic
-      cid
-    }
-    sentMessages {
-      id
-      createdAt
-      readAt
-      senderFissionName
-      recipientFissionName
-      topic
-      cid
-    }
   }
 }
     `;
@@ -475,8 +603,66 @@ export const ProfilesDocument = gql`
     fissionName
     fissionRoot
     omoAvatarCid
+    omoAvatarMimeType
     omoFirstName
     omoLastName
+  }
+}
+    `;
+export const InboxDocument = gql`
+    query inbox($query: QueryInboxInput) {
+  inbox(query: $query) {
+    id
+    createdAt
+    readAt
+    senderFissionName
+    sender {
+      fissionName
+      circlesAddress
+      omoAvatarCid
+      omoFirstName
+      omoLastName
+    }
+    recipientFissionName
+    recipient {
+      fissionName
+      circlesAddress
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    preview
+    cid
+  }
+}
+    `;
+export const OutboxDocument = gql`
+    query outbox($query: QueryOutboxInput) {
+  outbox(query: $query) {
+    id
+    createdAt
+    readAt
+    senderFissionName
+    sender {
+      fissionName
+      circlesAddress
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    recipientFissionName
+    recipient {
+      fissionName
+      circlesAddress
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    preview
+    cid
   }
 }
     `;
@@ -490,6 +676,7 @@ export const OffersDocument = gql`
       circlesAddress
       fissionName
       omoAvatarCid
+      omoAvatarMimeType
       omoFirstName
       omoLastName
     }
@@ -531,8 +718,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     upsertProfile(variables: UpsertProfileMutationVariables): Promise<{ data?: UpsertProfileMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<UpsertProfileMutation>(print(UpsertProfileDocument), variables));
     },
-    upsertOffer(variables: UpsertOfferMutationVariables): Promise<{ data?: UpsertOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<UpsertOfferMutation>(print(UpsertOfferDocument), variables));
+    createOffer(variables: CreateOfferMutationVariables): Promise<{ data?: CreateOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<CreateOfferMutation>(print(CreateOfferDocument), variables));
     },
     unpublishOffer(variables: UnpublishOfferMutationVariables): Promise<{ data?: UnpublishOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<UnpublishOfferMutation>(print(UnpublishOfferDocument), variables));
@@ -542,6 +729,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     markMessageAsRead(variables: MarkMessageAsReadMutationVariables): Promise<{ data?: MarkMessageAsReadMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<MarkMessageAsReadMutation>(print(MarkMessageAsReadDocument), variables));
+    },
+    lockOffer(variables: LockOfferMutationVariables): Promise<{ data?: LockOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<LockOfferMutation>(print(LockOfferDocument), variables));
+    },
+    provePayment(variables: ProvePaymentMutationVariables): Promise<{ data?: ProvePaymentMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<ProvePaymentMutation>(print(ProvePaymentDocument), variables));
     },
     omo(variables?: OmoQueryVariables): Promise<{ data?: OmoQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<OmoQuery>(print(OmoDocument), variables));
@@ -554,6 +747,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     profiles(variables: ProfilesQueryVariables): Promise<{ data?: ProfilesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ProfilesQuery>(print(ProfilesDocument), variables));
+    },
+    inbox(variables?: InboxQueryVariables): Promise<{ data?: InboxQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<InboxQuery>(print(InboxDocument), variables));
+    },
+    outbox(variables?: OutboxQueryVariables): Promise<{ data?: OutboxQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<OutboxQuery>(print(OutboxDocument), variables));
     },
     offers(variables: OffersQueryVariables): Promise<{ data?: OffersQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<OffersQuery>(print(OffersDocument), variables));

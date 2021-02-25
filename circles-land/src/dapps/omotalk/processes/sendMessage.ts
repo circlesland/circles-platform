@@ -16,12 +16,15 @@ import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
 import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
 import {text} from "omo-process/dist/artifacts/text";
 import {Client} from "omo-central-client/dist/omoCentralClient";
+import {textLine} from "omo-process/dist/artifacts/textLine";
 
 export interface SendMessageContext extends ProcessContext {
   omoCentral: Client,
+  namespace: string,
   topic: string,
   data: {
     recipient?: ProcessArtifact,
+    preview?: ProcessArtifact,
     text?: ProcessArtifact
   }
 }
@@ -35,7 +38,13 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   states: {
     idle: {
       on: {
-        "process.continue": "promptRecipient"
+        "process.continue": [{
+          target: "promptRecipient",
+          cond: (context) => !context.data?.recipient?.value
+        },{
+          target: "promptText",
+          cond: (context) => context.data?.recipient?.value
+        }]
       }
     },
     promptRecipient: {
@@ -75,7 +84,8 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
             }
           },
           artifacts: {
-            ...text("text", undefined, undefined, false)
+            ...textLine("preview", "Subject", undefined, false),
+            ...text("text", "Message", undefined, false)
           }
         }
       }),

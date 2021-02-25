@@ -12,46 +12,18 @@
 
   async function init() {
     fissionAuth.fissionState.omoCentralClientSubject.subscribe(async api => {
-      const myProfile = await api.queryProfile(fissionAuth.username);
-      if (myProfile.errors) {
-        console.error(myProfile.errors);
+      const myInbox = await api.queryOutbox();
+      if (myInbox.errors) {
+        console.error(myInbox.errors);
         throw new Error("The API returned an error")
       }
-      myMessages = myProfile.data.profile.sentMessages;
+      myMessages = myInbox.data.outbox;
     });
   }
 
   init();
 
-  function mapToListItem(offer: Offer) {
-    const actions = [{
-      title: "Edit offer",
-      icon: faEdit,
-      action: () => {
-        runWithDrive(async drive => {
-
-        });
-        console.log("Edit")
-      }
-    }];
-
-    // const locationParts = offer.productLocation.display_name.split(",");
-    // const country = locationParts[locationParts.length - 1];
-    const offerItem = {
-      data: {
-        title: offer.title,
-        image: offer.pictures?.length > 0 ? "https://ipfs.io/ipfs/" + offer.pictures[0].cid : undefined,
-        description: offer.description,
-        balance: offer.price,
-        subtitle: offer.city,
-        actions: actions
-      }
-    };
-
-    return offerItem;
-  }
-
-  const oldMessagesLabel = {
+  const sentMessagesLabel = {
     data: {
       label: "Sent messages",
     },
@@ -60,11 +32,13 @@
 
 <div>
   <div class="mb-4">
-    <CategoryTitle mapping={oldMessagesLabel} />
+    <CategoryTitle mapping={sentMessagesLabel} />
   </div>
   <div class="mb-4 space-y-2">
-    {#each myMessages.map(o => mapToListItem(o)) as item}
-      <ListItem mapping={item} />
+    {#each myMessages as item}
+      <ListItem avatar="https://ipfs.io/ipfs/{item.recipient.omoAvatarCid}"
+                name="{item.preview}"
+                content="{item.recipient.omoFirstName + ' ' + item.recipient.omoLastName}"/>
     {/each}
   </div>
 </div>

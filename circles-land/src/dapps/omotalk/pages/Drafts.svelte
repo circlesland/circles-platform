@@ -15,34 +15,6 @@
 
   init();
 
-  function mapToListItem(offer: Offer) {
-    const actions = [{
-      title: "Edit offer",
-      icon: faEdit,
-      action: () => {
-        runWithDrive(async drive => {
-
-        });
-        console.log("Edit")
-      }
-    }];
-
-    // const locationParts = offer.productLocation.display_name.split(",");
-    // const country = locationParts[locationParts.length - 1];
-    const offerItem = {
-      data: {
-        title: offer.title,
-        image: offer.pictures?.length > 0 ? "https://ipfs.io/ipfs/" + offer.pictures[0].cid : undefined,
-        description: offer.description,
-        balance: offer.price,
-        subtitle: offer.city,
-        actions: actions
-      }
-    };
-
-    return offerItem;
-  }
-
   const draftMessagesLabel = {
     data: {
       label: "Drafts",
@@ -55,8 +27,10 @@
     <CategoryTitle mapping={draftMessagesLabel} />
   </div>
   <div class="mb-4 space-y-2">
-    {#each myMessages.map(o => mapToListItem(o)) as item}
-      <ListItem mapping={item} />
+    {#each myMessages as item}
+      <ListItem avatar="https://ipfs.io/ipfs/{item.sender.omoAvatarCid}"
+                name="{item.preview}"
+                content="{item.sender.omoFirstName + ' ' + item.sender.omoLastName}"/>
     {/each}
   </div>
 </div>

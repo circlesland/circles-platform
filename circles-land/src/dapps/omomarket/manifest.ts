@@ -12,7 +12,7 @@ export interface OmoMarketState {}
 export const omomarket : DappManifest<OmoMarketState> = {
   dappId: "omo.market:1",
   isSingleton: true,
-  dependencies: ["omo.li:1"],
+  dependencies: ["omo.safe:1"], // TODO: Needs access to the contact list which is currently in the safe
   icon: faPeopleCarry,
   title: "OmoMarket",
   routeParts: ["omomarket"],

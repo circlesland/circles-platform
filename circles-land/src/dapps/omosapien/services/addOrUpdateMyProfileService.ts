@@ -5,6 +5,7 @@ import {OmoSapienState} from "../manifest";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Profile} from "omo-models/dist/omo/profile";
 import {setDappState, tryGetDappState} from "omo-kernel/dist/kernel";
+import {uploadFileAndGetCid} from "omo-fission/dist/fissionUtil";
 
 export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContext) =>
 {
@@ -16,19 +17,22 @@ export const addOrUpdateMyProfileService = async (context: CreateOmoSapienContex
     profile.name = "me";
     profile.firstName = context.data.firstName.value;
     profile.lastName = context.data.lastName ? context.data.lastName.value : null;
-    //profile.avatar = fissionAuthState.fission.profiles.getPath(["me.png"]);
 
     const fissionUsername = fissionDrive.username;
-
-    const hasAvatar = await fissionDrive.fs.exists(fissionDrive.profiles.getPath(["me.png"]));
     let avatarBytes = context.data.avatar ? context.data.avatar.value : null
-
-    if (!hasAvatar && !avatarBytes) {
+    let avatarMimeType = "image/png";
+    if (!avatarBytes) {
       let avatars = new Avatars(sprites);
       let svg = avatars.create(fissionUsername);
-      let dataUri = `data:image/svg+xml;base64,${btoa(svg)}`;
-      avatarBytes = dataUri;
+      avatarMimeType = "image/svg+xml";
+      avatarBytes = Buffer.from(svg, "utf-8");
     }
+
+    profile.omoAvatarMimeType = avatarMimeType;
+    profile.omoAvatarCid = await uploadFileAndGetCid(
+      "public/Apps/MamaOmo/OmoSapien/Avatars/",
+      "me",
+      avatarBytes);
 
     if (avatarBytes)
     {

@@ -52,7 +52,8 @@ configure({
       await omoCentralClientSubject.getValue()?.upsertProfile({
         circlesAddress: myProfile.circlesAddress,
         fissionRoot: cid,
-        omoAvatarCid: "",
+        omoAvatarCid: myProfile.omoAvatarCid,
+        omoAvatarMimeType: myProfile.omoAvatarMimeType,
         omoFirstName: myProfile.firstName,
         omoLastName: myProfile.lastName
       });

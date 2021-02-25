@@ -26,6 +26,7 @@ export type Profile = {
   omoFirstName?: Maybe<Scalars['String']>;
   omoLastName?: Maybe<Scalars['String']>;
   omoAvatarCid?: Maybe<Scalars['String']>;
+  omoAvatarMimeType?: Maybe<Scalars['String']>;
   offers?: Maybe<Array<Offer>>;
   sentMessages?: Maybe<Array<Message>>;
   receivedMessages?: Maybe<Array<Message>>;
@@ -36,24 +37,44 @@ export type Message = {
   id: Scalars['Int'];
   createdAt: Scalars['String'];
   readAt?: Maybe<Scalars['String']>;
+  namespace: Scalars['String'];
   topic: Scalars['String'];
+  preview: Scalars['String'];
   cid: Scalars['String'];
-  senderFissionName: Scalars['ID'];
-  recipientFissionName: Scalars['ID'];
+  sender: Profile;
+  senderFissionName: Scalars['String'];
+  recipient: Profile;
+  recipientFissionName: Scalars['String'];
 };
 
 export type SendMessageInput = {
   toFissionName: Scalars['String'];
+  namespace: Scalars['String'];
   topic: Scalars['String'];
+  preview: Scalars['String'];
   cid: Scalars['String'];
+};
+
+export type QueryInboxInput = {
+  senderFissionName?: Maybe<Scalars['String']>;
+  createdAt_lt?: Maybe<Scalars['String']>;
+  createdAt_gt?: Maybe<Scalars['String']>;
+};
+
+export type QueryOutboxInput = {
+  recipientFissionName?: Maybe<Scalars['String']>;
+  createdAt_lt?: Maybe<Scalars['String']>;
+  createdAt_gt?: Maybe<Scalars['String']>;
 };
 
 export type Offer = {
   __typename?: 'Offer';
   id: Scalars['Int'];
   createdBy: Profile;
+  createdByFissionName: Scalars['String'];
   publishedAt: Scalars['String'];
   unpublishedAt?: Maybe<Scalars['String']>;
+  purchasedAt?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   price: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -64,7 +85,7 @@ export type Offer = {
   pictures?: Maybe<Array<File>>;
 };
 
-export type UpsertOfferInput = {
+export type CreateOfferInput = {
   id?: Maybe<Scalars['Int']>;
   title: Scalars['String'];
   price: Scalars['String'];
@@ -123,6 +144,30 @@ export type UpdateProfileInput = {
   omoFirstName?: Maybe<Scalars['String']>;
   omoLastName?: Maybe<Scalars['String']>;
   omoAvatarCid?: Maybe<Scalars['String']>;
+  omoAvatarMimeType?: Maybe<Scalars['String']>;
+};
+
+export type LockOfferInput = {
+  offerId: Scalars['Int'];
+};
+
+export type LockOfferResult = {
+  __typename?: 'LockOfferResult';
+  success: Scalars['Boolean'];
+  lockedUntil?: Maybe<Scalars['String']>;
+};
+
+export type PaymentProof = {
+  forOfferId: Scalars['Int'];
+  tokenOwners: Array<Scalars['String']>;
+  sources: Array<Scalars['String']>;
+  destinations: Array<Scalars['String']>;
+  values: Array<Scalars['String']>;
+};
+
+export type ProvePaymentResult = {
+  __typename?: 'ProvePaymentResult';
+  success: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -133,6 +178,8 @@ export type Query = {
   profiles: Array<Profile>;
   offer: Offer;
   offers: Array<Offer>;
+  inbox: Array<Message>;
+  outbox: Array<Message>;
 };
 
 
@@ -160,13 +207,25 @@ export type QueryOffersArgs = {
   query: QueryOfferInput;
 };
 
+
+export type QueryInboxArgs = {
+  query?: Maybe<QueryInboxInput>;
+};
+
+
+export type QueryOutboxArgs = {
+  query?: Maybe<QueryOutboxInput>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   upsertProfile: Profile;
-  upsertOffer: Offer;
+  createOffer: Offer;
   unpublishOffer: Scalars['Boolean'];
   sendMessage: Message;
   markMessageAsRead: Scalars['Boolean'];
+  lockOffer: LockOfferResult;
+  provePayment: ProvePaymentResult;
 };
 
 
@@ -175,8 +234,8 @@ export type MutationUpsertProfileArgs = {
 };
 
 
-export type MutationUpsertOfferArgs = {
-  data: UpsertOfferInput;
+export type MutationCreateOfferArgs = {
+  data: CreateOfferInput;
 };
 
 
@@ -192,6 +251,16 @@ export type MutationSendMessageArgs = {
 
 export type MutationMarkMessageAsReadArgs = {
   messageId: Scalars['Int'];
+};
+
+
+export type MutationLockOfferArgs = {
+  data: LockOfferInput;
+};
+
+
+export type MutationProvePaymentArgs = {
+  data: PaymentProof;
 };
 
 export type Subscription = {
@@ -285,17 +354,23 @@ export type ResolversTypes = ResolversObject<{
   Message: ResolverTypeWrapper<Message>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   SendMessageInput: SendMessageInput;
+  QueryInboxInput: QueryInboxInput;
+  QueryOutboxInput: QueryOutboxInput;
   Offer: ResolverTypeWrapper<Offer>;
-  UpsertOfferInput: UpsertOfferInput;
+  CreateOfferInput: CreateOfferInput;
   QueryOfferInput: QueryOfferInput;
   File: ResolverTypeWrapper<File>;
   CreateFileInput: CreateFileInput;
   QueryUniqueProfileInput: QueryUniqueProfileInput;
   QueryProfileInput: QueryProfileInput;
   UpdateProfileInput: UpdateProfileInput;
+  LockOfferInput: LockOfferInput;
+  LockOfferResult: ResolverTypeWrapper<LockOfferResult>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  PaymentProof: PaymentProof;
+  ProvePaymentResult: ResolverTypeWrapper<ProvePaymentResult>;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Subscription: ResolverTypeWrapper<{}>;
 }>;
 
@@ -308,17 +383,23 @@ export type ResolversParentTypes = ResolversObject<{
   Message: Message;
   Int: Scalars['Int'];
   SendMessageInput: SendMessageInput;
+  QueryInboxInput: QueryInboxInput;
+  QueryOutboxInput: QueryOutboxInput;
   Offer: Offer;
-  UpsertOfferInput: UpsertOfferInput;
+  CreateOfferInput: CreateOfferInput;
   QueryOfferInput: QueryOfferInput;
   File: File;
   CreateFileInput: CreateFileInput;
   QueryUniqueProfileInput: QueryUniqueProfileInput;
   QueryProfileInput: QueryProfileInput;
   UpdateProfileInput: UpdateProfileInput;
+  LockOfferInput: LockOfferInput;
+  LockOfferResult: LockOfferResult;
+  Boolean: Scalars['Boolean'];
+  PaymentProof: PaymentProof;
+  ProvePaymentResult: ProvePaymentResult;
   Query: {};
   Mutation: {};
-  Boolean: Scalars['Boolean'];
   Subscription: {};
 }>;
 
@@ -334,6 +415,7 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
   omoFirstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   omoLastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   omoAvatarCid?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  omoAvatarMimeType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   offers?: Resolver<Maybe<Array<ResolversTypes['Offer']>>, ParentType, ContextType>;
   sentMessages?: Resolver<Maybe<Array<ResolversTypes['Message']>>, ParentType, ContextType>;
   receivedMessages?: Resolver<Maybe<Array<ResolversTypes['Message']>>, ParentType, ContextType>;
@@ -344,18 +426,24 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   readAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  namespace?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   topic?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  preview?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  senderFissionName?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  recipientFissionName?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  sender?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  senderFissionName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  recipient?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  recipientFissionName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type OfferResolvers<ContextType = any, ParentType extends ResolversParentTypes['Offer'] = ResolversParentTypes['Offer']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdBy?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  createdByFissionName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   publishedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   unpublishedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  purchasedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   price?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -374,6 +462,17 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type LockOfferResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['LockOfferResult'] = ResolversParentTypes['LockOfferResult']> = ResolversObject<{
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  lockedUntil?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ProvePaymentResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['ProvePaymentResult'] = ResolversParentTypes['ProvePaymentResult']> = ResolversObject<{
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   omo?: Resolver<Maybe<ResolversTypes['Omo']>, ParentType, ContextType>;
   fissionRoot?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryFissionRootArgs, 'query'>>;
@@ -381,14 +480,18 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   profiles?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfilesArgs, 'query'>>;
   offer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<QueryOfferArgs, 'offerId'>>;
   offers?: Resolver<Array<ResolversTypes['Offer']>, ParentType, ContextType, RequireFields<QueryOffersArgs, 'query'>>;
+  inbox?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryInboxArgs, never>>;
+  outbox?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryOutboxArgs, never>>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   upsertProfile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationUpsertProfileArgs, 'data'>>;
-  upsertOffer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<MutationUpsertOfferArgs, 'data'>>;
+  createOffer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<MutationCreateOfferArgs, 'data'>>;
   unpublishOffer?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUnpublishOfferArgs, 'offerId'>>;
   sendMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'data'>>;
   markMessageAsRead?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMarkMessageAsReadArgs, 'messageId'>>;
+  lockOffer?: Resolver<ResolversTypes['LockOfferResult'], ParentType, ContextType, RequireFields<MutationLockOfferArgs, 'data'>>;
+  provePayment?: Resolver<ResolversTypes['ProvePaymentResult'], ParentType, ContextType, RequireFields<MutationProvePaymentArgs, 'data'>>;
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
@@ -401,6 +504,8 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Message?: MessageResolvers<ContextType>;
   Offer?: OfferResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
+  LockOfferResult?: LockOfferResultResolvers<ContextType>;
+  ProvePaymentResult?: ProvePaymentResultResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;

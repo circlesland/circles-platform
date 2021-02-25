@@ -4,13 +4,13 @@
   import OmosapienAvatar from "../../../../libs/o-views/atoms/OmosapienAvatar.svelte";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
   import {FissionAuthState} from "omo-fission/dist/manifest";
+  import IpfsImage from "../../../../libs/o-views/atoms/IpfsImage.svelte";
 
   let omosapien = tryGetDappState<OmoSapienState>("omo.sapien:1");
   let fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   let openDetail: boolean = false;
 
-  function toggleExpand()
-  {
+  function toggleExpand() {
     openDetail = !openDetail;
   }
 </script>
@@ -20,7 +20,8 @@
     <div
       class="px-4 py-6 text-xl text-center bg-white border md:mt-4 md:py-10 rounded-xl text-primary border-light-200">
       <div>
-        <OmosapienAvatar fissionUsername={fissionAuth.username} classes="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300" />
+        <IpfsImage cid={omosapien.myProfile.omoAvatarCid} mimeType={omosapien.myProfile.omoAvatarMimeType} classes="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300" />
+        <!--<OmosapienAvatar fissionUsername={fissionAuth.username} classes="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300" />-->
         <!--<img
           src={omosapien.myProfile.avatar}
           class="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300"

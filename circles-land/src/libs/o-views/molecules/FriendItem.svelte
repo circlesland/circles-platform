@@ -31,6 +31,7 @@
   import {BN} from "ethereumjs-util";
   import {config} from "omo-circles/dist/config";
   import {CirclesHub} from "omo-circles/dist/circles/circlesHub";
+  import IpfsImage from "../atoms/IpfsImage.svelte";
 
   export let showActions: boolean = true;
   export let data = {
@@ -48,8 +49,7 @@
   };
 
   $:{
-    if (data && showActions)
-    {
+    if (data && showActions) {
       if (data.detail.trust.in > 0 && data.detail.trust.out === null)
         data.actions = ["trust", "send"];
       if (data.detail.trust.in > 0 && data.detail.trust.out > 0)
@@ -59,21 +59,18 @@
       if (data.detail.trust.out == 0)
         data.actions = ["trust"];
     }
-    if (data && !showActions)
-    {
+    if (data && !showActions) {
       data.actions = [];
     }
   }
 
   let openDetail: boolean = false;
 
-  function toggleExpand()
-  {
+  function toggleExpand() {
     openDetail = !openDetail;
   }
 
-  async function runTransferCircles(recipientAddress: string)
-  {
+  async function runTransferCircles(recipientAddress: string) {
     // const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
     // const myBalance = safeState.myBalances.getValue().payload.map(o => o.balance).reduce((p, c) => p.add(c), new BN(""));
 
@@ -92,10 +89,8 @@
     );
   }
 
-  function runTrust(recipientAddress: string)
-  {
-    window.o.publishEvent(new RunProcess<SetTrustContext>(setTrust, async (ctx: SetTrustContext) =>
-    {
+  function runTrust(recipientAddress: string) {
+    window.o.publishEvent(new RunProcess<SetTrustContext>(setTrust, async (ctx: SetTrustContext) => {
       ctx.web3 = config.getCurrent().web3();
       ctx.circlesHub = new CirclesHub(ctx.web3, config.getCurrent().HUB_ADDRESS);
       ctx.data.trustReceiver = {
@@ -108,10 +103,8 @@
     }));
   }
 
-  function runUntrust(recipientAddress: string)
-  {
-    window.o.publishEvent(new RunProcess<UnTrustContext>(unTrust, async (ctx: UnTrustContext) =>
-    {
+  function runUntrust(recipientAddress: string) {
+    window.o.publishEvent(new RunProcess<UnTrustContext>(unTrust, async (ctx: UnTrustContext) => {
       ctx.web3 = config.getCurrent().web3();
       ctx.circlesHub = new CirclesHub(ctx.web3, config.getCurrent().HUB_ADDRESS);
       ctx.data.trustReceiver = {
@@ -160,6 +153,7 @@
     class="w-full bg-white border rounded-xl card border-light-200">
     <div class="flex items-center justify-center p-2">
       {#if data.detail && data.detail.fissionUsername}
+        <!--<IpfsImage cid={omosapien.myProfile.omoAvatarCid} mimeType={omosapien.myProfile.omoAvatarMimeType}></IpfsImage>-->
         <OmosapienAvatar fissionUsername={data.detail.fissionUsername}></OmosapienAvatar>
       {:else}
         <img src={data.image} alt="CRC" class="rounded-xl" />

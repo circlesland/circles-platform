@@ -14,26 +14,9 @@ query profile($query:QueryUniqueProfileInput!) {
         fissionName
         fissionRoot
         omoAvatarCid
+        omoAvatarMimeType
         omoFirstName
         omoLastName
-        receivedMessages {
-            id
-            createdAt
-            readAt
-            senderFissionName
-            recipientFissionName
-            topic
-            cid
-        }
-        sentMessages {
-            id
-            createdAt
-            readAt
-            senderFissionName
-            recipientFissionName
-            topic
-            cid
-        }
     }
 }
 
@@ -43,8 +26,64 @@ query profiles($query:QueryProfileInput!) {
         fissionName
         fissionRoot
         omoAvatarCid
+        omoAvatarMimeType
         omoFirstName
         omoLastName
+    }
+}
+
+query inbox($query:QueryInboxInput) {
+    inbox(query: $query) {
+        id
+        createdAt
+        readAt
+        senderFissionName
+        sender {
+            fissionName
+            circlesAddress
+            omoAvatarCid
+            omoFirstName
+            omoLastName
+        }
+        recipientFissionName
+        recipient {
+            fissionName
+            circlesAddress
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        preview
+        cid
+    }
+}
+
+query outbox($query:QueryOutboxInput) {
+    outbox(query: $query) {
+        id
+        createdAt
+        readAt
+        senderFissionName
+        sender {
+            fissionName
+            circlesAddress
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        recipientFissionName
+        recipient {
+            fissionName
+            circlesAddress
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        preview
+        cid
     }
 }
 
@@ -57,6 +96,7 @@ query offers($query:QueryOfferInput!) {
             circlesAddress
             fissionName
             omoAvatarCid
+            omoAvatarMimeType
             omoFirstName
             omoLastName
         }

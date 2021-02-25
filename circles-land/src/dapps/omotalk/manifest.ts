@@ -72,7 +72,8 @@ export const overflowActions: QuickAction[] = [{
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
       fissionAuthState.fissionState.omoCentralClientSubject.subscribe(async api => {
         ctx.omoCentral = api;
-        ctx.topic = "omo.talk.textMessage:1";
+        ctx.namespace = "omo.talk"
+        ctx.topic = "chat";
         resolve(ctx);
       });
     }));

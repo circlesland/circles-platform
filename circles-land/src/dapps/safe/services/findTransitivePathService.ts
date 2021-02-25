@@ -14,7 +14,7 @@ export type TransitivePath = {
   }]
 }
 
-export const findTransitivePath = async (context: TransferCirclesContext) : Promise<TransitivePath> =>
+export const findTransitivePathService = async (context: TransferCirclesContext) : Promise<TransitivePath> =>
 {
   const safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
 

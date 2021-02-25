@@ -6,13 +6,13 @@
   import {onMount} from "svelte";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
   import {FissionAuthState} from "omo-fission/dist/manifest";
+  import IpfsImage from "../../../../libs/o-views/atoms/IpfsImage.svelte";
 
   onMount(async () => {
 
   });
 
-  let availableDapps = dapps.filter(o => !o.isHidden).map(dapp =>
-  {
+  let availableDapps = dapps.filter(o => !o.isHidden).map(dapp => {
     const appUrls = constructAppUrl(dapp);
     return {
       data: {
@@ -31,6 +31,7 @@
 
   let fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   let omosapien = tryGetDappState<OmoSapienState>("omo.sapien:1");
+
 </script>
 
 <div class="h-full overflow-hidden">
@@ -46,12 +47,8 @@
       <div
         class="p-4 text-xl text-center bg-white border md:w-72 rounded-xl text-primary border-light-200">
         <div>
-          <OmosapienAvatar fissionUsername={fissionAuth.username} classes="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300" />
-          <!--
-          <img
-            src={omosapien.myProfile.avatar}
-            class="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300"
-            alt="img" />-->
+          <IpfsImage cid={omosapien.myProfile.omoAvatarCid} mimeType={omosapien.myProfile.omoAvatarMimeType}
+                     classes="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300"/>
         </div>
         <div class="py-4 text-2xl font-bold uppercase font-title md:text-3xl">
           {omosapien.myProfile.firstName}

@@ -6,7 +6,7 @@ import { CirclesTransaction } from "omo-models/dist/circles/circlesTransaction";
 import { ProgressSignal } from "omo-events/dist/signals/progressSignal";
 import { EndSignal } from "omo-events/dist/signals/endSignal";
 import { tryGetDappState } from "omo-kernel/dist/kernel";
-import { TransitivePath } from "./findTransitivePath";
+import { TransitivePath } from "./findTransitivePathService";
 
 function sendMessage(message) {
   // This wraps the message posting/response in a promise, which will resolve if the response doesn't

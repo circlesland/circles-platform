@@ -1,21 +1,38 @@
 import {GraphQLClient} from "graphql-request";
 import {
     getSdk,
+    InboxDocument,
+    InboxQuery,
+    InboxQueryVariables,
     OffersDocument,
     OffersQuery,
     OffersQueryVariables,
+    OutboxDocument,
+    OutboxQuery,
+    OutboxQueryVariables,
     ProfileDocument,
     ProfileQuery,
-    ProfileQueryVariables, ProfilesDocument, ProfilesQuery, ProfilesQueryVariables, SendMessageDocument,
-    SendMessageInput, SendMessageMutation, SendMessageMutationVariables,
+    ProfileQueryVariables,
+    ProfilesDocument,
+    ProfilesQuery,
+    ProfilesQueryVariables,
+    SendMessageDocument,
+    SendMessageInput,
+    SendMessageMutation,
+    SendMessageMutationVariables,
     UpdateProfileInput,
-    UpsertOfferDocument,
-    UpsertOfferInput,
-    UpsertOfferMutation,
-    UpsertOfferMutationVariables,
+    CreateOfferDocument,
+    CreateOfferInput,
+    CreateOfferMutation,
+    CreateOfferMutationVariables,
     UpsertProfileDocument,
     UpsertProfileMutation,
-    UpsertProfileMutationVariables
+    UpsertProfileMutationVariables,
+    LockOfferMutation,
+    LockOfferMutationVariables,
+    LockOfferDocument,
+    LockOfferInput,
+    PaymentProof, ProvePaymentMutation, ProvePaymentMutationVariables, ProvePaymentDocument
 } from "./generated";
 import {ApolloLink, split} from "apollo-link";
 import ApolloClient, {DefaultOptions} from "apollo-client";
@@ -161,9 +178,9 @@ export class Client
         });
     }
 
-    async upsertOffer(data: UpsertOfferInput) {
-        return await this._client.mutate<UpsertOfferMutation, UpsertOfferMutationVariables>({
-            mutation: UpsertOfferDocument,
+    async createOffer(data: CreateOfferInput) {
+        return await this._client.mutate<CreateOfferMutation, CreateOfferMutationVariables>({
+            mutation: CreateOfferDocument,
             variables: {
                 data
             }
@@ -220,9 +237,51 @@ export class Client
         })
     }
 
+    async queryInbox(senderFissionName:string|undefined = undefined) {
+        const messages = await this._client.query<InboxQuery, InboxQueryVariables>({
+            query: InboxDocument,
+            variables: {
+                query: {
+                    senderFissionName: senderFissionName
+                }
+            }
+        });
+
+        return messages;
+    }
+
+    async queryOutbox(recipientFissionName:string|undefined = undefined) {
+        return await this._client.query<OutboxQuery, OutboxQueryVariables>({
+            query: OutboxDocument,
+            variables: {
+                query: {
+                    recipientFissionName: recipientFissionName
+                }
+            }
+        })
+    }
+
     async sendMessage(input:SendMessageInput) {
         return await this._client.mutate<SendMessageMutation, SendMessageMutationVariables>({
             mutation: SendMessageDocument,
+            variables: {
+                data: input
+            }
+        });
+    }
+
+    async lockOffer(input:LockOfferInput) {
+        return await this._client.mutate<LockOfferMutation, LockOfferMutationVariables>({
+            mutation: LockOfferDocument,
+            variables: {
+                data: input
+            }
+        });
+    }
+
+    async provePayment(input:PaymentProof) {
+        return await this._client.mutate<ProvePaymentMutation, ProvePaymentMutationVariables>({
+            mutation: ProvePaymentDocument,
             variables: {
                 data: input
             }

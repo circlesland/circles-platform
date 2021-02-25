@@ -1,12 +1,16 @@
 import {PrismaClient} from '@prisma/client'
-import {QueryOffersArgs, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
+import {Offer, QueryOffersArgs, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
 import {serverDid} from "./consts";
 import {EventBroker} from "omo-utils/dist/eventBroker";
 import {from} from 'ix/asynciterable';
 import {map} from 'ix/asynciterable/operators';
+import {CIRCLES_HUB_ABI} from "omo-circles/dist/consts";
+import {config} from "omo-circles/dist/config";
+import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 
 const prisma = new PrismaClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
+const lockTime = 90 * 1000;
 
 function whereProfile(args: RequireFields<QueryProfilesArgs, never>) {
     const q: { [key: string]: any } = {};
@@ -88,28 +92,9 @@ export const resolvers: Resolvers = {
         },
         profile: async (parent, args, context) => {
             const q = whereProfile(args);
-            const fissionName = await context.verifyJwt();
             const profile = await prisma.profile.findUnique({
                 where: {
                     ...q
-                },
-                include: {
-                    receivedMessages: {
-                        where: {
-                            recipientFissionName: fissionName
-                        }
-                    },
-                    sentMessages: {
-                        where: {
-                            senderFissionName: fissionName
-                        }
-                    },
-                    offers: {
-                        include: {
-                            createdBy: true,
-                            pictures: true
-                        }
-                    }
                 }
             });
 
@@ -117,30 +102,7 @@ export const resolvers: Resolvers = {
                 throw new Error(`Couldn't find a profile with the provided arguments.`)
             }
 
-            return {
-                ...profile,
-                sentMessages: profile.sentMessages.map(m => {
-                    return {
-                        ...m,
-                        createdAt: m.createdAt.toJSON(),
-                        readAt: m.readAt?.toJSON(),
-                    }
-                }),
-                receivedMessages: profile.receivedMessages.map(m => {
-                    return {
-                        ...m,
-                        createdAt: m.createdAt.toJSON(),
-                        readAt: m.readAt?.toJSON(),
-                    }
-                }),
-                offers: profile.offers.map(o => {
-                    return {
-                        ...o,
-                        publishedAt: o.publishedAt.toJSON(),
-                        unpublishedAt: o.unpublishedAt?.toJSON()
-                    };
-                })
-            };
+            return <any>profile;
         },
         profiles: async (parent, args, context) => {
             const q = whereProfile(args);
@@ -172,18 +134,10 @@ export const resolvers: Resolvers = {
             const result = await prisma.offer.findMany({
                 where: {
                     ...q
-                },
-                include: {
-                    createdBy: {
-                        select: {
-                            fissionName: true
-                        }
-                    },
-                    pictures: true
                 }
             });
 
-            return result.map(offer => {
+            return <any[]>result.map(offer => {
                 return {
                     ...offer,
                     publishedAt: offer.publishedAt.toJSON(),
@@ -192,25 +146,170 @@ export const resolvers: Resolvers = {
             });
         },
         offer: (parent, args, context) => {
-
+            throw new Error("NotImplemented");
+        },
+        inbox: async (parent, args, context) => {
+            const fissionUsername = await context.verifyJwt();
+            const messages = await prisma.message.findMany({
+                where: {
+                    senderFissionName: args.query?.senderFissionName ?? undefined,
+                    recipientFissionName: fissionUsername
+                }
+            });
+            return <any[]>messages;
+        },
+        outbox: async (parent, args, context) => {
+            const fissionUsername = await context.verifyJwt();
+            const messages = await prisma.message.findMany({
+                where: {
+                    recipientFissionName: args.query?.recipientFissionName ?? undefined,
+                    senderFissionName: fissionUsername
+                }
+            });
+            return <any[]>messages;
         }
     },
     Mutation: {
+        lockOffer:  async (parent, args, context) => {
+            /*
+            Check if the offer is already locked
+              - already locked ->
+                  Check if the lock is still valid (either not timed-out or PAYMENT_PROVEN)
+                    - still valid ->
+                        Return an error
+                    - not valid ->
+                        Set the state to INVALID
+              - not locked ->
+                  Set the lock and return success
+             */
+            const fissionUsername = await context.verifyJwt();
+            const profile = await prisma.profile.findUnique({
+                where: {
+                    fissionName: fissionUsername
+                }
+            });
+            if (!profile || !profile.circlesAddress)
+            {
+                throw new Error(`Couldn't find a profile for ${fissionUsername} or the profile has no associated circles safe`);
+            }
+
+            const existingLocks = await prisma.purchase.findMany({
+                where: {
+                    purchasedItemId: args.data.offerId,
+                    status: {
+                        not: "INVALID"
+                    }
+                }
+            });
+
+            const now = Date.now();
+
+            const invalidLocks = existingLocks.filter(lock => lock.purchasedAt.getTime() <= now - lockTime);
+            await prisma.purchase.updateMany({
+                data: {
+                    status: "INVALID"
+                },
+                where: {
+                    id: {
+                        in: invalidLocks.map(o => o.id)
+                    }
+                }
+            });
+
+            const validLocks = existingLocks.filter(lock => lock.purchasedAt.getTime() > now - lockTime || lock.purchasedProvenAt);
+            if (validLocks.length > 0)
+            {
+                console.log(`Cannot lock offer ${args.data.offerId} because it is already locked or sold.`);
+                return {
+                    success: false
+                }
+            }
+
+            const lock = await prisma.purchase.create({
+               data: {
+                   purchasedAt: new Date(now),
+                   status: "ITEM_LOCKED",
+                   purchasedByFissionName: fissionUsername,
+                   purchasedItemId: args.data.offerId
+               }
+            });
+
+            return {
+                success: true,
+                lockedUntil: new Date(lock.purchasedAt.getTime() + lockTime).toJSON()
+            };
+        },
+        provePayment:  async (parent, args, context) => {
+            /*
+            Check if the user holds a lock on the claimed item
+                - user has lock ->
+                    Check if the transaction hash belongs to a transaction from the buyer to the seller and has the right value
+                        - transaction is valid ->
+                            Set the purchase status to PAYMENT_PROVEN
+             */
+            const now = Date.now();
+            const fissionUsername = await context.verifyJwt();
+            const profile = await prisma.profile.findUnique({
+                where: {
+                    fissionName: fissionUsername
+                }
+            });
+            if (!profile || !profile.circlesAddress)
+            {
+                throw new Error(`Couldn't find a profile for ${fissionUsername} or the profile has no associated circles safe`);
+            }
+
+            const tokenOwners = args.data.tokenOwners;
+            const sources = args.data.sources;
+            const destinations = args.data.destinations;
+            const values = args.data.values;
+
+            // TODO: Validate the proof
+            const existingLocks = await prisma.purchase.findMany({
+                where: {
+                    purchasedItemId: args.data.forOfferId,
+                    purchasedByFissionName: fissionUsername,
+                    status: {
+                        not: "PAYMENT_PROVEN"
+                    }
+                }
+            });
+            if (existingLocks.length == 0)
+            {
+                throw new Error(`Couldn't find a previous lock for offer ${args.data.forOfferId}.`)
+            }
+
+            await prisma.purchase.update({
+                data: {
+                    status: "PAYMENT_PROVEN"
+                },
+                where: {
+                    id: existingLocks[0].id
+                }
+            });
+
+            await prisma.offer.update({
+                data: {
+                    unpublishedAt: new Date(now),
+                    purchasedAt: new Date(now)
+                },
+                where: {
+                    id: args.data.forOfferId
+                }
+            });
+
+            return {
+                success: true
+            }
+        },
         upsertProfile: async (parent, args, context) => {
             const fissionUsername = await context.verifyJwt();
-
             const profile = await prisma.profile.upsert({
                 create: {
-                    circlesAddress: args.data.circlesAddress,
-                    fissionName: fissionUsername,
-                    fissionRoot: args.data.fissionRoot,
-                    omoAvatarCid: args.data.omoAvatarCid,
-                    omoFirstName: args.data.omoFirstName,
-                    omoLastName: args.data.omoLastName
+                    ...args.data,
+                    fissionName: fissionUsername
                 },
-                update: {
-                    ...args.data
-                },
+                update: args.data,
                 where: {
                     fissionName: fissionUsername
                 }
@@ -218,7 +317,7 @@ export const resolvers: Resolvers = {
 
             return profile
         },
-        upsertOffer: async (parent, args, context) => {
+        createOffer: async (parent, args, context) => {
             const fissionUsername = await context.verifyJwt();
             const offer = await prisma.offer.create({
                 data: {
@@ -246,7 +345,8 @@ export const resolvers: Resolvers = {
             return {
                 ...offer,
                 publishedAt: offer.publishedAt.toJSON(),
-                unpublishedAt: offer.unpublishedAt?.toJSON()
+                unpublishedAt: offer.unpublishedAt?.toJSON(),
+                purchasedAt: offer.purchasedAt?.toJSON()
             };
         },
         unpublishOffer: async (parent, args, context) => {
@@ -270,6 +370,8 @@ export const resolvers: Resolvers = {
                     senderFissionName: fissionUsername,
                     createdAt: new Date(),
                     recipientFissionName: args.data.toFissionName,
+                    namespace: args.data.namespace,
+                    preview: args.data.preview,
                     topic: args.data.topic,
                     cid: args.data.cid
                 }
@@ -278,7 +380,7 @@ export const resolvers: Resolvers = {
             if (topic) {
                 topic.publish(message);
             }
-            return {
+            return <any>{
                 ...message,
                 createdAt: message.createdAt.toJSON(),
                 readAt: message.readAt?.toJSON()
@@ -313,8 +415,97 @@ export const resolvers: Resolvers = {
                     }
                 }));
 
-                return iterator;
+                return <any>iterator;
             },
+        }
+    },
+    Message: {
+        sender: async (parent, args, context) => {
+            const profile = await prisma.profile.findUnique({
+                where: {
+                    fissionName: parent.senderFissionName
+                }
+            });
+            if (!profile)
+            {
+                throw new Error(`Couldn't find a profile for fission name: ${parent.senderFissionName}`);
+            }
+
+            return profile;
+        },
+        recipient: async (parent, args, context) => {
+            const profile = await prisma.profile.findUnique({
+                where: {
+                    fissionName: parent.recipientFissionName
+                }
+            });
+            if (!profile)
+            {
+                throw new Error(`Couldn't find a profile for fission name: ${parent.senderFissionName}`);
+            }
+
+            return profile;
+        }
+    },
+    Profile: {
+        sentMessages: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            if (fissionName != parent.fissionName)
+            {
+                throw new Error(`Only the owner of a profile can access its sent messages`);
+            }
+            const messages = await prisma.message.findMany({
+                where: {
+                    senderFissionName: fissionName
+                }
+            });
+            return <any[]>messages;
+        },
+        receivedMessages: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            if (fissionName != parent.fissionName)
+            {
+                throw new Error(`Only the owner of a profile can access its received messages`);
+            }
+            const messages = await prisma.message.findMany({
+                where: {
+                    recipientFissionName: fissionName
+                }
+            });
+            return <any[]>messages;
+        },
+        offers: async (parent, args, context) => {
+            const offers = await prisma.offer.findMany({
+                where: {
+                    createdBy: {
+                        fissionName: parent.fissionName
+                    },
+                    unpublishedAt: null
+                }
+            });
+            return <any[]>offers;
+        }
+    },
+    Offer: {
+        createdBy: async (parent, args, context) => {
+            const profile = await prisma.profile.findUnique({
+                where: {
+                    fissionName: parent.createdByFissionName
+                }
+            });
+            if (!profile)
+            {
+                throw new Error(`Couldn't find the creator profile for offer ${parent.id}`);
+            }
+            return profile;
+        },
+        pictures: async (parent, args, context) => {
+            const pictures = await prisma.file.findMany({
+                where: {
+                    offerId: parent.id
+                }
+            });
+            return pictures;
         }
     }
 };
