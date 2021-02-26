@@ -45,10 +45,12 @@ export async function leave({ withoutRedirect }: { withoutRedirect?: boolean } =
  *                    Pass `null` if working without permissions.
  * @param redirectTo Specify the URL you want users to return to.
  *                   Uses the current url by default.
+ * @param theme Path or ipfs cid to a theme json file. See https://github.com/fission-suite/auth-lobby#theming for more info.
  */
 export async function redirectToLobby(
   permissions: Maybe<Permissions>,
-  redirectTo?: string
+  redirectTo?: string,
+  theme?: string
 ): Promise<void> {
   const app = permissions ? permissions.app : undefined
   const fs = permissions ? permissions.fs : undefined
@@ -59,11 +61,18 @@ export async function redirectToLobby(
   redirectTo = redirectTo || window.location.href
 
   // Compile params
-  const params = [
+  let params = [
     [ "didExchange", exchangeDid ],
     [ "didWrite", writeDid ],
     [ "redirectTo", redirectTo ]
-  ].concat(
+  ];
+
+  if (theme)
+  {
+    params.push(["theme", theme]);
+  }
+
+  params = params.concat(
     app                     ? [[ "appFolder", `${app.creator}/${app.name}` ]] : [],
     fs && fs.privatePaths   ? fs.privatePaths.map(path => [ "privatePath", path ]) : [],
     fs && fs.publicPaths    ? fs.publicPaths.map(path => [ "publicPath", path ]) : [],
