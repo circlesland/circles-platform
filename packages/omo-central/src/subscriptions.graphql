@@ -1,11 +1,12 @@
 subscription messages {
     messages {
         id
-        topic
         createdAt
         readAt
         senderFissionName
         recipientFissionName
-        cid
+        topic
+        type
+        content
     }
 }

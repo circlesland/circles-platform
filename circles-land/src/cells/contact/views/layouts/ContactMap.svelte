@@ -1,7 +1,7 @@
 <script lang="ts">
-  import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
   import {Contact} from "omo-central/dist/generated";
-  import ContactListItem from "../atoms/ContactListItem.svelte";
+  import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
+  import ContactListItem from "../../../../dapps/identity/views/atoms/ContactListItem.svelte";
 
   export let contacts: Contact[] = [];
 

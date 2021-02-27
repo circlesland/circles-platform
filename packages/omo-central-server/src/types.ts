@@ -31,6 +31,8 @@ export type Profile = {
   sentMessages?: Maybe<Array<Message>>;
   receivedMessages?: Maybe<Array<Message>>;
   contacts?: Maybe<Array<Contact>>;
+  purchases?: Maybe<Array<Purchase>>;
+  activities?: Maybe<Array<Activity>>;
 };
 
 export type Contact = {
@@ -48,10 +50,9 @@ export type Message = {
   id: Scalars['Int'];
   createdAt: Scalars['String'];
   readAt?: Maybe<Scalars['String']>;
-  namespace: Scalars['String'];
   topic: Scalars['String'];
-  preview: Scalars['String'];
-  cid: Scalars['String'];
+  type: Scalars['String'];
+  content: Scalars['String'];
   sender: Profile;
   senderFissionName: Scalars['String'];
   recipient: Profile;
@@ -60,10 +61,9 @@ export type Message = {
 
 export type SendMessageInput = {
   toFissionName: Scalars['String'];
-  namespace: Scalars['String'];
   topic: Scalars['String'];
-  preview: Scalars['String'];
-  cid: Scalars['String'];
+  type: Scalars['String'];
+  content: Scalars['String'];
 };
 
 export type QueryInboxInput = {
@@ -85,7 +85,7 @@ export type QueryConversationInput = {
 export type Offer = {
   __typename?: 'Offer';
   id: Scalars['Int'];
-  createdBy: Profile;
+  createdBy?: Maybe<Profile>;
   createdByFissionName: Scalars['String'];
   publishedAt: Scalars['String'];
   unpublishedAt?: Maybe<Scalars['String']>;
@@ -185,6 +185,50 @@ export type ProvePaymentResult = {
   success: Scalars['Boolean'];
 };
 
+export enum PurchaseStatus {
+  Invalid = 'INVALID',
+  ItemLocked = 'ITEM_LOCKED',
+  PaymentProven = 'PAYMENT_PROVEN'
+}
+
+export type Purchase = {
+  __typename?: 'Purchase';
+  id: Scalars['Int'];
+  purchasedAt: Scalars['String'];
+  status: PurchaseStatus;
+  purchasedFrom: Profile;
+  purchasedBy: Profile;
+  purchasedItem: Offer;
+};
+
+export type QueryPurchaseInput = {
+  purchasedByFissionName: Scalars['String'];
+};
+
+export enum ActivityPredicate {
+  Created = 'CREATED',
+  Updated = 'UPDATED',
+  Proved = 'PROVED',
+  Received = 'RECEIVED',
+  Closed = 'CLOSED'
+}
+
+export type Activity = {
+  __typename?: 'Activity';
+  timestamp: Scalars['String'];
+  isPublic: Scalars['Boolean'];
+  subjectType: Scalars['String'];
+  subjectKey: Scalars['String'];
+  predicate: Scalars['String'];
+  objectType: Scalars['String'];
+  objectKey: Scalars['String'];
+};
+
+export type QueryActivityInput = {
+  subjectType: Scalars['String'];
+  subjectKey: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   omo?: Maybe<Omo>;
@@ -196,6 +240,8 @@ export type Query = {
   inbox: Array<Message>;
   outbox: Array<Message>;
   conversation: Array<Message>;
+  purchases: Array<Purchase>;
+  activities: Array<Activity>;
 };
 
 
@@ -236,6 +282,16 @@ export type QueryOutboxArgs = {
 
 export type QueryConversationArgs = {
   query: QueryConversationInput;
+};
+
+
+export type QueryPurchasesArgs = {
+  query: QueryPurchaseInput;
+};
+
+
+export type QueryActivitiesArgs = {
+  query: QueryActivityInput;
 };
 
 export type Mutation = {
@@ -392,6 +448,12 @@ export type ResolversTypes = ResolversObject<{
   LockOfferResult: ResolverTypeWrapper<LockOfferResult>;
   PaymentProof: PaymentProof;
   ProvePaymentResult: ResolverTypeWrapper<ProvePaymentResult>;
+  PurchaseStatus: PurchaseStatus;
+  Purchase: ResolverTypeWrapper<Purchase>;
+  QueryPurchaseInput: QueryPurchaseInput;
+  ActivityPredicate: ActivityPredicate;
+  Activity: ResolverTypeWrapper<Activity>;
+  QueryActivityInput: QueryActivityInput;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   Subscription: ResolverTypeWrapper<{}>;
@@ -423,6 +485,10 @@ export type ResolversParentTypes = ResolversObject<{
   LockOfferResult: LockOfferResult;
   PaymentProof: PaymentProof;
   ProvePaymentResult: ProvePaymentResult;
+  Purchase: Purchase;
+  QueryPurchaseInput: QueryPurchaseInput;
+  Activity: Activity;
+  QueryActivityInput: QueryActivityInput;
   Query: {};
   Mutation: {};
   Subscription: {};
@@ -445,6 +511,8 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
   sentMessages?: Resolver<Maybe<Array<ResolversTypes['Message']>>, ParentType, ContextType>;
   receivedMessages?: Resolver<Maybe<Array<ResolversTypes['Message']>>, ParentType, ContextType>;
   contacts?: Resolver<Maybe<Array<ResolversTypes['Contact']>>, ParentType, ContextType>;
+  purchases?: Resolver<Maybe<Array<ResolversTypes['Purchase']>>, ParentType, ContextType>;
+  activities?: Resolver<Maybe<Array<ResolversTypes['Activity']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -462,10 +530,9 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   readAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  namespace?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   topic?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  preview?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  cid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   sender?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
   senderFissionName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   recipient?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
@@ -475,7 +542,7 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type OfferResolvers<ContextType = any, ParentType extends ResolversParentTypes['Offer'] = ResolversParentTypes['Offer']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  createdBy?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  createdBy?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   createdByFissionName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   publishedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   unpublishedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -509,6 +576,27 @@ export type ProvePaymentResultResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PurchaseResolvers<ContextType = any, ParentType extends ResolversParentTypes['Purchase'] = ResolversParentTypes['Purchase']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  purchasedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['PurchaseStatus'], ParentType, ContextType>;
+  purchasedFrom?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  purchasedBy?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  purchasedItem?: Resolver<ResolversTypes['Offer'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ActivityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Activity'] = ResolversParentTypes['Activity']> = ResolversObject<{
+  timestamp?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  subjectType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  subjectKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  predicate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  objectType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  objectKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   omo?: Resolver<Maybe<ResolversTypes['Omo']>, ParentType, ContextType>;
   fissionRoot?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryFissionRootArgs, 'query'>>;
@@ -519,6 +607,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   inbox?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryInboxArgs, never>>;
   outbox?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryOutboxArgs, never>>;
   conversation?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryConversationArgs, 'query'>>;
+  purchases?: Resolver<Array<ResolversTypes['Purchase']>, ParentType, ContextType, RequireFields<QueryPurchasesArgs, 'query'>>;
+  activities?: Resolver<Array<ResolversTypes['Activity']>, ParentType, ContextType, RequireFields<QueryActivitiesArgs, 'query'>>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
@@ -544,6 +634,8 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   File?: FileResolvers<ContextType>;
   LockOfferResult?: LockOfferResultResolvers<ContextType>;
   ProvePaymentResult?: ProvePaymentResultResolvers<ContextType>;
+  Purchase?: PurchaseResolvers<ContextType>;
+  Activity?: ActivityResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;

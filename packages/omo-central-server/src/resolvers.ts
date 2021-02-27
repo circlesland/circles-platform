@@ -1,9 +1,10 @@
 import {PrismaClient} from '@prisma/client'
-import {QueryOffersArgs, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
+import {ActivityPredicate, QueryOffersArgs, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
 import {serverDid} from "./consts";
 import {EventBroker} from "omo-utils/dist/eventBroker";
 import {from} from 'ix/asynciterable';
 import {map} from 'ix/asynciterable/operators';
+import {Activity} from "../dist/types";
 
 const prisma = new PrismaClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
@@ -393,10 +394,9 @@ export const resolvers: Resolvers = {
                     senderFissionName: fissionUsername,
                     createdAt: new Date(),
                     recipientFissionName: args.data.toFissionName,
-                    namespace: args.data.namespace,
-                    preview: args.data.preview,
                     topic: args.data.topic,
-                    cid: args.data.cid
+                    type: args.data.type,
+                    content: args.data.content
                 }
             });
             let topic = eventBroker.tryGetTopic(args.data.toFissionName, "messages");
@@ -471,6 +471,17 @@ export const resolvers: Resolvers = {
         }
     },
     Profile: {
+        offers: async (parent, args, context) => {
+            const offers = await prisma.offer.findMany({
+                where: {
+                    createdBy: {
+                        fissionName: parent.fissionName
+                    },
+                    unpublishedAt: null
+                }
+            });
+            return <any[]>offers;
+        },
         contacts: async (parent, args, context) => {
             const fissionName = await context.verifyJwt();
             if (fissionName != parent.fissionName)
@@ -515,17 +526,124 @@ export const resolvers: Resolvers = {
             });
             return <any[]>messages;
         },
-        offers: async (parent, args, context) => {
-            const offers = await prisma.offer.findMany({
+        purchases: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            if (fissionName != parent.fissionName)
+            {
+                throw new Error(`Only the owner of a profile can access its purchases`);
+            }
+            const purchases = await prisma.purchase.findMany({
                 where: {
-                    createdBy: {
-                        fissionName: parent.fissionName
-                    },
-                    unpublishedAt: null
+                    purchasedByFissionName: parent.fissionName
                 }
             });
-            return <any[]>offers;
-        }
+            return <any[]>purchases;
+        },
+        activities: async (parent, args, context) => {
+
+            // TODO: This is only a prototype. Streams must be created differently when this should survive load.
+
+            // Public activities are:
+            // * Profile created/updated/closed an Offer
+            // * Profile updated/closed own Profile
+            // Private activities are:
+            // * Profile created/updated/closed a Contact
+            // * Profile created/received a Message
+            // * Profile created/proved a Purchase
+
+            const fissionName = await context.verifyJwt();
+            const activities:Activity[] = [];
+
+            const createdOffers = await prisma.offer.findMany({
+                where: {
+                    createdByFissionName: parent.fissionName
+                },
+                select: {
+                    publishedAt: true,
+                    createdByFissionName: true,
+                    id: true,
+                }
+            });
+            createdOffers.forEach(offer => {
+               activities.push({
+                   timestamp: offer.publishedAt.toJSON(),
+                   isPublic: true,
+                   subjectType: "profile",
+                   subjectKey: offer.createdByFissionName,
+                   predicate: ActivityPredicate.Created,
+                   objectType: "offer",
+                   objectKey: offer.id.toString()
+               });
+            });
+
+            if (parent.fissionName === fissionName) {
+                const createdContacts = await prisma.contact.findMany({
+                    where: {
+                        anchorProfileFissionName: fissionName
+                    },
+                    select: {
+                        id: true,
+                        createdAt: true,
+                        anchorProfileFissionName: true,
+                        createdByType: true,
+                        createdByKey: true,
+                    }
+                });
+                createdContacts.forEach(contact => {
+                    activities.push({
+                        timestamp: contact.createdAt.toJSON(),
+                        isPublic: false,
+                        subjectType: contact.createdByType ? contact.createdByType : "profile",
+                        subjectKey: contact.createdByKey ? contact.createdByKey : fissionName,
+                        predicate: ActivityPredicate.Created,
+                        objectType: "contact",
+                        objectKey: contact.id.toString()
+                    });
+                });
+
+                const purchases = await prisma.purchase.findMany({
+                    where: {
+                        purchasedByFissionName: fissionName
+                    }
+                });
+                purchases.forEach(purchase => {
+                    activities.push({
+                        timestamp: purchase.purchasedAt.toJSON(),
+                        isPublic: false,
+                        subjectType: "profile",
+                        subjectKey: fissionName,
+                        predicate: ActivityPredicate.Created,
+                        objectType: "purchase",
+                        objectKey: purchase.id.toString()
+                    });
+                });
+
+                const sales = await prisma.purchase.findMany({
+                    where: {
+                        purchasedItem: {
+                            createdByFissionName: fissionName
+                        }
+                    }
+                });
+                sales.forEach(purchase => {
+                    activities.push({
+                        timestamp: purchase.purchasedAt.toJSON(),
+                        isPublic: false,
+                        subjectType: "profile",
+                        subjectKey: fissionName,
+                        predicate: ActivityPredicate.Received,
+                        objectType: "purchase",
+                        objectKey: purchase.id.toString()
+                    });
+                });
+            }
+
+            return activities.sort((a,b) => {
+                const aTime = new Date(a.timestamp).getTime();
+                const bTime = new Date(b.timestamp).getTime();
+                return aTime > bTime ? 1 : aTime < bTime ? -1 : 0;
+            });
+        },
     },
     Contact: {
         anchorProfile: async (parent, args, context) => {
@@ -581,6 +699,65 @@ export const resolvers: Resolvers = {
                 }
             });
             return pictures;
+        }
+    },
+    Purchase: {
+        purchasedFrom: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            const purchase = await prisma.purchase.findUnique({
+                where: {
+                    id: parent.id
+                },
+                include: {
+                    purchasedItem: {
+                        include: {
+                            createdBy: true
+                        }
+                    }
+                }
+            });
+            if (!purchase || purchase.purchasedByFissionName !== fissionName)
+            {
+                throw new Error(`Couldn't find a purchase with the id ${parent.id}`);
+            }
+            return purchase.purchasedItem.createdBy;
+        },
+        purchasedBy: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            const purchase = await prisma.purchase.findUnique({
+                where: {
+                    id: parent.id
+                },
+                include: {
+                    purchasedBy: true
+                }
+            });
+            if (!purchase || purchase.purchasedByFissionName !== fissionName)
+            {
+                throw new Error(`Couldn't find a purchase with the id ${parent.id}`);
+            }
+            return purchase.purchasedBy;
+        },
+        purchasedItem: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            const purchase = await prisma.purchase.findUnique({
+                where: {
+                    id: parent.id
+                },
+                include: {
+                    purchasedItem: true
+                }
+            });
+            if (!purchase || purchase.purchasedByFissionName !== fissionName)
+            {
+                throw new Error(`Couldn't find a purchase with the id ${parent.id}`);
+            }
+            return {
+                ...purchase.purchasedItem,
+                publishedAt: purchase.purchasedItem.publishedAt.toJSON(),
+                unpublishedAt: purchase.purchasedItem.unpublishedAt?.toJSON(),
+                purchasedAt: purchase.purchasedItem.purchasedAt?.toJSON(),
+            };
         }
     }
 };

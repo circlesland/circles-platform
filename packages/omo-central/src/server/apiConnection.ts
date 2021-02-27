@@ -25,7 +25,6 @@ export class ApiConnection
 
     readonly client = new AsyncBroadcast<void, ApolloClient<NormalizedCacheObject>>(async () =>
     {
-        console.log("start resolve AsyncBroadcast<ApolloClient> ..")
         const now = Date.now();
         if (!this._client || !this._validTo || this._validTo.getTime() <= now - 60 * 1000)
         {
@@ -38,14 +37,14 @@ export class ApiConnection
                 this._client.stop();
             }
 
-            console.log("start resolve AsyncBroadcast<ApolloClient> - connect() ..")
+            
             const newClient = await this.connect();
-            console.log("start resolve AsyncBroadcast<ApolloClient> - connect() done.")
+            
             this._validTo = newClient.validTo;
             this._client = newClient.client;
         }
 
-        console.log("finished resolve AsyncBroadcast<ApolloClient>.")
+        
         return this._client;
     });
 
@@ -63,11 +62,11 @@ export class ApiConnection
             // This will reconnect if the ucan is about to expire
             const client = await this.client.subscribeToResult();
             if (!this._eventSubscription) {
-                console.log("start resolve AsyncBroadcast<ApolloClient> - subscribe() ..")
+                
                 await this.subscribe();
-                console.log("start resolve AsyncBroadcast<ApolloClient> - subscribe() done.")
+                
             }
-        }, 1000);
+        }, 30000);
     }
 
     destroy()
@@ -107,15 +106,15 @@ export class ApiConnection
             return;
         }
 
-        console.log("start resolve AsyncBroadcast<ApolloClient> - subscribe() - getting client ..")
+        
         const client = await this.client.subscribeToResult();
-        console.log("start resolve AsyncBroadcast<ApolloClient> - subscribe() - got client.")
+        
 
         this._eventSubscription = client.subscribe<MessagesSubscriptionVariables>({
             query: MessagesDocument
         }).subscribe(next =>
         {
-            console.log("Received event:", next);
+            
             const newEvent = <Message>(<any>next.data).event;
             this._events.next(newEvent);
         });

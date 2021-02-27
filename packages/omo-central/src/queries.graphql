@@ -38,6 +38,18 @@ query contacts($query:QueryUniqueProfileInput!) {
     }
 }
 
+query activities($query:QueryActivityInput!) {
+    activities(query: $query) {
+        timestamp
+        isPublic
+        subjectType
+        subjectKey
+        predicate
+        objectType
+        objectKey
+    }
+}
+
 query inbox($query:QueryInboxInput) {
     inbox(query: $query) {
         id
@@ -60,8 +72,9 @@ query inbox($query:QueryInboxInput) {
             omoFirstName
             omoLastName
         }
-        preview
-        cid
+        topic
+        type
+        content
     }
 }
 
@@ -88,8 +101,9 @@ query outbox($query:QueryOutboxInput) {
             omoFirstName
             omoLastName
         }
-        preview
-        cid
+        topic
+        type
+        content
     }
 }
 
@@ -115,8 +129,9 @@ query conversation($query:QueryConversationInput!) {
             omoFirstName
             omoLastName
         }
-        preview
-        cid
+        topic
+        type
+        content
     }
 }
 
@@ -144,6 +159,54 @@ query offers($query:QueryOfferInput!) {
             size
             mimeType
             cid
+        }
+    }
+}
+
+query purchases($query:QueryPurchaseInput!) {
+    purchases(query: $query) {
+        id
+        purchasedAt
+        purchasedFrom {
+            circlesAddress
+            fissionName
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        purchasedBy {
+            circlesAddress
+            fissionName
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        purchasedItem {
+            id
+            publishedAt
+            unpublishedAt
+            createdBy {
+                circlesAddress
+                fissionName
+                omoAvatarCid
+                omoAvatarMimeType
+                omoFirstName
+                omoLastName
+            }
+            title
+            description
+            price
+            category
+            country
+            city
+            deliveryTerms
+            pictures {
+                size
+                mimeType
+                cid
+            }
         }
     }
 }

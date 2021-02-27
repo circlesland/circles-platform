@@ -28,6 +28,10 @@ type Profile {
     receivedMessages:[Message!]
     # All contacts of this profile
     contacts:[Contact!]
+    # All purchases of this profile
+    purchases:[Purchase!]
+    # All activities of this profile
+    activities:[Activity!]
 }
 
 type Contact {
@@ -44,11 +48,9 @@ type Message {
     createdAt:String!
     readAt:String
 
-    namespace:String!
     topic:String!
-
-    preview: String!
-    cid:String!
+    type: String!
+    content:String!
 
     sender: Profile!
     senderFissionName: String!
@@ -58,10 +60,9 @@ type Message {
 }
 input SendMessageInput {
     toFissionName: String!
-    namespace: String!
-    topic: String!
-    preview: String!
-    cid: String!
+    topic:String!
+    type: String!
+    content:String!
 }
 input QueryInboxInput {
     senderFissionName:String
@@ -79,7 +80,7 @@ input QueryConversationInput {
 
 type Offer {
     id: Int!
-    createdBy: Profile!
+    createdBy: Profile
     createdByFissionName: String!
     publishedAt: String!
     unpublishedAt: String
@@ -191,6 +192,44 @@ type ProvePaymentResult
     success:Boolean!
 }
 
+enum PurchaseStatus {
+    INVALID
+    ITEM_LOCKED
+    PAYMENT_PROVEN
+}
+type Purchase {
+    id: Int!
+    purchasedAt: String!
+    status: PurchaseStatus!
+    purchasedFrom: Profile!
+    purchasedBy: Profile!
+    purchasedItem: Offer!
+}
+input QueryPurchaseInput {
+    purchasedByFissionName: String!
+}
+
+enum ActivityPredicate {
+    CREATED # [profile X] CREATED a [contact|message|offer|purchase|profile]
+    UPDATED # [profile X] UPDATED a [contact|offer|profile]
+    PROVED # [profile X] PROVED a [purchase]
+    RECEIVED # [profile X] RECEIVED a [message]
+    CLOSED # [profile X] CLOSED a [contact|offer|profile]
+}
+type Activity {
+    timestamp: String!
+    isPublic: Boolean!
+    subjectType: String!
+    subjectKey: String!
+    predicate: String!
+    objectType: String!
+    objectKey: String!
+}
+input QueryActivityInput {
+    subjectType: String!
+    subjectKey: String!
+}
+
 type Query
 {
     omo : Omo
@@ -208,6 +247,8 @@ type Query
     inbox(query:QueryInboxInput) : [Message!]!
     outbox(query:QueryOutboxInput) : [Message!]!
     conversation(query:QueryConversationInput!) : [Message!]!
+    purchases(query:QueryPurchaseInput!):[Purchase!]!
+    activities(query:QueryActivityInput!):[Activity!]!
 }
 
 type Mutation

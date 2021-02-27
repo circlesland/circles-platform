@@ -37,6 +37,8 @@ export type Profile = {
   sentMessages?: Maybe<Array<Message>>;
   receivedMessages?: Maybe<Array<Message>>;
   contacts?: Maybe<Array<Contact>>;
+  purchases?: Maybe<Array<Purchase>>;
+  activities?: Maybe<Array<Activity>>;
 };
 
 export type Contact = {
@@ -54,10 +56,9 @@ export type Message = {
   id: Scalars['Int'];
   createdAt: Scalars['String'];
   readAt?: Maybe<Scalars['String']>;
-  namespace: Scalars['String'];
   topic: Scalars['String'];
-  preview: Scalars['String'];
-  cid: Scalars['String'];
+  type: Scalars['String'];
+  content: Scalars['String'];
   sender: Profile;
   senderFissionName: Scalars['String'];
   recipient: Profile;
@@ -66,10 +67,9 @@ export type Message = {
 
 export type SendMessageInput = {
   toFissionName: Scalars['String'];
-  namespace: Scalars['String'];
   topic: Scalars['String'];
-  preview: Scalars['String'];
-  cid: Scalars['String'];
+  type: Scalars['String'];
+  content: Scalars['String'];
 };
 
 export type QueryInboxInput = {
@@ -91,7 +91,7 @@ export type QueryConversationInput = {
 export type Offer = {
   __typename?: 'Offer';
   id: Scalars['Int'];
-  createdBy: Profile;
+  createdBy?: Maybe<Profile>;
   createdByFissionName: Scalars['String'];
   publishedAt: Scalars['String'];
   unpublishedAt?: Maybe<Scalars['String']>;
@@ -191,6 +191,50 @@ export type ProvePaymentResult = {
   success: Scalars['Boolean'];
 };
 
+export enum PurchaseStatus {
+  Invalid = 'INVALID',
+  ItemLocked = 'ITEM_LOCKED',
+  PaymentProven = 'PAYMENT_PROVEN'
+}
+
+export type Purchase = {
+  __typename?: 'Purchase';
+  id: Scalars['Int'];
+  purchasedAt: Scalars['String'];
+  status: PurchaseStatus;
+  purchasedFrom: Profile;
+  purchasedBy: Profile;
+  purchasedItem: Offer;
+};
+
+export type QueryPurchaseInput = {
+  purchasedByFissionName: Scalars['String'];
+};
+
+export enum ActivityPredicate {
+  Created = 'CREATED',
+  Updated = 'UPDATED',
+  Proved = 'PROVED',
+  Received = 'RECEIVED',
+  Closed = 'CLOSED'
+}
+
+export type Activity = {
+  __typename?: 'Activity';
+  timestamp: Scalars['String'];
+  isPublic: Scalars['Boolean'];
+  subjectType: Scalars['String'];
+  subjectKey: Scalars['String'];
+  predicate: Scalars['String'];
+  objectType: Scalars['String'];
+  objectKey: Scalars['String'];
+};
+
+export type QueryActivityInput = {
+  subjectType: Scalars['String'];
+  subjectKey: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   omo?: Maybe<Omo>;
@@ -202,6 +246,8 @@ export type Query = {
   inbox: Array<Message>;
   outbox: Array<Message>;
   conversation: Array<Message>;
+  purchases: Array<Purchase>;
+  activities: Array<Activity>;
 };
 
 
@@ -242,6 +288,16 @@ export type QueryOutboxArgs = {
 
 export type QueryConversationArgs = {
   query: QueryConversationInput;
+};
+
+
+export type QueryPurchasesArgs = {
+  query: QueryPurchaseInput;
+};
+
+
+export type QueryActivitiesArgs = {
+  query: QueryActivityInput;
 };
 
 export type Mutation = {
@@ -324,10 +380,10 @@ export type CreateOfferMutation = (
   & { createOffer: (
     { __typename?: 'Offer' }
     & Pick<Offer, 'category' | 'city' | 'country' | 'deliveryTerms' | 'description' | 'id' | 'price' | 'publishedAt' | 'title' | 'unpublishedAt'>
-    & { createdBy: (
+    & { createdBy?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'circlesAddress' | 'omoFirstName' | 'omoLastName'>
-    ), pictures?: Maybe<Array<(
+    )>, pictures?: Maybe<Array<(
       { __typename?: 'File' }
       & Pick<File, 'size' | 'mimeType' | 'cid'>
     )>> }
@@ -353,7 +409,7 @@ export type SendMessageMutation = (
   { __typename?: 'Mutation' }
   & { sendMessage: (
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'topic' | 'senderFissionName' | 'recipientFissionName' | 'cid'>
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'type' | 'content'>
   ) }
 );
 
@@ -444,6 +500,19 @@ export type ContactsQuery = (
   )> }
 );
 
+export type ActivitiesQueryVariables = Exact<{
+  query: QueryActivityInput;
+}>;
+
+
+export type ActivitiesQuery = (
+  { __typename?: 'Query' }
+  & { activities: Array<(
+    { __typename?: 'Activity' }
+    & Pick<Activity, 'timestamp' | 'isPublic' | 'subjectType' | 'subjectKey' | 'predicate' | 'objectType' | 'objectKey'>
+  )> }
+);
+
 export type InboxQueryVariables = Exact<{
   query?: Maybe<QueryInboxInput>;
 }>;
@@ -453,7 +522,7 @@ export type InboxQuery = (
   { __typename?: 'Query' }
   & { inbox: Array<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'preview' | 'cid'>
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'type' | 'content'>
     & { sender: (
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
@@ -473,7 +542,7 @@ export type OutboxQuery = (
   { __typename?: 'Query' }
   & { outbox: Array<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'preview' | 'cid'>
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'type' | 'content'>
     & { sender: (
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
@@ -493,7 +562,7 @@ export type ConversationQuery = (
   { __typename?: 'Query' }
   & { conversation: Array<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'preview' | 'cid'>
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'type' | 'content'>
     & { sender: (
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
@@ -514,13 +583,43 @@ export type OffersQuery = (
   & { offers: Array<(
     { __typename?: 'Offer' }
     & Pick<Offer, 'id' | 'publishedAt' | 'unpublishedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
-    & { createdBy: (
+    & { createdBy?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
-    ), pictures?: Maybe<Array<(
+    )>, pictures?: Maybe<Array<(
       { __typename?: 'File' }
       & Pick<File, 'size' | 'mimeType' | 'cid'>
     )>> }
+  )> }
+);
+
+export type PurchasesQueryVariables = Exact<{
+  query: QueryPurchaseInput;
+}>;
+
+
+export type PurchasesQuery = (
+  { __typename?: 'Query' }
+  & { purchases: Array<(
+    { __typename?: 'Purchase' }
+    & Pick<Purchase, 'id' | 'purchasedAt'>
+    & { purchasedFrom: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    ), purchasedBy: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    ), purchasedItem: (
+      { __typename?: 'Offer' }
+      & Pick<Offer, 'id' | 'publishedAt' | 'unpublishedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
+      & { createdBy?: Maybe<(
+        { __typename?: 'Profile' }
+        & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+      )>, pictures?: Maybe<Array<(
+        { __typename?: 'File' }
+        & Pick<File, 'size' | 'mimeType' | 'cid'>
+      )>> }
+    ) }
   )> }
 );
 
@@ -531,7 +630,7 @@ export type MessagesSubscription = (
   { __typename?: 'Subscription' }
   & { messages?: Maybe<(
     { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'topic' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'cid'>
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'type' | 'content'>
   )> }
 );
 
@@ -589,10 +688,11 @@ export const SendMessageDocument = gql`
     id
     createdAt
     readAt
-    topic
     senderFissionName
     recipientFissionName
-    cid
+    topic
+    type
+    content
   }
 }
     `;
@@ -660,6 +760,19 @@ export const ContactsDocument = gql`
   }
 }
     `;
+export const ActivitiesDocument = gql`
+    query activities($query: QueryActivityInput!) {
+  activities(query: $query) {
+    timestamp
+    isPublic
+    subjectType
+    subjectKey
+    predicate
+    objectType
+    objectKey
+  }
+}
+    `;
 export const InboxDocument = gql`
     query inbox($query: QueryInboxInput) {
   inbox(query: $query) {
@@ -683,8 +796,9 @@ export const InboxDocument = gql`
       omoFirstName
       omoLastName
     }
-    preview
-    cid
+    topic
+    type
+    content
   }
 }
     `;
@@ -712,8 +826,9 @@ export const OutboxDocument = gql`
       omoFirstName
       omoLastName
     }
-    preview
-    cid
+    topic
+    type
+    content
   }
 }
     `;
@@ -740,8 +855,9 @@ export const ConversationDocument = gql`
       omoFirstName
       omoLastName
     }
-    preview
-    cid
+    topic
+    type
+    content
   }
 }
     `;
@@ -774,16 +890,66 @@ export const OffersDocument = gql`
   }
 }
     `;
+export const PurchasesDocument = gql`
+    query purchases($query: QueryPurchaseInput!) {
+  purchases(query: $query) {
+    id
+    purchasedAt
+    purchasedFrom {
+      circlesAddress
+      fissionName
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    purchasedBy {
+      circlesAddress
+      fissionName
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    purchasedItem {
+      id
+      publishedAt
+      unpublishedAt
+      createdBy {
+        circlesAddress
+        fissionName
+        omoAvatarCid
+        omoAvatarMimeType
+        omoFirstName
+        omoLastName
+      }
+      title
+      description
+      price
+      category
+      country
+      city
+      deliveryTerms
+      pictures {
+        size
+        mimeType
+        cid
+      }
+    }
+  }
+}
+    `;
 export const MessagesDocument = gql`
     subscription messages {
   messages {
     id
-    topic
     createdAt
     readAt
     senderFissionName
     recipientFissionName
-    cid
+    topic
+    type
+    content
   }
 }
     `;
@@ -827,6 +993,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     contacts(variables: ContactsQueryVariables): Promise<{ data?: ContactsQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ContactsQuery>(print(ContactsDocument), variables));
     },
+    activities(variables: ActivitiesQueryVariables): Promise<{ data?: ActivitiesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<ActivitiesQuery>(print(ActivitiesDocument), variables));
+    },
     inbox(variables?: InboxQueryVariables): Promise<{ data?: InboxQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<InboxQuery>(print(InboxDocument), variables));
     },
@@ -838,6 +1007,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     offers(variables: OffersQueryVariables): Promise<{ data?: OffersQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<OffersQuery>(print(OffersDocument), variables));
+    },
+    purchases(variables: PurchasesQueryVariables): Promise<{ data?: PurchasesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<PurchasesQuery>(print(PurchasesDocument), variables));
     },
     messages(variables?: MessagesSubscriptionVariables): Promise<{ data?: MessagesSubscription | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<MessagesSubscription>(print(MessagesDocument), variables));

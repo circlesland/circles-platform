@@ -1,4 +1,4 @@
-import {AuthSucceeded, Continuation, initialise, redirectToLobby, Scenario} from "../../../omo-webnative/dist";
+import {AuthSucceeded, Continuation, initialise, redirectToLobby, Scenario} from "omo-webnative/dist";
 
 export async function authorize(lobbyTheme?: string): Promise<AuthSucceeded|Continuation | undefined> {
     const state = await initialise({

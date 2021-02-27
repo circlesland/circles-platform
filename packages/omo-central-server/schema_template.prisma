@@ -35,6 +35,8 @@ model Contact {
     anchorProfile Profile @relation(name: "Contact_AnchorProfile", fields: [anchorProfileFissionName], references: [fissionName])
     anchorProfileFissionName String
     createdAt DateTime
+    createdByType String?
+    createdByKey String?
     isMuted Boolean
     displayName String?
     contactProfile Profile @relation(name: "Contact_ContactProfile", fields: [contactProfileFissionName], references: [fissionName])
@@ -91,11 +93,9 @@ model Message {
     createdAt DateTime
     readAt DateTime?
 
-    namespace String
     topic String
-
-    preview String
-    cid String
+    type String
+    content String
 
     sender Profile @relation(name: "Message_Sender", fields: [senderFissionName], references: [fissionName])
     senderFissionName String
