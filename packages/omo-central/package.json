@@ -1,38 +1,29 @@
 {
-  "name": "omo-central",
-  "version": "1.0.0",
-  "description": "A directory service that keeps track of profile and offer CIDs",
-  "main": "dist/index.js",
-  "prepublish": "tsc",
-  "engines": {
-    "node": ">=12.19.0"
-  },
-  "scripts": {
-    "prisma-generate": "npx prisma generate --schema schema_template.prisma",
-    "graphql-generate": "npx graphql-codegen"
-  },
-  "author": "https://github.com/jaensen",
-  "license": "AGPL-3",
-  "dependencies": {
-    "@prisma/client": "^2.16.1",
-    "apollo-server": "^2.21.0",
-    "graphql": "^15.5.0",
-    "graphql-import": "^1.0.2",
-    "omo-ucan": "0.1.212",
-    "omo-circles": "1.0.0",
-    "subscriptions-transport-ws": "^0.9.18",
-    "omo-utils": "1.0.0",
-    "ix": "^4.2.0"
-  },
-  "devDependencies": {
-    "omo-ucan": "0.1.212",
-    "@graphql-codegen/cli": "^1.17.8",
-    "@graphql-codegen/introspection": "^1.18.1",
-    "@graphql-codegen/typescript": "^1.21.0",
-    "@graphql-codegen/typescript-resolvers": "^1.18.2",
-    "@types/node": "^14.0.1",
-    "prisma": "^2.16.1",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.1.3"
-  }
+	"name": "omo-central",
+	"version": "1.0.0",
+	"description": "omo directory service client",
+	"scripts": {
+		"generate": "cd src && generate.sh"
+	},
+	"author": "https://github.com/jaensen",
+	"license": "AGPL-3",
+	"dependencies": {
+		"apollo-cache-inmemory": "^1.6.6",
+		"apollo-client": "^2.6.10",
+		"apollo-link": "^1.2.14",
+		"apollo-link-http": "^1.5.17",
+		"apollo-link-ws": "^1.0.20",
+		"cross-fetch": "^3.0.4",
+		"ws": "^7.4.3",
+		"omo-utils": "1.0.0"
+	},
+	"devDependencies": {
+		"@types/ws": "^7.4.0",
+		"@graphql-codegen/cli": "^1.17.10",
+		"@graphql-codegen/typescript": "^1.17.10",
+		"@graphql-codegen/typescript-graphql-request": "^2.0.1",
+		"@graphql-codegen/typescript-operations": "^1.17.8",
+		"ts-node": "^9.1.1",
+		"typescript": "^4.1.3"
+	}
 }

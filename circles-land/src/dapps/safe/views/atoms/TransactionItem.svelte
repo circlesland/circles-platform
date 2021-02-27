@@ -100,7 +100,7 @@
               : ""}
             {transaction.subject}
           {:else if transaction.from}
-            Harvested Time
+            UBI
           {/if}
         </b>
         <p class="text-gray-500 text-xxs md:text-xs">

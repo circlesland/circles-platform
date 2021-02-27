@@ -1,11 +1,12 @@
 import {FissionDrive, runWithDrive} from "./fissionDrive";
 import {buildUcan, initialise, redirectToLobby, Scenario, State} from "omo-webnative/dist";
 import {configure} from "omo-webnative/dist/setup";
-import {Client, omoCentralUrl} from "omo-central-client/dist/omoCentralClient";
+import {OmoCentral, omoCentralServerUrl} from "omo-central/dist/omoCentral";
 import {decodeUcan} from "../../omo-ucan/dist/decodeUcan";
 import {BehaviorSubject} from "rxjs";
 
-const omoCentralClientSubject = new BehaviorSubject<Client | undefined>(undefined);
+/*
+const omoCentralClientSubject = new BehaviorSubject<OmoCentral | undefined>(undefined);
 let ucanValidTo:number|undefined;
 let ucanIssuer:string|undefined;
 let ucanAudience:string|undefined;
@@ -27,7 +28,7 @@ async function ensureOmoCentralConnection(jwt: string)
   ucanValidTo = decodedJwt.payload.exp;
   ucanIssuer = decodedJwt.payload.iss;
   ucanAudience = decodedJwt.payload.aud;
-  const nextConnection = await Client.connect(omoCentralUrl, jwt);
+  const nextConnection = await OmoCentral.connect(omoCentralServerUrl, jwt);
   if (currentConnection && changedOrExpiresSoon) {
     currentConnection.close();
   }
@@ -37,7 +38,7 @@ async function ensureOmoCentralConnection(jwt: string)
 configure({
   enableDebugMode: true,
   additionalDnsLinkResolver:async  fissionUsername => {
-    const cid = await Client.fissionRoot(fissionUsername);
+    const cid = await OmoCentral.fissionRoot(fissionUsername);
     return cid ?? "";
   },
   additionalDnsLinkUpdater: async (jwt, cid) =>
@@ -101,7 +102,7 @@ export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = tru
         //
         // ☞ We can now interact with our file system (more on that later)
         return {
-          fissionState: state,
+          state: state,
           username: state.username,
           fission: new FissionDrive(state),
           throughLobby: state.throughLobby,
@@ -128,3 +129,4 @@ export async function tryToAuthenticate(redirectToLobbyIfNecessary:boolean = tru
       return undefined;
   }
 }
+*/

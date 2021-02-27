@@ -70,7 +70,7 @@ const transactionPage = {
     {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -91,7 +91,7 @@ const noFundsOnAccountPage = {
     {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -112,7 +112,7 @@ const noKeyPage = {
     {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -133,7 +133,7 @@ const noSafePage = {
     {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -154,7 +154,7 @@ const noTokenPage = {
     {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -175,7 +175,7 @@ const noFundsOnSafePage = {
     {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -385,7 +385,7 @@ export const omosafe: DappManifest<OmoSafeState> = {
         {
           window.o.logger.log("routeGuard.detail:", detail);
           const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-          return fissionAuthState.fission !== undefined
+          return fissionAuthState.state.username !== undefined
         }
       ],
       userData: {
@@ -403,7 +403,7 @@ export const omosafe: DappManifest<OmoSafeState> = {
         {
           window.o.logger.log("routeGuard.detail:", detail);
           const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-          return fissionAuthState.fission !== undefined
+          return fissionAuthState.state.username !== undefined
         }
       ],
       userData: {

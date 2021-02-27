@@ -1,24 +1,14 @@
-import {FissionDrive} from "./fissionDrive";
 import {RuntimeDapp} from "omo-kernel-interfaces/dist/runtimeDapp";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
-import {tryToAuthenticate} from "./tryToAuthenticate";
+import {AuthSucceeded, Continuation} from "omo-webnative/dist";
+import {OmoCentral} from "omo-central/dist/omoCentral";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
-import {State} from "omo-webnative/dist";
-import {BehaviorSubject} from "rxjs";
-import {Client} from "omo-central-client/dist/omoCentralClient";
+import {FissionDrive} from "./fissionDrive";
 
 export interface FissionAuthState {
-  fissionState: {
-    fissionState: State,
-    username: string,
-    fission: FissionDrive,
-    throughLobby: boolean,
-    newUser: boolean,
-    omoCentralClientSubject: BehaviorSubject<Client | undefined>
-  },
+  state:Continuation|AuthSucceeded;
   fission: OmoBehaviorSubject<StatePropagation<FissionDrive>>,
-  username: string
 }
 
 /**
@@ -31,7 +21,8 @@ async function initialize(stack:RuntimeDapp<any>[], runtimeDapp:RuntimeDapp<any>
 {
   // TODO: Implement as "kernel module" (singleton) and provide
   //       the actual fission APIs via the state of this "dapp"
-  const authResult = await tryToAuthenticate();
+  const state = await OmoCentral.instance.subscribeToResult();
+  const authResult = state.fissionAuthState;
 
   return {
     initialPage: <any>{},

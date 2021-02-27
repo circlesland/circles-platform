@@ -13,7 +13,7 @@ export class DirectoryNode extends FsNode
     if (!this.title || this.title === "")
     {
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      this.title = fissionAuthState.username;
+      this.title = fissionAuthState.state.username;
     }
   }
 

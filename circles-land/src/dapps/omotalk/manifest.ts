@@ -12,6 +12,7 @@ import {FissionAuthState} from "omo-fission/dist/manifest";
 import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 import {RunProcess} from "omo-process/dist/events/runProcess";
 import {sendMessage, SendMessageContext} from "./processes/sendMessage";
+import {OmoCentral} from "omo-central/dist/omoCentral";
 
 export interface OmoTalkState {
 }
@@ -68,17 +69,12 @@ export const overflowActions: QuickAction[] = [{
     }
   },
   event: () => new RunProcess<SendMessageContext>(sendMessage, async ctx => {
-    return new Promise<SendMessageContext>((resolve => {
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      fissionAuthState.fissionState.omoCentralClientSubject.subscribe(async api => {
-        ctx.omoCentral = api;
-        ctx.namespace = "omo.talk"
-        ctx.topic = "chat";
-        resolve(ctx);
-      });
-    }));
+      ctx.omoCentral = await OmoCentral.instance.subscribeToResult();
+      ctx.namespace = "omo.talk"
+      ctx.topic = "chat";
+      return ctx;
   })
-}];
+}]
 
 const inbox = {
   isDefault: true,
@@ -88,7 +84,7 @@ const inbox = {
     (detail) => {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -108,7 +104,7 @@ const outbox = {
     (detail) => {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -128,7 +124,7 @@ const drafts = {
     (detail) => {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {

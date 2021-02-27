@@ -1,12 +1,9 @@
 import {PrismaClient} from '@prisma/client'
-import {Offer, QueryOffersArgs, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
+import {QueryOffersArgs, QueryProfilesArgs, RequireFields, Resolvers} from "./types";
 import {serverDid} from "./consts";
 import {EventBroker} from "omo-utils/dist/eventBroker";
 import {from} from 'ix/asynciterable';
 import {map} from 'ix/asynciterable/operators';
-import {CIRCLES_HUB_ABI} from "omo-circles/dist/consts";
-import {config} from "omo-circles/dist/config";
-import {CirclesAccount} from "omo-circles/dist/model/circlesAccount";
 
 const prisma = new PrismaClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
@@ -90,20 +87,6 @@ export const resolvers: Resolvers = {
                 did: serverDid
             };
         },
-        profile: async (parent, args, context) => {
-            const q = whereProfile(args);
-            const profile = await prisma.profile.findUnique({
-                where: {
-                    ...q
-                }
-            });
-
-            if (!profile) {
-                throw new Error(`Couldn't find a profile with the provided arguments.`)
-            }
-
-            return <any>profile;
-        },
         profiles: async (parent, args, context) => {
             const q = whereProfile(args);
             const profiles = await prisma.profile.findMany({
@@ -112,6 +95,31 @@ export const resolvers: Resolvers = {
                 }
             });
             return profiles;
+        },
+        contacts: async (parent, args, context) => {
+            const q = whereProfile(args);
+            const result = await prisma.profile.findUnique({
+                where: {
+                    ...q
+                },
+                include: {
+                    contacts: {
+                        include: {
+                            contactProfile: true,
+                        }
+                    }
+                }
+            });
+            if (!result)
+            {
+                throw new Error(`Couldn't find a profile with query: ${JSON.stringify(q)}`)
+            }
+            return result.contacts.map(o => {
+                return {
+                    ...o,
+                    createdAt: o.createdAt.toJSON()
+                }
+            });
         },
         fissionRoot: async (parent, args, context) => {
             const q = whereProfile(args);
@@ -164,6 +172,21 @@ export const resolvers: Resolvers = {
                 where: {
                     recipientFissionName: args.query?.recipientFissionName ?? undefined,
                     senderFissionName: fissionUsername
+                }
+            });
+            return <any[]>messages;
+        },
+        conversation: async (parent, args, context) => {
+            const fissionUsername = await context.verifyJwt();
+            const messages = await prisma.message.findMany({
+                where: {
+                    OR: [{
+                        recipientFissionName: args.query.withFissionName ?? undefined,
+                        senderFissionName: fissionUsername
+                    }, {
+                        recipientFissionName: fissionUsername,
+                        senderFissionName: args.query.withFissionName ?? undefined
+                    }]
                 }
             });
             return <any[]>messages;
@@ -448,6 +471,24 @@ export const resolvers: Resolvers = {
         }
     },
     Profile: {
+        contacts: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            if (fissionName != parent.fissionName)
+            {
+                throw new Error(`Only the owner of a profile can access its contacts`);
+            }
+            const contacts = await prisma.contact.findMany({
+                where: {
+                    anchorProfileFissionName: parent.fissionName
+                }
+            });
+            return contacts.map(o => {
+                return {
+                    ...o,
+                    createdAt: o.createdAt.toJSON()
+                }
+            });
+        },
         sentMessages: async (parent, args, context) => {
             const fissionName = await context.verifyJwt();
             if (fissionName != parent.fissionName)
@@ -485,6 +526,40 @@ export const resolvers: Resolvers = {
             });
             return <any[]>offers;
         }
+    },
+    Contact: {
+        anchorProfile: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            const contact = await prisma.contact.findUnique({
+                where: {
+                    id: parent.id
+                },
+                include: {
+                    anchorProfile: true
+                }
+            });
+            if (!contact || contact.anchorProfileFissionName != fissionName)
+            {
+                throw new Error(`Couldn't find a contact with id ${parent.id}`);
+            }
+            return contact.anchorProfile;
+        },
+        contactProfile: async (parent, args, context) => {
+            const fissionName = await context.verifyJwt();
+            const contact = await prisma.contact.findUnique({
+                where: {
+                    id: parent.id
+                },
+                include: {
+                    contactProfile: true
+                }
+            });
+            if (!contact || contact.anchorProfileFissionName != fissionName)
+            {
+                throw new Error(`Couldn't find a contact with id ${parent.id}`);
+            }
+            return contact.contactProfile;
+        },
     },
     Offer: {
         createdBy: async (parent, args, context) => {

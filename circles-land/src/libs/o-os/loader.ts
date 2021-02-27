@@ -24,11 +24,13 @@ import wrap from "svelte-spa-router/wrap";
 import { waitingarea } from "../../dapps/waitingarea/manifest";
 import {EventBroker} from "omo-utils/dist/eventBroker";
 import {Generate} from "omo-utils/dist/generate";
+import {identity} from "../../dapps/identity/manifest";
 
 const errorIndicator = ErrorIndicator;
 
 export const dapps: DappManifest<any>[] = [
   omosapien,
+  identity,
   omosafe,
   omomarket,
   omotalk,

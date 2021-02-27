@@ -2,7 +2,7 @@
   import {faEdit} from "@fortawesome/free-solid-svg-icons";
   import {runWithDrive} from "omo-fission/dist/fissionDrive";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
-  import {Message, Offer} from "omo-central-client/dist/generated";
+  import {Message, Offer} from "omo-central/dist/generated";
   import {FissionAuthState} from "omo-fission/dist/manifest";
   import CategoryTitle from "../../../libs/o-views/atoms/CategoryTitle.svelte";
   import ListItem from "../../../libs/o-views/atoms/ListItem.svelte";

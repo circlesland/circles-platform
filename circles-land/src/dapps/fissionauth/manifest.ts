@@ -22,7 +22,7 @@ async function initialize(stack, runtimeDapp:RuntimeDapp<any>)
   initLogger.log("begin");
 
   const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (fissionAuthState?.fissionState) {
+  if (fissionAuthState?.state) {
     initLogger.log("end");
     return {
       cancelDependencyLoading: false,

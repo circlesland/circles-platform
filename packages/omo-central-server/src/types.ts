@@ -30,6 +30,17 @@ export type Profile = {
   offers?: Maybe<Array<Offer>>;
   sentMessages?: Maybe<Array<Message>>;
   receivedMessages?: Maybe<Array<Message>>;
+  contacts?: Maybe<Array<Contact>>;
+};
+
+export type Contact = {
+  __typename?: 'Contact';
+  id: Scalars['Int'];
+  createdAt?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+  isMuted?: Maybe<Scalars['Boolean']>;
+  anchorProfile?: Maybe<Profile>;
+  contactProfile?: Maybe<Profile>;
 };
 
 export type Message = {
@@ -65,6 +76,10 @@ export type QueryOutboxInput = {
   recipientFissionName?: Maybe<Scalars['String']>;
   createdAt_lt?: Maybe<Scalars['String']>;
   createdAt_gt?: Maybe<Scalars['String']>;
+};
+
+export type QueryConversationInput = {
+  withFissionName: Scalars['String'];
 };
 
 export type Offer = {
@@ -174,21 +189,17 @@ export type Query = {
   __typename?: 'Query';
   omo?: Maybe<Omo>;
   fissionRoot: Scalars['String'];
-  profile: Profile;
   profiles: Array<Profile>;
   offer: Offer;
   offers: Array<Offer>;
+  contacts: Array<Contact>;
   inbox: Array<Message>;
   outbox: Array<Message>;
+  conversation: Array<Message>;
 };
 
 
 export type QueryFissionRootArgs = {
-  query: QueryUniqueProfileInput;
-};
-
-
-export type QueryProfileArgs = {
   query: QueryUniqueProfileInput;
 };
 
@@ -208,6 +219,11 @@ export type QueryOffersArgs = {
 };
 
 
+export type QueryContactsArgs = {
+  query: QueryUniqueProfileInput;
+};
+
+
 export type QueryInboxArgs = {
   query?: Maybe<QueryInboxInput>;
 };
@@ -215,6 +231,11 @@ export type QueryInboxArgs = {
 
 export type QueryOutboxArgs = {
   query?: Maybe<QueryOutboxInput>;
+};
+
+
+export type QueryConversationArgs = {
+  query: QueryConversationInput;
 };
 
 export type Mutation = {
@@ -351,11 +372,14 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Scalars['String']>;
   Profile: ResolverTypeWrapper<Profile>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  Message: ResolverTypeWrapper<Message>;
+  Contact: ResolverTypeWrapper<Contact>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Message: ResolverTypeWrapper<Message>;
   SendMessageInput: SendMessageInput;
   QueryInboxInput: QueryInboxInput;
   QueryOutboxInput: QueryOutboxInput;
+  QueryConversationInput: QueryConversationInput;
   Offer: ResolverTypeWrapper<Offer>;
   CreateOfferInput: CreateOfferInput;
   QueryOfferInput: QueryOfferInput;
@@ -366,7 +390,6 @@ export type ResolversTypes = ResolversObject<{
   UpdateProfileInput: UpdateProfileInput;
   LockOfferInput: LockOfferInput;
   LockOfferResult: ResolverTypeWrapper<LockOfferResult>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   PaymentProof: PaymentProof;
   ProvePaymentResult: ResolverTypeWrapper<ProvePaymentResult>;
   Query: ResolverTypeWrapper<{}>;
@@ -380,11 +403,14 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String'];
   Profile: Profile;
   ID: Scalars['ID'];
-  Message: Message;
+  Contact: Contact;
   Int: Scalars['Int'];
+  Boolean: Scalars['Boolean'];
+  Message: Message;
   SendMessageInput: SendMessageInput;
   QueryInboxInput: QueryInboxInput;
   QueryOutboxInput: QueryOutboxInput;
+  QueryConversationInput: QueryConversationInput;
   Offer: Offer;
   CreateOfferInput: CreateOfferInput;
   QueryOfferInput: QueryOfferInput;
@@ -395,7 +421,6 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateProfileInput: UpdateProfileInput;
   LockOfferInput: LockOfferInput;
   LockOfferResult: LockOfferResult;
-  Boolean: Scalars['Boolean'];
   PaymentProof: PaymentProof;
   ProvePaymentResult: ProvePaymentResult;
   Query: {};
@@ -419,6 +444,17 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
   offers?: Resolver<Maybe<Array<ResolversTypes['Offer']>>, ParentType, ContextType>;
   sentMessages?: Resolver<Maybe<Array<ResolversTypes['Message']>>, ParentType, ContextType>;
   receivedMessages?: Resolver<Maybe<Array<ResolversTypes['Message']>>, ParentType, ContextType>;
+  contacts?: Resolver<Maybe<Array<ResolversTypes['Contact']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ContactResolvers<ContextType = any, ParentType extends ResolversParentTypes['Contact'] = ResolversParentTypes['Contact']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isMuted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  anchorProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
+  contactProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -476,12 +512,13 @@ export type ProvePaymentResultResolvers<ContextType = any, ParentType extends Re
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   omo?: Resolver<Maybe<ResolversTypes['Omo']>, ParentType, ContextType>;
   fissionRoot?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryFissionRootArgs, 'query'>>;
-  profile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<QueryProfileArgs, 'query'>>;
   profiles?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfilesArgs, 'query'>>;
   offer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<QueryOfferArgs, 'offerId'>>;
   offers?: Resolver<Array<ResolversTypes['Offer']>, ParentType, ContextType, RequireFields<QueryOffersArgs, 'query'>>;
+  contacts?: Resolver<Array<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<QueryContactsArgs, 'query'>>;
   inbox?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryInboxArgs, never>>;
   outbox?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryOutboxArgs, never>>;
+  conversation?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryConversationArgs, 'query'>>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
@@ -501,6 +538,7 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
 export type Resolvers<ContextType = any> = ResolversObject<{
   Omo?: OmoResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
+  Contact?: ContactResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   Offer?: OfferResolvers<ContextType>;
   File?: FileResolvers<ContextType>;

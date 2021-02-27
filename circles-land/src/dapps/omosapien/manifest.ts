@@ -64,7 +64,7 @@ async function tryInitOmoDirectory(logger: Logger)
       // This is necessary because at the time of the profile creation or update
       // the DNSLink still updates.
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      const myDirectoryEntry = profileIndexData.byFissionName[fissionAuthState.username];
+      const myDirectoryEntry = profileIndexData.byFissionName[fissionAuthState.state.username];
       const isRegistrationCorrect = myDirectoryEntry
         && myDirectoryEntry.firstName == omosapienState.myProfile.firstName
         && myDirectoryEntry.lastName == omosapienState.myProfile.lastName
@@ -73,7 +73,7 @@ async function tryInitOmoDirectory(logger: Logger)
       if (!isRegistrationCorrect)
       {
         window.o.logger.log("You're not registered at the global directory yet or your registration is outdated. Updating it now ...")
-        await ProfileIndex.announceProfile(fissionAuthState.username);
+        await ProfileIndex.announceProfile(fissionAuthState.state.username);
       }
     }
     else
@@ -95,7 +95,7 @@ const noProfilePage = {
     {
       window.o.logger.log("routeGuard.detail:", detail);
       const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.fission !== undefined
+      return fissionAuthState.state.username !== undefined
     }
   ],
   userData: {
@@ -169,7 +169,7 @@ export const omosapien: DappManifest<OmoSapienState> = {
       {
         window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-        return fissionAuthState.fission !== undefined
+        return fissionAuthState.state.username !== undefined
       }
     ],
     userData: {
@@ -187,7 +187,7 @@ export const omosapien: DappManifest<OmoSapienState> = {
       {
         window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-        return fissionAuthState.fission !== undefined
+        return fissionAuthState.state.username !== undefined
       }
     ],
     userData: {
@@ -205,7 +205,7 @@ export const omosapien: DappManifest<OmoSapienState> = {
       {
         window.o.logger.log("routeGuard.detail:", detail);
         const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-        return fissionAuthState.fission !== undefined
+        return fissionAuthState.state.username !== undefined
       }
     ],
     userData: {

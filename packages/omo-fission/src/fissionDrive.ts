@@ -9,10 +9,11 @@ import {Offers} from "./directories/offers";
 import {tryGetDappState} from "../../omo-kernel/dist/kernel";
 import {FissionAuthState} from "./manifest";
 import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
-import {tryToAuthenticate} from "./tryToAuthenticate";
+// import {tryToAuthenticate} from "./tryToAuthenticate";
 import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
 import {UnavailableSignal} from "omo-events/dist/signals/unavailableSignal";
 import {EndSignal} from "omo-events/dist/signals/endSignal";
+import {OmoCentral} from "omo-central/dist/omoCentral";
 
 export class FissionDrive
 {
@@ -85,10 +86,11 @@ let initializingDrive:boolean = false;
 export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>, authenticateIfNecessary:boolean = true) : Promise<TOut>
 {
   let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-  if (!fissionAuthState)
+  if (!fissionAuthState || !fissionAuthState.state)
   {
-    const authState = await tryToAuthenticate();
-    if (!authState || !authState.username)
+    const authState = await OmoCentral.instance.subscribeToResult();
+    // const authState = await tryToAuthenticate();
+    if (!authState.fissionAuthState || !authState.fissionAuthState.username)
     {
       throw new Error("Cannot access your fission drive: The authorization failed.");
     }
@@ -124,7 +126,7 @@ export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TO
     const initFsBegin = Date.now();
     initializingDrive = true;
     // FS is not loaded yet. Load it.
-    const drive = new FissionDrive(fissionAuthState.fissionState)
+    const drive = new FissionDrive(fissionAuthState.state)
     drive.init().then(() => {
       if (!fissionAuthState)
       {

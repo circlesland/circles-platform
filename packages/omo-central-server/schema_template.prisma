@@ -18,6 +18,9 @@ model Profile {
     omoAvatarCid String?
     omoAvatarMimeType String?
 
+    contacts Contact[] @relation(name: "Contact_AnchorProfile")
+    inverseContacts Contact[] @relation(name: "Contact_ContactProfile")
+
     offers Offer[]
 
     sentMessages Message[] @relation(name: "Message_Sender")
@@ -25,6 +28,17 @@ model Profile {
 
     @@unique([fissionName], name:"UX_Profile_fissionName")
     @@unique([fissionRoot], name:"UX_Profile_fissionRoot")
+}
+
+model Contact {
+    id Int @id @default(autoincrement())
+    anchorProfile Profile @relation(name: "Contact_AnchorProfile", fields: [anchorProfileFissionName], references: [fissionName])
+    anchorProfileFissionName String
+    createdAt DateTime
+    isMuted Boolean
+    displayName String?
+    contactProfile Profile @relation(name: "Contact_ContactProfile", fields: [contactProfileFissionName], references: [fissionName])
+    contactProfileFissionName String
 }
 
 model Offer {

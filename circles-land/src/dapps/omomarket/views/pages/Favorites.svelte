@@ -7,22 +7,18 @@
   import {runWithDrive} from "omo-fission/dist/fissionDrive";
   import {RunProcess} from "omo-process/dist/events/runProcess";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
-  import {Offer} from "omo-central-client/dist/generated";
+  import {Offer} from "omo-central/dist/generated";
   import {FissionAuthState} from "omo-fission/dist/manifest";
+  import {OmoCentral} from "omo-central/dist/omoCentral";
 
   const fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   let myOffers: Offer[] = [];
 
   async function init()
   {
-    fissionAuth.fissionState.omoCentralClientSubject.subscribe(async api => {
-      const result = await api.queryOffersOfUser(fissionAuth.username);
-      if (result.errors) {
-        console.error(result.errors);
-        throw new Error("The API returned an error")
-      }
-      myOffers = result.data.offers;
-    });
+    const api = await OmoCentral.instance.subscribeToResult();
+    const result = await api.queryOffersOfUser(fissionAuth.state.username);
+    myOffers = result.offers;
   }
 
   init();

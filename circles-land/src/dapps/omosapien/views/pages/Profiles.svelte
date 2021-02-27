@@ -1,8 +1,6 @@
 <script lang="ts">
   import CategoryTitle from "src/libs/o-views/atoms/CategoryTitle.svelte";
-  import Compose from "src/libs/o-views/atoms/Compose.svelte";
   import ProfileItem from "src/libs/o-views/molecules/ProfileItem.svelte";
-  import Mobile from "src/libs/o-views/templates/Mobile.svelte";
   import {
     labelOmoSapiens,
     labelCoops,

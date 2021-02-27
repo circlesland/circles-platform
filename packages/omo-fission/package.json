@@ -12,7 +12,7 @@
     "omo-events": "1.0.0",
     "omo-utils": "1.0.0",
     "omo-kernel-interfaces": "1.0.0",
-    "omo-central-client": "1.0.0",
+    "omo-central": "1.0.0",
     "omo-quirks": "1.0.0"
   },
   "devDependencies": {

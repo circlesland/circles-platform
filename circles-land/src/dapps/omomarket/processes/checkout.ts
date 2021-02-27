@@ -7,7 +7,7 @@ import {setProcessResult} from "omo-process/dist/actions/setProcessResult";
 import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorPrompt";
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
-import {Offer} from "omo-central-client/dist/generated";
+import {Offer} from "omo-central/dist/generated";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
 import {FissionAuthState} from "omo-fission/dist/manifest";
 import {transferCirclesService} from "../../safe/services/transferCirclesService";
@@ -21,6 +21,7 @@ import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
 import {o} from "omo-process/dist/artifacts/o";
 import {textLine} from "omo-process/dist/artifacts/textLine";
 import BN from "omo-quirks/dist/BN";
+import {OmoCentral} from "omo-central/dist/omoCentral";
 
 export interface CheckoutContext extends ProcessContext {
   offer: Offer,
@@ -132,15 +133,9 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
       invoke: <any>{
         id: 'lock',
         src: async (context:CheckoutContext) => {
-          await new Promise((resolve, reject) => {
-            const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-            fissionAuthState.fissionState.omoCentralClientSubject.subscribe(async api => {
-              api.lockOffer({
-                offerId: context.offer.id
-              })
-                .then(() => resolve(undefined))
-                .catch(e => reject(e));
-            });
+          const api = await OmoCentral.instance.subscribeToResult();
+          await api.lockOffer({
+            offerId: context.offer.id
           });
         },
         onError: {
@@ -204,16 +199,10 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
       invoke: <any>{
         id: 'provePayment',
         src: async (context:CheckoutContext) => {
-          await new Promise((resolve, reject) => {
-            const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-            fissionAuthState.fissionState.omoCentralClientSubject.subscribe(async api => {
-              api.provePayment({
-                forOfferId: context.offer.id,
-                ...context.paymentProof
-              })
-                .then(() => resolve(undefined))
-                .catch(e => reject(e));
-            });
+          const api = await OmoCentral.instance.subscribeToResult();
+          await api.provePayment({
+            forOfferId: context.offer.id,
+            ...context.paymentProof
           });
         },
         onError: {

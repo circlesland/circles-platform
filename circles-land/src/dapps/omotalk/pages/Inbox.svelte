@@ -1,22 +1,18 @@
 <script lang="ts">
   import {tryGetDappState} from "omo-kernel/dist/kernel";
-  import {Message} from "omo-central-client/dist/generated";
+  import {Message} from "omo-central/dist/generated";
   import {FissionAuthState} from "omo-fission/dist/manifest";
   import CategoryTitle from "../../../libs/o-views/atoms/CategoryTitle.svelte";
   import ListItem from "../../../libs/o-views/atoms/ListItem.svelte";
+  import {OmoCentral} from "omo-central/dist/omoCentral";
 
   const fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   let myMessages: Message[] = [];
 
   async function init() {
-    fissionAuth.fissionState.omoCentralClientSubject.subscribe(async api => {
-      const myInbox = await api.queryInbox();
-      if (myInbox.errors) {
-        console.error(myInbox.errors);
-        throw new Error("The API returned an error")
-      }
-      myMessages = myInbox.data.inbox;
-    });
+    const api = await OmoCentral.instance.subscribeToResult();
+    const myInbox = await api.queryInbox();
+    myMessages = myInbox.inbox;
   }
 
   init();

@@ -4,20 +4,8 @@ query omo {
     }
 }
 
-query fissionRoot($fields:QueryUniqueProfileInput!) {
-    fissionRoot(query: $fields)
-}
-
-query profile($query:QueryUniqueProfileInput!) {
-    profile(query: $query) {
-        circlesAddress
-        fissionName
-        fissionRoot
-        omoAvatarCid
-        omoAvatarMimeType
-        omoFirstName
-        omoLastName
-    }
+query fissionRoot($query:QueryUniqueProfileInput!) {
+    fissionRoot(query: $query)
 }
 
 query profiles($query:QueryProfileInput!) {
@@ -29,6 +17,24 @@ query profiles($query:QueryProfileInput!) {
         omoAvatarMimeType
         omoFirstName
         omoLastName
+    }
+}
+
+query contacts($query:QueryUniqueProfileInput!) {
+    contacts(query: $query) {
+        id
+        createdAt
+        displayName
+        isMuted
+        contactProfile {
+            circlesAddress
+            fissionName
+            fissionRoot
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
     }
 }
 
@@ -70,6 +76,33 @@ query outbox($query:QueryOutboxInput) {
             circlesAddress
             omoAvatarCid
             omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        recipientFissionName
+        recipient {
+            fissionName
+            circlesAddress
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        preview
+        cid
+    }
+}
+
+query conversation($query:QueryConversationInput!) {
+    conversation(query: $query) {
+        id
+        createdAt
+        readAt
+        senderFissionName
+        sender {
+            fissionName
+            circlesAddress
+            omoAvatarCid
             omoFirstName
             omoLastName
         }

@@ -15,11 +15,11 @@ import Banner from "../../../libs/o-views/atoms/Banner.svelte";
 import {ethereumAddress} from "omo-process/dist/artifacts/ethereumAddress";
 import {storePromptResponse} from "omo-process/dist/actions/storePromptResponse";
 import {text} from "omo-process/dist/artifacts/text";
-import {Client} from "omo-central-client/dist/omoCentralClient";
+import {OmoCentral} from "omo-central/dist/omoCentral";
 import {textLine} from "omo-process/dist/artifacts/textLine";
 
 export interface SendMessageContext extends ProcessContext {
-  omoCentral: Client,
+  omoCentral: OmoCentral,
   namespace: string,
   topic: string,
   data: {

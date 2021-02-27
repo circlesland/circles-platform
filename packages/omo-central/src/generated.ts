@@ -36,6 +36,17 @@ export type Profile = {
   offers?: Maybe<Array<Offer>>;
   sentMessages?: Maybe<Array<Message>>;
   receivedMessages?: Maybe<Array<Message>>;
+  contacts?: Maybe<Array<Contact>>;
+};
+
+export type Contact = {
+  __typename?: 'Contact';
+  id: Scalars['Int'];
+  createdAt?: Maybe<Scalars['String']>;
+  displayName?: Maybe<Scalars['String']>;
+  isMuted?: Maybe<Scalars['Boolean']>;
+  anchorProfile?: Maybe<Profile>;
+  contactProfile?: Maybe<Profile>;
 };
 
 export type Message = {
@@ -71,6 +82,10 @@ export type QueryOutboxInput = {
   recipientFissionName?: Maybe<Scalars['String']>;
   createdAt_lt?: Maybe<Scalars['String']>;
   createdAt_gt?: Maybe<Scalars['String']>;
+};
+
+export type QueryConversationInput = {
+  withFissionName: Scalars['String'];
 };
 
 export type Offer = {
@@ -180,21 +195,17 @@ export type Query = {
   __typename?: 'Query';
   omo?: Maybe<Omo>;
   fissionRoot: Scalars['String'];
-  profile: Profile;
   profiles: Array<Profile>;
   offer: Offer;
   offers: Array<Offer>;
+  contacts: Array<Contact>;
   inbox: Array<Message>;
   outbox: Array<Message>;
+  conversation: Array<Message>;
 };
 
 
 export type QueryFissionRootArgs = {
-  query: QueryUniqueProfileInput;
-};
-
-
-export type QueryProfileArgs = {
   query: QueryUniqueProfileInput;
 };
 
@@ -214,6 +225,11 @@ export type QueryOffersArgs = {
 };
 
 
+export type QueryContactsArgs = {
+  query: QueryUniqueProfileInput;
+};
+
+
 export type QueryInboxArgs = {
   query?: Maybe<QueryInboxInput>;
 };
@@ -221,6 +237,11 @@ export type QueryInboxArgs = {
 
 export type QueryOutboxArgs = {
   query?: Maybe<QueryOutboxInput>;
+};
+
+
+export type QueryConversationArgs = {
+  query: QueryConversationInput;
 };
 
 export type Mutation = {
@@ -384,26 +405,13 @@ export type OmoQuery = (
 );
 
 export type FissionRootQueryVariables = Exact<{
-  fields: QueryUniqueProfileInput;
+  query: QueryUniqueProfileInput;
 }>;
 
 
 export type FissionRootQuery = (
   { __typename?: 'Query' }
   & Pick<Query, 'fissionRoot'>
-);
-
-export type ProfileQueryVariables = Exact<{
-  query: QueryUniqueProfileInput;
-}>;
-
-
-export type ProfileQuery = (
-  { __typename?: 'Query' }
-  & { profile: (
-    { __typename?: 'Profile' }
-    & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
-  ) }
 );
 
 export type ProfilesQueryVariables = Exact<{
@@ -416,6 +424,23 @@ export type ProfilesQuery = (
   & { profiles: Array<(
     { __typename?: 'Profile' }
     & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+  )> }
+);
+
+export type ContactsQueryVariables = Exact<{
+  query: QueryUniqueProfileInput;
+}>;
+
+
+export type ContactsQuery = (
+  { __typename?: 'Query' }
+  & { contacts: Array<(
+    { __typename?: 'Contact' }
+    & Pick<Contact, 'id' | 'createdAt' | 'displayName' | 'isMuted'>
+    & { contactProfile?: Maybe<(
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    )> }
   )> }
 );
 
@@ -452,6 +477,26 @@ export type OutboxQuery = (
     & { sender: (
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    ), recipient: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    ) }
+  )> }
+);
+
+export type ConversationQueryVariables = Exact<{
+  query: QueryConversationInput;
+}>;
+
+
+export type ConversationQuery = (
+  { __typename?: 'Query' }
+  & { conversation: Array<(
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'preview' | 'cid'>
+    & { sender: (
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
     ), recipient: (
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
@@ -579,21 +624,8 @@ export const OmoDocument = gql`
 }
     `;
 export const FissionRootDocument = gql`
-    query fissionRoot($fields: QueryUniqueProfileInput!) {
-  fissionRoot(query: $fields)
-}
-    `;
-export const ProfileDocument = gql`
-    query profile($query: QueryUniqueProfileInput!) {
-  profile(query: $query) {
-    circlesAddress
-    fissionName
-    fissionRoot
-    omoAvatarCid
-    omoAvatarMimeType
-    omoFirstName
-    omoLastName
-  }
+    query fissionRoot($query: QueryUniqueProfileInput!) {
+  fissionRoot(query: $query)
 }
     `;
 export const ProfilesDocument = gql`
@@ -606,6 +638,25 @@ export const ProfilesDocument = gql`
     omoAvatarMimeType
     omoFirstName
     omoLastName
+  }
+}
+    `;
+export const ContactsDocument = gql`
+    query contacts($query: QueryUniqueProfileInput!) {
+  contacts(query: $query) {
+    id
+    createdAt
+    displayName
+    isMuted
+    contactProfile {
+      circlesAddress
+      fissionName
+      fissionRoot
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
   }
 }
     `;
@@ -649,6 +700,34 @@ export const OutboxDocument = gql`
       circlesAddress
       omoAvatarCid
       omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    recipientFissionName
+    recipient {
+      fissionName
+      circlesAddress
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    preview
+    cid
+  }
+}
+    `;
+export const ConversationDocument = gql`
+    query conversation($query: QueryConversationInput!) {
+  conversation(query: $query) {
+    id
+    createdAt
+    readAt
+    senderFissionName
+    sender {
+      fissionName
+      circlesAddress
+      omoAvatarCid
       omoFirstName
       omoLastName
     }
@@ -742,17 +821,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     fissionRoot(variables: FissionRootQueryVariables): Promise<{ data?: FissionRootQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<FissionRootQuery>(print(FissionRootDocument), variables));
     },
-    profile(variables: ProfileQueryVariables): Promise<{ data?: ProfileQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<ProfileQuery>(print(ProfileDocument), variables));
-    },
     profiles(variables: ProfilesQueryVariables): Promise<{ data?: ProfilesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ProfilesQuery>(print(ProfilesDocument), variables));
+    },
+    contacts(variables: ContactsQueryVariables): Promise<{ data?: ContactsQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<ContactsQuery>(print(ContactsDocument), variables));
     },
     inbox(variables?: InboxQueryVariables): Promise<{ data?: InboxQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<InboxQuery>(print(InboxDocument), variables));
     },
     outbox(variables?: OutboxQueryVariables): Promise<{ data?: OutboxQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<OutboxQuery>(print(OutboxDocument), variables));
+    },
+    conversation(variables: ConversationQueryVariables): Promise<{ data?: ConversationQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<ConversationQuery>(print(ConversationDocument), variables));
     },
     offers(variables: OffersQueryVariables): Promise<{ data?: OffersQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<OffersQuery>(print(OffersDocument), variables));

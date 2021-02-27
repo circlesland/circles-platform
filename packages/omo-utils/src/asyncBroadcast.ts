@@ -16,11 +16,12 @@ export class AsyncBroadcast<TIn,TOut>
 
   private async dispatch(input:TIn)
   {
+    const key:any = input ?? "__undefined__";
     try
     {
-      const result = await this._executor(input);
+      const result = await this._executor(key);
 
-      const pendingOperationIndex = this._operations.findIndex(op => op.input === input);
+      const pendingOperationIndex = this._operations.findIndex(op => op.input === key);
       const pendingOperation = this._operations[pendingOperationIndex];
       pendingOperation.subscribers.forEach(subscriber => {
         subscriber.resolve(result);
@@ -29,7 +30,7 @@ export class AsyncBroadcast<TIn,TOut>
     }
     catch (e)
     {
-      const pendingOperationIndex = this._operations.findIndex(op => op.input === input);
+      const pendingOperationIndex = this._operations.findIndex(op => op.input === key);
       const pendingOperation = this._operations[pendingOperationIndex];
       pendingOperation.subscribers.forEach(subscriber => {
         subscriber.reject(e);
@@ -40,20 +41,21 @@ export class AsyncBroadcast<TIn,TOut>
 
   async subscribeToResult(input:TIn) : Promise<TOut>
   {
+    const key:any = input ?? "__undefined__";
     return new Promise<TOut>((resolve, reject) =>
     {
-      const pendingOperation = this._operations.find(op => op.input === input);
+      const pendingOperation = this._operations.find(op => op.input === key);
       if (!pendingOperation)
       {
         this._operations.push({
-          input: input,
+          input: key,
           subscribers: [{
             reject,
             resolve
           }]
         });
 
-        this.dispatch(input);
+        this.dispatch(key);
       }
       else
       {

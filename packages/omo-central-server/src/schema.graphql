@@ -22,10 +22,21 @@ type Profile {
     omoAvatarMimeType:String
     # All market offers of this profile
     offers:[Offer!]
-    # All messages that have been sent by this profile
+    # Messages sent by this profile
     sentMessages:[Message!]
-    # All messages that have been received by this profile
+    # Messages received by this profile
     receivedMessages:[Message!]
+    # All contacts of this profile
+    contacts:[Contact!]
+}
+
+type Contact {
+    id:Int!
+    createdAt:String
+    displayName:String
+    isMuted:Boolean
+    anchorProfile:Profile
+    contactProfile:Profile
 }
 
 type Message {
@@ -61,6 +72,9 @@ input QueryOutboxInput {
     recipientFissionName:String
     createdAt_lt:String
     createdAt_gt:String
+}
+input QueryConversationInput {
+    withFissionName:String!
 }
 
 type Offer {
@@ -182,8 +196,6 @@ type Query
     omo : Omo
     # Gets the root fs CID for a unique profile
     fissionRoot(query:QueryUniqueProfileInput!) : String!
-    # Gets a fully populated profile object
-    profile(query:QueryUniqueProfileInput!) : Profile!
     # Queries the directory for profiles that match one or more of the given field values.
     # All fields except "did" and "circlesAddress" are matched with 'startsWith'.
     profiles(query:QueryProfileInput!) : [Profile!]!
@@ -192,8 +204,10 @@ type Query
     # Queries all offers with a wide variety of filter properties
     offers(query:QueryOfferInput!) : [Offer!]!
 
+    contacts(query:QueryUniqueProfileInput!) : [Contact!]!
     inbox(query:QueryInboxInput) : [Message!]!
     outbox(query:QueryOutboxInput) : [Message!]!
+    conversation(query:QueryConversationInput!) : [Message!]!
 }
 
 type Mutation
