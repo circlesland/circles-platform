@@ -90,10 +90,10 @@ setInterval(async () => {
     await runWithDrive(async drive =>
     {
       await drive.sessionLogs.addOrUpdateEntity(sessionLog, false);
-      if (sessionLog.messages.length > 10000) {
+      if (sessionLog.messages.ts.length > 10000) {
         sessionLog = {
           name: sessionLog.name + "_" + Date.now(),
-          messages: []
+          messages.ts: []
         };
       }
     });
@@ -110,10 +110,10 @@ setInterval(async () => {
     await runWithDrive(async drive =>
     {
       await drive.sessionLogs.addOrUpdateEntity(sessionLog, true);
-      if (sessionLog.messages.length > 10000) {
+      if (sessionLog.messages.ts.length > 10000) {
         sessionLog = {
           name: sessionLog.name + "_" + Date.now(),
-          messages: []
+          messages.ts: []
         };
       }
     });

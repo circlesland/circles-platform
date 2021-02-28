@@ -19,12 +19,12 @@
 
   const newMessagesLabel = {
     data: {
-      label: "Unread messages",
+      label: "Unread messages.ts",
     },
   };
   const oldMessagesLabel = {
     data: {
-      label: "Older messages",
+      label: "Older messages.ts",
     },
   };
 </script>

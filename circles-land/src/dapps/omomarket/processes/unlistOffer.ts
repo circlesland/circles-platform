@@ -1,6 +1,6 @@
 import { createMachine} from "xstate";
 import {strings} from "../data/strings";
-import {unpublishOfferService} from "../services/unpublishOfferService";
+import {unlistOfferService} from "../services/unlistOfferService";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
 import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 import {OmoEvent} from "omo-events/dist/omoEvent";
@@ -11,7 +11,7 @@ import {sendErrorPrompt} from "omo-process/dist/actions/sendPrompt/sendErrorProm
 import {sendSuccessPrompt} from "omo-process/dist/actions/sendPrompt/sendSuccessPrompt";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 
-export interface UnpublishOfferContext extends ProcessContext {
+export interface UnlistOfferContext extends ProcessContext {
   data: {
     offerName: ProcessArtifact;
   }
@@ -20,20 +20,20 @@ export interface UnpublishOfferContext extends ProcessContext {
 /**
  * Connect safe
  */
-const str = strings.omomarket.processes.unpublishOffer;
-const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<UnpublishOfferContext, OmoEvent>({
+const str = strings.omomarket.processes.unlistOffer;
+const processDefinition = (progressView:any, successView:any, errorView:any) => createMachine<UnlistOfferContext, OmoEvent>({
   initial: "idle",
   states: {
     idle: {
       on: {
-        "process.continue": "unpublishOffer"
+        "process.continue": "unlistOffer"
       }
     },
-    unpublishOffer: {
+    unlistOffer: {
       entry: <any>sendInProgressPrompt(progressView, str.bannerProgress),
       invoke: <any>{
-        id: 'unpublishOffer',
-        src: unpublishOfferService,
+        id: 'unlistOffer',
+        src: unlistOfferService,
         onError: {
           actions: setError,
           target: "error"
@@ -64,7 +64,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const unpublishOffer: ProcessDefinition = {
-  name: "unpublishOffer",
+export const unlistOffer: ProcessDefinition = {
+  name: "unlistOffer",
   stateMachine:<any> processDefinition
 };

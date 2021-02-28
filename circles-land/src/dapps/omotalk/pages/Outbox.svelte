@@ -21,7 +21,7 @@
 
   const sentMessagesLabel = {
     data: {
-      label: "Sent messages",
+      label: "Sent messages.ts",
     },
   };
 </script>

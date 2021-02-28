@@ -3,7 +3,7 @@
   import {ListItem as IListItem} from "../../../../libs/o-views/interfaces/molecules";
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
   import {faEdit, faHome} from "@fortawesome/free-solid-svg-icons";
-  import {unpublishOffer, UnpublishOfferContext} from "../../processes/unpublishOffer";
+  import {unlistOffer, UnlistOfferContext} from "../../processes/unlistOffer";
   import {runWithDrive} from "omo-fission/dist/fissionDrive";
   import {RunProcess} from "omo-process/dist/events/runProcess";
   import {tryGetDappState} from "omo-kernel/dist/kernel";
@@ -40,10 +40,10 @@
 
     actions.push({
       icon: faHome,
-      title: "Unpublish offer",
+      title: "Unlist offer",
       action: () =>
       {
-        window.o.publishEvent(new RunProcess(unpublishOffer, async (processContext:UnpublishOfferContext) => {
+        window.o.publishEvent(new RunProcess(unlistOffer, async (processContext:UnlistOfferContext) => {
           processContext.data.offerName = {
             key: "offerName",
             isValid: true,

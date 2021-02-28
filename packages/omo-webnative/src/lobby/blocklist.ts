@@ -319,7 +319,7 @@ export const USERNAME_BLOCKLIST =
   , "member"
   , "members"
   , "message"
-  , "messages"
+  , "messages.ts"
   , "metrics"
   , "mis"
   , "mobile"

@@ -94,7 +94,7 @@ export type Offer = {
   createdBy?: Maybe<Profile>;
   createdByFissionName: Scalars['String'];
   publishedAt: Scalars['String'];
-  unpublishedAt?: Maybe<Scalars['String']>;
+  unlistedAt?: Maybe<Scalars['String']>;
   purchasedAt?: Maybe<Scalars['String']>;
   title: Scalars['String'];
   price: Scalars['String'];
@@ -130,8 +130,8 @@ export type QueryOfferInput = {
   city?: Maybe<Scalars['String']>;
   publishedAt_lt?: Maybe<Scalars['String']>;
   publishedAt_gt?: Maybe<Scalars['String']>;
-  unpublishedAt_lt?: Maybe<Scalars['String']>;
-  unpublishedAt_gt?: Maybe<Scalars['String']>;
+  unlistedAt_lt?: Maybe<Scalars['String']>;
+  unlistedAt_gt?: Maybe<Scalars['String']>;
 };
 
 export type File = {
@@ -304,7 +304,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   upsertProfile: Profile;
   createOffer: Offer;
-  unpublishOffer: Scalars['Boolean'];
+  unlistOffer: Scalars['Boolean'];
   sendMessage: Message;
   markMessageAsRead: Scalars['Boolean'];
   lockOffer: LockOfferResult;
@@ -322,7 +322,7 @@ export type MutationCreateOfferArgs = {
 };
 
 
-export type MutationUnpublishOfferArgs = {
+export type MutationUnlistOfferArgs = {
   offerId: Scalars['Int'];
 };
 
@@ -379,7 +379,7 @@ export type CreateOfferMutation = (
   { __typename?: 'Mutation' }
   & { createOffer: (
     { __typename?: 'Offer' }
-    & Pick<Offer, 'category' | 'city' | 'country' | 'deliveryTerms' | 'description' | 'id' | 'price' | 'publishedAt' | 'title' | 'unpublishedAt'>
+    & Pick<Offer, 'category' | 'city' | 'country' | 'deliveryTerms' | 'description' | 'id' | 'price' | 'publishedAt' | 'title' | 'unlistedAt'>
     & { createdBy?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'circlesAddress' | 'omoFirstName' | 'omoLastName'>
@@ -390,14 +390,14 @@ export type CreateOfferMutation = (
   ) }
 );
 
-export type UnpublishOfferMutationVariables = Exact<{
+export type UnlistOfferMutationVariables = Exact<{
   offerId: Scalars['Int'];
 }>;
 
 
-export type UnpublishOfferMutation = (
+export type UnlistOfferMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'unpublishOffer'>
+  & Pick<Mutation, 'unlistOffer'>
 );
 
 export type SendMessageMutationVariables = Exact<{
@@ -582,7 +582,7 @@ export type OffersQuery = (
   { __typename?: 'Query' }
   & { offers: Array<(
     { __typename?: 'Offer' }
-    & Pick<Offer, 'id' | 'publishedAt' | 'unpublishedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
+    & Pick<Offer, 'id' | 'publishedAt' | 'unlistedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
     & { createdBy?: Maybe<(
       { __typename?: 'Profile' }
       & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
@@ -611,7 +611,7 @@ export type PurchasesQuery = (
       & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
     ), purchasedItem: (
       { __typename?: 'Offer' }
-      & Pick<Offer, 'id' | 'publishedAt' | 'unpublishedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
+      & Pick<Offer, 'id' | 'publishedAt' | 'unlistedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
       & { createdBy?: Maybe<(
         { __typename?: 'Profile' }
         & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
@@ -673,13 +673,13 @@ export const CreateOfferDocument = gql`
     price
     publishedAt
     title
-    unpublishedAt
+    unlistedAt
   }
 }
     `;
-export const UnpublishOfferDocument = gql`
-    mutation unpublishOffer($offerId: Int!) {
-  unpublishOffer(offerId: $offerId)
+export const UnlistOfferDocument = gql`
+    mutation unlistOffer($offerId: Int!) {
+  unlistOffer(offerId: $offerId)
 }
     `;
 export const SendMessageDocument = gql`
@@ -866,7 +866,7 @@ export const OffersDocument = gql`
   offers(query: $query) {
     id
     publishedAt
-    unpublishedAt
+    unlistedAt
     createdBy {
       circlesAddress
       fissionName
@@ -914,7 +914,7 @@ export const PurchasesDocument = gql`
     purchasedItem {
       id
       publishedAt
-      unpublishedAt
+      unlistedAt
       createdBy {
         circlesAddress
         fissionName
@@ -966,8 +966,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     createOffer(variables: CreateOfferMutationVariables): Promise<{ data?: CreateOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<CreateOfferMutation>(print(CreateOfferDocument), variables));
     },
-    unpublishOffer(variables: UnpublishOfferMutationVariables): Promise<{ data?: UnpublishOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<UnpublishOfferMutation>(print(UnpublishOfferDocument), variables));
+    unlistOffer(variables: UnlistOfferMutationVariables): Promise<{ data?: UnlistOfferMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<UnlistOfferMutation>(print(UnlistOfferDocument), variables));
     },
     sendMessage(variables: SendMessageMutationVariables): Promise<{ data?: SendMessageMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<SendMessageMutation>(print(SendMessageDocument), variables));

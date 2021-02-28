@@ -34,12 +34,12 @@ mutation createOffer($data:CreateOfferInput!) {
         price
         publishedAt
         title
-        unpublishedAt
+        unlistedAt
     }
 }
 
-mutation unpublishOffer($offerId:Int!) {
-    unpublishOffer(offerId: $offerId)
+mutation unlistOffer($offerId:Int!) {
+    unlistOffer(offerId: $offerId)
 }
 
 mutation sendMessage($data:SendMessageInput!) {

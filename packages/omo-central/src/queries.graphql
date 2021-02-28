@@ -50,63 +50,6 @@ query activities($query:QueryActivityInput!) {
     }
 }
 
-query inbox($query:QueryInboxInput) {
-    inbox(query: $query) {
-        id
-        createdAt
-        readAt
-        senderFissionName
-        sender {
-            fissionName
-            circlesAddress
-            omoAvatarCid
-            omoFirstName
-            omoLastName
-        }
-        recipientFissionName
-        recipient {
-            fissionName
-            circlesAddress
-            omoAvatarCid
-            omoAvatarMimeType
-            omoFirstName
-            omoLastName
-        }
-        topic
-        type
-        content
-    }
-}
-
-query outbox($query:QueryOutboxInput) {
-    outbox(query: $query) {
-        id
-        createdAt
-        readAt
-        senderFissionName
-        sender {
-            fissionName
-            circlesAddress
-            omoAvatarCid
-            omoAvatarMimeType
-            omoFirstName
-            omoLastName
-        }
-        recipientFissionName
-        recipient {
-            fissionName
-            circlesAddress
-            omoAvatarCid
-            omoAvatarMimeType
-            omoFirstName
-            omoLastName
-        }
-        topic
-        type
-        content
-    }
-}
-
 query conversation($query:QueryConversationInput!) {
     conversation(query: $query) {
         id
@@ -139,7 +82,7 @@ query offers($query:QueryOfferInput!) {
     offers(query: $query) {
         id
         publishedAt
-        unpublishedAt
+        unlistedAt
         createdBy {
             circlesAddress
             fissionName
@@ -186,7 +129,7 @@ query purchases($query:QueryPurchaseInput!) {
         purchasedItem {
             id
             publishedAt
-            unpublishedAt
+            unlistedAt
             createdBy {
                 circlesAddress
                 fissionName

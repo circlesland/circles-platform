@@ -64,16 +64,6 @@ input SendMessageInput {
     type: String!
     content:String!
 }
-input QueryInboxInput {
-    senderFissionName:String
-    createdAt_lt:String
-    createdAt_gt:String
-}
-input QueryOutboxInput {
-    recipientFissionName:String
-    createdAt_lt:String
-    createdAt_gt:String
-}
 input QueryConversationInput {
     withFissionName:String!
 }
@@ -83,7 +73,7 @@ type Offer {
     createdBy: Profile
     createdByFissionName: String!
     publishedAt: String!
-    unpublishedAt: String
+    unlistedAt: String
     purchasedAt: String
 
     title: String!
@@ -120,8 +110,8 @@ input QueryOfferInput {
     city:String
     publishedAt_lt:String
     publishedAt_gt:String
-    unpublishedAt_lt:String
-    unpublishedAt_gt:String
+    unlistedAt_lt:String
+    unlistedAt_gt:String
 }
 
 type File {
@@ -230,32 +220,84 @@ input QueryActivityInput {
     subjectKey: String!
 }
 
+type CirclesTokenTransfer {
+    id: Int!
+    createdAt: String
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+    balanceAfterTransfer: String!
+
+    from: CirclesWallet!
+    to: CirclesWallet!
+    value: String!
+}
+enum CirclesTrustRelationPredicate {
+    GIVING_TO
+    RECEIVING_FROM
+}
+
+type CirclesTrustRelation {
+    id: Int!
+    createdAt: String
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    subject: CirclesWallet!
+    predicate: CirclesTrustRelationPredicate!
+    object: CirclesWallet!
+    weight: Int!
+}
+
+type CirclesToken {
+    address: String!
+
+    addedAt: String!
+    addedInBlockNo: Int!
+    addedInBlockHash: String!
+    balanceWhenAdded: String!
+
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    tokenOwner: CirclesWallet!
+
+    transfers: [CirclesTokenTransfer!]!
+}
+
+type CirclesWallet {
+    address: String!
+
+    ownToken: CirclesToken
+
+    tokens: [CirclesToken!]
+    trustRelations: [CirclesTrustRelation!]
+}
+input QueryCirclesWalletInput {
+    address: String
+    ownTokenAddress: String
+    trusts: String
+    isTrustedBy: String
+}
+
 type Query
 {
     omo : Omo
-    # Gets the root fs CID for a unique profile
     fissionRoot(query:QueryUniqueProfileInput!) : String!
-    # Queries the directory for profiles that match one or more of the given field values.
-    # All fields except "did" and "circlesAddress" are matched with 'startsWith'.
     profiles(query:QueryProfileInput!) : [Profile!]!
-    # Gets a fully populated offer object
-    offer(offerId:Int!) : Offer!
-    # Queries all offers with a wide variety of filter properties
     offers(query:QueryOfferInput!) : [Offer!]!
-
+    activities(query:QueryActivityInput!):[Activity!]!
     contacts(query:QueryUniqueProfileInput!) : [Contact!]!
-    inbox(query:QueryInboxInput) : [Message!]!
-    outbox(query:QueryOutboxInput) : [Message!]!
     conversation(query:QueryConversationInput!) : [Message!]!
     purchases(query:QueryPurchaseInput!):[Purchase!]!
-    activities(query:QueryActivityInput!):[Activity!]!
+    wallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
 }
 
 type Mutation
 {
     upsertProfile(data:UpdateProfileInput!):Profile!
     createOffer(data:CreateOfferInput!):Offer!
-    unpublishOffer(offerId:Int!):Boolean!
+    unlistOffer(offerId:Int!):Boolean!
     sendMessage(data:SendMessageInput!):Message!
     markMessageAsRead(messageId:Int!):Boolean!
     lockOffer(data:LockOfferInput!):LockOfferResult!
@@ -263,5 +305,6 @@ type Mutation
 }
 
 type Subscription {
+    activities: Activity
     messages: Message
 }

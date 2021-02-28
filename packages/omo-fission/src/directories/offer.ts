@@ -134,7 +134,7 @@ export class Offer extends Directory<OfferMetadata | BinaryFile> implements Enti
         });
     }
 
-    async unpublishOffer()
+    async unlistOffer()
     {
         const destinationPath = `public/Apps/MamaOmo/OmoSapien/offers/${this.name}/`;
         await this.fs.rm(destinationPath);
@@ -142,7 +142,7 @@ export class Offer extends Directory<OfferMetadata | BinaryFile> implements Enti
         const currentMetadata = await this.tryGetMetadata();
         if (!currentMetadata)
         {
-            throw new Error(`Cannot unpublish offer '${this.name}' because the offer's metadata file couldn't be found at '${this.getPath([this.name])}'.`)
+            throw new Error(`Cannot unlist offer '${this.name}' because the offer's metadata file couldn't be found at '${this.getPath([this.name])}'.`)
         }
         await this.setDescription({
             ...currentMetadata.description,

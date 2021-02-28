@@ -33,7 +33,7 @@ export const strings = {
         title: () => "Publishing ..",
         bannerProgress: () => "Publishing .."
       },
-      unpublishOffer: {
+      unlistOffer: {
         successMessage: (context: any) => `Your offer was successfully un-published`,
         errorMessage: (context: any) => `An error occurred during un-publishing. Refresh the page and try again if necessary.`,
         title: () => "Un-publishing ..",

@@ -1,10 +1,10 @@
 import {ApolloServer} from "apollo-server";
-import {resolvers} from "./resolvers";
 
 // TODO: Migrate to GraphQL-tools: https://www.graphql-tools.com/docs/migration-from-import/
 import {importSchema} from "graphql-import";
 import {Resolvers} from "./types";
 import {Context} from "./context";
+import {resolvers} from "./resolvers/resolvers";
 
 const corsOrigins = [
     "http://localhost:5000",

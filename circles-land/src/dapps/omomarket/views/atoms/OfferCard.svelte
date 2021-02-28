@@ -61,11 +61,11 @@
         <div class="text-xs leading-5 text-gray-600">
           {offer.city},
           {offer.country}
-          {#if !offer.unpublishedAt}| {offer.delivery}{/if}
+          {#if !offer.unlistedAt}| {offer.delivery}{/if}
         </div>
       </div>
     </div>
-    {#if !offer.unpublishedAt }
+    {#if !offer.unlistedAt }
       <div class="p-4 border-t border-light-200">
         <a class="flex items-center w-full space-x-4">
           <button
