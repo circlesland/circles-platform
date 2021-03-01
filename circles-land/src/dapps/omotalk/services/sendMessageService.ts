@@ -14,6 +14,7 @@ export const sendMessageService = async (context:SendMessageContext) => {
     messageFilename,
     Buffer.from(context.data.text.value, "utf-8"));
 
+  /*
   const sentMessage = await context.omoCentral.sendMessage({
     namespace: context.namespace,
     topic: context.topic,
@@ -21,4 +22,5 @@ export const sendMessageService = async (context:SendMessageContext) => {
     toFissionName: profile.fissionName,
     cid: messageCid
   });
+   */
 }

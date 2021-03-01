@@ -91,7 +91,7 @@ export const resolvers: Resolvers = {
     },
     CirclesWallet: {
         ownToken: async (parent:CirclesWallet, args, context:Context) => {
-            const parentWallet = await prisma.circlesWallet.findUnique({
+            const subjectWallet = await prisma.circlesWallet.findUnique({
                 where: {
                     address: parent.address
                 },
@@ -99,17 +99,21 @@ export const resolvers: Resolvers = {
                     ownToken: true
                 }
             });
-            return parentWallet?.ownToken;
+            if (!subjectWallet){
+                throw new Error(`Couldn't find a token with address ${parent.address}.`)
+            }
+            return <any>subjectWallet.ownToken;
         },
         tokens: async (parent:CirclesWallet, args, context:Context) => {
-            const parentWaller = await prisma.circlesWallet.findUnique({
+            const subjectWallet = await prisma.circlesWallet.findUnique({
                 where: {
                     address: parent.address
                 },
                 include: {
                     knownTokens: true
                 }
-            })
+            });
+            
         },
         trustRelations: async (parent:CirclesWallet, args, context:Context) => {
         }
