@@ -1,5 +1,5 @@
 # Circles Land
-- DAPP (early alpha WIP): https://circles.lands
+- DAPP (early alpha WIP): https://circles.land
 
 ## Overview
 
