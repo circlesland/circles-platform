@@ -5,4 +5,4 @@ if [ $branch_name == "main" ]; then
 else
   echo "url: ${branch_name}-circles.fission.app" >> fission.yaml
 fi
-echo "build: ./circles-land/public" >> fission.yaml
+echo "build: ./dapps/public" >> fission.yaml

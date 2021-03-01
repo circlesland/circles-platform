@@ -1,7 +1,7 @@
 {
   "packages": [
     "packages/*",
-    "circles-land"
+    "dapps"
   ],
   "version": "0.0.1"
 }
