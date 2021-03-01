@@ -50,7 +50,7 @@
 
         <button
           on:click={onActionButtonClick}
-          class="w-16 h-16 mx-auto text-white rounded-full bordr border-light-300 bg-light-100 hover:bg-light-200"
+          class="w-16 h-16 mx-auto text-white border rounded-full border-light-200 bg-light-100 hover:bg-light-200"
         >
           <div class="flex items-center justify-center">
             <img src="logos/circles.svg" alt="+" class="p-2" />

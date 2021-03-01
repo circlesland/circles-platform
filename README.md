@@ -1,18 +1,14 @@
-![dappscreens](https://user-images.githubusercontent.com/747161/99851260-29611000-2b7f-11eb-9223-e84578960e41.png)
-
-# Omo Li
-Building with Omo.Li a lightweight and hostless decentralized wallet and marketplace on top of the CirclesUBI protocol, ipfs and the fission Webnative SDK and identity key management
-
-- DAPP (early alpha WIP): https://omo.li/
+# Circles Land
+- DAPP (early alpha WIP): https://circles.land
 
 ## Overview
 
 - Chat: https://discord.gg/gxCpSX2q
-- Discussion Forum: https://github.com/omoearth/omo-li/discussions
-- Wishes & Bugs: https://github.com/omoearth/omo/issues
-- Roadmap: https://github.com/omoearth/omo/projects/1
-- Twitter: https://twitter.com/OmoEarth
-- Omo Visionpaper: https://omo.li/#/visionpaper
+- Discussion Forum: https://aboutcircles.com
+- Wishes & Bugs: https://github.com/circlesland/circles-platform/issues
+- Roadmap: https://github.com/circlesland/circles-platform/projects/1
+- Twitter: https://twitter.com/CirclesUBI
+- Omo Visionpaper: https://circles.land/#/visionpaper
 
 ## Dapp
 
@@ -30,7 +26,7 @@ Building with Omo.Li a lightweight and hostless decentralized wallet and marketp
 ## Install
 
 Clone Repo 
-`git clone https://github.com/omoearth/omo-li.git`
+`git clone https://github.com/circlesland/circles-platform.git`
 
 
 Install with npm
@@ -41,7 +37,7 @@ chmod +x ./build.sh
 
 Start
 ```bash
-cd omo-shell
+cd dapps
 npm run dev
 # or
 npm run dev-https

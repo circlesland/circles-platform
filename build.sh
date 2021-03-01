@@ -79,8 +79,8 @@ cd omo-indexes || exit
 npx --no-install tsc || exit
 cd ../.. || exit
 
-echo "Building 'circles-land' .."
-cd circles-land || exit
+echo "Building 'dapps' .."
+cd dapps || exit
 npm run build
 cd .. || exit
 
