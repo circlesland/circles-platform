@@ -1,9 +1,9 @@
 import {PrismaClient} from "@prisma/client";
-import {QueryWalletsArgs} from "../../types";
+import {QueryCirclesWalletsArgs} from "../../types";
 import {Context} from "../../context";
 
-export function walletsResolver(prisma:PrismaClient) {
-    return async (parent:any, args:QueryWalletsArgs, context: Context) => {
+export function circlesWalletsResolver(prisma:PrismaClient) {
+    return async (parent:any, args:QueryCirclesWalletsArgs, context: Context) => {
         await context.verifyJwt();
 
         const address = args.query.address;

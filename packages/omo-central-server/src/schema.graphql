@@ -1,4 +1,4 @@
-type Omo {
+type Server {
     # Omo's DID
     did:String!
 }
@@ -32,11 +32,29 @@ type Profile {
     purchases:[Purchase!]
     # All activities of this profile
     activities:[Activity!]
+    # All keys of this profile
+    keyPairs:[KeyPair!]
+}
+
+type KeyPair {
+    id:Int!
+    createdAt:String!
+    type:String!
+    name:String!
+
+    publicKey:String!
+    privateKey:String!
+}
+input AddKeyPairInput {
+    type:String!
+    name:String!
+    publicKey:String!
+    privateKey:String!
 }
 
 type Contact {
     id:Int!
-    createdAt:String
+    createdAt:String!
     displayName:String
     isMuted:Boolean
     anchorProfile:Profile
@@ -222,16 +240,25 @@ input QueryActivityInput {
 
 type CirclesTokenTransfer {
     id: Int!
-    createdAt: String
+    createdAt: String!
     createdInBlockNo: Int!
     createdInBlockHash: String!
-    balanceAfterTransfer: String!
 
-    from: CirclesWallet!
-    to: CirclesWallet!
+    subject: CirclesWallet!
+    predicate: CirclesTokenTransferPredicate!
+    object: CirclesWallet!
     value: String!
 }
-enum CirclesTrustRelationPredicate {
+input AddCirclesTokenTransferInput {
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+    subjectAddress: String!
+    predicate: CirclesTokenTransferPredicate!
+    objectAddress: String!
+    value: String!
+}
+enum CirclesTokenTransferPredicate {
     GIVING_TO
     RECEIVING_FROM
 }
@@ -247,22 +274,36 @@ type CirclesTrustRelation {
     object: CirclesWallet!
     weight: Int!
 }
+input AddCirclesTrustRelationInput {
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+    subjectAddress: String!
+    predicate: CirclesTrustRelationPredicate!
+    objectAddress: String!
+    weight: Int!
+}
+enum CirclesTrustRelationPredicate {
+    GIVING_TO
+    RECEIVING_FROM
+}
 
 type CirclesToken {
     address: String!
-
-    addedAt: String!
-    addedInBlockNo: Int!
-    addedInBlockHash: String!
-    balanceWhenAdded: String!
 
     createdAt: String!
     createdInBlockNo: Int!
     createdInBlockHash: String!
 
-    tokenOwner: CirclesWallet!
-
-    transfers: [CirclesTokenTransfer!]!
+    owner: CirclesWallet
+    transfers: [CirclesTokenTransfer!]
+}
+input AddCirclesTokenInput {
+    address: String!
+    owner: AddCirclesWalletInput
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
 }
 
 type CirclesWallet {
@@ -271,7 +312,12 @@ type CirclesWallet {
     ownToken: CirclesToken
 
     tokens: [CirclesToken!]
+    transfers: [CirclesTokenTransfer!]
     trustRelations: [CirclesTrustRelation!]
+}
+input AddCirclesWalletInput {
+    address: String!
+    ownToken: AddCirclesTokenInput
 }
 input QueryCirclesWalletInput {
     address: String
@@ -282,7 +328,7 @@ input QueryCirclesWalletInput {
 
 type Query
 {
-    omo : Omo
+    server : Server
     fissionRoot(query:QueryUniqueProfileInput!) : String!
     profiles(query:QueryProfileInput!) : [Profile!]!
     offers(query:QueryOfferInput!) : [Offer!]!
@@ -290,18 +336,25 @@ type Query
     contacts(query:QueryUniqueProfileInput!) : [Contact!]!
     conversation(query:QueryConversationInput!) : [Message!]!
     purchases(query:QueryPurchaseInput!):[Purchase!]!
-    wallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
+    circlesWallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
 }
 
 type Mutation
 {
     upsertProfile(data:UpdateProfileInput!):Profile!
+    addKeyPair(data:AddKeyPairInput!):KeyPair!
+    removeKeyPair(keyPairId:Int!):Boolean!
     createOffer(data:CreateOfferInput!):Offer!
     unlistOffer(offerId:Int!):Boolean!
     sendMessage(data:SendMessageInput!):Message!
     markMessageAsRead(messageId:Int!):Boolean!
     lockOffer(data:LockOfferInput!):LockOfferResult!
     provePayment(data:PaymentProof!):ProvePaymentResult!
+
+    addCirclesWallet(data:AddCirclesWalletInput!) : CirclesWallet!
+    addCirclesToken(data:AddCirclesTokenInput!) : CirclesToken!
+    addCirclesTrustRelation(data:AddCirclesTrustRelationInput!) : CirclesTrustRelation!
+    addCirclesTokenTransfer(data:AddCirclesTokenTransferInput!) : CirclesTokenTransfer!
 }
 
 type Subscription {

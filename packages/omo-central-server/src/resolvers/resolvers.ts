@@ -1,7 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {EventBroker} from "omo-utils/dist/eventBroker";
-import {CirclesToken, CirclesTokenTransfer, CirclesTrustRelation, CirclesWallet, Resolvers} from "../types";
-import {omoResolver} from "./queries/omo";
+import {Resolvers} from "../types";
+import {serverResolver} from "./queries/server";
 import {profilesResolver} from "./queries/profiles";
 import {contactsResolver} from "./queries/contacts";
 import {fissionRootResolver} from "./queries/fissionRoot";
@@ -33,15 +33,28 @@ import {purchasedBy} from "./edges/purchase/purchasedBy";
 import {purchasedItem} from "./edges/purchase/purchasedItem";
 import {activitiesResolver} from "./queries/activitities";
 import {purchasesResolver} from "./queries/purchases";
-import {walletsResolver} from "./queries/wallets";
-import {Context} from "../context";
+import {circlesWalletsResolver} from "./queries/circlesWallets";
+import {ownTokenResolver} from "./edges/circlesWallet/ownToken";
+import {tokensResolver} from "./edges/circlesWallet/tokens";
+import {trustRelationsResolver} from "./edges/circlesWallet/trustRelations";
+import {tokenTransfersResolver} from "./edges/circlesToken/transfers";
+import {ownerResolver} from "./edges/circlesToken/owner";
+import {objectResolver as trustRelationObjectResolver} from "./edges/circlesTrustRelation/object";
+import {subjectResolver as trustRelationSubjectResolver} from "./edges/circlesTrustRelation/subject";
+import {objectResolver as circlesTransferObjectResolver} from "./edges/circlesTransfer/object";
+import {subjectResolver as circlesTransferSubjectResolver} from "./edges/circlesTransfer/subject";
+import {walletTransfersResolver} from "./edges/circlesWallet/transfers";
+import {addCirclesTrustRelationResolver} from "./mutations/addCirclesTrustRelation";
+import {addCirclesWalletResolver} from "./mutations/addCirclesWallet";
+import {addCirclesTokenResolver} from "./mutations/addCirclesToken";
+import {addCirclesTokenTransferResolver} from "./mutations/addCirclesTokenTransfer";
 
 const prisma = new PrismaClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
 
 export const resolvers: Resolvers = {
     Query: {
-        omo: omoResolver,
+        server: serverResolver,
         profiles: profilesResolver(prisma),
         fissionRoot: fissionRootResolver(prisma),
         offers: offersResolver(prisma),
@@ -49,7 +62,7 @@ export const resolvers: Resolvers = {
         contacts: contactsResolver(prisma),
         conversation: conversationResolver(prisma),
         purchases: purchasesResolver(prisma),
-        wallets: walletsResolver(prisma)
+        circlesWallets: circlesWalletsResolver(prisma)
     },
     Mutation: {
         lockOffer: lockOfferResolver(prisma),
@@ -58,7 +71,17 @@ export const resolvers: Resolvers = {
         createOffer: createOfferResolver(prisma),
         unlistOffer: unlistOfferResolver(prisma),
         sendMessage: sendMessageResolver(prisma, eventBroker),
-        markMessageAsRead: markMessageAsReadResolver(prisma)
+        markMessageAsRead: markMessageAsReadResolver(prisma),
+        addCirclesWallet: addCirclesWalletResolver(prisma),
+        addCirclesToken: addCirclesTokenResolver(prisma),
+        addCirclesTrustRelation: addCirclesTrustRelationResolver(prisma),
+        addCirclesTokenTransfer: addCirclesTokenTransferResolver(prisma),
+        addKeyPair: async (parent, args, context) => {
+            throw new Error(`NotImplemented`);
+        },
+        removeKeyPair: async (parent, args, context) => {
+            throw new Error(`NotImplemented`);
+        },
     },
     Subscription: {
         activities: activitiesSubscription(eventBroker),
@@ -90,50 +113,21 @@ export const resolvers: Resolvers = {
         purchasedItem: purchasedItem(prisma)
     },
     CirclesWallet: {
-        ownToken: async (parent:CirclesWallet, args, context:Context) => {
-            const subjectWallet = await prisma.circlesWallet.findUnique({
-                where: {
-                    address: parent.address
-                },
-                include: {
-                    ownToken: true
-                }
-            });
-            if (!subjectWallet){
-                throw new Error(`Couldn't find a token with address ${parent.address}.`)
-            }
-            return <any>subjectWallet.ownToken;
-        },
-        tokens: async (parent:CirclesWallet, args, context:Context) => {
-            const subjectWallet = await prisma.circlesWallet.findUnique({
-                where: {
-                    address: parent.address
-                },
-                include: {
-                    knownTokens: true
-                }
-            });
-            
-        },
-        trustRelations: async (parent:CirclesWallet, args, context:Context) => {
-        }
+        ownToken: ownTokenResolver(prisma),
+        tokens: tokensResolver(prisma),
+        trustRelations: trustRelationsResolver(prisma),
+        transfers: walletTransfersResolver(prisma)
     },
     CirclesToken: {
-        tokenOwner: async (parent:CirclesToken, args, context:Context) => {
-        },
-        transfers: async (parent:CirclesToken, args, context:Context) => {
-        }
+        owner: ownerResolver(prisma),
+        transfers: tokenTransfersResolver(prisma)
     },
     CirclesTrustRelation: {
-        object: async (parent:CirclesTrustRelation, args, context:Context) => {
-        },
-        subject: async (parent:CirclesTrustRelation, args, context:Context) => {
-        }
+        subject: trustRelationSubjectResolver(prisma),
+        object: trustRelationObjectResolver(prisma)
     },
     CirclesTokenTransfer: {
-        from: (parent:CirclesTokenTransfer, args, context:Context) => {
-        },
-        to: (parent:CirclesTokenTransfer, args, context:Context) => {
-        }
+        subject: circlesTransferSubjectResolver(prisma),
+        object: circlesTransferObjectResolver(prisma)
     }
 };

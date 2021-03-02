@@ -13,8 +13,8 @@ export type Scalars = {
   Float: number;
 };
 
-export type Omo = {
-  __typename?: 'Omo';
+export type Server = {
+  __typename?: 'Server';
   did: Scalars['String'];
 };
 
@@ -33,12 +33,30 @@ export type Profile = {
   contacts?: Maybe<Array<Contact>>;
   purchases?: Maybe<Array<Purchase>>;
   activities?: Maybe<Array<Activity>>;
+  keyPairs?: Maybe<Array<KeyPair>>;
+};
+
+export type KeyPair = {
+  __typename?: 'KeyPair';
+  id: Scalars['Int'];
+  createdAt: Scalars['String'];
+  type: Scalars['String'];
+  name: Scalars['String'];
+  publicKey: Scalars['String'];
+  privateKey: Scalars['String'];
+};
+
+export type AddKeyPairInput = {
+  type: Scalars['String'];
+  name: Scalars['String'];
+  publicKey: Scalars['String'];
+  privateKey: Scalars['String'];
 };
 
 export type Contact = {
   __typename?: 'Contact';
   id: Scalars['Int'];
-  createdAt?: Maybe<Scalars['String']>;
+  createdAt: Scalars['String'];
   displayName?: Maybe<Scalars['String']>;
   isMuted?: Maybe<Scalars['Boolean']>;
   anchorProfile?: Maybe<Profile>;
@@ -220,16 +238,26 @@ export type QueryActivityInput = {
 export type CirclesTokenTransfer = {
   __typename?: 'CirclesTokenTransfer';
   id: Scalars['Int'];
-  createdAt?: Maybe<Scalars['String']>;
+  createdAt: Scalars['String'];
   createdInBlockNo: Scalars['Int'];
   createdInBlockHash: Scalars['String'];
-  balanceAfterTransfer: Scalars['String'];
-  from: CirclesWallet;
-  to: CirclesWallet;
+  subject: CirclesWallet;
+  predicate: CirclesTokenTransferPredicate;
+  object: CirclesWallet;
   value: Scalars['String'];
 };
 
-export enum CirclesTrustRelationPredicate {
+export type AddCirclesTokenTransferInput = {
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  subjectAddress: Scalars['String'];
+  predicate: CirclesTokenTransferPredicate;
+  objectAddress: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export enum CirclesTokenTransferPredicate {
   GivingTo = 'GIVING_TO',
   ReceivingFrom = 'RECEIVING_FROM'
 }
@@ -246,18 +274,37 @@ export type CirclesTrustRelation = {
   weight: Scalars['Int'];
 };
 
-export type CirclesToken = {
-  __typename?: 'CirclesToken';
-  address: Scalars['String'];
-  addedAt: Scalars['String'];
-  addedInBlockNo: Scalars['Int'];
-  addedInBlockHash: Scalars['String'];
-  balanceWhenAdded: Scalars['String'];
+export type AddCirclesTrustRelationInput = {
   createdAt: Scalars['String'];
   createdInBlockNo: Scalars['Int'];
   createdInBlockHash: Scalars['String'];
-  tokenOwner: CirclesWallet;
-  transfers: Array<CirclesTokenTransfer>;
+  subjectAddress: Scalars['String'];
+  predicate: CirclesTrustRelationPredicate;
+  objectAddress: Scalars['String'];
+  weight: Scalars['Int'];
+};
+
+export enum CirclesTrustRelationPredicate {
+  GivingTo = 'GIVING_TO',
+  ReceivingFrom = 'RECEIVING_FROM'
+}
+
+export type CirclesToken = {
+  __typename?: 'CirclesToken';
+  address: Scalars['String'];
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  owner?: Maybe<CirclesWallet>;
+  transfers?: Maybe<Array<CirclesTokenTransfer>>;
+};
+
+export type AddCirclesTokenInput = {
+  address: Scalars['String'];
+  owner?: Maybe<AddCirclesWalletInput>;
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
 };
 
 export type CirclesWallet = {
@@ -265,7 +312,13 @@ export type CirclesWallet = {
   address: Scalars['String'];
   ownToken?: Maybe<CirclesToken>;
   tokens?: Maybe<Array<CirclesToken>>;
+  transfers?: Maybe<Array<CirclesTokenTransfer>>;
   trustRelations?: Maybe<Array<CirclesTrustRelation>>;
+};
+
+export type AddCirclesWalletInput = {
+  address: Scalars['String'];
+  ownToken?: Maybe<AddCirclesTokenInput>;
 };
 
 export type QueryCirclesWalletInput = {
@@ -277,7 +330,7 @@ export type QueryCirclesWalletInput = {
 
 export type Query = {
   __typename?: 'Query';
-  omo?: Maybe<Omo>;
+  server?: Maybe<Server>;
   fissionRoot: Scalars['String'];
   profiles: Array<Profile>;
   offers: Array<Offer>;
@@ -285,7 +338,7 @@ export type Query = {
   contacts: Array<Contact>;
   conversation: Array<Message>;
   purchases: Array<Purchase>;
-  wallets: Array<CirclesWallet>;
+  circlesWallets: Array<CirclesWallet>;
 };
 
 
@@ -324,24 +377,40 @@ export type QueryPurchasesArgs = {
 };
 
 
-export type QueryWalletsArgs = {
+export type QueryCirclesWalletsArgs = {
   query: QueryCirclesWalletInput;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   upsertProfile: Profile;
+  addKeyPair: KeyPair;
+  removeKeyPair: Scalars['Boolean'];
   createOffer: Offer;
   unlistOffer: Scalars['Boolean'];
   sendMessage: Message;
   markMessageAsRead: Scalars['Boolean'];
   lockOffer: LockOfferResult;
   provePayment: ProvePaymentResult;
+  addCirclesWallet: CirclesWallet;
+  addCirclesToken: CirclesToken;
+  addCirclesTrustRelation: CirclesTrustRelation;
+  addCirclesTokenTransfer: CirclesTokenTransfer;
 };
 
 
 export type MutationUpsertProfileArgs = {
   data: UpdateProfileInput;
+};
+
+
+export type MutationAddKeyPairArgs = {
+  data: AddKeyPairInput;
+};
+
+
+export type MutationRemoveKeyPairArgs = {
+  keyPairId: Scalars['Int'];
 };
 
 
@@ -372,6 +441,26 @@ export type MutationLockOfferArgs = {
 
 export type MutationProvePaymentArgs = {
   data: PaymentProof;
+};
+
+
+export type MutationAddCirclesWalletArgs = {
+  data: AddCirclesWalletInput;
+};
+
+
+export type MutationAddCirclesTokenArgs = {
+  data: AddCirclesTokenInput;
+};
+
+
+export type MutationAddCirclesTrustRelationArgs = {
+  data: AddCirclesTrustRelationInput;
+};
+
+
+export type MutationAddCirclesTokenTransferArgs = {
+  data: AddCirclesTokenTransferInput;
 };
 
 export type Subscription = {
@@ -459,12 +548,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Omo: ResolverTypeWrapper<Omo>;
+  Server: ResolverTypeWrapper<Server>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Profile: ResolverTypeWrapper<Profile>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
-  Contact: ResolverTypeWrapper<Contact>;
+  KeyPair: ResolverTypeWrapper<KeyPair>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  AddKeyPairInput: AddKeyPairInput;
+  Contact: ResolverTypeWrapper<Contact>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Message: ResolverTypeWrapper<Message>;
   SendMessageInput: SendMessageInput;
@@ -488,10 +579,15 @@ export type ResolversTypes = ResolversObject<{
   Activity: ResolverTypeWrapper<Activity>;
   QueryActivityInput: QueryActivityInput;
   CirclesTokenTransfer: ResolverTypeWrapper<CirclesTokenTransfer>;
-  CirclesTrustRelationPredicate: CirclesTrustRelationPredicate;
+  AddCirclesTokenTransferInput: AddCirclesTokenTransferInput;
+  CirclesTokenTransferPredicate: CirclesTokenTransferPredicate;
   CirclesTrustRelation: ResolverTypeWrapper<CirclesTrustRelation>;
+  AddCirclesTrustRelationInput: AddCirclesTrustRelationInput;
+  CirclesTrustRelationPredicate: CirclesTrustRelationPredicate;
   CirclesToken: ResolverTypeWrapper<CirclesToken>;
+  AddCirclesTokenInput: AddCirclesTokenInput;
   CirclesWallet: ResolverTypeWrapper<CirclesWallet>;
+  AddCirclesWalletInput: AddCirclesWalletInput;
   QueryCirclesWalletInput: QueryCirclesWalletInput;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
@@ -500,12 +596,14 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Omo: Omo;
+  Server: Server;
   String: Scalars['String'];
   Profile: Profile;
   ID: Scalars['ID'];
-  Contact: Contact;
+  KeyPair: KeyPair;
   Int: Scalars['Int'];
+  AddKeyPairInput: AddKeyPairInput;
+  Contact: Contact;
   Boolean: Scalars['Boolean'];
   Message: Message;
   SendMessageInput: SendMessageInput;
@@ -527,16 +625,20 @@ export type ResolversParentTypes = ResolversObject<{
   Activity: Activity;
   QueryActivityInput: QueryActivityInput;
   CirclesTokenTransfer: CirclesTokenTransfer;
+  AddCirclesTokenTransferInput: AddCirclesTokenTransferInput;
   CirclesTrustRelation: CirclesTrustRelation;
+  AddCirclesTrustRelationInput: AddCirclesTrustRelationInput;
   CirclesToken: CirclesToken;
+  AddCirclesTokenInput: AddCirclesTokenInput;
   CirclesWallet: CirclesWallet;
+  AddCirclesWalletInput: AddCirclesWalletInput;
   QueryCirclesWalletInput: QueryCirclesWalletInput;
   Query: {};
   Mutation: {};
   Subscription: {};
 }>;
 
-export type OmoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Omo'] = ResolversParentTypes['Omo']> = ResolversObject<{
+export type ServerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Server'] = ResolversParentTypes['Server']> = ResolversObject<{
   did?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -555,12 +657,23 @@ export type ProfileResolvers<ContextType = any, ParentType extends ResolversPare
   contacts?: Resolver<Maybe<Array<ResolversTypes['Contact']>>, ParentType, ContextType>;
   purchases?: Resolver<Maybe<Array<ResolversTypes['Purchase']>>, ParentType, ContextType>;
   activities?: Resolver<Maybe<Array<ResolversTypes['Activity']>>, ParentType, ContextType>;
+  keyPairs?: Resolver<Maybe<Array<ResolversTypes['KeyPair']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type KeyPairResolvers<ContextType = any, ParentType extends ResolversParentTypes['KeyPair'] = ResolversParentTypes['KeyPair']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  publicKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  privateKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type ContactResolvers<ContextType = any, ParentType extends ResolversParentTypes['Contact'] = ResolversParentTypes['Contact']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   displayName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   isMuted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   anchorProfile?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
@@ -641,12 +754,12 @@ export type ActivityResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type CirclesTokenTransferResolvers<ContextType = any, ParentType extends ResolversParentTypes['CirclesTokenTransfer'] = ResolversParentTypes['CirclesTokenTransfer']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdInBlockNo?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdInBlockHash?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  balanceAfterTransfer?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  from?: Resolver<ResolversTypes['CirclesWallet'], ParentType, ContextType>;
-  to?: Resolver<ResolversTypes['CirclesWallet'], ParentType, ContextType>;
+  subject?: Resolver<ResolversTypes['CirclesWallet'], ParentType, ContextType>;
+  predicate?: Resolver<ResolversTypes['CirclesTokenTransferPredicate'], ParentType, ContextType>;
+  object?: Resolver<ResolversTypes['CirclesWallet'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -665,15 +778,11 @@ export type CirclesTrustRelationResolvers<ContextType = any, ParentType extends 
 
 export type CirclesTokenResolvers<ContextType = any, ParentType extends ResolversParentTypes['CirclesToken'] = ResolversParentTypes['CirclesToken']> = ResolversObject<{
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  addedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  addedInBlockNo?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  addedInBlockHash?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  balanceWhenAdded?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdInBlockNo?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdInBlockHash?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tokenOwner?: Resolver<ResolversTypes['CirclesWallet'], ParentType, ContextType>;
-  transfers?: Resolver<Array<ResolversTypes['CirclesTokenTransfer']>, ParentType, ContextType>;
+  owner?: Resolver<Maybe<ResolversTypes['CirclesWallet']>, ParentType, ContextType>;
+  transfers?: Resolver<Maybe<Array<ResolversTypes['CirclesTokenTransfer']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -681,12 +790,13 @@ export type CirclesWalletResolvers<ContextType = any, ParentType extends Resolve
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   ownToken?: Resolver<Maybe<ResolversTypes['CirclesToken']>, ParentType, ContextType>;
   tokens?: Resolver<Maybe<Array<ResolversTypes['CirclesToken']>>, ParentType, ContextType>;
+  transfers?: Resolver<Maybe<Array<ResolversTypes['CirclesTokenTransfer']>>, ParentType, ContextType>;
   trustRelations?: Resolver<Maybe<Array<ResolversTypes['CirclesTrustRelation']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  omo?: Resolver<Maybe<ResolversTypes['Omo']>, ParentType, ContextType>;
+  server?: Resolver<Maybe<ResolversTypes['Server']>, ParentType, ContextType>;
   fissionRoot?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<QueryFissionRootArgs, 'query'>>;
   profiles?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfilesArgs, 'query'>>;
   offers?: Resolver<Array<ResolversTypes['Offer']>, ParentType, ContextType, RequireFields<QueryOffersArgs, 'query'>>;
@@ -694,17 +804,23 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   contacts?: Resolver<Array<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<QueryContactsArgs, 'query'>>;
   conversation?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryConversationArgs, 'query'>>;
   purchases?: Resolver<Array<ResolversTypes['Purchase']>, ParentType, ContextType, RequireFields<QueryPurchasesArgs, 'query'>>;
-  wallets?: Resolver<Array<ResolversTypes['CirclesWallet']>, ParentType, ContextType, RequireFields<QueryWalletsArgs, 'query'>>;
+  circlesWallets?: Resolver<Array<ResolversTypes['CirclesWallet']>, ParentType, ContextType, RequireFields<QueryCirclesWalletsArgs, 'query'>>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   upsertProfile?: Resolver<ResolversTypes['Profile'], ParentType, ContextType, RequireFields<MutationUpsertProfileArgs, 'data'>>;
+  addKeyPair?: Resolver<ResolversTypes['KeyPair'], ParentType, ContextType, RequireFields<MutationAddKeyPairArgs, 'data'>>;
+  removeKeyPair?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationRemoveKeyPairArgs, 'keyPairId'>>;
   createOffer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType, RequireFields<MutationCreateOfferArgs, 'data'>>;
   unlistOffer?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationUnlistOfferArgs, 'offerId'>>;
   sendMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationSendMessageArgs, 'data'>>;
   markMessageAsRead?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationMarkMessageAsReadArgs, 'messageId'>>;
   lockOffer?: Resolver<ResolversTypes['LockOfferResult'], ParentType, ContextType, RequireFields<MutationLockOfferArgs, 'data'>>;
   provePayment?: Resolver<ResolversTypes['ProvePaymentResult'], ParentType, ContextType, RequireFields<MutationProvePaymentArgs, 'data'>>;
+  addCirclesWallet?: Resolver<ResolversTypes['CirclesWallet'], ParentType, ContextType, RequireFields<MutationAddCirclesWalletArgs, 'data'>>;
+  addCirclesToken?: Resolver<ResolversTypes['CirclesToken'], ParentType, ContextType, RequireFields<MutationAddCirclesTokenArgs, 'data'>>;
+  addCirclesTrustRelation?: Resolver<ResolversTypes['CirclesTrustRelation'], ParentType, ContextType, RequireFields<MutationAddCirclesTrustRelationArgs, 'data'>>;
+  addCirclesTokenTransfer?: Resolver<ResolversTypes['CirclesTokenTransfer'], ParentType, ContextType, RequireFields<MutationAddCirclesTokenTransferArgs, 'data'>>;
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
@@ -713,8 +829,9 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
-  Omo?: OmoResolvers<ContextType>;
+  Server?: ServerResolvers<ContextType>;
   Profile?: ProfileResolvers<ContextType>;
+  KeyPair?: KeyPairResolvers<ContextType>;
   Contact?: ContactResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   Offer?: OfferResolvers<ContextType>;

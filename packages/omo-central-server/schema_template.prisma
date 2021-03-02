@@ -26,7 +26,7 @@ model Profile {
     sentMessages Message[] @relation(name: "Message_Sender")
     receivedMessages Message[] @relation(name: "Message_Recipient")
 
-    wallets CirclesWallet[]
+    wallets CirclesWallet[]  @relation(name: "CirclesWallet_AddedBy")
 
     @@unique([fissionName], name:"UX_Profile_fissionName")
     @@unique([fissionRoot], name:"UX_Profile_fissionRoot")
@@ -65,9 +65,9 @@ model Offer {
 }
 
 enum PurchaseStatus {
-  INVALID
-  ITEM_LOCKED
-  PAYMENT_PROVEN
+      INVALID
+      ITEM_LOCKED
+      PAYMENT_PROVEN
 }
 
 model Purchase {
@@ -126,9 +126,9 @@ model CirclesWallet {
     addedBy Profile @relation(name: "CirclesWallet_AddedBy", fields: [addedByFissionName], references: [fissionName])
     addedByFissionName String
 
-    ownToken CirclesToken? @relation(name: "CirclesToken_TokenOwner")
-    knownTokens CirclesToken[]
+    ownToken CirclesToken? @relation(name: "CirclesToken_Owner")
 
+    tokens CirclesToken[]
     trusts CirclesTrustRelation[] @relation(name: "CirclesTrustRelation_Subject")
     transfers CirclesTokenTransfer[] @relation(name: "CirclesTokenTransfer_Subject")
 }
@@ -140,7 +140,7 @@ enum CirclesTrustRelationPredicate {
 
 model CirclesTrustRelation {
     id Int @id @default(autoincrement())
-    createdAt DateTime?
+    createdAt DateTime
     createdInBlockNo Int
     createdInBlockHash String
 
@@ -158,17 +158,12 @@ model CirclesTrustRelation {
 model CirclesToken {
     address String @id
 
-    addedAt DateTime
-    addedAtBlockNo Int
-    addedAtBlockHash String
-    balanceWhenAdded String
-
     createdAt DateTime
     createdInBlockNo Int
     createdInBlockHash String
 
-    tokenOwner CirclesWallet @relation(name: "CirclesToken_TokenOwner", fields: [tokenOwnerAddress], references: [address])
-    tokenOwnerAddress String
+    owner CirclesWallet @relation(name: "CirclesToken_Owner", fields: [ownerAddress], references: [address])
+    ownerAddress String
 
     transfers CirclesTokenTransfer[]
 }
@@ -180,10 +175,9 @@ enum CirclesTokenTransferPredicate {
 
 model CirclesTokenTransfer {
     id Int @id @default(autoincrement())
-    createdAt DateTime?
+    createdAt DateTime
     createdInBlockNo Int
     createdInBlockHash String
-    balanceAfterTransfer String
 
     subject CirclesWallet @relation(name: "CirclesTokenTransfer_Subject", fields: [subjectAddress], references: [address])
     subjectAddress String
