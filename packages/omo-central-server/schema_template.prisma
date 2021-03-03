@@ -26,7 +26,7 @@ model Profile {
     sentMessages Message[] @relation(name: "Message_Sender")
     receivedMessages Message[] @relation(name: "Message_Recipient")
 
-    wallets CirclesWallet[]  @relation(name: "CirclesWallet_AddedBy")
+    // wallets CirclesWallet[]  @relation(name: "CirclesWallet_AddedBy")
 
     @@unique([fissionName], name:"UX_Profile_fissionName")
     @@unique([fissionRoot], name:"UX_Profile_fissionRoot")
@@ -106,86 +106,86 @@ model Message {
     recipientFissionName String
 }
 
-model KeyPair {
-    id Int @id @default(autoincrement())
-    createdAt DateTime
-    createdBy Profile @relation(name: "KeyPair_CreatedBy", fields: [createdByFissionName], references: [fissionName])
-    createdByFissionName String
+// model KeyPair {
+//     id Int @id @default(autoincrement())
+//     createdAt DateTime
+//     createdBy Profile @relation(name: "KeyPair_CreatedBy", fields: [createdByFissionName], references: [fissionName])
+//     createdByFissionName String
+//
+//     type String
+//     name String?
+//
+//     publicKey String
+//     privateKey String
+// }
 
-    type String
-    name String?
+// model CirclesWallet {
+//     address String @id
+//
+//     addedAt DateTime
+//     addedBy Profile @relation(name: "CirclesWallet_AddedBy", fields: [addedByFissionName], references: [fissionName])
+//     addedByFissionName String
+//
+//     ownToken CirclesToken? @relation(name: "CirclesToken_Owner")
+//
+//     tokens CirclesToken[]
+//     trusts CirclesTrustRelation[] @relation(name: "CirclesTrustRelation_Subject")
+//     transfers CirclesTokenTransfer[] @relation(name: "CirclesTokenTransfer_Subject")
+// }
 
-    publicKey String
-    privateKey String
-}
-
-model CirclesWallet {
-    address String @id
-
-    addedAt DateTime
-    addedBy Profile @relation(name: "CirclesWallet_AddedBy", fields: [addedByFissionName], references: [fissionName])
-    addedByFissionName String
-
-    ownToken CirclesToken? @relation(name: "CirclesToken_Owner")
-
-    tokens CirclesToken[]
-    trusts CirclesTrustRelation[] @relation(name: "CirclesTrustRelation_Subject")
-    transfers CirclesTokenTransfer[] @relation(name: "CirclesTokenTransfer_Subject")
-}
-
-enum CirclesTrustRelationPredicate {
-    GIVING_TO
-    RECEIVING_FROM
-}
-
-model CirclesTrustRelation {
-    id Int @id @default(autoincrement())
-    createdAt DateTime
-    createdInBlockNo Int
-    createdInBlockHash String
-
-    subject CirclesWallet @relation(name: "CirclesTrustRelation_Subject", fields: [subjectAddress], references: [address])
-    subjectAddress String
-
-    predicate CirclesTrustRelationPredicate
-
-    object CirclesWallet @relation(name: "CirclesTrustRelation_Object", fields: [objectAddress], references: [address])
-    objectAddress String
-
-    weight Int // 0-100
-}
-
-model CirclesToken {
-    address String @id
-
-    createdAt DateTime
-    createdInBlockNo Int
-    createdInBlockHash String
-
-    owner CirclesWallet @relation(name: "CirclesToken_Owner", fields: [ownerAddress], references: [address])
-    ownerAddress String
-
-    transfers CirclesTokenTransfer[]
-}
-
-enum CirclesTokenTransferPredicate {
-    GIVING_TO
-    RECEIVING_FROM
-}
-
-model CirclesTokenTransfer {
-    id Int @id @default(autoincrement())
-    createdAt DateTime
-    createdInBlockNo Int
-    createdInBlockHash String
-
-    subject CirclesWallet @relation(name: "CirclesTokenTransfer_Subject", fields: [subjectAddress], references: [address])
-    subjectAddress String
-
-    predicate CirclesTokenTransferPredicate
-
-    object CirclesWallet @relation(name: "CirclesTokenTransfer_Object", fields: [objectAddress], references: [address])
-    objectAddress String
-
-    value String
-}
+//enum CirclesTrustRelationPredicate {
+//    GIVING_TO
+//    RECEIVING_FROM
+//}
+//
+//model CirclesTrustRelation {
+//    id Int @id @default(autoincrement())
+//    createdAt DateTime
+//    createdInBlockNo Int
+//    createdInBlockHash String
+//
+//    subject CirclesWallet @relation(name: "CirclesTrustRelation_Subject", fields: [subjectAddress], references: [address])
+//    subjectAddress String
+//
+//    predicate CirclesTrustRelationPredicate
+//
+//    object CirclesWallet @relation(name: "CirclesTrustRelation_Object", fields: [objectAddress], references: [address])
+//    objectAddress String
+//
+//    weight Int // 0-100
+//}
+//
+//model CirclesToken {
+//    address String @id
+//
+//    createdAt DateTime
+//    createdInBlockNo Int
+//    createdInBlockHash String
+//
+//    owner CirclesWallet @relation(name: "CirclesToken_Owner", fields: [ownerAddress], references: [address])
+//    ownerAddress String
+//
+//    transfers CirclesTokenTransfer[]
+//}
+//
+//enum CirclesTokenTransferPredicate {
+//    GIVING_TO
+//    RECEIVING_FROM
+//}
+//
+//model CirclesTokenTransfer {
+//    id Int @id @default(autoincrement())
+//    createdAt DateTime
+//    createdInBlockNo Int
+//    createdInBlockHash String
+//
+//    subject CirclesWallet @relation(name: "CirclesTokenTransfer_Subject", fields: [subjectAddress], references: [address])
+//    subjectAddress String
+//
+//    predicate CirclesTokenTransferPredicate
+//
+//    object CirclesWallet @relation(name: "CirclesTokenTransfer_Object", fields: [objectAddress], references: [address])
+//    objectAddress String
+//
+//    value String
+//}
