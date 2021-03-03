@@ -19,8 +19,8 @@ export type Scalars = {
 };
 
 
-export type Omo = {
-  __typename?: 'Omo';
+export type Server = {
+  __typename?: 'Server';
   did: Scalars['String'];
 };
 
@@ -44,7 +44,7 @@ export type Profile = {
 export type Contact = {
   __typename?: 'Contact';
   id: Scalars['Int'];
-  createdAt?: Maybe<Scalars['String']>;
+  createdAt: Scalars['String'];
   displayName?: Maybe<Scalars['String']>;
   isMuted?: Maybe<Scalars['Boolean']>;
   anchorProfile?: Maybe<Profile>;
@@ -108,6 +108,7 @@ export type CreateOfferInput = {
 
 export type QueryOfferInput = {
   createdByFissionName?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   price_lt?: Maybe<Scalars['String']>;
   price_gt?: Maybe<Scalars['String']>;
@@ -223,73 +224,9 @@ export type QueryActivityInput = {
   subjectKey: Scalars['String'];
 };
 
-export type CirclesTokenTransfer = {
-  __typename?: 'CirclesTokenTransfer';
-  id: Scalars['Int'];
-  createdAt?: Maybe<Scalars['String']>;
-  createdInBlockNo: Scalars['Int'];
-  createdInBlockHash: Scalars['String'];
-  balanceAfterTransfer: Scalars['String'];
-  subject: CirclesWallet;
-  predicate: CirclesTokenTransferPredicate;
-  object: CirclesWallet;
-  value: Scalars['String'];
-};
-
-export enum CirclesTokenTransferPredicate {
-  GivingTo = 'GIVING_TO',
-  ReceivingFrom = 'RECEIVING_FROM'
-}
-
-export type CirclesTrustRelation = {
-  __typename?: 'CirclesTrustRelation';
-  id: Scalars['Int'];
-  createdAt?: Maybe<Scalars['String']>;
-  createdInBlockNo: Scalars['Int'];
-  createdInBlockHash: Scalars['String'];
-  subject: CirclesWallet;
-  predicate: CirclesTrustRelationPredicate;
-  object: CirclesWallet;
-  weight: Scalars['Int'];
-};
-
-export enum CirclesTrustRelationPredicate {
-  GivingTo = 'GIVING_TO',
-  ReceivingFrom = 'RECEIVING_FROM'
-}
-
-export type CirclesToken = {
-  __typename?: 'CirclesToken';
-  address: Scalars['String'];
-  addedAt: Scalars['String'];
-  addedInBlockNo: Scalars['Int'];
-  addedInBlockHash: Scalars['String'];
-  balanceWhenAdded: Scalars['String'];
-  createdAt: Scalars['String'];
-  createdInBlockNo: Scalars['Int'];
-  createdInBlockHash: Scalars['String'];
-  owner?: Maybe<CirclesWallet>;
-  transfers?: Maybe<Array<CirclesTokenTransfer>>;
-};
-
-export type CirclesWallet = {
-  __typename?: 'CirclesWallet';
-  address: Scalars['String'];
-  ownToken?: Maybe<CirclesToken>;
-  tokens?: Maybe<Array<CirclesToken>>;
-  trustRelations?: Maybe<Array<CirclesTrustRelation>>;
-};
-
-export type QueryCirclesWalletInput = {
-  address?: Maybe<Scalars['String']>;
-  ownTokenAddress?: Maybe<Scalars['String']>;
-  trusts?: Maybe<Scalars['String']>;
-  isTrustedBy?: Maybe<Scalars['String']>;
-};
-
 export type Query = {
   __typename?: 'Query';
-  omo?: Maybe<Omo>;
+  server?: Maybe<Server>;
   fissionRoot: Scalars['String'];
   profiles: Array<Profile>;
   offers: Array<Offer>;
@@ -297,7 +234,6 @@ export type Query = {
   contacts: Array<Contact>;
   conversation: Array<Message>;
   purchases: Array<Purchase>;
-  wallets: Array<CirclesWallet>;
 };
 
 
@@ -333,11 +269,6 @@ export type QueryConversationArgs = {
 
 export type QueryPurchasesArgs = {
   query: QueryPurchaseInput;
-};
-
-
-export type QueryWalletsArgs = {
-  query: QueryCirclesWalletInput;
 };
 
 export type Mutation = {
@@ -490,14 +421,14 @@ export type ProvePaymentMutation = (
   ) }
 );
 
-export type OmoQueryVariables = Exact<{ [key: string]: never; }>;
+export type ServerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type OmoQuery = (
+export type ServerQuery = (
   { __typename?: 'Query' }
-  & { omo?: Maybe<(
-    { __typename?: 'Omo' }
-    & Pick<Omo, 'did'>
+  & { server?: Maybe<(
+    { __typename?: 'Server' }
+    & Pick<Server, 'did'>
   )> }
 );
 
@@ -717,9 +648,9 @@ export const ProvePaymentDocument = gql`
   }
 }
     `;
-export const OmoDocument = gql`
-    query omo {
-  omo {
+export const ServerDocument = gql`
+    query server {
+  server {
     did
   }
 }
@@ -923,8 +854,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     provePayment(variables: ProvePaymentMutationVariables): Promise<{ data?: ProvePaymentMutation | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ProvePaymentMutation>(print(ProvePaymentDocument), variables));
     },
-    omo(variables?: OmoQueryVariables): Promise<{ data?: OmoQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<OmoQuery>(print(OmoDocument), variables));
+    server(variables?: ServerQueryVariables): Promise<{ data?: ServerQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<ServerQuery>(print(ServerDocument), variables));
     },
     fissionRoot(variables: FissionRootQueryVariables): Promise<{ data?: FissionRootQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<FissionRootQuery>(print(FissionRootDocument), variables));

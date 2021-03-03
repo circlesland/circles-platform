@@ -106,7 +106,6 @@ export class OmoCentral {
     //
     // Mutations
     //
-
     async upsertProfile(data: UpdateProfileInput) {
         return await this.withClient(async client =>
             await client.mutate<UpsertProfileMutation, UpsertProfileMutationVariables>({

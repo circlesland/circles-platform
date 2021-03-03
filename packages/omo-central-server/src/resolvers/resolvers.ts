@@ -30,22 +30,6 @@ import {purchasedBy} from "./edges/purchase/purchasedBy";
 import {purchasedItem} from "./edges/purchase/purchasedItem";
 import {activitiesResolver} from "./queries/activitities";
 import {purchasesResolver} from "./queries/purchases";
-import {circlesWalletsResolver} from "./queries/circlesWallets";
-import {ownTokenResolver} from "./edges/circlesWallet/ownToken";
-import {tokensResolver} from "./edges/circlesWallet/tokens";
-import {trustRelationsResolver} from "./edges/circlesWallet/trustRelations";
-import {tokenTransfersResolver} from "./edges/circlesToken/transfers";
-import {ownerResolver} from "./edges/circlesToken/owner";
-import {objectResolver as trustRelationObjectResolver} from "./edges/circlesTrustRelation/object";
-import {subjectResolver as trustRelationSubjectResolver} from "./edges/circlesTrustRelation/subject";
-import {objectResolver as circlesTransferObjectResolver} from "./edges/circlesTransfer/object";
-import {subjectResolver as circlesTransferSubjectResolver} from "./edges/circlesTransfer/subject";
-import {walletTransfersResolver} from "./edges/circlesWallet/transfers";
-import {addCirclesTrustRelationResolver} from "./mutations/addCirclesTrustRelation";
-import {addCirclesWalletResolver} from "./mutations/addCirclesWallet";
-import {addCirclesTokenResolver} from "./mutations/addCirclesToken";
-import {addCirclesTokenTransferResolver} from "./mutations/addCirclesTokenTransfer";
-import {Context} from "../context";
 import {Resolvers} from "omo-central-interfaces/dist/types";
 
 const prisma = new PrismaClient()
@@ -60,8 +44,7 @@ export const resolvers: Resolvers = {
         activities: activitiesResolver(prisma),
         contacts: contactsResolver(prisma),
         conversation: conversationResolver(prisma),
-        purchases: purchasesResolver(prisma),
-        circlesWallets: circlesWalletsResolver(prisma)
+        purchases: purchasesResolver(prisma)
     },
     Mutation: {
         lockOffer: lockOfferResolver(prisma),
@@ -70,17 +53,7 @@ export const resolvers: Resolvers = {
         createOffer: createOfferResolver(prisma),
         unlistOffer: unlistOfferResolver(prisma),
         sendMessage: sendMessageResolver(prisma, eventBroker),
-        markMessageAsRead: markMessageAsReadResolver(prisma),
-        addCirclesWallet: addCirclesWalletResolver(prisma),
-        addCirclesToken: addCirclesTokenResolver(prisma),
-        addCirclesTrustRelation: addCirclesTrustRelationResolver(prisma),
-        addCirclesTokenTransfer: addCirclesTokenTransferResolver(prisma),
-        addKeyPair: async (parent, args, context:Context) => {
-            throw new Error(`NotImplemented`);
-        },
-        removeKeyPair: async (parent, args, context:Context) => {
-            throw new Error(`NotImplemented`);
-        },
+        markMessageAsRead: markMessageAsReadResolver(prisma)
     },
     Subscription: {
         activities: activitiesSubscription(eventBroker),
@@ -108,23 +81,5 @@ export const resolvers: Resolvers = {
         purchasedFrom: purchasedFrom(prisma),
         purchasedBy: purchasedBy(prisma),
         purchasedItem: purchasedItem(prisma)
-    },
-    CirclesWallet: {
-        ownToken: ownTokenResolver(prisma),
-        tokens: tokensResolver(prisma),
-        trustRelations: trustRelationsResolver(prisma),
-        transfers: walletTransfersResolver(prisma)
-    },
-    CirclesToken: {
-        owner: ownerResolver(prisma),
-        transfers: tokenTransfersResolver(prisma)
-    },
-    CirclesTrustRelation: {
-        subject: trustRelationSubjectResolver(prisma),
-        object: trustRelationObjectResolver(prisma)
-    },
-    CirclesTokenTransfer: {
-        subject: circlesTransferSubjectResolver(prisma),
-        object: circlesTransferObjectResolver(prisma)
     }
 };

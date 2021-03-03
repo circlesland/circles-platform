@@ -22,7 +22,7 @@ export class Main
 
     constructor()
     {
-        const apiSchemaTypeDefs = importSchema("../src/schema.graphql");
+        const apiSchemaTypeDefs = importSchema("../src/server-schema.graphql");
         this._resolvers = resolvers;
 
         console.log("cors origins: ", corsOrigins);
