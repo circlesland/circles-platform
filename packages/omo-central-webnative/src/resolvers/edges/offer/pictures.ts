@@ -1,8 +1,8 @@
-import {Offer} from "../../../types";
+import {Offer} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 
-export function offerPictures(wnfs:WnfsClient) {
+export function offerPictures(wnfs:WnfsClientInterface) {
     return async (parent:Offer, args:any, context:Context) => {
         const pictures = await wnfs.file.findMany({
             where: {

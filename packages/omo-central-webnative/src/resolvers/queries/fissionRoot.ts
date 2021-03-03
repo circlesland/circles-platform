@@ -1,8 +1,8 @@
-import {QueryFissionRootArgs} from "../../types";
+import {QueryFissionRootArgs} from "omo-central-interfaces/dist/types";
 import {whereProfile} from "./profiles";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function fissionRootResolver(wnfs:WnfsClient) {
+export function fissionRootResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:QueryFissionRootArgs) => {
         const q = whereProfile(args);
         const result = await wnfs.profile.findUnique({

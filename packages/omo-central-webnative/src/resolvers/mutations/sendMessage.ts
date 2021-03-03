@@ -1,9 +1,9 @@
-import {MutationSendMessageArgs} from "../../types";
+import {MutationSendMessageArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 import {EventBroker} from "omo-utils/dist/eventBroker";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function sendMessageResolver(wnfs:WnfsClient, eventBroker:EventBroker) {
+export function sendMessageResolver(wnfs:WnfsClientInterface, eventBroker:EventBroker) {
     return async (parent:any, args:MutationSendMessageArgs, context:Context) => {
         const fissionUsername = await context.verifyJwt();
         const message = await wnfs.message.create({

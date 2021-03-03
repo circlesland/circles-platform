@@ -1,12 +1,12 @@
-import {Activity, ActivityPredicate, Profile} from "../../../types";
+import {Activity, ActivityPredicate, Profile} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 import {Contact, Offer, Purchase} from "omo-central-interfaces/dist/types";
 
-export function profileActivities(wnfs:WnfsClient) {
+export function profileActivities(wnfs:WnfsClientInterface) {
     return async (parent:Profile, args:any, context:Context) => {
-        // TODO: This is only a prototype. Streams must be created differently when this should survive load.
-
+        throw new Error(`NotImplemented`);
+        /*
         // Public activities are:
         // * Profile created/updated/closed an Offer
         // * Profile updated/closed own Profile
@@ -107,5 +107,6 @@ export function profileActivities(wnfs:WnfsClient) {
             const bTime = new Date(b.timestamp).getTime();
             return aTime > bTime ? 1 : aTime < bTime ? -1 : 0;
         });
+         */
     };
 }

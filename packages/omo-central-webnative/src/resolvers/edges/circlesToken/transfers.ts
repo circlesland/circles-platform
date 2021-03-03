@@ -1,9 +1,9 @@
-import {CirclesToken, CirclesTokenTransferPredicate} from "../../../types";
+import {CirclesToken, CirclesTokenTransferPredicate} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 import {CirclesTokenTransfer} from "omo-central-interfaces/dist/types";
 
-export function tokenTransfersResolver(wnfs:WnfsClient) {
+export function tokenTransfersResolver(wnfs:WnfsClientInterface) {
     return async (parent: CirclesToken, args: any, context: Context) => {
         const token = await wnfs.circlesToken.findUnique({
             where: {
@@ -16,6 +16,6 @@ export function tokenTransfersResolver(wnfs:WnfsClient) {
         if (!token) {
             throw new Error(`Couldn't find a token with the address ${parent.address}`);
         }
-        return token.transfers;
+        return token.transfers ?? [];
     };
 }

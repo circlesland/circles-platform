@@ -1,8 +1,8 @@
-import {CirclesTrustRelation} from "../../../types";
+import {CirclesTrustRelation} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 
-export function objectResolver(wnfs:WnfsClient) {
+export function objectResolver(wnfs:WnfsClientInterface) {
     return async (parent: CirclesTrustRelation, args: any, context: Context) => {
         const trustRelation = await wnfs.circlesTrustRelation.findUnique({
             where: {

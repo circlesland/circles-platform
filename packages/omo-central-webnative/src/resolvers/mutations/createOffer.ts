@@ -1,8 +1,8 @@
-import {MutationCreateOfferArgs} from "../../types";
+import {MutationCreateOfferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function createOfferResolver(wnfs:WnfsClient) {
+export function createOfferResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:MutationCreateOfferArgs, context:Context) => {
         const fissionUsername = await context.verifyJwt();
         const offer = await wnfs.offer.create({

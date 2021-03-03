@@ -1,9 +1,9 @@
-import {QueryActivitiesArgs} from "../../types";
+import {QueryActivitiesArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 import {profileActivities} from "../edges/profile/activities";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function activitiesResolver(wnfs:WnfsClient) {
+export function activitiesResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:QueryActivitiesArgs, context: Context) => {
         if (args.query.subjectType !== "profile") {
             throw new Error(`Invalid type: 'activities' can only be queried for 'profiles'.`)

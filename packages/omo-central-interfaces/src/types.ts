@@ -202,12 +202,13 @@ export type Purchase = {
   id: Scalars['Int'];
   purchasedAt: Scalars['String'];
   status: PurchaseStatus;
-  purchasedFrom: Profile;
+  purchasedFrom?: Maybe<Profile>;
   purchasedBy: Profile;
   purchasedItem: Offer;
 };
 
 export type QueryPurchaseInput = {
+  id?: Maybe<Scalars['Int']>;
   purchasedByFissionName?: Maybe<Scalars['String']>;
   purchasedItemId?: Maybe<Scalars['Int']>;
 };
@@ -734,7 +735,7 @@ export type PurchaseResolvers<ContextType = any, ParentType extends ResolversPar
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   purchasedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['PurchaseStatus'], ParentType, ContextType>;
-  purchasedFrom?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
+  purchasedFrom?: Resolver<Maybe<ResolversTypes['Profile']>, ParentType, ContextType>;
   purchasedBy?: Resolver<ResolversTypes['Profile'], ParentType, ContextType>;
   purchasedItem?: Resolver<ResolversTypes['Offer'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

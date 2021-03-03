@@ -1,8 +1,8 @@
-import {QueryConversationArgs} from "../../types";
+import {QueryConversationArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function conversationResolver(wnfs:WnfsClient) {
+export function conversationResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:QueryConversationArgs, context:Context) => {
         const fissionUsername = await context.verifyJwt();
         const messages = await wnfs.message.findMany({

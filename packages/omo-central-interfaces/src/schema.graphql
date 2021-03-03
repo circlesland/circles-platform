@@ -207,11 +207,12 @@ type Purchase {
     id: Int!
     purchasedAt: String!
     status: PurchaseStatus!
-    purchasedFrom: Profile!
+    purchasedFrom: Profile
     purchasedBy: Profile!
     purchasedItem: Offer!
 }
 input QueryPurchaseInput {
+    id: Int
     purchasedByFissionName: String
     purchasedItemId: Int
 }

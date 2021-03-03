@@ -1,8 +1,8 @@
-import {MutationUnlistOfferArgs} from "../../types";
+import {MutationUnlistOfferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function unlistOfferResolver(wnfs:WnfsClient) {
+export function unlistOfferResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:MutationUnlistOfferArgs, context:Context) => {
         const fissionUsername = await context.verifyJwt();
         const result = await wnfs.offer.updateMany({

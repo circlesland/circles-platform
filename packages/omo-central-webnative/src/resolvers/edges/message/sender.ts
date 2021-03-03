@@ -1,8 +1,8 @@
-import {Message} from "../../../types";
+import {Message} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 
-export function messageSender(wnfs:WnfsClient) {
+export function messageSender(wnfs:WnfsClientInterface) {
     return async (parent:Message, args:any, context:Context) => {
         const profile = await wnfs.profile.findUnique({
             where: {

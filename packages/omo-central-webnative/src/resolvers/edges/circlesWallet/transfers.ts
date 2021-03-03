@@ -1,8 +1,8 @@
-import {CirclesWallet} from "../../../types";
+import {CirclesWallet} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 
-export function walletTransfersResolver(wnfs:WnfsClient) {
+export function walletTransfersResolver(wnfs:WnfsClientInterface) {
     return async (parent: CirclesWallet, args: any, context: Context) => {
         const token = await wnfs.circlesWallet.findUnique({
             where: {
@@ -15,6 +15,6 @@ export function walletTransfersResolver(wnfs:WnfsClient) {
         if (!token) {
             throw new Error(`Couldn't find a token with the address ${parent.address}`);
         }
-        return token.transfers;
+        return token.transfers ?? [];
     };
 }

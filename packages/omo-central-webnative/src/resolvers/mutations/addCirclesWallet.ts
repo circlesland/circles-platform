@@ -1,8 +1,8 @@
-import {MutationAddCirclesWalletArgs} from "../../types";
+import {MutationAddCirclesWalletArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function addCirclesWalletResolver(wnfs:WnfsClient) {
+export function addCirclesWalletResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:MutationAddCirclesWalletArgs, context:Context) => {
         await context.verifyJwt();
         const createArgs: any = {

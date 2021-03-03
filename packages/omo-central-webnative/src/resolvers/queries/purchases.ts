@@ -1,8 +1,8 @@
-import {PurchaseStatus, QueryPurchasesArgs} from "../../types";
+import {PurchaseStatus, QueryPurchasesArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function purchasesResolver(wnfs:WnfsClient) {
+export function purchasesResolver(wnfs:WnfsClientInterface) {
     return async (parent: any, args: QueryPurchasesArgs, context: Context) => {
         const fissionName = await context.verifyJwt();
         if (args.query.purchasedByFissionName !== fissionName) {

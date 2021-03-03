@@ -1,8 +1,8 @@
-import {MutationAddCirclesTrustRelationArgs} from "../../types";
+import {MutationAddCirclesTrustRelationArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function addCirclesTrustRelationResolver(wnfs:WnfsClient) {
+export function addCirclesTrustRelationResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:MutationAddCirclesTrustRelationArgs, context:Context) => {
         const fissionName = await context.verifyJwt();
         const trustRelation = await wnfs.circlesTrustRelation.create({

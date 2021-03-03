@@ -1,8 +1,8 @@
-import {CirclesTokenTransfer} from "../../../types";
+import {CirclesTokenTransfer} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 
-export function subjectResolver(wnfs:WnfsClient) {
+export function subjectResolver(wnfs:WnfsClientInterface) {
     return async (parent: CirclesTokenTransfer, args: any, context: Context) => {
         const transfer = await wnfs.circlesTokenTransfer.findUnique({
             where: {

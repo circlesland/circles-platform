@@ -1,5 +1,4 @@
 import {EventBroker} from "omo-utils/dist/eventBroker";
-import {Resolvers} from "../types";
 import {serverResolver} from "./queries/server";
 import {profilesResolver} from "./queries/profiles";
 import {contactsResolver} from "./queries/contacts";
@@ -46,6 +45,7 @@ import {addCirclesWalletResolver} from "./mutations/addCirclesWallet";
 import {addCirclesTokenResolver} from "./mutations/addCirclesToken";
 import {addCirclesTokenTransferResolver} from "./mutations/addCirclesTokenTransfer";
 import {WnfsClient} from "../wnfsClient";
+import {Resolvers} from "omo-central-interfaces/dist/types";
 
 const wnfs = new WnfsClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!

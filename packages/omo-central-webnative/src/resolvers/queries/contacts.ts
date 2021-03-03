@@ -1,8 +1,8 @@
-import {QueryContactsArgs} from "../../types";
+import {QueryContactsArgs} from "omo-central-interfaces/dist/types";
 import {whereProfile} from "./profiles";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function contactsResolver(wnfs:WnfsClient) {
+export function contactsResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:QueryContactsArgs) => {
         const q = whereProfile(args);
         const result = await wnfs.profile.findUnique({
@@ -20,6 +20,6 @@ export function contactsResolver(wnfs:WnfsClient) {
         if (!result) {
             throw new Error(`Couldn't find a profile with query: ${JSON.stringify(q)}`)
         }
-        return result.contacts;
+        return result.contacts ?? [];
     };
 }

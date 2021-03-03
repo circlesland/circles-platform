@@ -1,8 +1,8 @@
-import {MutationUpsertProfileArgs} from "../../types";
+import {MutationUpsertProfileArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function upsertProfileResolver(wnfs:WnfsClient) {
+export function upsertProfileResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:MutationUpsertProfileArgs, context:Context) => {
         const fissionUsername = await context.verifyJwt();
         const profile = await wnfs.profile.upsert({

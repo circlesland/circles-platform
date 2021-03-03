@@ -1,5 +1,5 @@
-import {QueryProfilesArgs, RequireFields} from "../../types";
-import {WnfsClient} from "../../wnfsClient";
+import {QueryProfilesArgs, RequireFields} from "omo-central-interfaces/dist/types";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
 export function whereProfile(args: RequireFields<QueryProfilesArgs, never>) {
     const q: { [key: string]: any } = {};
@@ -25,7 +25,7 @@ export function whereProfile(args: RequireFields<QueryProfilesArgs, never>) {
     return q;
 }
 
-export function profilesResolver(wnfs:WnfsClient) {
+export function profilesResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:QueryProfilesArgs) => {
         const q = whereProfile(args);
         return await wnfs.profile.findMany({

@@ -1,5 +1,5 @@
-import {QueryOffersArgs, RequireFields} from "../../types";
-import {WnfsClient} from "../../wnfsClient";
+import {QueryOffersArgs, RequireFields} from "omo-central-interfaces/dist/types";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 import {Offer} from "omo-central-interfaces/dist/types";
 
 export function whereOffer(args: RequireFields<QueryOffersArgs, never>) {
@@ -49,7 +49,7 @@ export function whereOffer(args: RequireFields<QueryOffersArgs, never>) {
     return q;
 }
 
-export function offersResolver(wnfs:WnfsClient) {
+export function offersResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:QueryOffersArgs) => {
         const q = whereOffer(args);
         const result = await wnfs.offer.findMany({

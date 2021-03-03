@@ -1,8 +1,8 @@
-import {Profile} from "../../../types";
+import {Profile} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
-import {WnfsClient} from "../../../wnfsClient";
+import {WnfsClientInterface} from "../../../wnfsClientInterface";
 
-export function profilePurchases(wnfs:WnfsClient) {
+export function profilePurchases(wnfs:WnfsClientInterface) {
     return async (parent:Profile, args:any, context:Context) => {
         const fissionName = await context.verifyJwt();
         if (fissionName != parent.fissionName) {

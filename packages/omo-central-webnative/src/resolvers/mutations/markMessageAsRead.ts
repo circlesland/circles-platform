@@ -1,8 +1,8 @@
-import {MutationMarkMessageAsReadArgs} from "../../types";
+import {MutationMarkMessageAsReadArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function markMessageAsReadResolver(wnfs:WnfsClient) {
+export function markMessageAsReadResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:MutationMarkMessageAsReadArgs, context:Context) => {
         const fissionUsername = await context.verifyJwt();
         const result = await wnfs.message.updateMany({

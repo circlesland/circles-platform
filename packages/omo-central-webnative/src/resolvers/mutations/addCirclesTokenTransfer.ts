@@ -1,8 +1,8 @@
-import {MutationAddCirclesTokenTransferArgs} from "../../types";
+import {MutationAddCirclesTokenTransferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function addCirclesTokenTransferResolver(wnfs: WnfsClient) {
+export function addCirclesTokenTransferResolver(wnfs: WnfsClientInterface) {
     return async (parent: any, args: MutationAddCirclesTokenTransferArgs, context: Context) => {
         const fissionName = await context.verifyJwt();
         const transfer = await wnfs.circlesTokenTransfer.create({
@@ -43,10 +43,6 @@ export function addCirclesTokenTransferResolver(wnfs: WnfsClient) {
             }
         });
 
-        return {
-            ...transfer,
-            createdAt: transfer.createdAt.toJSON(),
-            predicate: args.data.predicate
-        };
+        return transfer;
     };
 }

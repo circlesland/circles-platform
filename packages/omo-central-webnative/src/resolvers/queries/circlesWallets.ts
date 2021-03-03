@@ -1,8 +1,8 @@
-import {QueryCirclesWalletsArgs} from "../../types";
+import {QueryCirclesWalletsArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
-import {WnfsClient} from "../../wnfsClient";
+import {WnfsClientInterface} from "../../wnfsClientInterface";
 
-export function circlesWalletsResolver(wnfs:WnfsClient) {
+export function circlesWalletsResolver(wnfs:WnfsClientInterface) {
     return async (parent:any, args:QueryCirclesWalletsArgs, context: Context) => {
         await context.verifyJwt();
 
