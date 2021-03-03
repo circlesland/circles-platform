@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {QueryConversationArgs} from "../../types";
+import {QueryConversationArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function conversationResolver(prisma:PrismaClient) {

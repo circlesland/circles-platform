@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {MutationAddCirclesTokenArgs} from "../../types";
+import {MutationAddCirclesTokenArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function addCirclesTokenResolver(prisma:PrismaClient) {

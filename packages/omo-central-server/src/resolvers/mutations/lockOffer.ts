@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {MutationLockOfferArgs} from "../../types";
+import {MutationLockOfferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export const lockTime = 90 * 1000;

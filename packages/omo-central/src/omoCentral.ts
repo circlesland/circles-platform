@@ -7,15 +7,9 @@ import {AuthSucceeded, buildUcan, Continuation, redirectToLobby, Scenario, State
 import ApolloClient from "apollo-client";
 import {NormalizedCacheObject} from "apollo-cache-inmemory"
 import {
-    InboxDocument,
-    InboxQuery,
-    InboxQueryVariables,
     OffersDocument,
     OffersQuery,
     OffersQueryVariables,
-    OutboxDocument,
-    OutboxQuery,
-    OutboxQueryVariables,
     ProfilesDocument,
     ProfilesQuery,
     ProfilesQueryVariables,
@@ -229,32 +223,6 @@ export class OmoCentral {
                     variables: {
                         query: {
                             publishedAt_gt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toJSON()
-                        }
-                    }
-                })));
-    }
-
-    async queryInbox(senderFissionName: string | undefined = undefined) {
-        return this.throwOnErrorOrData(
-            await this.withClient(async client =>
-                await client.query<InboxQuery, InboxQueryVariables>({
-                    query: InboxDocument,
-                    variables: {
-                        query: {
-                            senderFissionName: senderFissionName
-                        }
-                    }
-                })));
-    }
-
-    async queryOutbox(recipientFissionName: string | undefined = undefined) {
-        return this.throwOnErrorOrData(
-            await this.withClient(async client =>
-                await client.query<OutboxQuery, OutboxQueryVariables>({
-                    query: OutboxDocument,
-                    variables: {
-                        query: {
-                            recipientFissionName: recipientFissionName
                         }
                     }
                 })));

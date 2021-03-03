@@ -1,4 +1,4 @@
-import {MutationSendMessageArgs} from "../../types";
+import {MutationSendMessageArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 import {PrismaClient} from "@prisma/client/scripts/default-index";
 import {EventBroker} from "omo-utils/dist/eventBroker";

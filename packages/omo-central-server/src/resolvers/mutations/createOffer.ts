@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {MutationCreateOfferArgs} from "../../types";
+import {MutationCreateOfferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function createOfferResolver(prisma:PrismaClient) {

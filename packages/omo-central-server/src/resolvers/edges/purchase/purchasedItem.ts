@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {Purchase} from "../../../types";
+import {Purchase} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function purchasedItem(prisma:PrismaClient) {

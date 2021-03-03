@@ -1,0 +1,362 @@
+type Server {
+    # Omo's DID
+    did:String!
+}
+
+type Profile {
+    # The did to which this profile is attached to
+    # TODO: Is this always the same, even for different devices?
+    #did:String
+    # The fission username
+    fissionName:ID!
+    # The last known fission FS root CID
+    fissionRoot:String
+    # The address of the connected circles safe
+    circlesAddress:String
+    # The first name as entered for omosapien
+    omoFirstName:String
+    # The last name as entered for omosapien
+    omoLastName:String
+    # The CID of the omo avatar image
+    omoAvatarCid:String
+    omoAvatarMimeType:String
+    # All market offers of this profile
+    offers:[Offer!]
+    # All contacts of this profile
+    contacts:[Contact!]
+    # All purchases of this profile
+    purchases:[Purchase!]
+    # All activities of this profile
+    activities:[Activity!]
+    # All keys of this profile
+    keyPairs:[KeyPair!]
+}
+
+type KeyPair {
+    id:Int!
+    createdAt:String!
+    type:String!
+    name:String!
+
+    publicKey:String!
+    privateKey:String!
+}
+input AddKeyPairInput {
+    type:String!
+    name:String!
+    publicKey:String!
+    privateKey:String!
+}
+
+type Contact {
+    id:Int!
+    createdAt:String!
+    displayName:String
+    isMuted:Boolean
+    anchorProfile:Profile
+    contactProfile:Profile
+}
+
+type Message {
+    id: Int!
+    createdAt:String!
+    readAt:String
+
+    topic:String!
+    type: String!
+    content:String!
+
+    sender: Profile!
+    senderFissionName: String!
+
+    recipient: Profile!
+    recipientFissionName: String!
+}
+input SendMessageInput {
+    toFissionName: String!
+    topic:String!
+    type: String!
+    content:String!
+}
+input QueryConversationInput {
+    withFissionName:String!
+}
+
+type Offer {
+    id: Int!
+    createdBy: Profile
+    createdByFissionName: String!
+    publishedAt: String!
+    unlistedAt: String
+    purchasedAt: String
+
+    title: String!
+    price: String!
+    description: String
+    category: String
+    country: String
+    city: String
+    deliveryTerms: String!
+
+    pictures: [File!]
+}
+input CreateOfferInput
+{
+    id: Int
+    title:String!
+    price:String!
+    deliveryTerms:String!
+    description:String
+    category:String
+    country:String
+    city:String
+    pictures:[CreateFileInput!]!
+}
+input QueryOfferInput {
+    id:Int
+    createdByFissionName:String
+    title:String
+    price_lt:String
+    price_gt:String
+    deliveryTerms:String
+    description:String
+    category:String
+    country:String
+    city:String
+    publishedAt_lt:String
+    publishedAt_gt:String
+    unlistedAt:String
+    unlistedAt_lt:String
+    unlistedAt_gt:String
+}
+
+type File {
+    size: Int,
+    mimeType: String,
+    cid: String!
+}
+input CreateFileInput
+{
+    size:Int
+    mimeType:String
+    cid:String!
+}
+
+input QueryUniqueProfileInput
+{
+    #did: String
+    fissionName: String
+    fissionRoot:String
+}
+
+input QueryProfileInput
+{
+    #did: String
+    fissionName: String
+    omoFirstName:String
+    omoLastName:String
+    circlesAddress:String
+}
+
+input UpdateProfileInput
+{
+    # The last known fission FS root CID or null
+    fissionRoot:String
+    # The address of the connected circles safe or null
+    circlesAddress:String
+    # The first name as entered for omosapien or null
+    omoFirstName:String
+    # The last name as entered for omosapien or null
+    omoLastName:String
+    # The CID of the omo avatar image or null
+    omoAvatarCid:String
+    omoAvatarMimeType:String
+}
+
+input LockOfferInput
+{
+    offerId:Int!
+}
+
+type LockOfferResult
+{
+    success:Boolean!
+    lockedUntil:String
+}
+
+input PaymentProof
+{
+    forOfferId:Int!
+    tokenOwners:[String!]!
+    sources:[String!]!
+    destinations:[String!]!
+    values:[String!]!
+}
+
+type ProvePaymentResult
+{
+    success:Boolean!
+}
+
+enum PurchaseStatus {
+    INVALID
+    ITEM_LOCKED
+    PAYMENT_PROVEN
+}
+type Purchase {
+    id: Int!
+    purchasedAt: String!
+    status: PurchaseStatus!
+    purchasedFrom: Profile!
+    purchasedBy: Profile!
+    purchasedItem: Offer!
+}
+input QueryPurchaseInput {
+    purchasedByFissionName: String
+    purchasedItemId: Int
+}
+
+enum ActivityPredicate {
+    CREATED # [profile X] CREATED a [contact|message|offer|purchase|profile]
+    UPDATED # [profile X] UPDATED a [contact|offer|profile]
+    PROVED # [profile X] PROVED a [purchase]
+    RECEIVED # [profile X] RECEIVED a [message]
+    CLOSED # [profile X] CLOSED a [contact|offer|profile]
+}
+type Activity {
+    timestamp: String!
+    isPublic: Boolean!
+    subjectType: String!
+    subjectKey: String!
+    predicate: String!
+    objectType: String!
+    objectKey: String!
+}
+input QueryActivityInput {
+    subjectType: String!
+    subjectKey: String!
+}
+
+type CirclesTokenTransfer {
+    id: Int!
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    subject: CirclesWallet!
+    predicate: CirclesTokenTransferPredicate!
+    object: CirclesWallet!
+    value: String!
+}
+input AddCirclesTokenTransferInput {
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+    subjectAddress: String!
+    predicate: CirclesTokenTransferPredicate!
+    objectAddress: String!
+    value: String!
+}
+enum CirclesTokenTransferPredicate {
+    GIVING_TO
+    RECEIVING_FROM
+}
+
+type CirclesTrustRelation {
+    id: Int!
+    createdAt: String
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    subject: CirclesWallet!
+    predicate: CirclesTrustRelationPredicate!
+    object: CirclesWallet!
+    weight: Int!
+}
+input AddCirclesTrustRelationInput {
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+    subjectAddress: String!
+    predicate: CirclesTrustRelationPredicate!
+    objectAddress: String!
+    weight: Int!
+}
+enum CirclesTrustRelationPredicate {
+    GIVING_TO
+    RECEIVING_FROM
+}
+
+type CirclesToken {
+    address: String!
+
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    owner: CirclesWallet
+    transfers: [CirclesTokenTransfer!]
+}
+input AddCirclesTokenInput {
+    address: String!
+    owner: AddCirclesWalletInput
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+}
+
+type CirclesWallet {
+    address: String!
+
+    ownToken: CirclesToken
+
+    tokens: [CirclesToken!]
+    transfers: [CirclesTokenTransfer!]
+    trustRelations: [CirclesTrustRelation!]
+}
+input AddCirclesWalletInput {
+    address: String!
+    ownToken: AddCirclesTokenInput
+}
+input QueryCirclesWalletInput {
+    address: String
+    ownTokenAddress: String
+    trusts: String
+    isTrustedBy: String
+}
+
+type Query
+{
+    server : Server
+    fissionRoot(query:QueryUniqueProfileInput!) : String!
+    profiles(query:QueryProfileInput!) : [Profile!]!
+    offers(query:QueryOfferInput!) : [Offer!]!
+    activities(query:QueryActivityInput!):[Activity!]!
+    contacts(query:QueryUniqueProfileInput!) : [Contact!]!
+    conversation(query:QueryConversationInput!) : [Message!]!
+    purchases(query:QueryPurchaseInput!):[Purchase!]!
+    circlesWallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
+}
+
+type Mutation
+{
+    upsertProfile(data:UpdateProfileInput!):Profile!
+    addKeyPair(data:AddKeyPairInput!):KeyPair!
+    removeKeyPair(keyPairId:Int!):Boolean!
+    createOffer(data:CreateOfferInput!):Offer!
+    unlistOffer(offerId:Int!):Boolean!
+    sendMessage(data:SendMessageInput!):Message!
+    markMessageAsRead(messageId:Int!):Boolean!
+    lockOffer(data:LockOfferInput!):LockOfferResult!
+    provePayment(data:PaymentProof!):ProvePaymentResult!
+
+    addCirclesWallet(data:AddCirclesWalletInput!) : CirclesWallet!
+    addCirclesToken(data:AddCirclesTokenInput!) : CirclesToken!
+    addCirclesTrustRelation(data:AddCirclesTrustRelationInput!) : CirclesTrustRelation!
+    addCirclesTokenTransfer(data:AddCirclesTokenTransferInput!) : CirclesTokenTransfer!
+}
+
+type Subscription {
+    activities: Activity
+    messages: Message
+}

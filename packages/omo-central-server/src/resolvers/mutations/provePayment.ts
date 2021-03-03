@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {MutationProvePaymentArgs} from "../../types";
+import {MutationProvePaymentArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function provePaymentResolver(prisma:PrismaClient) {

@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {QueryCirclesWalletsArgs} from "../../types";
+import {QueryCirclesWalletsArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function circlesWalletsResolver(prisma:PrismaClient) {

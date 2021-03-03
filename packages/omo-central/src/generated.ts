@@ -72,18 +72,6 @@ export type SendMessageInput = {
   content: Scalars['String'];
 };
 
-export type QueryInboxInput = {
-  senderFissionName?: Maybe<Scalars['String']>;
-  createdAt_lt?: Maybe<Scalars['String']>;
-  createdAt_gt?: Maybe<Scalars['String']>;
-};
-
-export type QueryOutboxInput = {
-  recipientFissionName?: Maybe<Scalars['String']>;
-  createdAt_lt?: Maybe<Scalars['String']>;
-  createdAt_gt?: Maybe<Scalars['String']>;
-};
-
 export type QueryConversationInput = {
   withFissionName: Scalars['String'];
 };
@@ -235,19 +223,81 @@ export type QueryActivityInput = {
   subjectKey: Scalars['String'];
 };
 
+export type CirclesTokenTransfer = {
+  __typename?: 'CirclesTokenTransfer';
+  id: Scalars['Int'];
+  createdAt?: Maybe<Scalars['String']>;
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  balanceAfterTransfer: Scalars['String'];
+  subject: CirclesWallet;
+  predicate: CirclesTokenTransferPredicate;
+  object: CirclesWallet;
+  value: Scalars['String'];
+};
+
+export enum CirclesTokenTransferPredicate {
+  GivingTo = 'GIVING_TO',
+  ReceivingFrom = 'RECEIVING_FROM'
+}
+
+export type CirclesTrustRelation = {
+  __typename?: 'CirclesTrustRelation';
+  id: Scalars['Int'];
+  createdAt?: Maybe<Scalars['String']>;
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  subject: CirclesWallet;
+  predicate: CirclesTrustRelationPredicate;
+  object: CirclesWallet;
+  weight: Scalars['Int'];
+};
+
+export enum CirclesTrustRelationPredicate {
+  GivingTo = 'GIVING_TO',
+  ReceivingFrom = 'RECEIVING_FROM'
+}
+
+export type CirclesToken = {
+  __typename?: 'CirclesToken';
+  address: Scalars['String'];
+  addedAt: Scalars['String'];
+  addedInBlockNo: Scalars['Int'];
+  addedInBlockHash: Scalars['String'];
+  balanceWhenAdded: Scalars['String'];
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  owner?: Maybe<CirclesWallet>;
+  transfers?: Maybe<Array<CirclesTokenTransfer>>;
+};
+
+export type CirclesWallet = {
+  __typename?: 'CirclesWallet';
+  address: Scalars['String'];
+  ownToken?: Maybe<CirclesToken>;
+  tokens?: Maybe<Array<CirclesToken>>;
+  trustRelations?: Maybe<Array<CirclesTrustRelation>>;
+};
+
+export type QueryCirclesWalletInput = {
+  address?: Maybe<Scalars['String']>;
+  ownTokenAddress?: Maybe<Scalars['String']>;
+  trusts?: Maybe<Scalars['String']>;
+  isTrustedBy?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   omo?: Maybe<Omo>;
   fissionRoot: Scalars['String'];
   profiles: Array<Profile>;
-  offer: Offer;
   offers: Array<Offer>;
+  activities: Array<Activity>;
   contacts: Array<Contact>;
-  inbox: Array<Message>;
-  outbox: Array<Message>;
   conversation: Array<Message>;
   purchases: Array<Purchase>;
-  activities: Array<Activity>;
+  wallets: Array<CirclesWallet>;
 };
 
 
@@ -261,28 +311,18 @@ export type QueryProfilesArgs = {
 };
 
 
-export type QueryOfferArgs = {
-  offerId: Scalars['Int'];
-};
-
-
 export type QueryOffersArgs = {
   query: QueryOfferInput;
 };
 
 
+export type QueryActivitiesArgs = {
+  query: QueryActivityInput;
+};
+
+
 export type QueryContactsArgs = {
   query: QueryUniqueProfileInput;
-};
-
-
-export type QueryInboxArgs = {
-  query?: Maybe<QueryInboxInput>;
-};
-
-
-export type QueryOutboxArgs = {
-  query?: Maybe<QueryOutboxInput>;
 };
 
 
@@ -296,8 +336,8 @@ export type QueryPurchasesArgs = {
 };
 
 
-export type QueryActivitiesArgs = {
-  query: QueryActivityInput;
+export type QueryWalletsArgs = {
+  query: QueryCirclesWalletInput;
 };
 
 export type Mutation = {
@@ -348,6 +388,7 @@ export type MutationProvePaymentArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  activities?: Maybe<Activity>;
   messages?: Maybe<Message>;
 };
 
@@ -510,46 +551,6 @@ export type ActivitiesQuery = (
   & { activities: Array<(
     { __typename?: 'Activity' }
     & Pick<Activity, 'timestamp' | 'isPublic' | 'subjectType' | 'subjectKey' | 'predicate' | 'objectType' | 'objectKey'>
-  )> }
-);
-
-export type InboxQueryVariables = Exact<{
-  query?: Maybe<QueryInboxInput>;
-}>;
-
-
-export type InboxQuery = (
-  { __typename?: 'Query' }
-  & { inbox: Array<(
-    { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'type' | 'content'>
-    & { sender: (
-      { __typename?: 'Profile' }
-      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoFirstName' | 'omoLastName'>
-    ), recipient: (
-      { __typename?: 'Profile' }
-      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
-    ) }
-  )> }
-);
-
-export type OutboxQueryVariables = Exact<{
-  query?: Maybe<QueryOutboxInput>;
-}>;
-
-
-export type OutboxQuery = (
-  { __typename?: 'Query' }
-  & { outbox: Array<(
-    { __typename?: 'Message' }
-    & Pick<Message, 'id' | 'createdAt' | 'readAt' | 'senderFissionName' | 'recipientFissionName' | 'topic' | 'type' | 'content'>
-    & { sender: (
-      { __typename?: 'Profile' }
-      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
-    ), recipient: (
-      { __typename?: 'Profile' }
-      & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
-    ) }
   )> }
 );
 
@@ -773,65 +774,6 @@ export const ActivitiesDocument = gql`
   }
 }
     `;
-export const InboxDocument = gql`
-    query inbox($query: QueryInboxInput) {
-  inbox(query: $query) {
-    id
-    createdAt
-    readAt
-    senderFissionName
-    sender {
-      fissionName
-      circlesAddress
-      omoAvatarCid
-      omoFirstName
-      omoLastName
-    }
-    recipientFissionName
-    recipient {
-      fissionName
-      circlesAddress
-      omoAvatarCid
-      omoAvatarMimeType
-      omoFirstName
-      omoLastName
-    }
-    topic
-    type
-    content
-  }
-}
-    `;
-export const OutboxDocument = gql`
-    query outbox($query: QueryOutboxInput) {
-  outbox(query: $query) {
-    id
-    createdAt
-    readAt
-    senderFissionName
-    sender {
-      fissionName
-      circlesAddress
-      omoAvatarCid
-      omoAvatarMimeType
-      omoFirstName
-      omoLastName
-    }
-    recipientFissionName
-    recipient {
-      fissionName
-      circlesAddress
-      omoAvatarCid
-      omoAvatarMimeType
-      omoFirstName
-      omoLastName
-    }
-    topic
-    type
-    content
-  }
-}
-    `;
 export const ConversationDocument = gql`
     query conversation($query: QueryConversationInput!) {
   conversation(query: $query) {
@@ -995,12 +937,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     activities(variables: ActivitiesQueryVariables): Promise<{ data?: ActivitiesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ActivitiesQuery>(print(ActivitiesDocument), variables));
-    },
-    inbox(variables?: InboxQueryVariables): Promise<{ data?: InboxQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<InboxQuery>(print(InboxDocument), variables));
-    },
-    outbox(variables?: OutboxQueryVariables): Promise<{ data?: OutboxQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<OutboxQuery>(print(OutboxDocument), variables));
     },
     conversation(variables: ConversationQueryVariables): Promise<{ data?: ConversationQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ConversationQuery>(print(ConversationDocument), variables));

@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {Contact} from "../../../types";
+import {Contact} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function contactAnchorProfile(prisma:PrismaClient) {

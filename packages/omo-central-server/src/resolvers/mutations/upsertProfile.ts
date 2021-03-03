@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {MutationUpsertProfileArgs} from "../../types";
+import {MutationUpsertProfileArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function upsertProfileResolver(prisma:PrismaClient) {

@@ -1,6 +1,5 @@
 import {PrismaClient} from '@prisma/client'
 import {EventBroker} from "omo-utils/dist/eventBroker";
-import {Resolvers} from "../types";
 import {serverResolver} from "./queries/server";
 import {profilesResolver} from "./queries/profiles";
 import {contactsResolver} from "./queries/contacts";
@@ -20,8 +19,6 @@ import {messageSender} from "./edges/message/sender";
 import {messageRecipient} from "./edges/message/recipient";
 import {profileOffers} from "./edges/profile/offers";
 import {profileContacts} from "./edges/profile/contacts";
-import {profileSentMessages} from "./edges/profile/sentMessages";
-import {profileReceivedMessages} from "./edges/profile/receivedMessages";
 import {profilePurchases} from "./edges/profile/purchases";
 import {profileActivities} from "./edges/profile/activities";
 import {contactAnchorProfile} from "./edges/contact/anchorProfile";
@@ -48,6 +45,8 @@ import {addCirclesTrustRelationResolver} from "./mutations/addCirclesTrustRelati
 import {addCirclesWalletResolver} from "./mutations/addCirclesWallet";
 import {addCirclesTokenResolver} from "./mutations/addCirclesToken";
 import {addCirclesTokenTransferResolver} from "./mutations/addCirclesTokenTransfer";
+import {Context} from "../context";
+import {Resolvers} from "omo-central-interfaces/dist/types";
 
 const prisma = new PrismaClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
@@ -76,10 +75,10 @@ export const resolvers: Resolvers = {
         addCirclesToken: addCirclesTokenResolver(prisma),
         addCirclesTrustRelation: addCirclesTrustRelationResolver(prisma),
         addCirclesTokenTransfer: addCirclesTokenTransferResolver(prisma),
-        addKeyPair: async (parent, args, context) => {
+        addKeyPair: async (parent, args, context:Context) => {
             throw new Error(`NotImplemented`);
         },
-        removeKeyPair: async (parent, args, context) => {
+        removeKeyPair: async (parent, args, context:Context) => {
             throw new Error(`NotImplemented`);
         },
     },
@@ -94,8 +93,6 @@ export const resolvers: Resolvers = {
     Profile: {
         offers: profileOffers(prisma),
         contacts: profileContacts(prisma),
-        sentMessages: profileSentMessages(prisma),
-        receivedMessages: profileReceivedMessages(prisma),
         purchases: profilePurchases(prisma),
         activities: profileActivities(prisma)
     },

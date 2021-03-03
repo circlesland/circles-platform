@@ -20,6 +20,7 @@
     "graphql-import": "^1.0.2",
     "omo-ucan": "0.1.212",
     "omo-circles": "1.0.0",
+    "omo-central-interfaces": "1.0.0",
     "subscriptions-transport-ws": "^0.9.18",
     "omo-utils": "1.0.0",
     "ix": "^4.2.0"

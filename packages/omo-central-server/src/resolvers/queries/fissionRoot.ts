@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {QueryFissionRootArgs} from "../../types";
+import {QueryFissionRootArgs} from "omo-central-interfaces/dist/types";
 import {whereProfile} from "./profiles";
 
 export function fissionRootResolver(prisma:PrismaClient) {

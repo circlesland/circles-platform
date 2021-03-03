@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {QueryActivitiesArgs} from "../../types";
+import {QueryActivitiesArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 import {profileActivities} from "../edges/profile/activities";
 

@@ -1,4 +1,4 @@
-import {QueryProfilesArgs, RequireFields} from "../../types";
+import {QueryProfilesArgs, RequireFields} from "omo-central-interfaces/dist/types";
 import {PrismaClient} from "@prisma/client";
 
 export function whereProfile(args: RequireFields<QueryProfilesArgs, never>) {

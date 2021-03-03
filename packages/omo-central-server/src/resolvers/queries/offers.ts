@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {QueryOffersArgs, RequireFields} from "../../types";
+import {QueryOffersArgs, RequireFields} from "omo-central-interfaces/dist/types";
 
 export function whereOffer(args: RequireFields<QueryOffersArgs, never>) {
     const q: { [key: string]: any } = {};

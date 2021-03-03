@@ -1,0 +1,24 @@
+{
+  "name": "omo-central-interfaces",
+  "version": "1.0.0",
+  "description": "A directory service that keeps track of profile and offer CIDs",
+  "main": "dist/index.js",
+  "prepublish": "tsc",
+  "engines": {
+    "node": ">=12.19.0"
+  },
+  "scripts": {
+    "generate": "npx graphql-codegen"
+  },
+  "author": "https://github.com/jaensen",
+  "license": "AGPL-3",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.17.8",
+    "@graphql-codegen/introspection": "^1.18.1",
+    "@graphql-codegen/typescript": "^1.21.0",
+    "@graphql-codegen/typescript-resolvers": "^1.18.2",
+    "typescript": "^4.1.3"
+  }
+}

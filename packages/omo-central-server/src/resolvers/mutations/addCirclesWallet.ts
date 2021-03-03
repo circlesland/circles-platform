@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {MutationAddCirclesWalletArgs} from "../../types";
+import {MutationAddCirclesWalletArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function addCirclesWalletResolver(prisma:PrismaClient) {

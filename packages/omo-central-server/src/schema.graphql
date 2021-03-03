@@ -118,6 +118,7 @@ input CreateOfferInput
 }
 input QueryOfferInput {
     createdByFissionName:String
+    id:Int
     title:String
     price_lt:String
     price_gt:String

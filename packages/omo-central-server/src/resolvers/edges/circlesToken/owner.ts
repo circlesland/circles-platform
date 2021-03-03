@@ -1,4 +1,4 @@
-import {CirclesToken} from "../../../types";
+import {CirclesToken} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 import {PrismaClient} from '@prisma/client'
 

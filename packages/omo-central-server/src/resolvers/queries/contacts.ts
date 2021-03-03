@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {QueryContactsArgs} from "../../types";
+import {QueryContactsArgs} from "omo-central-interfaces/dist/types";
 import {whereProfile} from "./profiles";
 
 export function contactsResolver(prisma:PrismaClient) {

@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {MutationUnlistOfferArgs} from "../../types";
+import {MutationUnlistOfferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function unlistOfferResolver(prisma:PrismaClient) {

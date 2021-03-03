@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesTokenTransferPredicate, CirclesWallet} from "../../../types";
+import {CirclesTokenTransferPredicate, CirclesWallet} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function walletTransfersResolver(prisma:PrismaClient) {

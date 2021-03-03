@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesTrustRelationPredicate, MutationAddCirclesTrustRelationArgs} from "../../types";
+import {CirclesTrustRelationPredicate, MutationAddCirclesTrustRelationArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function addCirclesTrustRelationResolver(prisma:PrismaClient) {

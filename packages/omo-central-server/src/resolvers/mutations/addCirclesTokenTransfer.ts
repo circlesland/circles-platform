@@ -2,7 +2,7 @@ import {PrismaClient, CirclesTokenTransferPredicate as DBCirclesTokenTransferPre
 import {
     CirclesTokenTransferPredicate as ApiCirclesTokenTransferPredicate,
     MutationAddCirclesTokenTransferArgs
-} from "../../types";
+} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
 export function addCirclesTokenTransferResolver(prisma: PrismaClient) {
