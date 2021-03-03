@@ -95,7 +95,6 @@ model File {
   cid      String
 
   @@unique([offerId, cid], name: "UX_File_Offer")
-  Offer Offer? @relation(fields: [offerId], references: [id])
 }
 
 model Message {
