@@ -50,6 +50,8 @@ export function addCirclesTrustRelationResolver(prisma:PrismaClient) {
             case "GIVING_TO":
                 predicate = CirclesTrustRelationPredicate.GivingTo;
                 break;
+            default:
+                throw new Error(`Unknown trust relation predicate: ${trustRelation.predicate}`)
         }
         return {
             ...trustRelation,

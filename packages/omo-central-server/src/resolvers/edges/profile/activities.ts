@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, Offer, Contact, Purchase} from "@prisma/client";
 import {Activity, ActivityPredicate, Profile} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
@@ -27,7 +27,7 @@ export function profileActivities(prisma:PrismaClient) {
                 id: true,
             }
         });
-        createdOffers.forEach(offer => {
+        createdOffers.forEach((offer:{publishedAt: Date, createdByFissionName: string, id: number}) => {
             activities.push({
                 timestamp: offer.publishedAt.toJSON(),
                 isPublic: true,
@@ -52,7 +52,7 @@ export function profileActivities(prisma:PrismaClient) {
                     createdByKey: true,
                 }
             });
-            createdContacts.forEach(contact => {
+            createdContacts.forEach((contact:{id: number, createdAt: Date, anchorProfileFissionName: string, createdByType: string | null, createdByKey: string | null}) => {
                 activities.push({
                     timestamp: contact.createdAt.toJSON(),
                     isPublic: false,
@@ -69,7 +69,7 @@ export function profileActivities(prisma:PrismaClient) {
                     purchasedByFissionName: fissionName
                 }
             });
-            purchases.forEach(purchase => {
+            purchases.forEach((purchase:Purchase) => {
                 activities.push({
                     timestamp: purchase.purchasedAt.toJSON(),
                     isPublic: false,
@@ -88,7 +88,7 @@ export function profileActivities(prisma:PrismaClient) {
                     }
                 }
             });
-            sales.forEach(purchase => {
+            sales.forEach((purchase:Purchase) => {
                 activities.push({
                     timestamp: purchase.purchasedAt.toJSON(),
                     isPublic: false,

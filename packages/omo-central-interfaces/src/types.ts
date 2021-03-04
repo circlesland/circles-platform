@@ -310,6 +310,10 @@ export type AddCirclesTokenInput = {
   createdInBlockHash: Scalars['String'];
 };
 
+export type QueryCirclesTokensInput = {
+  addresses: Array<Scalars['String']>;
+};
+
 export type CirclesWallet = {
   __typename?: 'CirclesWallet';
   address: Scalars['String'];
@@ -338,10 +342,11 @@ export type Query = {
   profiles: Array<Profile>;
   offers: Array<Offer>;
   activities: Array<Activity>;
+  circlesWallets: Array<CirclesWallet>;
+  circlesTokens: Array<CirclesToken>;
   contacts: Array<Contact>;
   conversation: Array<Message>;
   purchases: Array<Purchase>;
-  circlesWallets: Array<CirclesWallet>;
 };
 
 
@@ -365,6 +370,16 @@ export type QueryActivitiesArgs = {
 };
 
 
+export type QueryCirclesWalletsArgs = {
+  query: QueryCirclesWalletInput;
+};
+
+
+export type QueryCirclesTokensArgs = {
+  query: QueryCirclesTokensInput;
+};
+
+
 export type QueryContactsArgs = {
   query: QueryUniqueProfileInput;
 };
@@ -377,11 +392,6 @@ export type QueryConversationArgs = {
 
 export type QueryPurchasesArgs = {
   query: QueryPurchaseInput;
-};
-
-
-export type QueryCirclesWalletsArgs = {
-  query: QueryCirclesWalletInput;
 };
 
 export type Mutation = {
@@ -589,6 +599,7 @@ export type ResolversTypes = ResolversObject<{
   CirclesTrustRelationPredicate: CirclesTrustRelationPredicate;
   CirclesToken: ResolverTypeWrapper<CirclesToken>;
   AddCirclesTokenInput: AddCirclesTokenInput;
+  QueryCirclesTokensInput: QueryCirclesTokensInput;
   CirclesWallet: ResolverTypeWrapper<CirclesWallet>;
   AddCirclesWalletInput: AddCirclesWalletInput;
   QueryCirclesWalletInput: QueryCirclesWalletInput;
@@ -633,6 +644,7 @@ export type ResolversParentTypes = ResolversObject<{
   AddCirclesTrustRelationInput: AddCirclesTrustRelationInput;
   CirclesToken: CirclesToken;
   AddCirclesTokenInput: AddCirclesTokenInput;
+  QueryCirclesTokensInput: QueryCirclesTokensInput;
   CirclesWallet: CirclesWallet;
   AddCirclesWalletInput: AddCirclesWalletInput;
   QueryCirclesWalletInput: QueryCirclesWalletInput;
@@ -802,10 +814,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   profiles?: Resolver<Array<ResolversTypes['Profile']>, ParentType, ContextType, RequireFields<QueryProfilesArgs, 'query'>>;
   offers?: Resolver<Array<ResolversTypes['Offer']>, ParentType, ContextType, RequireFields<QueryOffersArgs, 'query'>>;
   activities?: Resolver<Array<ResolversTypes['Activity']>, ParentType, ContextType, RequireFields<QueryActivitiesArgs, 'query'>>;
+  circlesWallets?: Resolver<Array<ResolversTypes['CirclesWallet']>, ParentType, ContextType, RequireFields<QueryCirclesWalletsArgs, 'query'>>;
+  circlesTokens?: Resolver<Array<ResolversTypes['CirclesToken']>, ParentType, ContextType, RequireFields<QueryCirclesTokensArgs, 'query'>>;
   contacts?: Resolver<Array<ResolversTypes['Contact']>, ParentType, ContextType, RequireFields<QueryContactsArgs, 'query'>>;
   conversation?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryConversationArgs, 'query'>>;
   purchases?: Resolver<Array<ResolversTypes['Purchase']>, ParentType, ContextType, RequireFields<QueryPurchasesArgs, 'query'>>;
-  circlesWallets?: Resolver<Array<ResolversTypes['CirclesWallet']>, ParentType, ContextType, RequireFields<QueryCirclesWalletsArgs, 'query'>>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{

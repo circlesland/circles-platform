@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, Offer} from "@prisma/client";
 import {QueryOffersArgs, RequireFields} from "omo-central-interfaces/dist/types";
 
 export function whereOffer(args: RequireFields<QueryOffersArgs, never>) {
@@ -57,7 +57,7 @@ export function offersResolver(prisma:PrismaClient) {
             }
         });
 
-        return <any[]>result.map(offer => {
+        return <any[]>result.map((offer:Offer) => {
             return {
                 ...offer,
                 publishedAt: offer.publishedAt.toJSON(),

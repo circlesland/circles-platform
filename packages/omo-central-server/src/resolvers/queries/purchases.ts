@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, Purchase, Offer, Profile} from "@prisma/client";
 import {PurchaseStatus, QueryPurchasesArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
@@ -33,7 +33,7 @@ export function purchasesResolver(prisma:PrismaClient) {
                     throw new Error(`Unknown status`);
             }
         };
-        return purchases.map(purchase => {
+        return purchases.map((purchase: (Purchase & {purchasedItem: Offer & {createdBy: Profile}, purchasedBy: Profile})) => {
             return {
                 ...purchase,
                 status: mapStatus(purchase.status),

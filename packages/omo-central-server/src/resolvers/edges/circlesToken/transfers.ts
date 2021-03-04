@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {PrismaClient, CirclesTokenTransfer} from '@prisma/client'
 import {CirclesToken, CirclesTokenTransferPredicate} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
@@ -15,7 +15,7 @@ export function tokenTransfersResolver(prisma:PrismaClient) {
         if (!token) {
             throw new Error(`Couldn't find a token with the address ${parent.address}`);
         }
-        return token.transfers.map(transfer => {
+        return token.transfers.map((transfer:CirclesTokenTransfer) => {
             let predicate: CirclesTokenTransferPredicate;
             switch (transfer.predicate) {
                 case "GIVING_TO":

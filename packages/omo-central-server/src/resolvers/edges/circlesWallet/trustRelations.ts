@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import {PrismaClient, CirclesTrustRelation} from '@prisma/client'
 import {CirclesTrustRelationPredicate, CirclesWallet} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
@@ -29,7 +29,7 @@ export function trustRelationsResolver(prisma:PrismaClient) {
 
         const trusts = subjectWallet.trustSubject.concat(subjectWallet.trustObject);
 
-        return trusts.map(trust => {
+        return trusts.map((trust:CirclesTrustRelation) => {
             let predicate: CirclesTrustRelationPredicate;
             switch (trust.predicate) {
                 case "GIVING_TO":

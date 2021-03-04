@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, Contact} from "@prisma/client";
 import {QueryContactsArgs} from "omo-central-interfaces/dist/types";
 import {whereProfile} from "./profiles";
 
@@ -20,7 +20,7 @@ export function contactsResolver(prisma:PrismaClient) {
         if (!result) {
             throw new Error(`Couldn't find a profile with query: ${JSON.stringify(q)}`)
         }
-        return result.contacts.map(o => {
+        return result.contacts.map((o:Contact) => {
             return {
                 ...o,
                 createdAt: o.createdAt.toJSON()

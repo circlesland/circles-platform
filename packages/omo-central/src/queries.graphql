@@ -20,6 +20,73 @@ query profiles($query:QueryProfileInput!) {
     }
 }
 
+query offers($query:QueryOfferInput!) {
+    offers(query: $query) {
+        id
+        publishedAt
+        unlistedAt
+        createdBy {
+            circlesAddress
+            fissionName
+            omoAvatarCid
+            omoAvatarMimeType
+            omoFirstName
+            omoLastName
+        }
+        title
+        description
+        price
+        category
+        country
+        city
+        deliveryTerms
+        pictures {
+            size
+            mimeType
+            cid
+        }
+    }
+}
+
+query activities($query:QueryActivityInput!) {
+    activities(query: $query) {
+        timestamp
+        isPublic
+        subjectType
+        subjectKey
+        predicate
+        objectType
+        objectKey
+    }
+}
+
+query circlesWallets($query:QueryCirclesWalletInput!) {
+    circlesWallets(query: $query) {
+        address
+        ownToken {
+            address
+            owner {
+                address
+            }
+        }
+        tokens {
+            address
+            owner {
+                address
+            }
+        }
+        trustRelations {
+            subject {
+                address
+            }
+            predicate
+            object {
+                address
+            }
+        }
+    }
+}
+
 query contacts($query:QueryUniqueProfileInput!) {
     contacts(query: $query) {
         id
@@ -35,18 +102,6 @@ query contacts($query:QueryUniqueProfileInput!) {
             omoFirstName
             omoLastName
         }
-    }
-}
-
-query activities($query:QueryActivityInput!) {
-    activities(query: $query) {
-        timestamp
-        isPublic
-        subjectType
-        subjectKey
-        predicate
-        objectType
-        objectKey
     }
 }
 
@@ -75,34 +130,6 @@ query conversation($query:QueryConversationInput!) {
         topic
         type
         content
-    }
-}
-
-query offers($query:QueryOfferInput!) {
-    offers(query: $query) {
-        id
-        publishedAt
-        unlistedAt
-        createdBy {
-            circlesAddress
-            fissionName
-            omoAvatarCid
-            omoAvatarMimeType
-            omoFirstName
-            omoLastName
-        }
-        title
-        description
-        price
-        category
-        country
-        city
-        deliveryTerms
-        pictures {
-            size
-            mimeType
-            cid
-        }
     }
 }
 
@@ -149,33 +176,6 @@ query purchases($query:QueryPurchaseInput!) {
                 size
                 mimeType
                 cid
-            }
-        }
-    }
-}
-
-query wallets($query:QueryCirclesWalletInput!) {
-    circlesWallets(query: $query) {
-        address
-        ownToken {
-            address
-            owner {
-                address
-            }
-        }
-        tokens {
-            address
-            owner {
-                address
-            }
-        }
-        trustRelations {
-            subject {
-                address
-            }
-            predicate
-            object {
-                address
             }
         }
     }

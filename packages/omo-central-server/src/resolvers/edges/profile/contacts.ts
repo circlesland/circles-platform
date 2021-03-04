@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, Contact} from "@prisma/client";
 import {Profile} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
@@ -13,7 +13,7 @@ export function profileContacts(prisma:PrismaClient) {
                 anchorProfileFissionName: parent.fissionName
             }
         });
-        return contacts.map(o => {
+        return contacts.map((o:Contact) => {
             return {
                 ...o,
                 createdAt: o.createdAt.toJSON()

@@ -44,7 +44,7 @@ export const resolvers: Resolvers = {
         activities: activitiesResolver(prisma),
         contacts: contactsResolver(prisma),
         conversation: conversationResolver(prisma),
-        purchases: purchasesResolver(prisma)
+        purchases: purchasesResolver(prisma),
     },
     Mutation: {
         lockOffer: lockOfferResolver(prisma),

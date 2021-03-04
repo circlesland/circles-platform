@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, Purchase} from "@prisma/client";
 import {MutationLockOfferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
@@ -38,19 +38,19 @@ export function lockOfferResolver(prisma:PrismaClient) {
 
         const now = Date.now();
 
-        const invalidLocks = existingLocks.filter(lock => lock.purchasedAt.getTime() <= now - lockTime);
+        const invalidLocks = existingLocks.filter((lock:Purchase) => lock.purchasedAt.getTime() <= now - lockTime);
         await prisma.purchase.updateMany({
             data: {
                 status: "INVALID"
             },
             where: {
                 id: {
-                    in: invalidLocks.map(o => o.id)
+                    in: invalidLocks.map((o:Purchase) => o.id)
                 }
             }
         });
 
-        const validLocks = existingLocks.filter(lock => lock.purchasedAt.getTime() > now - lockTime || lock.purchasedProvenAt);
+        const validLocks = existingLocks.filter((lock:Purchase) => lock.purchasedAt.getTime() > now - lockTime || lock.purchasedProvenAt);
         if (validLocks.length > 0) {
             console.log(`Cannot lock offer ${args.data.offerId} because it is already locked or sold.`);
             return {

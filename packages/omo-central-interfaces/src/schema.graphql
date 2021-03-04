@@ -306,6 +306,9 @@ input AddCirclesTokenInput {
     createdInBlockNo: Int!
     createdInBlockHash: String!
 }
+input QueryCirclesTokensInput {
+    addresses: [String!]!
+}
 
 type CirclesWallet {
     address: String!
@@ -334,10 +337,11 @@ type Query
     profiles(query:QueryProfileInput!) : [Profile!]!
     offers(query:QueryOfferInput!) : [Offer!]!
     activities(query:QueryActivityInput!):[Activity!]!
+    circlesWallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
+    circlesTokens(query:QueryCirclesTokensInput!):[CirclesToken!]!
     contacts(query:QueryUniqueProfileInput!) : [Contact!]!
     conversation(query:QueryConversationInput!) : [Message!]!
     purchases(query:QueryPurchaseInput!):[Purchase!]!
-    circlesWallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
 }
 
 type Mutation
