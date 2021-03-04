@@ -61,6 +61,11 @@ cd omo-process || exit
 npx --no-install tsc || exit
 cd .. || exit
 
+echo "Building 'omo-ucan' .."
+cd omo-ucan || exit
+npx --no-install tsc || exit
+cd .. || exit
+
 echo "Building 'omo-central-interfaces' .."
 cd omo-central-interfaces || exit
 npx --no-install tsc || exit
