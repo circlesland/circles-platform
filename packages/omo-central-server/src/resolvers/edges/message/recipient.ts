@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {Message} from "omo-central-interfaces/dist/types";
+import {Message} from "../../../types";
 import {Context} from "../../../context";
 
 export function messageRecipient(prisma:PrismaClient) {

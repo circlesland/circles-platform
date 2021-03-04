@@ -32,6 +32,24 @@ type Profile {
     purchases:[Purchase!]
     # All activities of this profile
     activities:[Activity!]
+    # All keys of this profile
+    keyPairs:[KeyPair!]
+}
+
+type KeyPair {
+    id:Int!
+    createdAt:String!
+    type:String!
+    name:String!
+
+    publicKey:String!
+    privateKey:String!
+}
+input AddKeyPairInput {
+    type:String!
+    name:String!
+    publicKey:String!
+    privateKey:String!
 }
 
 type Contact {
@@ -221,6 +239,94 @@ input QueryActivityInput {
     subjectKey: String!
 }
 
+type CirclesTokenTransfer {
+    id: Int!
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    subject: CirclesWallet!
+    predicate: CirclesTokenTransferPredicate!
+    object: CirclesWallet!
+    value: String!
+}
+input AddCirclesTokenTransferInput {
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+    subjectAddress: String!
+    predicate: CirclesTokenTransferPredicate!
+    objectAddress: String!
+    value: String!
+}
+enum CirclesTokenTransferPredicate {
+    GIVING_TO
+    RECEIVING_FROM
+}
+
+type CirclesTrustRelation {
+    id: Int!
+    createdAt: String
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    subject: CirclesWallet!
+    predicate: CirclesTrustRelationPredicate!
+    object: CirclesWallet!
+    weight: Int!
+}
+input AddCirclesTrustRelationInput {
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+    subjectAddress: String!
+    predicate: CirclesTrustRelationPredicate!
+    objectAddress: String!
+    weight: Int!
+}
+enum CirclesTrustRelationPredicate {
+    GIVING_TO
+    RECEIVING_FROM
+}
+
+type CirclesToken {
+    address: String!
+
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+
+    owner: CirclesWallet
+    transfers: [CirclesTokenTransfer!]
+}
+input AddCirclesTokenInput {
+    address: String!
+    owner: AddCirclesWalletInput
+    createdAt: String!
+    createdInBlockNo: Int!
+    createdInBlockHash: String!
+}
+
+type CirclesWallet {
+    address: String!
+
+    ownToken: CirclesToken
+
+    tokens: [CirclesToken!]
+    transfers: [CirclesTokenTransfer!]
+    trustRelations: [CirclesTrustRelation!]
+}
+input AddCirclesWalletInput {
+    address: String!
+    ownToken: AddCirclesTokenInput
+}
+input QueryCirclesWalletInput {
+    address: String
+    ownTokenAddress: String
+    trusts: String
+    isTrustedBy: String
+}
+
 type Query
 {
     server : Server
@@ -231,17 +337,25 @@ type Query
     contacts(query:QueryUniqueProfileInput!) : [Contact!]!
     conversation(query:QueryConversationInput!) : [Message!]!
     purchases(query:QueryPurchaseInput!):[Purchase!]!
+    circlesWallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
 }
 
 type Mutation
 {
     upsertProfile(data:UpdateProfileInput!):Profile!
+    addKeyPair(data:AddKeyPairInput!):KeyPair!
+    removeKeyPair(keyPairId:Int!):Boolean!
     createOffer(data:CreateOfferInput!):Offer!
     unlistOffer(offerId:Int!):Boolean!
     sendMessage(data:SendMessageInput!):Message!
     markMessageAsRead(messageId:Int!):Boolean!
     lockOffer(data:LockOfferInput!):LockOfferResult!
     provePayment(data:PaymentProof!):ProvePaymentResult!
+
+    addCirclesWallet(data:AddCirclesWalletInput!) : CirclesWallet!
+    addCirclesToken(data:AddCirclesTokenInput!) : CirclesToken!
+    addCirclesTrustRelation(data:AddCirclesTrustRelationInput!) : CirclesTrustRelation!
+    addCirclesTokenTransfer(data:AddCirclesTokenTransferInput!) : CirclesTokenTransfer!
 }
 
 type Subscription {

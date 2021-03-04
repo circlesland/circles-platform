@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {Profile} from "omo-central-interfaces/dist/types";
+import {Profile} from "../../../types";
 import {Context} from "../../../context";
 
 export function profileOffers(prisma:PrismaClient) {

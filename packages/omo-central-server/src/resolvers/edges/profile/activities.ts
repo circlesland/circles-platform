@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {Activity, ActivityPredicate, Profile} from "omo-central-interfaces/dist/types";
+import {Activity, ActivityPredicate, Profile} from "../../../types";
 import {Context} from "../../../context";
 
 export function profileActivities(prisma:PrismaClient) {

@@ -39,6 +39,24 @@ export type Profile = {
   contacts?: Maybe<Array<Contact>>;
   purchases?: Maybe<Array<Purchase>>;
   activities?: Maybe<Array<Activity>>;
+  keyPairs?: Maybe<Array<KeyPair>>;
+};
+
+export type KeyPair = {
+  __typename?: 'KeyPair';
+  id: Scalars['Int'];
+  createdAt: Scalars['String'];
+  type: Scalars['String'];
+  name: Scalars['String'];
+  publicKey: Scalars['String'];
+  privateKey: Scalars['String'];
+};
+
+export type AddKeyPairInput = {
+  type: Scalars['String'];
+  name: Scalars['String'];
+  publicKey: Scalars['String'];
+  privateKey: Scalars['String'];
 };
 
 export type Contact = {
@@ -224,6 +242,99 @@ export type QueryActivityInput = {
   subjectKey: Scalars['String'];
 };
 
+export type CirclesTokenTransfer = {
+  __typename?: 'CirclesTokenTransfer';
+  id: Scalars['Int'];
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  subject: CirclesWallet;
+  predicate: CirclesTokenTransferPredicate;
+  object: CirclesWallet;
+  value: Scalars['String'];
+};
+
+export type AddCirclesTokenTransferInput = {
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  subjectAddress: Scalars['String'];
+  predicate: CirclesTokenTransferPredicate;
+  objectAddress: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export enum CirclesTokenTransferPredicate {
+  GivingTo = 'GIVING_TO',
+  ReceivingFrom = 'RECEIVING_FROM'
+}
+
+export type CirclesTrustRelation = {
+  __typename?: 'CirclesTrustRelation';
+  id: Scalars['Int'];
+  createdAt?: Maybe<Scalars['String']>;
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  subject: CirclesWallet;
+  predicate: CirclesTrustRelationPredicate;
+  object: CirclesWallet;
+  weight: Scalars['Int'];
+};
+
+export type AddCirclesTrustRelationInput = {
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  subjectAddress: Scalars['String'];
+  predicate: CirclesTrustRelationPredicate;
+  objectAddress: Scalars['String'];
+  weight: Scalars['Int'];
+};
+
+export enum CirclesTrustRelationPredicate {
+  GivingTo = 'GIVING_TO',
+  ReceivingFrom = 'RECEIVING_FROM'
+}
+
+export type CirclesToken = {
+  __typename?: 'CirclesToken';
+  address: Scalars['String'];
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+  owner?: Maybe<CirclesWallet>;
+  transfers?: Maybe<Array<CirclesTokenTransfer>>;
+};
+
+export type AddCirclesTokenInput = {
+  address: Scalars['String'];
+  owner?: Maybe<AddCirclesWalletInput>;
+  createdAt: Scalars['String'];
+  createdInBlockNo: Scalars['Int'];
+  createdInBlockHash: Scalars['String'];
+};
+
+export type CirclesWallet = {
+  __typename?: 'CirclesWallet';
+  address: Scalars['String'];
+  ownToken?: Maybe<CirclesToken>;
+  tokens?: Maybe<Array<CirclesToken>>;
+  transfers?: Maybe<Array<CirclesTokenTransfer>>;
+  trustRelations?: Maybe<Array<CirclesTrustRelation>>;
+};
+
+export type AddCirclesWalletInput = {
+  address: Scalars['String'];
+  ownToken?: Maybe<AddCirclesTokenInput>;
+};
+
+export type QueryCirclesWalletInput = {
+  address?: Maybe<Scalars['String']>;
+  ownTokenAddress?: Maybe<Scalars['String']>;
+  trusts?: Maybe<Scalars['String']>;
+  isTrustedBy?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   server?: Maybe<Server>;
@@ -234,6 +345,7 @@ export type Query = {
   contacts: Array<Contact>;
   conversation: Array<Message>;
   purchases: Array<Purchase>;
+  circlesWallets: Array<CirclesWallet>;
 };
 
 
@@ -271,20 +383,41 @@ export type QueryPurchasesArgs = {
   query: QueryPurchaseInput;
 };
 
+
+export type QueryCirclesWalletsArgs = {
+  query: QueryCirclesWalletInput;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   upsertProfile: Profile;
+  addKeyPair: KeyPair;
+  removeKeyPair: Scalars['Boolean'];
   createOffer: Offer;
   unlistOffer: Scalars['Boolean'];
   sendMessage: Message;
   markMessageAsRead: Scalars['Boolean'];
   lockOffer: LockOfferResult;
   provePayment: ProvePaymentResult;
+  addCirclesWallet: CirclesWallet;
+  addCirclesToken: CirclesToken;
+  addCirclesTrustRelation: CirclesTrustRelation;
+  addCirclesTokenTransfer: CirclesTokenTransfer;
 };
 
 
 export type MutationUpsertProfileArgs = {
   data: UpdateProfileInput;
+};
+
+
+export type MutationAddKeyPairArgs = {
+  data: AddKeyPairInput;
+};
+
+
+export type MutationRemoveKeyPairArgs = {
+  keyPairId: Scalars['Int'];
 };
 
 
@@ -315,6 +448,26 @@ export type MutationLockOfferArgs = {
 
 export type MutationProvePaymentArgs = {
   data: PaymentProof;
+};
+
+
+export type MutationAddCirclesWalletArgs = {
+  data: AddCirclesWalletInput;
+};
+
+
+export type MutationAddCirclesTokenArgs = {
+  data: AddCirclesTokenInput;
+};
+
+
+export type MutationAddCirclesTrustRelationArgs = {
+  data: AddCirclesTrustRelationInput;
+};
+
+
+export type MutationAddCirclesTokenTransferArgs = {
+  data: AddCirclesTokenTransferInput;
 };
 
 export type Subscription = {

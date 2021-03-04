@@ -2,17 +2,17 @@ import {PrismaClient} from "@prisma/client";
 import {Profile} from "../../../types";
 import {Context} from "../../../context";
 
-export function profilePurchases(prisma:PrismaClient) {
+export function profileReceivedMessages(prisma:PrismaClient) {
     return async (parent:Profile, args:any, context:Context) => {
         const fissionName = await context.verifyJwt();
         if (fissionName != parent.fissionName) {
-            throw new Error(`Only the owner of a profile can access its purchases`);
+            throw new Error(`Only the owner of a profile can access its received messages`);
         }
-        const purchases = await prisma.purchase.findMany({
+        const messages = await prisma.message.findMany({
             where: {
-                purchasedByFissionName: parent.fissionName
+                recipientFissionName: fissionName
             }
         });
-        return <any[]>purchases;
+        return <any[]>messages;
     };
 }
