@@ -9,7 +9,7 @@ import typescript from 'rollup-plugin-typescript2'
 // Require understands JSON files.
 const pkg = require('./package.json')
 
-const input = 'src/omoCentral.ts'
+const input = 'src/index.ts'
 const name = 'webnative'
 
 // For importing modules with `this` at the top level:

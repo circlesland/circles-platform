@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesTrustRelationPredicate, CirclesWallet} from "../../../types";
+import {CirclesTrustRelationPredicate, CirclesWallet} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function trustRelationsResolver(prisma:PrismaClient) {
@@ -9,7 +9,13 @@ export function trustRelationsResolver(prisma:PrismaClient) {
                 address: parent.address
             },
             include: {
-                trusts: {
+                trustSubject: {
+                    include: {
+                        subject: true,
+                        object: true
+                    }
+                },
+                trustObject: {
                     include: {
                         subject: true,
                         object: true
@@ -20,7 +26,10 @@ export function trustRelationsResolver(prisma:PrismaClient) {
         if (!subjectWallet) {
             throw new Error(`Couldn't find a wallet with address ${parent.address}`);
         }
-        return subjectWallet.trusts.map(trust => {
+
+        const trusts = subjectWallet.trustSubject.concat(subjectWallet.trustObject);
+
+        return trusts.map(trust => {
             let predicate: CirclesTrustRelationPredicate;
             switch (trust.predicate) {
                 case "GIVING_TO":

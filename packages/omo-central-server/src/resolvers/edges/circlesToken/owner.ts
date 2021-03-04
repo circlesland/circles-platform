@@ -1,6 +1,6 @@
-import {CirclesToken} from "../../../types";
 import {Context} from "../../../context";
 import {PrismaClient} from '@prisma/client'
+import {CirclesToken} from "omo-central-interfaces/dist/types";
 
 export function ownerResolver(prisma:PrismaClient) {
     return async (parent: CirclesToken, args: any, context: Context) => {

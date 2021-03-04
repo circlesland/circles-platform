@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesTrustRelation} from "../../../types";
+import {CirclesTrustRelation} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function objectResolver(prisma:PrismaClient) {

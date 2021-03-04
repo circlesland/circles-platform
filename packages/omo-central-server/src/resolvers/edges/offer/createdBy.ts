@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client";
-import {Offer} from "../../../types";
+import {Offer} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function offerCreatedBy(prisma:PrismaClient) {

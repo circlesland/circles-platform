@@ -253,6 +253,7 @@ export type AddCirclesTokenTransferInput = {
   createdAt: Scalars['String'];
   createdInBlockNo: Scalars['Int'];
   createdInBlockHash: Scalars['String'];
+  tokenAddress: Scalars['String'];
   subjectAddress: Scalars['String'];
   predicate: CirclesTokenTransferPredicate;
   objectAddress: Scalars['String'];

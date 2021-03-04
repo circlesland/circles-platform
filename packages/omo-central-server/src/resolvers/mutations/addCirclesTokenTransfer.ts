@@ -24,6 +24,11 @@ export function addCirclesTokenTransferResolver(prisma: PrismaClient) {
                 createdAt: new Date(args.data.createdAt),
                 createdInBlockNo: args.data.createdInBlockNo,
                 createdInBlockHash: args.data.createdInBlockHash,
+                token: {
+                  connect: {
+                      address: args.data.tokenAddress
+                  }
+                },
                 subject: {
                     connectOrCreate: {
                         where: {

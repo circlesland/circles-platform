@@ -1,21 +1,32 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesTokenTransferPredicate, CirclesWallet} from "../../../types";
+import {CirclesTokenTransferPredicate, CirclesWallet} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function walletTransfersResolver(prisma:PrismaClient) {
     return async (parent: CirclesWallet, args: any, context: Context) => {
-        const token = await prisma.circlesWallet.findUnique({
+        const wallet = await prisma.circlesWallet.findUnique({
             where: {
                 address: parent.address
             },
             include: {
-                transfers: true
+                knwonTokens: {
+                    include: {
+                        token: {
+                            include: {
+                                transfers: true
+                            }
+                        }
+                    }
+                }
             }
         });
-        if (!token) {
+        if (!wallet) {
             throw new Error(`Couldn't find a token with the address ${parent.address}`);
         }
-        return token.transfers.map(transfer => {
+
+        const walletTransfers = wallet.knwonTokens.map(knownToken => knownToken.token.transfers).reduce((p,c) => p.concat(c), []);
+
+        return walletTransfers.map(transfer => {
             let predicate: CirclesTokenTransferPredicate;
             switch (transfer.predicate) {
                 case "GIVING_TO":

@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesWallet} from "../../../types";
+import {CirclesWallet} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function ownTokenResolver(prisma:PrismaClient) {

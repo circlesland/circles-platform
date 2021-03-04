@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesTokenTransfer} from "../../../types";
+import {CirclesTokenTransfer} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function subjectResolver(prisma:PrismaClient) {

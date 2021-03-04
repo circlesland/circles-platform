@@ -253,6 +253,7 @@ input AddCirclesTokenTransferInput {
     createdAt: String!
     createdInBlockNo: Int!
     createdInBlockHash: String!
+    tokenAddress: String!
     subjectAddress: String!
     predicate: CirclesTokenTransferPredicate!
     objectAddress: String!

@@ -1,5 +1,5 @@
 import {PrismaClient} from '@prisma/client'
-import {CirclesWallet} from "../../../types";
+import {CirclesWallet} from "omo-central-interfaces/dist/types";
 import {Context} from "../../../context";
 
 export function tokensResolver(prisma:PrismaClient) {
@@ -9,16 +9,20 @@ export function tokensResolver(prisma:PrismaClient) {
                 address: parent.address
             },
             include: {
-                tokens: true,
+                knwonTokens: {
+                    include: {
+                        token: true
+                    }
+                }
             }
         });
         if (!subjectWallet) {
             throw new Error(`Couldn't find a wallet with address ${parent.address}`);
         }
-        return subjectWallet.tokens.map(token => {
+        return subjectWallet.knwonTokens.map(knownToken => {
             return {
-                ...token,
-                createdAt: token.createdAt.toJSON()
+                ...knownToken.token,
+                createdAt: knownToken.token.createdAt.toJSON()
             }
         });
     };
