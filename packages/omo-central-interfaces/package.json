@@ -13,6 +13,7 @@
   "author": "https://github.com/jaensen",
   "license": "AGPL-3",
   "dependencies": {
+    "graphql": "^15.5.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.17.8",
