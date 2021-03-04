@@ -134,15 +134,15 @@ export abstract class Web3Contract {
     const web3 = config.getCurrent().web3();
     return new Promise<TransactionReceipt>((resolve, reject) => {
       web3.eth.sendSignedTransaction(serializedTx)
-        /*.once('transactionHash', (hash) => {
-          window.o.logger.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);
+        .once('transactionHash', (hash) => {
+          console.log("web3.eth.sendSignedTransaction | Got transaction hash: " + hash);
         })
         .once('receipt', (receipt) => {
-          window.o.logger.log("web3.eth.sendSignedTransaction | Got receipt:", receipt);
+          console.log("web3.eth.sendSignedTransaction | Got receipt:", receipt);
         })
         .once('confirmation', (confNumber) => {
-          window.o.logger.log("web3.eth.sendSignedTransaction | Got confirmation. Conf No.: " + confNumber);
-        })*/
+          console.log("web3.eth.sendSignedTransaction | Got confirmation. Conf No.: " + confNumber);
+        })
         .once('error', (error) => {
           reject(error);
         })

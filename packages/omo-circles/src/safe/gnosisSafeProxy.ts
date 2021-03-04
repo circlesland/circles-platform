@@ -74,12 +74,12 @@ export class GnosisSafeProxy extends Web3Contract
     const estimatedBaseGas = dontEstimate
       ? new BN(this.web3.utils.toWei("1000000", "wei"))
       : this.estimateBaseGasCosts(safeTransaction, 1)
-        .add(new BN(this.web3.utils.toWei("10000", "wei")));
+        .add(new BN(this.web3.utils.toWei("100000", "wei")));
 
     const estimatedSafeTxGas = dontEstimate
       ? new BN(this.web3.utils.toWei("1000000", "wei"))
       : (await this.estimateSafeTxGasCosts(safeTransaction))
-        .add(new BN(this.web3.utils.toWei("10000", "wei")));
+        .add(new BN(this.web3.utils.toWei("100000", "wei")));
 
     const nonce = await this.getNonce();
 
@@ -111,8 +111,11 @@ export class GnosisSafeProxy extends Web3Contract
       signatures.signature).estimateGas();
 
     const gasEstimate = new BN(gasEstimationResult).add(estimatedBaseGas).add(estimatedSafeTxGas);
+    console.log("gasEstimate:", gasEstimate.toNumber());
 
     const execTransactionData = this.toAbiMessage(executableTransaction, signatures.signature);
+    console.log("execTransactionData:", execTransactionData);
+
     const signedTransactionData = await Web3Contract.signRawTransaction(
       (await this.getOwners())[0],
       privateKey,
@@ -121,7 +124,12 @@ export class GnosisSafeProxy extends Web3Contract
       gasEstimate,
       new BN("0"));
 
-    return await Web3Contract.sendSignedRawTransaction(signedTransactionData);
+    console.log("signedRawTransaction:", signedTransactionData);
+
+    const receipt = await Web3Contract.sendSignedRawTransaction(signedTransactionData);
+    console.log("Web3Contract.sendSignedRawTransaction() result:", receipt);
+
+    return receipt;
   }
 
   private validateSafeTransaction(safeTransaction: SafeTransaction)
@@ -190,12 +198,11 @@ export class GnosisSafeProxy extends Web3Contract
         if (!e.data)
           throw new Error(JSON.stringify(e));
 
-        let estimateInError = e.data;
-        if (estimateInError.startsWith("Reverted 0x"))
-        {
-          estimateInError = estimateInError.substr(11);
-        }
-        txGasEstimation = new BN(estimateInError.substring(138), 16)
+        // TODO: This is a quick fix because xdai.poanetwork.dev updated their geth version
+        //       and it now returns other revert messages.
+        //       Consider all other major gateways in future.
+        const gasEstimateDataBuffer = Buffer.from(e.data.toString().substr(8));
+        txGasEstimation = new BN(gasEstimateDataBuffer)
       });
 
     if (txGasEstimation.eq(new BN("0")))
