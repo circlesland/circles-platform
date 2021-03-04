@@ -153,3 +153,30 @@ query purchases($query:QueryPurchaseInput!) {
         }
     }
 }
+
+query wallets($query:QueryCirclesWalletInput!) {
+    circlesWallets(query: $query) {
+        address
+        ownToken {
+            address
+            owner {
+                address
+            }
+        }
+        tokens {
+            address
+            owner {
+                address
+            }
+        }
+        trustRelations {
+            subject {
+                address
+            }
+            predicate
+            object {
+                address
+            }
+        }
+    }
+}

@@ -708,6 +708,44 @@ export type PurchasesQuery = (
   )> }
 );
 
+export type WalletsQueryVariables = Exact<{
+  query: QueryCirclesWalletInput;
+}>;
+
+
+export type WalletsQuery = (
+  { __typename?: 'Query' }
+  & { circlesWallets: Array<(
+    { __typename?: 'CirclesWallet' }
+    & Pick<CirclesWallet, 'address'>
+    & { ownToken?: Maybe<(
+      { __typename?: 'CirclesToken' }
+      & Pick<CirclesToken, 'address'>
+      & { owner?: Maybe<(
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      )> }
+    )>, tokens?: Maybe<Array<(
+      { __typename?: 'CirclesToken' }
+      & Pick<CirclesToken, 'address'>
+      & { owner?: Maybe<(
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      )> }
+    )>>, trustRelations?: Maybe<Array<(
+      { __typename?: 'CirclesTrustRelation' }
+      & Pick<CirclesTrustRelation, 'predicate'>
+      & { subject: (
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      ), object: (
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      ) }
+    )>> }
+  )> }
+);
+
 export type MessagesSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -965,6 +1003,34 @@ export const PurchasesDocument = gql`
   }
 }
     `;
+export const WalletsDocument = gql`
+    query wallets($query: QueryCirclesWalletInput!) {
+  circlesWallets(query: $query) {
+    address
+    ownToken {
+      address
+      owner {
+        address
+      }
+    }
+    tokens {
+      address
+      owner {
+        address
+      }
+    }
+    trustRelations {
+      subject {
+        address
+      }
+      predicate
+      object {
+        address
+      }
+    }
+  }
+}
+    `;
 export const MessagesDocument = gql`
     subscription messages {
   messages {
@@ -1030,6 +1096,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     purchases(variables: PurchasesQueryVariables): Promise<{ data?: PurchasesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<PurchasesQuery>(print(PurchasesDocument), variables));
+    },
+    wallets(variables: WalletsQueryVariables): Promise<{ data?: WalletsQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<WalletsQuery>(print(WalletsDocument), variables));
     },
     messages(variables?: MessagesSubscriptionVariables): Promise<{ data?: MessagesSubscription | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<MessagesSubscription>(print(MessagesDocument), variables));

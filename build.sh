@@ -61,13 +61,8 @@ cd omo-process || exit
 npx --no-install tsc || exit
 cd .. || exit
 
-echo "Building 'omo-kernel-interfaces' .."
-cd omo-kernel-interfaces || exit
-npx --no-install tsc || exit
-cd .. || exit
-
-echo "Building 'omo-kernel' .."
-cd omo-kernel || exit
+echo "Building 'omo-central-interfaces' .."
+cd omo-central-interfaces || exit
 npx --no-install tsc || exit
 cd .. || exit
 
@@ -83,6 +78,16 @@ cd .. || exit
 
 echo "Building 'omo-central' .."
 cd omo-central || exit
+npx --no-install tsc || exit
+cd .. || exit
+
+echo "Building 'omo-kernel-interfaces' .."
+cd omo-kernel-interfaces || exit
+npx --no-install tsc || exit
+cd .. || exit
+
+echo "Building 'omo-kernel' .."
+cd omo-kernel || exit
 npx --no-install tsc || exit
 cd .. || exit
 
