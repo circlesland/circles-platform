@@ -21,10 +21,12 @@ model Profile {
     contacts Contact[] @relation(name: "Contact_AnchorProfile")
     inverseContacts Contact[] @relation(name: "Contact_ContactProfile")
 
-    offers Offer[]
+    offers Offer[] @relation(name: "Offer_CreatedBy")
+    purchases Purchase[] @relation(name: "Purchase_CreatedBy")
 
     sentMessages Message[] @relation(name: "Message_Sender")
     receivedMessages Message[] @relation(name: "Message_Recipient")
+    keyPairs KeyPair[] @relation(name: "KeyPair_CreatedBy")
 
     wallets CirclesWallet[]  @relation(name: "CirclesWallet_AddedBy")
 
@@ -61,7 +63,8 @@ model Offer {
     city String?
     deliveryTerms String    // pickup, delivery etc.
 
-    pictures File[]
+    pictures File[]  @relation(name: "File_Offer")
+    purchases Purchase[] @relation(name: "Purchase_PurchasedItem")
 }
 
 enum PurchaseStatus {
@@ -128,9 +131,23 @@ model CirclesWallet {
 
     ownToken CirclesToken? @relation(name: "CirclesToken_Owner")
 
-    tokens CirclesToken[]
-    trusts CirclesTrustRelation[] @relation(name: "CirclesTrustRelation_Subject")
-    transfers CirclesTokenTransfer[] @relation(name: "CirclesTokenTransfer_Subject")
+    knwonTokens CirclesWalletKnownTokens[] @relation(name: "CirclesWalletKnownTokens_Wallet")
+    trustSubject CirclesTrustRelation[] @relation(name: "CirclesTrustRelation_Subject")
+    trustObject CirclesTrustRelation[] @relation(name: "CirclesTrustRelation_Object")
+    transferSubject CirclesTokenTransfer[] @relation(name: "CirclesTokenTransfer_Subject")
+    transferObject CirclesTokenTransfer[] @relation(name: "CirclesTokenTransfer_Object")
+}
+
+model CirclesWalletKnownTokens {
+    id Int @id @default(autoincrement())
+
+    createdAt DateTime
+
+    wallet CirclesWallet @relation(name: "CirclesWalletKnownTokens_Wallet", fields: [walletAddress], references: [address])
+    walletAddress String
+
+    token CirclesToken @relation(name: "CirclesWalletKnownTokens_Token", fields: [tokenAddress], references: [address])
+    tokenAddress String
 }
 
 enum CirclesTrustRelationPredicate {
@@ -140,6 +157,7 @@ enum CirclesTrustRelationPredicate {
 
 model CirclesTrustRelation {
     id Int @id @default(autoincrement())
+
     createdAt DateTime
     createdInBlockNo Int
     createdInBlockHash String
@@ -165,7 +183,8 @@ model CirclesToken {
     owner CirclesWallet @relation(name: "CirclesToken_Owner", fields: [ownerAddress], references: [address])
     ownerAddress String
 
-    transfers CirclesTokenTransfer[]
+    knownBy CirclesWalletKnownTokens[] @relation(name: "CirclesWalletKnownTokens_Token")
+    transfers CirclesTokenTransfer[] @relation(name: "CirclesTokenTransfer_Token")
 }
 
 enum CirclesTokenTransferPredicate {
@@ -178,6 +197,9 @@ model CirclesTokenTransfer {
     createdAt DateTime
     createdInBlockNo Int
     createdInBlockHash String
+
+    token CirclesToken @relation(name: "CirclesTokenTransfer_Token", fields: [tokenAddress], references: [address])
+    tokenAddress String
 
     subject CirclesWallet @relation(name: "CirclesTokenTransfer_Subject", fields: [subjectAddress], references: [address])
     subjectAddress String
