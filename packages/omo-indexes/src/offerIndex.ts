@@ -35,7 +35,7 @@ export class OfferIndex extends Index
       const path = fsRoot
         + "/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/offers/userland";
 
-      const publicProfileDir = ipfs.ls(path);
+      const publicProfileDir = ipfs.ls(path, {preload: false});
       const offerNames:string[] = [];
       for await (const element of publicProfileDir)
       {
@@ -43,7 +43,7 @@ export class OfferIndex extends Index
       }
 
       const offers:OfferMetadata[] = await Promise.all(offerNames.map(async offerName => {
-        const statResult = await ipfs.files.stat(path + "/" + offerName + "/userland/metadata");
+        const statResult = await ipfs.files.stat(path + "/" + offerName + "/userland/metadata", {});
         const metadataFile = await this.tryGetFissionFile(statResult.cid.toString())
         if (!metadataFile)
         {

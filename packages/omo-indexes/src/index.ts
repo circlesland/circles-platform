@@ -56,7 +56,7 @@ export abstract class Index
   {
     return await IpfsNode.runWithIPFS(async ipfs =>
     {
-      const fileContentCid = ipfs.ls(nodeDirCid);
+      const fileContentCid = ipfs.ls(nodeDirCid, {preload: false});
 
       for await (const fileCid of fileContentCid)
       {
