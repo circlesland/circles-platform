@@ -78,6 +78,10 @@ cd .. || exit
 
 echo "Building 'omo-central-server' .."
 cd omo-central-server || exit
+sedArgument="s/REPLACE_ME_WITH_THE_CONNECTION_STRING/${DO_PGSQL_CONNECTIONSTRING//\//\\/}/g"
+cp -f schema_template.prisma schema.prisma
+sed -i "${sedArgument}" schema.prisma
+npx --no-install prisma generate || exit
 npx --no-install tsc || exit
 cd .. || exit
 

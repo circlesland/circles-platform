@@ -45,6 +45,35 @@ export const resolvers: Resolvers = {
         contacts: contactsResolver(prisma),
         conversation: conversationResolver(prisma),
         purchases: purchasesResolver(prisma),
+        /*
+        circlesWallets: async (parent, args, context) => {
+            const wallets = await prisma.circlesWallet.findMany({
+                where: {
+                    address: args.query.address,
+                    ownToken: {
+                        address: args.query.ownTokenAddress
+                    },
+                    trustObject: {
+                        some: {
+                            OR: [{
+                                object: {
+                                    address: args.query.trusts
+                                },
+                                predicate: "GIVING_TO"
+                            },{
+                                subject: {
+                                    address: args.query.trusts
+                                },
+                                predicate: "RECEIVING_FROM"
+                            }]
+                        }
+                    }
+                }
+            })
+        },
+        circlesTokens: async (parent, args, context) => {
+        }
+         */
     },
     Mutation: {
         lockOffer: lockOfferResolver(prisma),

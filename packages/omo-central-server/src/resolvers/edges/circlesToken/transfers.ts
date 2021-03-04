@@ -24,6 +24,8 @@ export function tokenTransfersResolver(prisma:PrismaClient) {
                 case "RECEIVING_FROM":
                     predicate = CirclesTokenTransferPredicate.ReceivingFrom;
                     break;
+                default:
+                    throw new Error(`Unknown predicate: ${transfer.predicate}`);
             }
             return {
                 ...transfer,
