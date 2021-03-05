@@ -195,14 +195,28 @@ export class GnosisSafeProxy extends Web3Contract
     })
       .catch(e =>
       {
-        if (!e.data)
-          throw new Error(JSON.stringify(e));
-
         // TODO: This is a quick fix because xdai.poanetwork.dev updated their geth version
         //       and it now returns other revert messages.
         //       Consider all other major gateways in future.
-        const gasEstimateDataBuffer = Buffer.from(e.data.toString().substr(8));
-        txGasEstimation = new BN(gasEstimateDataBuffer)
+        if (e.data && e.data.startsWith("Reverted 0x") && e.data.length == 211)
+        {
+          let estimateInError = e.data;
+          if (estimateInError.startsWith("Reverted 0x"))
+          {
+            estimateInError = estimateInError.substr(11);
+          }
+          txGasEstimation = new BN(estimateInError.substring(138), 16)
+        }
+        else if (e.data && e.data.startsWith("revert: ") && e.data.length == 40)
+        {
+          const gasEstimateDataBuffer = Buffer.from(e.data.toString().substr(8));
+          txGasEstimation = new BN(gasEstimateDataBuffer)
+        }
+        else
+        {
+          console.warn(`Expected a 'revert'-error with the estimated gas cost in the 'data'-property.`)
+          throw new Error(JSON.stringify(e));
+        }
       });
 
     if (txGasEstimation.eq(new BN("0")))

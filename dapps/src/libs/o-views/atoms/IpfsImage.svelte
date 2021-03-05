@@ -17,7 +17,7 @@
   {
     dataUrl = await IpfsNode.runWithIPFS(async ipfs =>
     {
-      const catIterable = ipfs.cat(cid);
+      const catIterable = ipfs.cat(cid, {preload:false});
       const chunks = []
 
       for await (const chunk of catIterable)

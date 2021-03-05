@@ -1,6 +1,7 @@
 <script lang="ts">
   import {Offer} from "omo-central/dist/generated";
   import OfferCard from "../atoms/OfferCard.svelte";
+  import OfferListItem from "../../../../dapps/omomarket/views/atoms/OfferListItem.svelte";
 
   export let offers: Offer[] = [];
 </script>
@@ -9,13 +10,7 @@
   </div>
   <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
     {#each offers as item(item.name)}
-      <!--<OfferListItem offer={item} />-->
-      <OfferCard offer={item}
-                 statusBadgeText="sold"
-                 statusBadgeColor="bg-action"
-                 on:contact={() => contact(item)}
-                 on:checkout={() => checkout(item)}
-      />
+      <OfferListItem offer={item} />
     {/each}
   </div>
 </section>

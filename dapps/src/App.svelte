@@ -21,6 +21,7 @@
   import {onMount} from "svelte";
   import {kernel} from "omo-kernel/dist/kernel";
   import {faHome} from "@fortawesome/free-solid-svg-icons";
+  import {config} from "omo-circles/dist/config";
 
   onMount(async () => {
     await kernel.boot();
