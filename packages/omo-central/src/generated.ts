@@ -215,7 +215,8 @@ export type Purchase = {
 };
 
 export type QueryPurchaseInput = {
-  purchasedByFissionName: Scalars['String'];
+  id?: Maybe<Scalars['Int']>;
+  purchasedByFissionName?: Maybe<Scalars['String']>;
 };
 
 export enum ActivityPredicate {
@@ -608,6 +609,77 @@ export type ProfilesQuery = (
   )> }
 );
 
+export type OffersQueryVariables = Exact<{
+  query: QueryOfferInput;
+}>;
+
+
+export type OffersQuery = (
+  { __typename?: 'Query' }
+  & { offers: Array<(
+    { __typename?: 'Offer' }
+    & Pick<Offer, 'id' | 'publishedAt' | 'unlistedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
+    & { createdBy?: Maybe<(
+      { __typename?: 'Profile' }
+      & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
+    )>, pictures?: Maybe<Array<(
+      { __typename?: 'File' }
+      & Pick<File, 'size' | 'mimeType' | 'cid'>
+    )>> }
+  )> }
+);
+
+export type ActivitiesQueryVariables = Exact<{
+  query: QueryActivityInput;
+}>;
+
+
+export type ActivitiesQuery = (
+  { __typename?: 'Query' }
+  & { activities: Array<(
+    { __typename?: 'Activity' }
+    & Pick<Activity, 'timestamp' | 'isPublic' | 'subjectType' | 'subjectKey' | 'predicate' | 'objectType' | 'objectKey'>
+  )> }
+);
+
+export type CirclesWalletsQueryVariables = Exact<{
+  query: QueryCirclesWalletInput;
+}>;
+
+
+export type CirclesWalletsQuery = (
+  { __typename?: 'Query' }
+  & { circlesWallets: Array<(
+    { __typename?: 'CirclesWallet' }
+    & Pick<CirclesWallet, 'address'>
+    & { ownToken?: Maybe<(
+      { __typename?: 'CirclesToken' }
+      & Pick<CirclesToken, 'address'>
+      & { owner?: Maybe<(
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      )> }
+    )>, tokens?: Maybe<Array<(
+      { __typename?: 'CirclesToken' }
+      & Pick<CirclesToken, 'address'>
+      & { owner?: Maybe<(
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      )> }
+    )>>, trustRelations?: Maybe<Array<(
+      { __typename?: 'CirclesTrustRelation' }
+      & Pick<CirclesTrustRelation, 'predicate'>
+      & { subject: (
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      ), object: (
+        { __typename?: 'CirclesWallet' }
+        & Pick<CirclesWallet, 'address'>
+      ) }
+    )>> }
+  )> }
+);
+
 export type ContactsQueryVariables = Exact<{
   query: QueryUniqueProfileInput;
 }>;
@@ -622,19 +694,6 @@ export type ContactsQuery = (
       { __typename?: 'Profile' }
       & Pick<Profile, 'circlesAddress' | 'fissionName' | 'fissionRoot' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
     )> }
-  )> }
-);
-
-export type ActivitiesQueryVariables = Exact<{
-  query: QueryActivityInput;
-}>;
-
-
-export type ActivitiesQuery = (
-  { __typename?: 'Query' }
-  & { activities: Array<(
-    { __typename?: 'Activity' }
-    & Pick<Activity, 'timestamp' | 'isPublic' | 'subjectType' | 'subjectKey' | 'predicate' | 'objectType' | 'objectKey'>
   )> }
 );
 
@@ -655,26 +714,6 @@ export type ConversationQuery = (
       { __typename?: 'Profile' }
       & Pick<Profile, 'fissionName' | 'circlesAddress' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
     ) }
-  )> }
-);
-
-export type OffersQueryVariables = Exact<{
-  query: QueryOfferInput;
-}>;
-
-
-export type OffersQuery = (
-  { __typename?: 'Query' }
-  & { offers: Array<(
-    { __typename?: 'Offer' }
-    & Pick<Offer, 'id' | 'publishedAt' | 'unlistedAt' | 'title' | 'description' | 'price' | 'category' | 'country' | 'city' | 'deliveryTerms'>
-    & { createdBy?: Maybe<(
-      { __typename?: 'Profile' }
-      & Pick<Profile, 'circlesAddress' | 'fissionName' | 'omoAvatarCid' | 'omoAvatarMimeType' | 'omoFirstName' | 'omoLastName'>
-    )>, pictures?: Maybe<Array<(
-      { __typename?: 'File' }
-      & Pick<File, 'size' | 'mimeType' | 'cid'>
-    )>> }
   )> }
 );
 
@@ -705,44 +744,6 @@ export type PurchasesQuery = (
         & Pick<File, 'size' | 'mimeType' | 'cid'>
       )>> }
     ) }
-  )> }
-);
-
-export type WalletsQueryVariables = Exact<{
-  query: QueryCirclesWalletInput;
-}>;
-
-
-export type WalletsQuery = (
-  { __typename?: 'Query' }
-  & { circlesWallets: Array<(
-    { __typename?: 'CirclesWallet' }
-    & Pick<CirclesWallet, 'address'>
-    & { ownToken?: Maybe<(
-      { __typename?: 'CirclesToken' }
-      & Pick<CirclesToken, 'address'>
-      & { owner?: Maybe<(
-        { __typename?: 'CirclesWallet' }
-        & Pick<CirclesWallet, 'address'>
-      )> }
-    )>, tokens?: Maybe<Array<(
-      { __typename?: 'CirclesToken' }
-      & Pick<CirclesToken, 'address'>
-      & { owner?: Maybe<(
-        { __typename?: 'CirclesWallet' }
-        & Pick<CirclesWallet, 'address'>
-      )> }
-    )>>, trustRelations?: Maybe<Array<(
-      { __typename?: 'CirclesTrustRelation' }
-      & Pick<CirclesTrustRelation, 'predicate'>
-      & { subject: (
-        { __typename?: 'CirclesWallet' }
-        & Pick<CirclesWallet, 'address'>
-      ), object: (
-        { __typename?: 'CirclesWallet' }
-        & Pick<CirclesWallet, 'address'>
-      ) }
-    )>> }
   )> }
 );
 
@@ -864,6 +865,76 @@ export const ProfilesDocument = gql`
   }
 }
     `;
+export const OffersDocument = gql`
+    query offers($query: QueryOfferInput!) {
+  offers(query: $query) {
+    id
+    publishedAt
+    unlistedAt
+    createdBy {
+      circlesAddress
+      fissionName
+      omoAvatarCid
+      omoAvatarMimeType
+      omoFirstName
+      omoLastName
+    }
+    title
+    description
+    price
+    category
+    country
+    city
+    deliveryTerms
+    pictures {
+      size
+      mimeType
+      cid
+    }
+  }
+}
+    `;
+export const ActivitiesDocument = gql`
+    query activities($query: QueryActivityInput!) {
+  activities(query: $query) {
+    timestamp
+    isPublic
+    subjectType
+    subjectKey
+    predicate
+    objectType
+    objectKey
+  }
+}
+    `;
+export const CirclesWalletsDocument = gql`
+    query circlesWallets($query: QueryCirclesWalletInput!) {
+  circlesWallets(query: $query) {
+    address
+    ownToken {
+      address
+      owner {
+        address
+      }
+    }
+    tokens {
+      address
+      owner {
+        address
+      }
+    }
+    trustRelations {
+      subject {
+        address
+      }
+      predicate
+      object {
+        address
+      }
+    }
+  }
+}
+    `;
 export const ContactsDocument = gql`
     query contacts($query: QueryUniqueProfileInput!) {
   contacts(query: $query) {
@@ -880,19 +951,6 @@ export const ContactsDocument = gql`
       omoFirstName
       omoLastName
     }
-  }
-}
-    `;
-export const ActivitiesDocument = gql`
-    query activities($query: QueryActivityInput!) {
-  activities(query: $query) {
-    timestamp
-    isPublic
-    subjectType
-    subjectKey
-    predicate
-    objectType
-    objectKey
   }
 }
     `;
@@ -922,35 +980,6 @@ export const ConversationDocument = gql`
     topic
     type
     content
-  }
-}
-    `;
-export const OffersDocument = gql`
-    query offers($query: QueryOfferInput!) {
-  offers(query: $query) {
-    id
-    publishedAt
-    unlistedAt
-    createdBy {
-      circlesAddress
-      fissionName
-      omoAvatarCid
-      omoAvatarMimeType
-      omoFirstName
-      omoLastName
-    }
-    title
-    description
-    price
-    category
-    country
-    city
-    deliveryTerms
-    pictures {
-      size
-      mimeType
-      cid
-    }
   }
 }
     `;
@@ -998,34 +1027,6 @@ export const PurchasesDocument = gql`
         size
         mimeType
         cid
-      }
-    }
-  }
-}
-    `;
-export const WalletsDocument = gql`
-    query wallets($query: QueryCirclesWalletInput!) {
-  circlesWallets(query: $query) {
-    address
-    ownToken {
-      address
-      owner {
-        address
-      }
-    }
-    tokens {
-      address
-      owner {
-        address
-      }
-    }
-    trustRelations {
-      subject {
-        address
-      }
-      predicate
-      object {
-        address
       }
     }
   }
@@ -1082,23 +1083,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     profiles(variables: ProfilesQueryVariables): Promise<{ data?: ProfilesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ProfilesQuery>(print(ProfilesDocument), variables));
     },
-    contacts(variables: ContactsQueryVariables): Promise<{ data?: ContactsQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<ContactsQuery>(print(ContactsDocument), variables));
+    offers(variables: OffersQueryVariables): Promise<{ data?: OffersQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<OffersQuery>(print(OffersDocument), variables));
     },
     activities(variables: ActivitiesQueryVariables): Promise<{ data?: ActivitiesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ActivitiesQuery>(print(ActivitiesDocument), variables));
     },
+    circlesWallets(variables: CirclesWalletsQueryVariables): Promise<{ data?: CirclesWalletsQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<CirclesWalletsQuery>(print(CirclesWalletsDocument), variables));
+    },
+    contacts(variables: ContactsQueryVariables): Promise<{ data?: ContactsQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
+        return withWrapper(() => client.rawRequest<ContactsQuery>(print(ContactsDocument), variables));
+    },
     conversation(variables: ConversationQueryVariables): Promise<{ data?: ConversationQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<ConversationQuery>(print(ConversationDocument), variables));
     },
-    offers(variables: OffersQueryVariables): Promise<{ data?: OffersQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<OffersQuery>(print(OffersDocument), variables));
-    },
     purchases(variables: PurchasesQueryVariables): Promise<{ data?: PurchasesQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<PurchasesQuery>(print(PurchasesDocument), variables));
-    },
-    wallets(variables: WalletsQueryVariables): Promise<{ data?: WalletsQuery | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
-        return withWrapper(() => client.rawRequest<WalletsQuery>(print(WalletsDocument), variables));
     },
     messages(variables?: MessagesSubscriptionVariables): Promise<{ data?: MessagesSubscription | undefined; extensions?: any; headers: Headers; status: number; errors?: GraphQLError[] | undefined; }> {
         return withWrapper(() => client.rawRequest<MessagesSubscription>(print(MessagesDocument), variables));

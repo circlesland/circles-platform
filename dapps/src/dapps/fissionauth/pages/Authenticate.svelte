@@ -16,7 +16,6 @@
     //const state = await tryToAuthenticate();
     const state = await OmoCentral.instance.subscribeToResult();
 
-
     if (state.fissionAuthState.username) {
       // set a marker in the local storage that indicates whether we've already logged-in
       localStorage.setItem("fissionAuth", JSON.stringify({

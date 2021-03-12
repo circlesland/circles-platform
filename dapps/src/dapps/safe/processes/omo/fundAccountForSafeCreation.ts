@@ -71,7 +71,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const fundAccountForSafeCreation: ProcessDefinition = {
+export const fundAccountForSafeCreation: ProcessDefinition<any,any> = {
   name: "fundAccountForSafeCreation",
   stateMachine: <any>processDefinition
 };

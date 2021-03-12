@@ -11,6 +11,6 @@ export type QuickAction = {
       label: string
     }
   }
-  event?: () => OmoEvent,
+  event?: (item?:any) => OmoEvent,
   route?: string
 }

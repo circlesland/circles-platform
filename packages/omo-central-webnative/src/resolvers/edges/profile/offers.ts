@@ -7,7 +7,8 @@ export function profileOffers(wnfs:WnfsClientInterface) {
         const offers = await wnfs.offer.findMany({
             where: {
                 createdByFissionName: parent.fissionName,
-                unlistedAt: null
+                // TODO: Add a unlisted:boolean filter attribute
+                unlistedAt_gt: new Date().toJSON()
             }
         });
         return <any[]>offers;

@@ -75,7 +75,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const requestUbi: ProcessDefinition = {
+export const requestUbi: ProcessDefinition<any,any> = {
   name: "requestUbi",
   stateMachine: <any>processDefinition
 };

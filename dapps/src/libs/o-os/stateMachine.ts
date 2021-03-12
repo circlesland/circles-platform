@@ -19,7 +19,7 @@ export const stateMachine = {
   {
     this._current = null;
   },
-  async run<TContext>(definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<TContext>)
+  async run<TContext>(definition: ProcessDefinition<any,any>, contextModifier?: (processContext: ProcessContext) => Promise<TContext>)
   {
     window.o.logger.log("run", definition.name);
 
@@ -47,6 +47,7 @@ export const stateMachine = {
         event: event
       });
     });
+
     service.onStop(() =>
     {
       processEvents.next({

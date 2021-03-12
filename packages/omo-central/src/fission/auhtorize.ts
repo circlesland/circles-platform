@@ -1,6 +1,6 @@
 import {AuthSucceeded, Continuation, initialise, redirectToLobby, Scenario} from "omo-webnative/dist";
 
-export async function authorize(lobbyTheme?: string): Promise<AuthSucceeded|Continuation | undefined> {
+export async function authorize(lobbyTheme?: string, redirectToLobbyIfNotAuthorized:boolean = true): Promise<AuthSucceeded|Continuation | undefined> {
     const state = await initialise({
         permissions: {
             app: {
@@ -20,6 +20,8 @@ export async function authorize(lobbyTheme?: string): Promise<AuthSucceeded|Cont
         case Scenario.Continuation:
             return state;
         case Scenario.NotAuthorised:
+            if (!redirectToLobbyIfNotAuthorized)
+                return undefined;
             await redirectToLobby(state.permissions, undefined, lobbyTheme);
             break;
     }

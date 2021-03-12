@@ -66,6 +66,26 @@ cd omo-ucan || exit
 npx --no-install tsc || exit
 cd .. || exit
 
+echo "Building 'omo-kernel-interfaces' .."
+cd omo-kernel-interfaces || exit
+npx --no-install tsc || exit
+cd .. || exit
+
+echo "Building 'omo-kernel' .."
+cd omo-kernel || exit
+npx --no-install tsc || exit
+cd .. || exit
+
+echo "Building 'omo-central' .."
+cd omo-central || exit
+npx --no-install tsc || exit
+cd .. || exit
+
+echo "Building 'omo-fission' .."
+cd omo-fission || exit
+npx --no-install tsc || exit
+cd .. || exit
+
 echo "Building 'omo-central-interfaces' .."
 cd omo-central-interfaces || exit
 npx --no-install tsc || exit
@@ -82,26 +102,6 @@ sedArgument="s/REPLACE_ME_WITH_THE_CONNECTION_STRING/${DO_PGSQL_CONNECTIONSTRING
 cp -f schema_template.prisma schema.prisma
 sed -i "${sedArgument}" schema.prisma
 npx --no-install prisma generate || exit
-npx --no-install tsc || exit
-cd .. || exit
-
-echo "Building 'omo-central' .."
-cd omo-central || exit
-npx --no-install tsc || exit
-cd .. || exit
-
-echo "Building 'omo-kernel-interfaces' .."
-cd omo-kernel-interfaces || exit
-npx --no-install tsc || exit
-cd .. || exit
-
-echo "Building 'omo-kernel' .."
-cd omo-kernel || exit
-npx --no-install tsc || exit
-cd .. || exit
-
-echo "Building 'omo-fission' .."
-cd omo-fission || exit
 npx --no-install tsc || exit
 cd .. || exit
 

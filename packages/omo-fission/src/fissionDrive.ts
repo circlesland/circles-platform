@@ -86,6 +86,7 @@ let initializingDrive:boolean = false;
 export async function runWithDrive<TOut>(func:(drive:FissionDrive) => Promise<TOut>, authenticateIfNecessary:boolean = true) : Promise<TOut>
 {
   let fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+
   if (!fissionAuthState || !fissionAuthState.state)
   {
     const authState = await OmoCentral.instance.subscribeToResult();

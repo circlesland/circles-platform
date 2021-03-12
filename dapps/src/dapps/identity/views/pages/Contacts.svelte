@@ -1,9 +1,6 @@
 <script lang="ts">
   import CategoryTitle from "../../../../libs/o-views/atoms/CategoryTitle.svelte";
-  import {Contact} from "omo-central/dist/generated";
-  import ContactListItem from "../atoms/ContactListItem.svelte";
-
-  export let contacts: Contact[] = [];
+  import ContactList from "../../../../cells/contact/views/layouts/ContactList.svelte";
 
   const labelMyOffers = {
     data: {
@@ -17,8 +14,6 @@
     <CategoryTitle mapping={labelMyOffers} />
   </div>
   <div class="mb-4 space-y-2">
-    {#each contacts as contact}
-      <ContactListItem contact={contact} />
-    {/each}
+    <ContactList client={o.graphQLClient} view="list" />
   </div>
 </div>

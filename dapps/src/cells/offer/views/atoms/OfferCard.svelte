@@ -4,6 +4,10 @@
   import Card from "../../../_generic/views/atoms/Card.svelte";
   import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
   import {faMailBulk, faShoppingCart} from "@fortawesome/free-solid-svg-icons";
+  import {RunProcess} from "omo-process/dist/events/runProcess";
+  import {sendMessage, SendMessageContext} from "../../../../dapps/omotalk/processes/sendMessage";
+  import {OmoCentral} from "omo-central/dist/omoCentral";
+  import {checkout as checkoutProcess, CheckoutContext} from "../../../../dapps/omomarket/processes/checkout";
 
   export let offer: Offer;
 
@@ -57,16 +61,23 @@
       return undefined;
     }
   };
+
+  function getPictureCid() {
+    return offer.pictures?.length > 0 ? offer.pictures[0].cid : undefined;
+  }
+  function getPictureMimeType() {
+    return offer.pictures?.length > 0 ? offer.pictures[0].mimeType : undefined;
+  }
 </script>
 
 <Card
-  pictureCid={offer.pictures?.length > 0 ? offer.pictures[0].cid : undefined}
-  pictureMimeType={offer.pictures?.length > 0 ? offer.pictures[0].mimeType : undefined}
+  pictureCid={getPictureCid()}
+  pictureMimeType={getPictureMimeType()}
   avatarCid={offer.createdBy.omoAvatarCid}
   avatarMimeType={offer.createdBy.omoAvatarMimeType}
   avatarName="{offer.createdBy.omoFirstName} {offer.createdBy.omoLastName}"
   avatarStatus={offer.city}
-  badeText={offer.price}
+  badgeText={offer.price}
   statusBadgeText={statusBadgeText}
   statusBadgeColor={statusBadgeColor}
   title={offer.title}

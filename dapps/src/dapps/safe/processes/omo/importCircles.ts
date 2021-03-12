@@ -126,7 +126,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const importCircles: ProcessDefinition = {
+export const importCircles: ProcessDefinition<any,any> = {
   name: "importCircles",
   stateMachine: <any>processDefinition
 };

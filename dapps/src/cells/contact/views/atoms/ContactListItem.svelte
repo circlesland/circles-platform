@@ -8,9 +8,9 @@
 </script>
 
 <ListItem
-  imageCid={contact.contactProfile.omoAvatarCid ? contact.contactProfile.omoAvatarCid : undefined}
+  imageCid={contact.contactProfile.omoAvatarCid}
   title="{contact.contactProfile.omoFirstName} {contact.contactProfile.omoLastName}"
-  description="" {contact.contactProfile.fissionName}
+  description="{contact.contactProfile.fissionName}"
 >
   <span class="text-primary">Known since: {contact.createdAt}</span>
 </ListItem>
@@ -50,4 +50,55 @@
       </button>
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+<div>
+  {#if contact}
+    <div
+      on:click={toggleExpand}
+      class="w-full bg-white border rounded-xl card border-light-200">
+      <div class="flex items-center justify-center p-2 rounded-lg">
+        <img src={getPicture()} alt="CRC" class="rounded-lg" />
+      </div>
+      <div class="flex items-center">
+        <div class="px-1 py-2">
+          <div class="text-xs md:text-base text-primary">
+            {contact.contactProfile.omoFirstName}
+            {contact.contactProfile.omoLastName}
+          </div>
+          <p class="text-gray-500 text-xxs md:text-xs">
+            <span class="text-gray-500">
+              {contact.contactProfile.fissionName}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
+        <div class="text-3xl font-light text-action">
+          <span style="white-space:nowrap; display: inline-block">
+
+          </span>
+        </div>
+      </div>
+    </div>
+    {#if contact.contactProfile && openDetail}
+      <div class="px-3">
+        <div
+          class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200">
+          <span class="text-primary">Known since: {contact.createdAt}</span>
+        </div>
+      </div>
+    {/if}
+  {:else}
+    loading ..
+  {/if}
+</div>
 -->
+

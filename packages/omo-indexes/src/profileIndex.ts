@@ -99,7 +99,7 @@ export class ProfileIndex extends Index
       const path = fsRoot
         + "/userland/Apps/userland/MamaOmo/userland/OmoSapien/userland/profiles/userland";
 
-      const publicProfileDir = ipfs.ls(path);
+      const publicProfileDir = ipfs.ls(path, {recursive: false, preload:false});
 
       for await (const element of publicProfileDir)
       {

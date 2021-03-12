@@ -149,7 +149,7 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
   }
 });
 
-export const jumpstart: ProcessDefinition = {
+export const jumpstart: ProcessDefinition<any,any> = {
   name: "jumpstart",
   stateMachine: <any>processDefinition
 };

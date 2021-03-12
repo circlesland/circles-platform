@@ -99,7 +99,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
     }
   }
 });
-export const initialMenu: ProcessDefinition = {
+export const initialMenu: ProcessDefinition<any,any> = {
   name: "initialMenu",
   stateMachine: <any>processDefinition
 };

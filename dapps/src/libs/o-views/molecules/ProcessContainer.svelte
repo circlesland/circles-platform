@@ -14,6 +14,8 @@
   import {Prompt as PromptEvent} from "omo-process/dist/events/prompt";
   import {Continue} from "omo-process/dist/events/continue";
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
+  import {OmoEvent} from "omo-events/dist/omoEvent";
+  import {Bubble} from "../../../dapps/identity/events/process/ipc/bubble";
 
   /**
    * A channel to an already running process.
@@ -44,6 +46,8 @@
     }
   }
 
+  let lastBubble:Bubble;
+
   function ensureProcess(action: (p: Process) => void) {
     if (!process) {
       console.warn(
@@ -60,14 +64,36 @@
     {
       subscription = process.events.subscribe((next) =>
       {
-        if (next.event?.type === "process.shellEvent")
-        {
-          console.log("publishing shell event:", next.event);
-          window.o.publishEvent((<ShellEvent>next.event).payload);
+        if (next.stopped) {
+          prompt = null;
+          process = null;
+          dispatch("stopped");
         }
-        else if (next.event?.type === "process.prompt")
+
+        if (!next.event)
+          return;
+
+        console.log("ProcessContainer received: ", next.event);
+
+        let event:OmoEvent;
+        if (next.event?.type === "process.ipc.bubble") {
+          console.log("ProcessContainer received Bubble: ", next);
+          lastBubble = next.event;
+          event = next.event.wrappedEvent;
+        } else {
+          event = next.event;
+        }
+
+        if (event.type === "process.shellEvent")
         {
-          prompt = <PromptEvent>next.event;
+          console.log("ProcessContainer received 'process.shellEvent' event: ", next);
+          console.log("publishing shell event:", event);
+          window.o.publishEvent((<ShellEvent>event).payload);
+        }
+        else if (event.type === "process.prompt")
+        {
+          console.log("ProcessContainer received 'process.prompt' event: ", next);
+          prompt = <PromptEvent>event;
           let artifactsArr = Object.keys(prompt.data).map(
             (key) => prompt.data[key]
           );
@@ -81,10 +107,6 @@
           console.log("artifactsArr:", artifactsArr);
 
           canGoBack = prompt.canGoBack;
-        } else if (next.stopped) {
-          prompt = null;
-          process = null;
-          dispatch("stopped");
         }
       });
 
@@ -135,7 +157,7 @@
     </div>
   {/if}
   <div class="w-full">
-    <Prompt {process} {prompt} />
+    <Prompt {process} {prompt} bubble={lastBubble} />
   </div>
 {/if}
 <footer class="flex justify-between px-4 pt-4 text-gray-400 bg-white ">

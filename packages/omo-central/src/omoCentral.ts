@@ -42,6 +42,7 @@ import {
     FissionRootQuery, FissionRootQueryVariables, FissionRootDocument
 } from "./generated";
 import {AsyncBroadcast} from "omo-utils/dist/asyncBroadcast";
+import {api} from "omo-webnative/dist/common";
 
 export const omoCentralServerUrl = "http://localhost:8989/graphql"
 export const lobbyThemeCid = "QmPjh5wi3j9L7rJ8wYUAnFBbjT33EiNtzkeyepDjau5F2P";
@@ -72,7 +73,7 @@ export class OmoCentral {
     }
 
     private static async create() {
-        const fissionAuthState = await authorize(lobbyThemeCid);
+        const fissionAuthState = await authorize(lobbyThemeCid, false);
         if (!fissionAuthState) {
             throw new Error(`Not authorized.`);
         }

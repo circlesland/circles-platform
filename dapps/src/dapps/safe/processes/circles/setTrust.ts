@@ -104,7 +104,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const setTrust: ProcessDefinition = {
+export const setTrust: ProcessDefinition<any,any> = {
   name: "setTrust",
   stateMachine: <any>processDefinition
 };

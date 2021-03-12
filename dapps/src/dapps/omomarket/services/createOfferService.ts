@@ -1,6 +1,4 @@
 import {CreateOfferContext} from "../processes/createOffer";
-import {tryGetDappState} from "omo-kernel/dist/kernel";
-import {FissionAuthState} from "omo-fission/dist/manifest";
 import {Generate} from "omo-utils/dist/generate";
 import {CreateOfferInput} from "omo-central/dist/generated";
 import {uploadFileAndGetCid} from "omo-fission/dist/fissionUtil";

@@ -88,7 +88,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const createPrivateKey: ProcessDefinition = {
+export const createPrivateKey: ProcessDefinition<any,any> = {
   name: "createPrivateKey",
   stateMachine: <any>processDefinition
 };

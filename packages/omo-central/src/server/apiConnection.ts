@@ -6,7 +6,7 @@ import {WebSocketLink} from "apollo-link-ws";
 import {split} from "apollo-link";
 import {getMainDefinition} from "apollo-utilities";
 import {AsyncBroadcast} from "omo-utils/dist/asyncBroadcast";
-import {decodeUcan} from "../../../omo-ucan/dist/decodeUcan";
+import {decodeUcan} from "omo-ucan/dist/decodeUcan";
 import {Observable, Subject} from "rxjs";
 
 /**

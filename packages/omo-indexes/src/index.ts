@@ -40,7 +40,7 @@ export abstract class Index
     console.log("catCid")
     return await IpfsNode.runWithIPFS(async ipfs =>
     {
-      const catIterable = ipfs.cat(cid);
+      const catIterable = ipfs.cat(cid, {preload: false});
       const chunks = []
 
       for await (const chunk of catIterable)

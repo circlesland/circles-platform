@@ -13,12 +13,13 @@
 		"apollo-link": "^1.2.14",
 		"apollo-link-http": "^1.5.17",
 		"apollo-link-ws": "^1.0.20",
+		"subscriptions-transport-ws": "^0.9.18",
+		"graphql": "^15.5.0",
 		"cross-fetch": "^3.0.4",
 		"ws": "^7.4.3",
-		"subscriptions-transport-ws": "^0.9.18",
 		"omo-utils": "1.0.0",
 		"omo-webnative": "0.21.4",
-		"graphql": "^15.5.0"
+		"omo-ucan": "0.1.212"
 	},
 	"devDependencies": {
 		"@types/ws": "^7.4.0",

@@ -26,7 +26,7 @@ export function addCirclesTokenTransferResolver(prisma: PrismaClient) {
                 createdInBlockHash: args.data.createdInBlockHash,
                 token: {
                   connect: {
-                      address: args.data.tokenAddress
+                      address: args.data.transferredToken
                   }
                 },
                 subject: {

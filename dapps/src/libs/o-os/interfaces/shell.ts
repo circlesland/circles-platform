@@ -4,8 +4,11 @@ import {OmoSubject} from "omo-quirks/dist/OmoSubject";
 import {Process} from "omo-process/dist/interfaces/process";
 import {ProcessDefinition} from "omo-process/dist/interfaces/processManifest";
 import {ProcessContext} from "omo-process/dist/interfaces/processContext";
+import ApolloClient, {DefaultOptions} from "apollo-client";
+import {NormalizedCacheObject} from "apollo-cache-inmemory";
 
 export interface Shell {
+  graphQLClient?: ApolloClient<NormalizedCacheObject>,
   lastError?: any;
   redirectTo?: string;
   events?: OmoSubject<OmoEvent>,
@@ -14,6 +17,6 @@ export interface Shell {
   stateMachines: {
     current(): Process | null,
     cancel(),
-    run: (definition: ProcessDefinition, contextModifier?: (processContext: ProcessContext) => Promise<ProcessContext>) => Process
+    run: (definition: ProcessDefinition<any, any>, contextModifier?: (processContext: ProcessContext) => Promise<ProcessContext>) => Process
   }
 }

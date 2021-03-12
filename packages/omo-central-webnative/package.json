@@ -18,6 +18,7 @@
     "omo-ucan": "0.1.212",
     "omo-circles": "1.0.0",
     "omo-utils": "1.0.0",
+    "omo-webnative": "0.21.4",
     "ix": "^4.2.0"
   },
   "devDependencies": {

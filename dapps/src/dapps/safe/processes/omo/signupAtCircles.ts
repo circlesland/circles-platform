@@ -93,7 +93,7 @@ A small amount of the credits you received from your invite will be used to do t
   }
 });
 
-export const signupAtCircles: ProcessDefinition = {
+export const signupAtCircles: ProcessDefinition<any,any> = {
   name: "signupAtCircles",
   stateMachine:<any> processDefinition
 };

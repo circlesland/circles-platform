@@ -57,7 +57,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const signup: ProcessDefinition = {
+export const signup: ProcessDefinition<any,any> = {
   name: "signup",
   stateMachine:<any> processDefinition
 };

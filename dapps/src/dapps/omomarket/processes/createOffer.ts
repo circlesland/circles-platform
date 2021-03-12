@@ -239,7 +239,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const createOffer: ProcessDefinition = {
+export const createOffer: ProcessDefinition<any,any> = {
   name: "createOffer",
   stateMachine:<any> processDefinition
 };

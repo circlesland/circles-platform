@@ -96,7 +96,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const importPrivateKey: ProcessDefinition = {
+export const importPrivateKey: ProcessDefinition<any,any> = {
   name: "importPrivateKey",
   stateMachine: <any>processDefinition
 };

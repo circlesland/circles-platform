@@ -1,6 +1,7 @@
 <script lang="ts">
-  import Offers from "../molecules/Offers.svelte";
+  import OfferList from "../../../../cells/offer/views/layouts/OfferList.svelte";
 </script>
+
 
 <div class="bg-gray-50">
   <section
@@ -15,5 +16,6 @@
       </h3>
     </div>
   </section>
-  <Offers />
+  <!--<Offers />-->
+  <OfferList client={o.graphQLClient} view="card" />
 </div>

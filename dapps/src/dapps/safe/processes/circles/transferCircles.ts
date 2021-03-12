@@ -183,7 +183,7 @@ const processDefinition = (maxBalance: number, progressView:any, successView:any
   }
 });
 
-export const transferCircles: ProcessDefinition = {
+export const transferCircles: ProcessDefinition<any,any> = {
   name: "transferCircles",
   stateMachine: <any>processDefinition
 };

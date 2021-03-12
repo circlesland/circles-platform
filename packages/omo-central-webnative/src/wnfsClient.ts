@@ -14,8 +14,16 @@ import {
     QueryPurchaseInput,
     QueryUniqueProfileInput, UpdateProfileInput
 } from "omo-central-interfaces/dist/types";
+import {AuthSucceeded, Continuation} from "../../omo-webnative/dist";
 
-export class WnfsClient implements WnfsClientInterface {
+export class WnfsClient implements WnfsClientInterface
+{
+    private readonly _fissionAuthState: AuthSucceeded|Continuation;
+
+    constructor(fissionAuthState: AuthSucceeded|Continuation) {
+        this._fissionAuthState = fissionAuthState
+    }
+
     circlesToken = {
         findUnique(param: { include?: { transfers: boolean }; where: { address: string }; select?: { owner: true } }): Promise<CirclesToken> {
             throw new Error(`NotImplemented`)

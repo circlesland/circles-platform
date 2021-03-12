@@ -221,10 +221,10 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
   window.o.publishEvent(new ProgressSignal("Loading your safe address ..", 0));
   await initSafeAddress();
 
+  safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   window.o.publishEvent(new ProgressSignal("Loading your xDai balances ..", 0));
   await initXDaiBalances();
 
-  safeState = tryGetDappState<OmoSafeState>("omo.safe:1");
   if (!safeState.mySafeAddress
     && (safeState.myAccountXDaiBalance?.lt(new BN("100000")) ?? true))
   {

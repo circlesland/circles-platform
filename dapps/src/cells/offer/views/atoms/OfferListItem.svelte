@@ -5,10 +5,14 @@
 
   export let offer: Offer;
   const dispatch = createEventDispatcher();
+
+  function getImageCid() {
+    return offer.pictures?.length > 0 ? offer.pictures[0].cid : undefined;
+  }
 </script>
 
 <ListItem
-  imageCid={offer.pictures?.length > 0 ? offer.pictures[0].cid : undefined}
+  imageCid={getImageCid()}
   title={offer.title}
   description="in: {offer.city}, by: {offer.createdBy.omoFirstName} {offer.createdBy.omoLastName}"
   rightText={offer.price}

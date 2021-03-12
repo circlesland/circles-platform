@@ -105,7 +105,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const unTrust: ProcessDefinition = {
+export const unTrust: ProcessDefinition<any,any> = {
   name: "unTrust",
   stateMachine:<any> processDefinition
 };

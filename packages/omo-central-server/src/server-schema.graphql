@@ -215,7 +215,8 @@ type Purchase {
     purchasedItem: Offer!
 }
 input QueryPurchaseInput {
-    purchasedByFissionName: String!
+    id: Int
+    purchasedByFissionName: String
 }
 
 enum ActivityPredicate {
@@ -257,6 +258,7 @@ input AddCirclesTokenTransferInput {
     subjectAddress: String!
     predicate: CirclesTokenTransferPredicate!
     objectAddress: String!
+    transferredToken: String!
     value: String!
 }
 enum CirclesTokenTransferPredicate {

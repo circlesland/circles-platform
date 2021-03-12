@@ -17,7 +17,7 @@ module.exports = {
 	},
 	resolve: {
 		alias: {
-            svelte: sveltePath,
+      svelte: sveltePath,
       src: path.resolve( __dirname, 'src'),
       libs: path.resolve( __dirname, 'libs'),
 			// dapps: path.resolve( __dirname, 'dapps'),

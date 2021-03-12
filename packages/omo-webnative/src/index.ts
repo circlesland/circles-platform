@@ -77,9 +77,9 @@ export type Continuation = {
 }
 
 
-export async function buildUcan(proof?: string) {
+export async function buildUcan(audience?: string, proof?: string) {
   return await ucan2.build({
-    audience: await api.did(),
+    audience: audience ?? await api.did(),
     issuer: await did.ucan(),
     potency: "APPEND",
     proof,

@@ -10,12 +10,12 @@
   import {Offer} from "omo-central/dist/generated";
   import {FissionAuthState} from "omo-fission/dist/manifest";
   import {OmoCentral} from "omo-central/dist/omoCentral";
-
+  import OfferList from "../../../../cells/offer/views/layouts/OfferList.svelte";
+/*
   const fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   let myOffers: Offer[] = [];
 
-  async function init()
-  {
+  async function init() {
     const api = await OmoCentral.instance.subscribeToResult();
     const result = await api.queryOffersOfUser(fissionAuth.state.username);
     myOffers = result.offers;
@@ -23,8 +23,7 @@
 
   init();
 
-  function mapToListItem(offer: Offer)
-  {
+  function mapToListItem(offer: Offer) {
     console.log("MyOffer:", offer);
 
     const actions = [{
@@ -41,9 +40,8 @@
     actions.push({
       icon: faHome,
       title: "Unlist offer",
-      action: () =>
-      {
-        window.o.publishEvent(new RunProcess(unlistOffer, async (processContext:UnlistOfferContext) => {
+      action: () => {
+        window.o.publishEvent(new RunProcess(unlistOffer, async (processContext: UnlistOfferContext) => {
           processContext.data.offerName = {
             key: "offerName",
             isValid: true,
@@ -71,7 +69,7 @@
 
     return offerItem;
   }
-
+*/
   const labelMyOffers = {
     data: {
       label: "My offers",
@@ -83,9 +81,12 @@
   <div class="mb-4">
     <CategoryTitle mapping={labelMyOffers} />
   </div>
+  <OfferList client={o.graphQLClient} view="list" />
+  <!--
   <div class="mb-4 space-y-2">
     {#each myOffers.map(o => mapToListItem(o)) as item}
       <ListItem mapping={item} />
     {/each}
   </div>
+  -->
 </div>

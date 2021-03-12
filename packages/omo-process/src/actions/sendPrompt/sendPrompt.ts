@@ -19,10 +19,10 @@ export type PromptSpec = {
   canGoBack?: boolean
 };
 
-export const sendPrompt = (generateSpec: (context: ProcessContext) => PromptSpec) => {
+export const sendPrompt = (generateSpec: (context: ProcessContext, event?: any) => PromptSpec) => {
   
-  const action: SendAction<ProcessContext, EventObject, Prompt> = send((context) => {
-    const spec = generateSpec(context);
+  const action: SendAction<ProcessContext, EventObject, Prompt> = send((context, event) => {
+    const spec = generateSpec(context, event);
     Object.keys(spec.artifacts)
       .filter(key => context.data[key] !== undefined)
       .forEach(key => spec.artifacts[key].value = context.data[key]?.value);

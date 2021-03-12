@@ -22,6 +22,10 @@ type Profile {
     omoAvatarMimeType:String
     # All market offers of this profile
     offers:[Offer!]
+    # Messages sent by this profile
+    sentMessages:[Message!]
+    # Messages received by this profile
+    receivedMessages:[Message!]
     # All contacts of this profile
     contacts:[Contact!]
     # All purchases of this profile
@@ -113,8 +117,8 @@ input CreateOfferInput
     pictures:[CreateFileInput!]!
 }
 input QueryOfferInput {
-    id:Int
     createdByFissionName:String
+    id:Int
     title:String
     price_lt:String
     price_gt:String
@@ -125,7 +129,6 @@ input QueryOfferInput {
     city:String
     publishedAt_lt:String
     publishedAt_gt:String
-    unlistedAt:String
     unlistedAt_lt:String
     unlistedAt_gt:String
 }
@@ -207,14 +210,13 @@ type Purchase {
     id: Int!
     purchasedAt: String!
     status: PurchaseStatus!
-    purchasedFrom: Profile
+    purchasedFrom: Profile!
     purchasedBy: Profile!
     purchasedItem: Offer!
 }
 input QueryPurchaseInput {
     id: Int
     purchasedByFissionName: String
-    purchasedItemId: Int
 }
 
 enum ActivityPredicate {
@@ -253,10 +255,10 @@ input AddCirclesTokenTransferInput {
     createdAt: String!
     createdInBlockNo: Int!
     createdInBlockHash: String!
-    tokenAddress: String!
     subjectAddress: String!
     predicate: CirclesTokenTransferPredicate!
     objectAddress: String!
+    transferredToken: String!
     value: String!
 }
 enum CirclesTokenTransferPredicate {
@@ -306,9 +308,6 @@ input AddCirclesTokenInput {
     createdInBlockNo: Int!
     createdInBlockHash: String!
 }
-input QueryCirclesTokensInput {
-    addresses: [String!]!
-}
 
 type CirclesWallet {
     address: String!
@@ -337,11 +336,10 @@ type Query
     profiles(query:QueryProfileInput!) : [Profile!]!
     offers(query:QueryOfferInput!) : [Offer!]!
     activities(query:QueryActivityInput!):[Activity!]!
-    circlesWallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
-    circlesTokens(query:QueryCirclesTokensInput!):[CirclesToken!]!
     contacts(query:QueryUniqueProfileInput!) : [Contact!]!
     conversation(query:QueryConversationInput!) : [Message!]!
     purchases(query:QueryPurchaseInput!):[Purchase!]!
+    circlesWallets(query:QueryCirclesWalletInput!):[CirclesWallet!]!
 }
 
 type Mutation

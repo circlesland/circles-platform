@@ -249,7 +249,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const checkout: ProcessDefinition = {
+export const checkout: ProcessDefinition<any,any> = {
   name: "checkout",
   stateMachine:<any> processDefinition
 };

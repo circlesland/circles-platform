@@ -12,7 +12,7 @@
   export let avatarName: String;
   export let avatarStatus: String;
 
-  export let badeText: String;
+  export let badgeText: String;
   export let statusBadgeText: String;
   export let statusBadgeColor: String = "bg-action";
 
@@ -30,10 +30,10 @@
     {#if pictureCid}
       <IpfsImage cid={pictureCid} mimeType={pictureMimeType} classes="object-cover w-full h-72"/>
     {/if}
-    {#if badeText}
+    {#if badgeText}
         <span
           class="absolute top-0 right-0 inline-flex items-center px-4 pt-2 pb-1 mt-4 text-2xl font-medium leading-tight text-white rounded-l-full bg-secondary">
-              {badeText}
+              {badgeText}
         </span>
     {/if}
     {#if statusBadgeText}

@@ -111,7 +111,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const deploySafe: ProcessDefinition = {
+export const deploySafe: ProcessDefinition<any,any> = {
   name: "deploySafe",
   stateMachine: <any>processDefinition
 };

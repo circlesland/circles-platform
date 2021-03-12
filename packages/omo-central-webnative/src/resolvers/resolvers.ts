@@ -18,8 +18,9 @@ import {addCirclesTokenResolver} from "./mutations/addCirclesToken";
 import {addCirclesTokenTransferResolver} from "./mutations/addCirclesTokenTransfer";
 import {WnfsClient} from "../wnfsClient";
 import {Resolvers} from "omo-central-interfaces/dist/types";
+import {Context} from "../context";
 
-const wnfs = new WnfsClient()
+const wnfs =<any>{}; // new WnfsClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
 
 // Everything that's commented out is currently implemented in
@@ -45,10 +46,10 @@ export const resolvers: Resolvers = {
         addCirclesToken: addCirclesTokenResolver(wnfs),
         addCirclesTrustRelation: addCirclesTrustRelationResolver(wnfs),
         addCirclesTokenTransfer: addCirclesTokenTransferResolver(wnfs),
-        addKeyPair: async (parent, args, context) => {
+        addKeyPair: async (parent:any, args:any, context:Context) => {
             throw new Error(`NotImplemented`);
         },
-        removeKeyPair: async (parent, args, context) => {
+        removeKeyPair: async (parent:any, args:any, context:Context) => {
             throw new Error(`NotImplemented`);
         },
     },

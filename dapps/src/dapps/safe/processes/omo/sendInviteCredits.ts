@@ -150,7 +150,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const sendInviteCredits: ProcessDefinition = {
+export const sendInviteCredits: ProcessDefinition<any,any> = {
   name: "sendInviteCredits",
   stateMachine: <any>processDefinition
 };

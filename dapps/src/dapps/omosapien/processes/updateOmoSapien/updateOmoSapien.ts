@@ -144,7 +144,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const updateOmoSapien: ProcessDefinition = {
+export const updateOmoSapien: ProcessDefinition<any,any> = {
   name: "updateOmoSapien",
   stateMachine: <any>processDefinition
 };

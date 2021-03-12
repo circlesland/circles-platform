@@ -135,7 +135,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const sendMessage: ProcessDefinition = {
+export const sendMessage: ProcessDefinition<any,any> = {
   name: "sendMessage",
   stateMachine:<any> processDefinition
 };

@@ -21,7 +21,9 @@
   import {onMount} from "svelte";
   import {kernel} from "omo-kernel/dist/kernel";
   import {faHome} from "@fortawesome/free-solid-svg-icons";
-  import {config} from "omo-circles/dist/config";
+  import {shellProcess, ShellProcessContext} from "./dapps/identity/processes/shell/shellProcess";
+  import {createProfile} from "./dapps/identity/processes/createProfile/createProfile";
+  import {createOffer} from "./dapps/identity/processes/offer/createOffer";
 
   onMount(async () => {
     await kernel.boot();
@@ -45,42 +47,65 @@
     percent: number;
   };
 
-  window.o.events.subscribe(async (event: OmoEvent) =>
-  {
+  setTimeout(() => {
+    window.o.publishEvent(new RunProcess<ShellProcessContext>(shellProcess, async (ctx:ShellProcessContext) => {
+      ctx.ensureIsAuthenticated = true;
+      ctx.childProcessDefinition =  createOffer;
+      ctx.childContext = {
+        environment:{},
+        data:{},
+        pictures: []
+      };
+      return ctx;
+    }));
+    /*
+    window.o.publishEvent(new RunProcess<ShellProcessContext>(shellProcess, async ctx => {
+      ctx.ensureIsAuthenticated = true;
+      ctx.childProcessDefinition =  createProfile;
+        ctx.childContext = {
+          environment:{},
+          data:{},
+        }
+      return ctx;
+    }));
+    */
+    /*
+    window.o.publishEvent(new RunProcessInShell(ensureIsAuthenticated, async (context:EnsureIsAuthenticatedContext) => {
+      context.myDid = "123";
+      return context;
+    }));
+     */
+  }, 1000);
+
+  window.o.events.subscribe(async (event: OmoEvent) => {
     // runningProcess = window.o.stateMachines.current();
-    if (event.type === "shell.openMenu")
-    {
+    if (event.type === "shell.openMenu") {
       isOpen = true;
     }
-    if (event.type === "shell.closeModal")
-    {
+    if (event.type === "shell.closeModal") {
+      console .log("App.svelte receeive 'shell.closeModal' event: ", event);
       isOpen = false;
     }
-    if (event.type === "shell.openModal")
-    {
+    if (event.type === "shell.openModal") {
+      console .log("App.svelte receeive 'shell.openModal' event: ", event);
       isOpen = true;
     }
-    if (event.type == "shell.runProcess")
-    {
+    if (event.type == "shell.runProcess") {
       runningProcess = await window.o.stateMachines.run(
         (<RunProcess<any>>event).definition,
         (<RunProcess<any>>event).contextModifier
       );
       isOpen = true;
     }
-    if (event.type === "shell.begin")
-    {
+    if (event.type === "shell.begin") {
     }
-    if (event.type === "shell.navigateTo")
-    {
+    if (event.type === "shell.navigateTo") {
       push("#" + (<NavigateTo>event).route);
     }
-    if (event.type === "shell.done")
-    {
+    if (event.type === "shell.done") {
       progressIndicator = null;
     }
-    if (event.type === "shell.progress")
-    {
+    if (event.type === "shell.progress") {
       const progressEvent: ProgressSignal = <ProgressSignal>event;
       progressIndicator = {
         message: progressEvent.message,
@@ -89,8 +114,9 @@
     }
   });
 
-  function routeLoading(e)
-  {
+
+
+  function routeLoading(e) {
     if (!e.detail.userData) return;
 
     showActionBar = e.detail.userData.showActionBar;
@@ -106,8 +132,7 @@
     contentHeight = windowInnerHeight - headerHeight - footerHeight;
 
     let _quickActions = actions.filter((o) => o.pos && o.pos !== "overflow");
-    quickActions = [0, 1, 2, 3].map((index) =>
-    {
+    quickActions = [0, 1, 2, 3].map((index) => {
       let actionAt: any = _quickActions.find(
         (action) => action.pos == index + 1
       );
@@ -126,7 +151,7 @@
       return actionAt;
     });
 
-    const defaultActions:{data: {label: string}, design: {icon: any, type: string}, event: () => Promise<void>, type: string, pos: string}[] = [{
+    const defaultActions: { data: { label: string }, design: { icon: any, type: string }, event: () => Promise<void>, type: string, pos: string }[] = [{
       data: {
         label: "",
       },
@@ -144,9 +169,8 @@
 
     const dynamicOverflowActions = actions
       .filter((o) => !o.pos || o.pos === "overflow")
-      .map((item) =>
-      {
-        return <{data: {label: string}, design: {icon: any, type: string}, event: () => Promise<void>, type: string, pos: string}>{
+      .map((item) => {
+        return <{ data: { label: string }, design: { icon: any, type: string }, event: () => Promise<void>, type: string, pos: string }>{
           data: {
             label: item.mapping.data.label,
           },
@@ -163,35 +187,28 @@
     overflowActions = dynamicOverflowActions;
   }
 
-  function toggleOpen()
-  {
+  function toggleOpen() {
     isOpen = !isOpen;
   }
 
-  function modalWantsToClose()
-  {
+  function modalWantsToClose() {
     isOpen = false;
-    if (!runningProcess)
-    {
+    if (!runningProcess) {
       return;
     }
     runningProcess.sendEvent(new Cancel());
   }
 
-  function conditionsFailed(event)
-  {
+  function conditionsFailed(event) {
     console.log(
       "Escaped redirect url:",
       encodeURIComponent(event.detail.location)
     );
-    if (event.detail.userData && event.detail.userData.shellEvent)
-    {
+    if (event.detail.userData && event.detail.userData.shellEvent) {
       // There are some cases where we don't want to route to a different page
       // but instead only use the route params to initiate a process
       //window.o.publishEvent(event.detail.userData.shellEvent);
-    }
-    else
-    {
+    } else {
       push(
         `#/omosapien/authenticate/${encodeURIComponent(event.detail.location)}`
       );
@@ -202,6 +219,28 @@
 <ImageEditor></ImageEditor>
 -->
 <svelte:window bind:innerHeight={windowInnerHeight} />
+<!--<div style="overflow: scroll; width: 100%; height: 100%;">
+{#if graphQLClient}
+
+Offer List:<br/>
+<OfferList client={graphQLClient}/>
+Offer Detail:<br/>
+<OfferDetail client={graphQLClient} offerId={1}/>
+Activity stream:<br/>
+<ActivityStream client={graphQLClient}/>
+Purchase List:<br/>
+<PurchaseList client={graphQLClient}/>
+Purchase Detail:<br/>
+<PurchaseDetail client={graphQLClient} purchaseId={1} />
+Profile list:<br/>
+<ProfileList client={graphQLClient} />
+Profile Overview:<br/>
+<ProfileOverview client={graphQLClient} fissionName="heinzifranz" />
+Profile Detail:<br/>
+<ProfileDetail client={graphQLClient} fissionName="heinzifranz" />
+{/if}
+</div>
+-->
 <div class="appContainer font-primary bg-light-100">
   <div
     bind:this={headerElement}

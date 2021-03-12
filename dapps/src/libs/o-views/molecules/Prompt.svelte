@@ -15,9 +15,12 @@
   import {Prompt} from "omo-process/dist/events/prompt";
   import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
   import {Continue} from "omo-process/dist/events/continue";
+  import {Sinker} from "../../../dapps/identity/events/process/ipc/sinker";
+  import {Bubble} from "../../../dapps/identity/events/process/ipc/bubble";
 
   export let process: Process;
   export let prompt: Prompt;
+  export let bubble: Bubble;
 
   let processArtifacts: ProcessArtifact[];
 
@@ -68,6 +71,15 @@
     process.sendEvent(<Continue>{
       type: "process.continue",
       data: prompt.data,
+    });
+    process.sendEvent(<Sinker>{
+      type:"process.ipc.sinker",
+      levels: bubble.levels,
+      backTrace: bubble.trace,
+      wrappedEvent: {
+        type: "process.continue",
+        data: prompt.data
+      }
     });
   }
 

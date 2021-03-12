@@ -64,7 +64,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
   }
 });
 
-export const unlistOffer: ProcessDefinition = {
+export const unlistOffer: ProcessDefinition<any,any> = {
   name: "unlistOffer",
   stateMachine:<any> processDefinition
 };
