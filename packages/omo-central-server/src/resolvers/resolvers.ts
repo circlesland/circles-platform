@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+
 import {EventBroker} from "omo-utils/dist/eventBroker";
 import {serverResolver} from "./queries/server";
 import {profilesResolver} from "./queries/profiles";
@@ -31,8 +31,8 @@ import {purchasedItem} from "./edges/purchase/purchasedItem";
 import {activitiesResolver} from "./queries/activitities";
 import {purchasesResolver} from "./queries/purchases";
 import {Resolvers} from "omo-central-interfaces/dist/types";
+import {prisma} from "../prismaClient";
 
-const prisma = new PrismaClient()
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
 
 export const resolvers: Resolvers = {

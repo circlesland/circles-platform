@@ -13,22 +13,9 @@ import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 import {runWithDrive} from "omo-fission/dist/fissionDrive";
 import {Profile} from "omo-central/dist/generated";
 
-const defaultActions: QuickAction[] = [
-  {
+const defaultActions: QuickAction[] = [{
     type: "route",
     pos: "1",
-    mapping: {
-      design: {
-        icon: faUser
-      },
-      data: {
-        label: "Profile"
-      }
-    },
-    route: "#/identity/profile"
-  }, {
-    type: "route",
-    pos: "2",
     mapping: {
       design: {
         icon: faAddressBook,
@@ -40,23 +27,6 @@ const defaultActions: QuickAction[] = [
     route: "#/identity/contacts"
   }
 ];
-
-const myProfile : PageManifest = {
-  isDefault: true,
-  routeParts: ["profile"],
-  component: ProfilePage,
-  available: [
-    (detail) => {
-      window.o.logger.log("routeGuard.detail:", detail);
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.state.username !== undefined
-    }
-  ],
-  userData: {
-    showActionBar: true,
-    actions: defaultActions
-  }
-};
 
 const myContacts : PageManifest = {
   isDefault: true,
@@ -127,9 +97,9 @@ export const identity : DappManifest<IdentityState> = {
   initialize: async (stack, runtimeDapp) => {
     await tryInitMyProfile();
     return {
-      initialPage: myProfile,
+      initialPage: myContacts,
       cancelDependencyLoading: false
     };
   },
-  pages: [myProfile, myContacts]
+  pages: [myContacts]
 };

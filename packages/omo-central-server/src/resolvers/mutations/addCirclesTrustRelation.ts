@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 import {CirclesTrustRelationPredicate, MutationAddCirclesTrustRelationArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
 
