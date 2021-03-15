@@ -27,16 +27,10 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
       },
       error: {
         type: 'final',
-        // TODO: Make 'escalate' work
         entry: [
           () => console.log("runWithOmoCentral: error"),
           escalate((context, event:OmoEvent&{data:Error}) => event.data)
-        ]/*,
-        data: (context, event : OmoEvent & { data: Error }) => {
-          console.log("runWithOmoCentral.error", event.data);
-          return event.data;
-        }
-        */
+        ]
       },
       success: {
         entry: () => console.log("runWithOmoCentral: success"),

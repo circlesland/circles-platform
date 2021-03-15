@@ -266,7 +266,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
   if (safeState.mySafeAddress && !safeState.myToken && safeState.mySafeXDaiBalance?.lte(new BN("4600000000000000")))
   {
     // Not yet registered at the circles hub
-    runtimeDapp.outEvents.publish(new RunProcess<FundSafeContext>(fundSafe, async processContext => {
+    window.o.publishEvent(new RunProcess<FundSafeContext>(fundSafe, async processContext => {
       processContext.web3 = config.getCurrent().web3();
       return processContext;
     }));
@@ -279,7 +279,7 @@ async function initialize(stack, runtimeDapp: RuntimeDapp<any>)
   if (safeState.mySafeAddress && !safeState.myToken)
   {
     // Not yet registered at the circles hub
-    runtimeDapp.outEvents.publish(new RunProcess<SignupAtCirclesContext>(signupAtCircles, async processContext => {
+    window.o.publishEvent(new RunProcess<SignupAtCirclesContext>(signupAtCircles, async processContext => {
       processContext.web3 = config.getCurrent().web3();
       processContext.circlesHub = new CirclesHub(processContext.web3, config.getCurrent().HUB_ADDRESS);
       return processContext;

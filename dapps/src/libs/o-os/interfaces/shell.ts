@@ -8,6 +8,7 @@ import ApolloClient, {DefaultOptions} from "apollo-client";
 import {NormalizedCacheObject} from "apollo-cache-inmemory";
 
 export interface Shell {
+  contactUsername?: string;
   graphQLClient?: ApolloClient<NormalizedCacheObject>,
   lastError?: any;
   redirectTo?: string;

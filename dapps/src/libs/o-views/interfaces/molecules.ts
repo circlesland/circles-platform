@@ -56,7 +56,7 @@ export interface ProfileHeader {
   };
 }
 
-export interface ProfileField {
+export interface DataFieldMapping {
   data: {
     title: string;
     subtitle: string;

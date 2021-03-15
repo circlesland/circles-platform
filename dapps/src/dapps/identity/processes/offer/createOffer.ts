@@ -10,7 +10,6 @@ import {Offer} from "omo-central/dist/generated";
 import {uploadPicture} from "../shell/imageUploader/uploadPicture";
 import {ProcessContext} from "../processContext";
 import {Bubble} from "../../events/process/ipc/bubble";
-import {ipcSinker} from "../../patterns/ipcSinker";
 import {ipc} from "../../patterns/ipc";
 const {assign, send, sendParent, escalate} = actions;
 
@@ -41,8 +40,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
         () => console.log("createOffer: promptName"),
         sendParent(<Bubble>{
           type: "process.ipc.bubble",
-          tag: "testBubble",
-          levels: 0,
+            levels: 0,
           trace: [],
           wrappedEvent: {
             type: "process.prompt",
@@ -75,7 +73,8 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
         id: "uploadOfferPicture",
         src: uploadPicture.stateMachine(progressView, successView, errorView),
         data: {
-          targetDirectory: "public/Apps/MamaOmo/OmoSapien/offerPictures"
+          targetDirectory: "public/Apps/MamaOmo/OmoSapien/offerPictures",
+          isOptional: false
         },
         onError: "error",
         onDone: [{
@@ -103,11 +102,10 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
     promptUploadAnotherImage: {
       entry: [
         () => console.log("createOffer: promptUploadAnotherImage"),
-        sendParent((context) => {
+        sendParent(() => {
           return <Bubble>{
             type: "process.ipc.bubble",
-            tag: "testBubble",
-            levels: 0,
+                levels: 0,
             trace: [],
             wrappedEvent: {
               type: "process.prompt",
@@ -128,6 +126,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
                 ])
               }
             }
+          }
         })
       ],
       on: {
@@ -145,12 +144,7 @@ const processDefinition = (progressView:any, successView:any, errorView:any) => 
 
     error: {
       type: 'final',
-      // TODO: Make 'escalate' work
-      entry: escalate((context, event:OmoEvent&{data:Error}) => event.data),
-      /*data: (context, event : OmoEvent & { data: boolean }) => {
-        console.log("createOffer.error", event.data);
-        return event.data;
-      }*/
+      entry: escalate((context, event:OmoEvent&{data:Error}) => event.data)
     },
     success: {
       type: 'final',

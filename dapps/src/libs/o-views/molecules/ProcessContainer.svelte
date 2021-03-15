@@ -5,7 +5,7 @@
     faForward,
     faTimes,
   } from "@fortawesome/free-solid-svg-icons";
-  import Prompt from "./Prompt.svelte";
+  import Prompt, {bubble} from "./Prompt.svelte";
   import { createEventDispatcher } from "svelte";
   import {Process} from "omo-process/dist/interfaces/process";
   import {ShellEvent} from "omo-process/dist/events/shellEvent";
@@ -16,6 +16,7 @@
   import {OmoSubscription} from "omo-quirks/dist/OmoSubscription";
   import {OmoEvent} from "omo-events/dist/omoEvent";
   import {Bubble} from "../../../dapps/identity/events/process/ipc/bubble";
+  import {Sinker} from "../../../dapps/identity/events/process/ipc/sinker";
 
   /**
    * A channel to an already running process.
@@ -116,6 +117,21 @@
     });
   }
 
+  function sinkEvent(event) {
+    if (!lastBubble) {
+      // TODO: This is error prone without event-ids
+      throw new Error("Can only sink events in response to a previously bubbled event.");
+    }
+    ensureProcess((p) => {
+      p.sendEvent(<Sinker>{
+        type: "process.ipc.sinker",
+        levels: lastBubble.levels,
+        backTrace: lastBubble.trace,
+        wrappedEvent: event
+      })
+    });
+  }
+
   const back = {
     data: {
       label: "Back",
@@ -124,7 +140,7 @@
       icon: faArrowLeft,
     },
   };
-  const backPressed = () => ensureProcess((p) => p.sendEvent(new Back()));
+  const backPressed = () => sinkEvent(new Back());
 
   const cancel = {
     data: {
@@ -134,7 +150,9 @@
       icon: faTimes,
     },
   };
-  const cancelPressed = () => ensureProcess((p) => p.sendEvent(new Cancel()));
+  const cancelPressed = () => {
+    process.sendEvent(new Cancel());
+  };
 
   const skip = {
     data: {
@@ -144,7 +162,7 @@
       icon: faForward,
     },
   };
-  const skipPressed = () => ensureProcess((p) => p.sendEvent(new Continue()));
+  const skipPressed = () => sinkEvent(new Continue());
 </script>
 
 {#if process && prompt}

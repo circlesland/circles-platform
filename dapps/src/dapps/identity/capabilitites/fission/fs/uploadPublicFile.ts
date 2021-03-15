@@ -16,6 +16,7 @@ export interface UploadPublicFileContext extends ProcessContext {
   filename?: string;
   bytes: Buffer;
   targetPath?: string;
+  mimeType?:string;
 }
 
 const processDefinition = (progressView: any, successView: any, errorView: any) => {
@@ -143,7 +144,8 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
                   directory: context.directory,
                   filename: context.filename,
                   size: context.bytes.length,
-                  cid: cid
+                  cid: cid,
+                  mimeType: context.mimeType
                 }
               };
             }
@@ -155,14 +157,7 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
       error: {
         id: "error",
         type: 'final',
-        // TODO: Make 'escalate' work
-        entry: escalate((context, event:OmoEvent&{data:Error}) => event.data),
-        /*
-        data: (context, event: OmoEvent & { data: Error }) => {
-          console.log("uploadPublicFile.error", event.data);
-          return event.data;
-        }
-         */
+        entry: escalate((context, event:OmoEvent&{data:Error}) => event.data)
       },
       success: {
         type: 'final',
@@ -186,12 +181,14 @@ export const uploadPublicFile: ProcessDefinition<{
   createDirectory?: boolean;
   filename?: string;
   bytes: Buffer;
+  mimeType?:string;
 }, {
   path: string;
   directory: string;
   filename: string;
   size: number;
   cid: string;
+  mimeType?:string;
 }> = {
   name: "uploadPublicFile",
   stateMachine: <any>processDefinition

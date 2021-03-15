@@ -7,16 +7,28 @@
   import {RunProcess} from "omo-process/dist/events/runProcess";
   import {sendMessage, SendMessageContext} from "../../../../dapps/omotalk/processes/sendMessage";
   import {OmoCentral} from "omo-central/dist/omoCentral";
+  import { push } from "svelte-spa-router";
+
+  import {
+    faChat
+  } from "@fortawesome/free-solid-svg-icons";
+  import {Contact, ContactsDocument} from "omo-central/dist/generated";
+  import {tryGetDappState} from "omo-kernel/dist/kernel";
+  import {FissionAuthState} from "omo-fission/dist/manifest";
+  import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 
   export let client: any;
   export let view: "cards" | "list" | undefined;
 
-  import {Contact, ContactsDocument} from "omo-central/dist/generated";
-
+  // TODO: Use process 'ensureIsAuthenticated' instead of 'tryGetDappState'
+  const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
   setClient(client);
+
   $:contacts = query(ContactsDocument, {
     variables: {
-      fissionName: ""
+      query: {
+        fissionName: fissionAuthState.state.username
+      }
     }
   });
 
@@ -42,6 +54,7 @@
       label: "My contacts",
     },
   };
+
 </script>
 
 <div>
@@ -55,9 +68,14 @@
       <b>An error occurred while loading the contacts:</b> <br/>{$contacts.error.message}
     {:else if $contacts.data && $contacts.data.contacts && $contacts.data.contacts.length > 0}
       {#each $contacts.data.contacts as contact}
+        <div on:click={() => {
+          window.o.contactUsername = contact.contactProfile.fissionName;
+          push("#/omotalk/chat");
+        }}>
         <ContactListItem
           contact={contact}
           on:contact={() => contact(contact)} />
+        </div>
       {/each}
     {:else}
       <span>No contacts</span>

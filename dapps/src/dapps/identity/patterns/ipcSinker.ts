@@ -8,7 +8,6 @@ export const ipcSinker = (id:string) => {
       // Unwrap and send
       cond: (context, event) => {
         const sinker = <Sinker>event;
-        // TODO: Automatically unwrap the sinker
         return sinker.levels == 1;
       },
       actions: send((context, event) => {

@@ -10,16 +10,14 @@
   $:profiles = query(ProfilesDocument, {
     variables: {
       query: {
-
+        fissionName: "heinzifranz"
       }
     }
   });
 
 </script>
 <section class="w-full p-4 mx-auto md:p-8">
-  <div class="grid grid-cols-1 gap-8 pb-12 lg:grid-cols-2">
-  </div>
-  <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+  <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3">
     {#if $profiles.loading}
       Loading profiles...
     {:else if $profiles.error}

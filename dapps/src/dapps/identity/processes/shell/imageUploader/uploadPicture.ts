@@ -8,11 +8,16 @@ import {uploadPublicFile} from "../../../capabilitites/fission/fs/uploadPublicFi
 import {ProcessContext} from "../../processContext";
 import Banner from "../../../../../libs/o-views/atoms/Banner.svelte";
 import {Bubble} from "../../../events/process/ipc/bubble";
+import {Prompt} from "omo-process/dist/events/prompt";
+import {Continue} from "omo-process/dist/events/continue";
+import {ipc} from "../../../patterns/ipc";
 
 const {assign, escalate, sendParent} = actions;
 
 export class UploadPictureContext extends ProcessContext {
   targetDirectory: string;
+  isOptional?: boolean;
+  canGoBack?: boolean;
   strings?: {
     promptTitle: string,
     promptButton: string;
@@ -41,14 +46,13 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
         sendParent((context) => {
           return <Bubble>{
             type: "process.ipc.bubble",
-            tag: "testBubble",
-            levels: 0,
+                levels: 0,
             trace: [],
-            wrappedEvent: {
+            wrappedEvent: <Prompt>{
               type: "process.prompt",
               title: context.strings?.promptTitle ?? "Please select a picture to upload",
               nextButtonTitle: context.strings?.promptButton ?? "Upload",
-              canGoBack: true,
+              canGoBack: context.canGoBack,
               hideNextButton: false,
               banner: context.strings?.promptBanner ? {
                 component: Banner,
@@ -57,17 +61,21 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
                 }
               } : undefined,
               data: {
-                ...file("picture", undefined, undefined, true)
+                ...file("picture", undefined, undefined, context.isOptional)
               }
             }
           }
         })
       ],
       on: {
-        "process.continue": {
+        ...ipc("promptPicture"),
+        "process.continue": [{
+          cond: (context, event:Continue) => !!event.data,
           actions: <any>storePromptResponse,
           target: "uploadPicture"
-        }
+        }, {
+          target: "success"
+        }]
       }
     },
     uploadPicture: {
@@ -87,30 +95,34 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
     },
     error: {
       type: 'final',
-      // TODO: Make 'escalate' work
-      entry: escalate((context, event:OmoEvent&{data:Error}) => event.data),
-      /*
-      data: (context, event: OmoEvent & { data: Error }) => {
-        throw event.data;
-        console.log("uploadPicture.error", event.data);
-        return event.data;
-      }
-      */
+      entry: escalate((context, event:OmoEvent&{data:Error}) => event.data)
     },
     success: {
       type: 'final',
       data: (context, event: OmoEvent & {
         data: {
-          path: string;
-          directory: string;
-          filename: string;
-          size: number;
-          cid: string;
-          mimeType: string;
+          isSet: boolean;
+          path?: string;
+          directory?: string;
+          filename?: string;
+          size?: number;
+          cid?: string;
+          mimeType?: string;
         }
       }) => {
-        console.log("uploadPicture.success. done data is: ", event.data);
-        return event.data
+        if (!event.data) {
+          // User skipped the upload
+          console.log("uploadPicture.success. step was skipped.");
+          return {
+            isSet: false
+          }
+        } else {
+          console.log("uploadPicture.success. done data is: ", event.data);
+          return {
+            isSet: true,
+            ...event.data
+          }
+        }
       }
     }
   }
@@ -118,17 +130,25 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
 
 export const uploadPicture: ProcessDefinition<{
   targetDirectory: string;
+  isOptional?: boolean;
+  canGoBack?: boolean;
   strings?: {
     promptTitle: string,
     promptButton: string;
+    promptBanner?: string;
   }
 }, {
-  path: string;
-  directory: string;
-  filename: string;
-  size: number;
-  cid: string;
-  mimeType: string;
+  /**
+   * If the user decided to skip the upload then this property is 'false'.
+   * All other properties are only set when 'isSet' == 'true'.
+   */
+  isSet: boolean;
+  path?: string;
+  directory?: string;
+  filename?: string;
+  size?: number;
+  cid?: string;
+  mimeType?: string;
 }> = {
   name: "uploadPicture",
   stateMachine: <any>processDefinition

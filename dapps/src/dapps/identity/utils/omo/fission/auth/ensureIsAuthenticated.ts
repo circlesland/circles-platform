@@ -46,12 +46,7 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
       },
       error: {
         type: 'final',
-        // TODO: Make 'escalate' work
         entry: escalate((context, event:OmoEvent&{data:Error}) => event.data)
-        /*data: (context, event : OmoEvent & { data: Error }) => {
-          console.log("ensureIsAuthenticated.error", event.data);
-          return event.data;
-        }*/
       },
       success: {
         type: 'final',

@@ -1,12 +1,10 @@
 import {
-  faArrowUp, faCoins,
+  faCoins,
   faComments,
-  faEnvelopeOpenText, faPen,
+  faEnvelopeOpenText
 } from "@fortawesome/free-solid-svg-icons";
 import {DappManifest} from "omo-kernel-interfaces/dist/dappManifest";
-import Inbox from "./pages/Inbox.svelte";
-import Outbox from "./pages/Outbox.svelte";
-import Drafts from "./pages/Drafts.svelte";
+import Chat from "./pages/Chat.svelte";
 import {tryGetDappState} from "omo-kernel/dist/kernel";
 import {FissionAuthState} from "omo-fission/dist/manifest";
 import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
@@ -26,34 +24,10 @@ export const deafultActions: QuickAction[] = [
         icon: faEnvelopeOpenText
       },
       data: {
-        label: "Inbox"
+        label: "Chat"
       }
     },
-    route: "#/omotalk/inbox"
-  }, {
-    type: "route",
-    pos: "2",
-    mapping: {
-      design: {
-        icon: faArrowUp,
-      },
-      data: {
-        label: "Sent"
-      }
-    },
-    route: "#/omotalk/outbox"
-  }, {
-    type: "route",
-    pos: "3",
-    mapping: {
-      design: {
-        icon: faPen,
-      },
-      data: {
-        label: "Drafts"
-      }
-    },
-    route: "#/omotalk/drafts"
+    route: "#/omotalk/chat"
   }
 ];
 
@@ -76,50 +50,10 @@ export const overflowActions: QuickAction[] = [{
   })
 }]
 
-const inbox = {
+const chat = {
   isDefault: true,
-  routeParts: ["inbox"],
-  component: Inbox,
-  available: [
-    (detail) => {
-      window.o.logger.log("routeGuard.detail:", detail);
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.state.username !== undefined
-    }
-  ],
-  userData: {
-    showActionBar: true,
-    actions: <QuickAction[]>[
-      ...deafultActions,
-      ...overflowActions
-    ]
-  }
-};
-
-const outbox = {
-  isDefault: true,
-  routeParts: ["outbox"],
-  component: Outbox,
-  available: [
-    (detail) => {
-      window.o.logger.log("routeGuard.detail:", detail);
-      const fissionAuthState = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
-      return fissionAuthState.state.username !== undefined
-    }
-  ],
-  userData: {
-    showActionBar: true,
-    actions: <QuickAction[]>[
-      ...deafultActions,
-      ...overflowActions
-    ]
-  }
-};
-
-const drafts = {
-  isDefault: true,
-  routeParts: ["drafts"],
-  component: Drafts,
+  routeParts: ["chat"],
+  component: Chat,
   available: [
     (detail) => {
       window.o.logger.log("routeGuard.detail:", detail);
@@ -146,5 +80,5 @@ export const omotalk: DappManifest<OmoTalkState> = {
   routeParts: ["omotalk"],
   tag: Promise.resolve("alpha"),
   isEnabled: true,
-  pages: [inbox, outbox, drafts]
+  pages: [chat]
 };

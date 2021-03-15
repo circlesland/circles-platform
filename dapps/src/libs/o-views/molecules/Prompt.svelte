@@ -68,13 +68,15 @@
       prompt.data[changedArtifact.key].changed = true; // TODO: Set this property only if the value changed
     });
 
+    // TODO: Remove the regular 'sendEvent' in favor of the 'process.ipc.sinker' when all processes have been migrated.
     process.sendEvent(<Continue>{
       type: "process.continue",
       data: prompt.data,
     });
+
     process.sendEvent(<Sinker>{
       type:"process.ipc.sinker",
-      levels: bubble.levels,
+      levels: bubble?.levels ?? 0,
       backTrace: bubble.trace,
       wrappedEvent: {
         type: "process.continue",

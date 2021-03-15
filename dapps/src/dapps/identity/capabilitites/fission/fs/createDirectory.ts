@@ -32,29 +32,22 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
       },
       error: {
         type: 'final',
-        // TODO: Make 'escalate' work
         entry: [
           () => console.log("createDirectory: error"),
           escalate((context, event:OmoEvent&{data:Error}) => event.data)
         ]
-        /*
-          data: (context, event : OmoEvent & { data: Error }) => {
-            console.log("createDirectory.error", event.data);
-            return event.data;
-          }
-         */
-        },
-        success: {
-          entry: () => console.log("createDirectory: success"),
-          type: 'final',
-          data:  (context, event : OmoEvent) => {
-            console.log("createDirectory.success.");
-            return undefined;
-          }
+      },
+      success: {
+        entry: () => console.log("createDirectory: success"),
+        type: 'final',
+        data:  (context, event : OmoEvent) => {
+          console.log("createDirectory.success.");
+          return undefined;
         }
       }
-    });
-  }
+    }
+  });
+}
 
   /**
    * Creates a new directory at the specified position in the user's fission drive.

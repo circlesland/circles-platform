@@ -50,6 +50,9 @@ export class CirclesAccount implements CirclesAccountModel
 
   async tryGetMyToken(): Promise<CirclesToken|null>
   {
+    if (!this.safeAddress) {
+      throw new Error(`The safe address is not known. Your token cannot be loaded.`)
+    }
     const result = await this.hub.queryEvents(CirclesHub.queryPastSignup(this.safeAddress)).toArray();
     if (result.length == 0)
     {
@@ -69,6 +72,9 @@ export class CirclesAccount implements CirclesAccountModel
 
   async tryGetTokensBySafeAddress(safeAddresses: string[]): Promise<CirclesToken[]>
   {
+    if (safeAddresses.length == 0) {
+      throw new Error(`Trying to get tokens by safe address failed because an empty array was supplied.`)
+    }
     const tokensBySafeAddress = await this.hub.queryEvents(
       CirclesHub.queryPastSignups(safeAddresses)
     ).toArray();
@@ -112,6 +118,9 @@ export class CirclesAccount implements CirclesAccountModel
   {
     const subject = new OmoSubject<BlockchainEvent>();
 
+    if (!this.safeAddress) {
+      throw new Error(`The safe address is not known. Your contacts cannot be loaded.`)
+    }
     const myIncomingTrusts = this.hub.queryEvents(CirclesHub.queryPastTrusts(undefined, this.safeAddress));
     myIncomingTrusts.events.subscribe(trustEvent =>
     {

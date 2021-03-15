@@ -29,15 +29,10 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
       },
       error: {
         type: 'final',
-        // TODO: Make 'escalate' work
         entry: [
           () => console.log("runWithIpfs: error"),
           escalate((context, event:OmoEvent&{data:Error}) => event.data),
-        ],
-        data: (context, event : OmoEvent & { data: Error }) => {
-          console.log("runWithIpfs.error", event.data);
-          return event.data;
-        }
+        ]
       },
       success: {
         entry: () => console.log("runWithIpfs: success"),

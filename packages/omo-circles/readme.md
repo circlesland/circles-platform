@@ -142,7 +142,7 @@ async function signupAtCircles() {
     const safeProxy = new GnosisSafeProxy(web3, safeOwnerAddress, safeAddress);
     const circlesHub = new CirclesHub(web3, config.getCurrent().HUB_ADDRESS);
     
-    await circlesHub.createProfile(
+    await circlesHub.upsertProfile(
         safeOwnerPrivateKey,
         safeProxy
     );

@@ -12,7 +12,9 @@
   setClient(client);
   $:profiles = query(ProfilesDocument, {
     variables: {
-      "fissionName": fissionName
+      query: {
+        "fissionName": fissionName
+      }
     }
   });
 
@@ -33,16 +35,13 @@
                          classes="w-40 h-40 mx-auto bg-white border-4 rounded-full md:w-48 md:h-48 border-light-300"/>
             </div>
             <div class="py-4 text-2xl font-bold uppercase font-title md:text-3xl">
-              {profile.firstName}
-              {profile.lastName}
+              {profile.omoFirstName}
+              {profile.omoLastName}
             </div>
           </div>
-          <div
-            class="grid w-full h-full grid-cols-2 gap-4 p-4 md:overflow-y-scroll md:py-0 md:grid-cols-3 lg:grid-cols-4">
-            {#if fissionName}
+          {#if fissionName}
             <ActivityStream client={client} fissionName={fissionName} />
-              {/if}
-          </div>
+          {/if}
         {:else}
           Loading ..
         {/if}

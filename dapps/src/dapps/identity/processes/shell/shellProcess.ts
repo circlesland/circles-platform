@@ -5,7 +5,7 @@ import {sendPrompt} from "omo-process/dist/actions/sendPrompt/sendPrompt";
 import {createMachine, actions} from "xstate";
 import {ipcSinker} from "../../patterns/ipcSinker";
 import {Bubble} from "../../events/process/ipc/bubble";
-const {send, sendParent} = actions;
+const {send} = actions;
 
 export interface ShellProcessContext extends ProcessContext {
   childProcessId: string;
@@ -15,8 +15,6 @@ export interface ShellProcessContext extends ProcessContext {
 
 /**
  * Wraps a process and provides shell services to it.
- * The shell wrapper creates a new ProcessContext with injected capabilities
- * for the child process.
  */
 const processDefinition = (progressView: any, successView: any, errorView: any) => {
   return createMachine<ShellProcessContext, OmoEvent & { data?: any }>({
@@ -74,48 +72,7 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
                 trace: bubble.trace.concat(["childProcess"])
               };
             })
-          },
-/*
-          //
-          // Events from child process
-          //
-          "process.requestPrompt": {
-            actions: send((context, event:any) => {
-              console.log("shellProcess received process.requestPrompt from child: ", event);
-              return {
-                ...event,
-                type:"process.prompt"
-              };
-            })
-          },
-          "process.requestShellEvent": {
-            actions: send((context, event:any) => {
-              console.log("shellProcess received process.shellEvent from child: ", event);
-              return {
-                ...event,
-                type:"process.shellEvent"
-              };
-            })
-          },
-
-          //
-          // Events from shell
-          //
-          "*": {
-            actions: send((context, event:any, meta) => {
-              if (event.type === "process.prompt") {
-                return {
-                  type: "process.nop"
-                };
-              }
-              console.log("shellProcess received event for child (wildcard event handler): ", meta);
-              return {
-                ...event,
-                type:event.type
-              };
-            }, {to: "childProcess"})
           }
- */
         }
       },
       showError: {

@@ -2,13 +2,16 @@
   import {Contact} from "omo-central/dist/generated";
   import {createEventDispatcher} from "svelte";
   import ListItem from "../../../_generic/views/atoms/ListItem.svelte";
+  import {QuickAction} from "omo-kernel-interfaces/dist/quickAction";
 
   export let contact: Contact;
+  export let actions:QuickAction[] = [];
   const dispatch = createEventDispatcher();
 </script>
 
 <ListItem
   imageCid={contact.contactProfile.omoAvatarCid}
+  actions={actions}
   title="{contact.contactProfile.omoFirstName} {contact.contactProfile.omoLastName}"
   description="{contact.contactProfile.fissionName}"
 >

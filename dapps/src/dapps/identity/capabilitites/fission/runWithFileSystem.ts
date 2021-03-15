@@ -63,14 +63,7 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
       error: {
         id: "error",
         type: 'final',
-        // TODO: Make 'escalate' work
-        entry: escalate((context, event:OmoEvent&{data:Error}) => event.data),
-        /*
-        data: (context, event : OmoEvent & { data: Error }) => {
-          console.log("runWithFileSystem.error", event.data);
-          return event.data;
-        }
-         */
+        entry: escalate((context, event:OmoEvent&{data:Error}) => event.data)
       },
       success: {
         type: 'final',

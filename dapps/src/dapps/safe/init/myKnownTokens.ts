@@ -96,6 +96,9 @@ export async function initMyKnownTokens()
     safeState.myContacts.subscribe(async contactList =>
     {
       const newContacts = contactList.payload.filter(contact => !myKnownTokens[contact.safeAddress]);
+      if (newContacts.length == 0)
+        return;
+
       const newTokens = await circlesAccount.tryGetTokensBySafeAddress(newContacts.map(o => o.safeAddress));
 
       newTokens.forEach(token =>

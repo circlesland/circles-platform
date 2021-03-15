@@ -30,64 +30,62 @@
   }
 </style>
 
-<div>
-  <div
-    on:click={toggleExpand}
-    class="w-full bg-white border rounded-xl listItem border-light-200">
-    {#if imageCid}
-      <div class="flex items-center justify-center p-2 rounded-lg">
-        <IpfsImage cid={imageCid} mimeType={imageMimeType} classes="rounded-lg"/>
-      </div>
-    {/if}
-    <div class="flex items-center">
-      <div class="px-1 py-2">
-        <div class="text-xs md:text-base text-primary">
-          {title}
-        </div>
-        {#if height !== "1" && description}
-          <p class="text-gray-500 text-xxs md:text-xs">
-            <span class="text-gray-500">
-              {description}
-            </span>
-          </p>
-        {/if}
-      </div>
+<div
+  on:click={toggleExpand}
+  class="w-full bg-white border rounded-xl listItem border-light-200">
+  {#if imageCid}
+    <div class="flex items-center justify-center p-2 rounded-lg">
+      <IpfsImage cid={imageCid} mimeType={imageMimeType} classes="rounded-lg"/>
     </div>
-    <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
-      {#if rightText}
-        <div class="text-3xl font-light text-action">
-          <span style="white-space:nowrap; display: inline-block">
-            {rightText}
+  {/if}
+  <div class="flex items-center">
+    <div class="px-1 py-2">
+      <div class="text-xs md:text-base text-primary">
+        {title}
+      </div>
+      {#if height !== "1" && description}
+        <p class="text-gray-500 text-xxs md:text-xs">
+          <span class="text-gray-500">
+            {description}
           </span>
-        </div>
-      {/if}
-      {#if actions}
-        {#each actions as action}
-          <div
-            on:click={async (e) => {
-            await action.action();
-            e.preventDefault();
-            e.stopPropagation();
-          }}>
-            <ButtonIcon mapping={{
-            design: {
-              icon: action.icon,
-              type: "primary",
-              disabled: false
-            },
-            tooltip: action.title
-          }}/>
-          </div>
-        {/each}
+        </p>
       {/if}
     </div>
   </div>
-  {#if isExpanded}
-    <div class="px-3">
-      <div
-        class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200">
-        <slot/>
+  <div class="flex justify-end p-2 space-x-2 overflow-hidden text-right">
+    {#if rightText}
+      <div class="text-3xl font-light text-action">
+        <span style="white-space:nowrap; display: inline-block">
+          {rightText}
+        </span>
       </div>
-    </div>
-  {/if}
+    {/if}
+    {#if actions}
+      {#each actions as action}
+        <div
+          on:click={async (e) => {
+          await action.action();
+          e.preventDefault();
+          e.stopPropagation();
+        }}>
+          <ButtonIcon mapping={{
+          design: {
+            icon: action.icon,
+            type: "primary",
+            disabled: false
+          },
+          tooltip: action.title
+        }}/>
+        </div>
+      {/each}
+    {/if}
+  </div>
 </div>
+{#if isExpanded}
+  <div class="px-3">
+    <div
+      class="w-full p-2 text-gray-500 bg-white border-b border-l border-r rounded-b-xl text-xxs md:text-xs border-light-200">
+      <slot/>
+    </div>
+  </div>
+{/if}

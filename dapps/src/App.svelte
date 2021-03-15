@@ -22,8 +22,9 @@
   import {kernel} from "omo-kernel/dist/kernel";
   import {faHome} from "@fortawesome/free-solid-svg-icons";
   import {shellProcess, ShellProcessContext} from "./dapps/identity/processes/shell/shellProcess";
-  import {createProfile} from "./dapps/identity/processes/createProfile/createProfile";
+  import {upsertProfile} from "./dapps/identity/processes/upsertProfile/upsertProfile";
   import {createOffer} from "./dapps/identity/processes/offer/createOffer";
+  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
 
   onMount(async () => {
     await kernel.boot();
@@ -48,8 +49,8 @@
   };
 
   setTimeout(() => {
+    /*
     window.o.publishEvent(new RunProcess<ShellProcessContext>(shellProcess, async (ctx:ShellProcessContext) => {
-      ctx.ensureIsAuthenticated = true;
       ctx.childProcessDefinition =  createOffer;
       ctx.childContext = {
         environment:{},
@@ -58,17 +59,19 @@
       };
       return ctx;
     }));
-    /*
+    */
+/*
     window.o.publishEvent(new RunProcess<ShellProcessContext>(shellProcess, async ctx => {
-      ctx.ensureIsAuthenticated = true;
-      ctx.childProcessDefinition =  createProfile;
-        ctx.childContext = {
-          environment:{},
-          data:{},
-        }
+      ctx.childProcessDefinition =  upsertProfile;
+      ctx.childContext = {
+        environment:{},
+        data:{
+        },
+      }
       return ctx;
     }));
     */
+
     /*
     window.o.publishEvent(new RunProcessInShell(ensureIsAuthenticated, async (context:EnsureIsAuthenticatedContext) => {
       context.myDid = "123";
