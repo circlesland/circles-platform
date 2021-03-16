@@ -1,3 +1,12 @@
+<script lang="ts">
+  import {Contact} from "omo-central/dist/generated";
+
+  export let contact: Contact;
+
+  async function send() {
+
+  }
+</script>
 <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
   <div class="relative flex">
          <span class="absolute inset-y-0 flex items-center">
@@ -40,6 +49,7 @@
         </svg>
       </button>
       <button type="button"
+              on:click={() => send()}
               class="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
              class="h-6 w-6 transform rotate-90">

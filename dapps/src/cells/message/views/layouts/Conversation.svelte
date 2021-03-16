@@ -40,5 +40,5 @@
       <MessageItem message={message} side={message.recipient.fissionName === contact.contactProfile.fissionName ? "right" : "left"} />
     {/each}
   </div>
-  <MessageComposer />
+  <MessageComposer contact={contact} />
 </div>

@@ -73,7 +73,7 @@ export class OmoCentral {
     }
 
     private static async create() {
-        const fissionAuthState = await authorize(lobbyThemeCid, false);
+        const fissionAuthState = await authorize(lobbyThemeCid, true /*false*/);
         if (!fissionAuthState) {
             throw new Error(`Not authorized.`);
         }

@@ -1,7 +1,6 @@
 <script lang="ts">
   import {onMount} from "svelte";
   import {push} from "svelte-spa-router";
-  // import {tryToAuthenticate} from "omo-fission/dist/tryToAuthenticate";
   import {setDappState} from "omo-kernel/dist/kernel";
   import {FissionAuthState} from "omo-fission/dist/manifest";
   import {OmoBehaviorSubject} from "omo-quirks/dist/OmoBehaviorSubject";
@@ -9,6 +8,7 @@
   import {StatePropagation} from "omo-kernel-interfaces/dist/statePropagation";
   import LoadingSpinner from "../../../libs/o-views/atoms/LoadingSpinner.svelte";
   import {OmoCentral} from "omo-central/dist/omoCentral";
+  // import {tryToAuthenticate} from "omo-fission/dist/tryToAuthenticate";
 
   export let params;
 
@@ -25,7 +25,7 @@
       setDappState<FissionAuthState>("omo.fission.auth:1", current => {
         return {
           state: state.fissionAuthState,
-          username: state.fissionAuthState.username,
+          // username: state.fissionAuthState.username,
           fission: new OmoBehaviorSubject<StatePropagation<FissionDrive>>({
             signal: undefined,
             payload:  undefined//state.fission

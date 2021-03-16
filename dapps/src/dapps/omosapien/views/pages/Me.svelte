@@ -6,7 +6,8 @@
   import ProfileOverview from "../../../../cells/profile/views/layouts/ProfileOverview.svelte";
 
   let fissionAuth = tryGetDappState<FissionAuthState>("omo.fission.auth:1");
+  console.log("Profile:", fissionAuth)
 </script>
-<ProfileDetail fissionName={fissionAuth.username} client={o.graphQLClient}/>
+<ProfileDetail fissionName={fissionAuth.state.username} client={o.graphQLClient}/>
 <ProfileList client={o.graphQLClient} />
-<ProfileOverview fissionName={fissionAuth.username} client={o.graphQLClient} />
+<ProfileOverview fissionName={fissionAuth.state.username} client={o.graphQLClient} />
