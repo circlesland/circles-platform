@@ -17,7 +17,7 @@ export const sendMessageService = async (context:SendMessageContext) => {
 */
 
   const sentMessage = await context.omoCentral.sendMessage({
-    type: "textMessage",
+    type: "text/plain",
     topic: context.topic,
     toFissionName: profile.fissionName,
     content: JSON.stringify({

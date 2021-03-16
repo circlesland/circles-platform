@@ -3,9 +3,19 @@
   import MessageComposer from "../molecules/MessageComposer.svelte";
   import {Contact, Message} from "omo-central/dist/generated";
   import MessageItem from "../atoms/MessageItem.svelte";
+  import {OmoCentral} from "omo-central/dist/omoCentral";
 
   export let contact: Contact;
   export let messages: Message[] = [];
+
+
+  async function sub() {
+    const api = await OmoCentral.instance.subscribeToResult();
+    api.events.subscribe(next => {
+      console.log("Received message event:", next);
+    })
+  }
+  sub();
 </script>
 
 <style>
