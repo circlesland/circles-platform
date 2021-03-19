@@ -1,4 +1,5 @@
 #!/bin/bash
+
 echo "Installing build dependencies .."
 npm i
 npx --no-install lerna bootstrap || exit
@@ -10,6 +11,16 @@ cd .. || exit
 
 echo "Building 'omo-utils' .."
 cd omo-utils || exit
+npx --no-install tsc || exit
+cd .. || exit
+
+echo "Building 'omo-events' .."
+cd omo-events || exit
+npx --no-install tsc || exit
+cd .. || exit
+
+echo "Building 'omo-models' .."
+cd omo-models || exit
 npx --no-install tsc || exit
 cd .. || exit
 

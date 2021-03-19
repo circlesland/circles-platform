@@ -13,7 +13,7 @@ npm run build
 cd ../..
 
 echo "Cleaning all 'omo-*/dist' directories  .."
-rm -r circles-land/dist
+rm -r dapps/dist
 rm -r packages/omo-central/dist
 rm -r packages/omo-central-webnative/dist
 rm -r packages/omo-central-server/dist
