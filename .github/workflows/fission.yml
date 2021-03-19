@@ -1,4 +1,4 @@
-name: Publish
+name: deploy webapp on fisison
 on: [push, pull_request]
 jobs:
   publish_job:

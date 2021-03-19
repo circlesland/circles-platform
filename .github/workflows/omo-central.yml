@@ -1,11 +1,9 @@
-name: Docker Image CI
-
+name: create omo-central-server docker image
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   build:
     runs-on: ubuntu-latest

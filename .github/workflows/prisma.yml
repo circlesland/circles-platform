@@ -1,4 +1,4 @@
-name: Prisma
+name: deploy prisma model
 on: [push, pull_request]
 jobs:
   prisma_job:
