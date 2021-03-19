@@ -4,6 +4,11 @@ echo "Installing build dependencies .."
 npm i
 npx --no-install lerna bootstrap || exit
 
+echo "Building 'webnative' .."
+cd packages/omo-webnative || exit
+npm install
+npm run build
+
 echo "Building 'omo-quirks' .."
 cd packages/omo-quirks || exit
 npx --no-install tsc || exit
