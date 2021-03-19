@@ -1,4 +1,20 @@
 #!/bin/bash
+rm -r dapps/dist
+rm -r packages/omo-central/dist
+rm -r packages/omo-central-webnative/dist
+rm -r packages/omo-central-server/dist
+rm -r packages/omo-circles/dist
+rm -r packages/omo-directory/dist
+rm -r packages/omo-events/dist
+rm -r packages/omo-fission/dist
+rm -r packages/omo-indexes/dist
+rm -r packages/omo-kernel/dist
+rm -r packages/omo-kernel-interfaces/dist
+rm -r packages/omo-models/dist
+rm -r packages/omo-quirks/dist
+rm -r packages/omo-process/dist
+rm -r packages/omo-utils/dist
+rm -r packages/omo-webnative/dist
 
 echo "Installing build dependencies .."
 npm i
