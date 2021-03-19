@@ -16,7 +16,7 @@ const _o: Shell = {
   graphQLClient: null
 };
 async function connectToApi() {
-  const apiConnection = new ApiConnection("http://139.59.153.176:8989/graphql", async () => await buildUcan());
+  const apiConnection = new ApiConnection("http://localhost:8989/graphql", async () => await buildUcan());
   _o.graphQLClient = await apiConnection.client.subscribeToResult();
   console.log("GraphQL client ready:", _o.graphQLClient);
 }

@@ -7,14 +7,15 @@ export function activitiesSubscription(eventBroker:EventBroker) {
     return {
         subscribe: async (root:any, args:any, context:Context) => {
             const fissionName = await context.verifyJwt();
-            let topic = eventBroker.tryGetTopic(fissionName, "messages");
+            let topic = eventBroker.tryGetTopic(fissionName, "activities");
             if (!topic) {
-                topic = eventBroker.createTopic(fissionName, "messages");
+                topic = eventBroker.createTopic(fissionName, "activities");
             }
 
             const iterator = from(topic.observable).pipe(map(event => {
+                console.log("Sending event to subscribers:", event);
                 return {
-                    messages: event
+                    activities: event
                 }
             }));
 

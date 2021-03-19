@@ -1,8 +1,9 @@
 import {PrismaClient} from "@prisma/client";
 import {MutationProvePaymentArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
+import {EventBroker} from "omo-utils/dist/eventBroker";
 
-export function provePaymentResolver(prisma:PrismaClient) {
+export function provePaymentResolver(prisma:PrismaClient, eventBroker:EventBroker) {
     return async (parent:any, args:MutationProvePaymentArgs, context:Context) => {
         /*
         Check if the user holds a lock on the claimed item

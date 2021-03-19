@@ -13,6 +13,7 @@ export function messagesSubscription(eventBroker:EventBroker) {
             }
 
             const iterator = from(topic.observable).pipe(map(event => {
+                console.log("Sending event to subscribers:", event);
                 return {
                     messages: event
                 }

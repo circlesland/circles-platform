@@ -1,26 +1,14 @@
 <script lang="ts">
   import {Contact} from "omo-central/dist/generated";
-  import {RunProcess} from "omo-process/dist/events/runProcess";
-  import {shellProcess, ShellProcessContext} from "../../../../dapps/identity/processes/shell/shellProcess";
-  import {sendMessage} from "../../../../dapps/identity/processes/talk/sendMessage";
+  import {createEventDispatcher} from "svelte";
 
+  const dispatch = createEventDispatcher();
   export let contact: Contact;
 
   let message:string = "";
 
-  async function send(body:string) {
-    const event = new RunProcess<ShellProcessContext>(shellProcess, async ctx => {
-      ctx.childProcessDefinition = sendMessage;
-      ctx.childContext = <any>{// TODO: fix cast to 'any'
-        environment: {},
-        topic: "chat",
-        recipientFissionName:contact.contactProfile.fissionName,
-        body:body
-      };
-      message = "";
-      return ctx;
-    });
-    window.o.publishEvent(event);
+  function submit() {
+    dispatch("submit", message)
   }
 </script>
 <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
@@ -41,7 +29,8 @@
     on:keypress={(e) => {{
       if (e.keyCode == 13 && message.trim().length > 0) {
         console.log("Chat.Send")
-        send(message)
+        submit(message);
+        message = "";
       }
     }}}>
     <div class="absolute right-0 items-center inset-y-0 hidden sm:flex">

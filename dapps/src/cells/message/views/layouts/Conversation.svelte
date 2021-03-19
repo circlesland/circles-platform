@@ -4,18 +4,36 @@
   import {Contact, Message} from "omo-central/dist/generated";
   import MessageItem from "../atoms/MessageItem.svelte";
   import {OmoCentral} from "omo-central/dist/omoCentral";
+  import {RunProcess} from "omo-process/dist/events/runProcess";
+  import {shellProcess, ShellProcessContext} from "../../../../dapps/identity/processes/shell/shellProcess";
+  import {sendMessage} from "../../../../dapps/identity/processes/talk/sendMessage";
 
   export let contact: Contact;
   export let messages: Message[] = [];
-
 
   async function sub() {
     const api = await OmoCentral.instance.subscribeToResult();
     api.events.subscribe(next => {
       console.log("Received message event:", next);
+      messages.push(next);
     })
   }
   sub();
+
+
+  async function send(body:string) {
+    const event = new RunProcess<ShellProcessContext>(shellProcess, async ctx => {
+      ctx.childProcessDefinition = sendMessage;
+      ctx.childContext = <any>{// TODO: fix cast to 'any'
+        environment: {},
+        topic: "chat",
+        recipientFissionName:contact.contactProfile.fissionName,
+        body:body
+      };
+      return ctx;
+    });
+    window.o.publishEvent(event);
+  }
 </script>
 
 <style>
@@ -50,5 +68,5 @@
       <MessageItem message={message} side={message.recipient.fissionName === contact.contactProfile.fissionName ? "right" : "left"} />
     {/each}
   </div>
-  <MessageComposer contact={contact} />
+  <MessageComposer contact={contact} on:submit={(e) => send(e.detail)} />
 </div>

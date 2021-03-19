@@ -106,17 +106,14 @@ export class ApiConnection
             return;
         }
 
-        
         const client = await this.client.subscribeToResult();
-        
 
         this._eventSubscription = client.subscribe<MessagesSubscriptionVariables>({
             query: MessagesDocument
         }).subscribe(next =>
         {
-            
-            const newEvent = <Message>(<any>next.data).event;
-            this._events.next(newEvent);
+          const newMessage = <Message>(<any>next.data).messages;
+          this._events.next(newMessage);
         });
     }
 

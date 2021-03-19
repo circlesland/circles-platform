@@ -76,17 +76,16 @@ export const resolvers: Resolvers = {
          */
     },
     Mutation: {
-        lockOffer: lockOfferResolver(prisma),
-        provePayment: provePaymentResolver(prisma),
-        upsertProfile: upsertProfileResolver(prisma),
-        createOffer: createOfferResolver(prisma),
-        unlistOffer: unlistOfferResolver(prisma),
+        lockOffer: lockOfferResolver(prisma, eventBroker),
+        provePayment: provePaymentResolver(prisma, eventBroker),
+        upsertProfile: upsertProfileResolver(prisma, eventBroker),
+        createOffer: createOfferResolver(prisma, eventBroker),
+        unlistOffer: unlistOfferResolver(prisma, eventBroker),
         sendMessage: sendMessageResolver(prisma, eventBroker),
         markMessageAsRead: markMessageAsReadResolver(prisma)
     },
     Subscription: {
-        activities: activitiesSubscription(eventBroker),
-        messages: messagesSubscription(eventBroker)
+        activities: activitiesSubscription(eventBroker)
     },
     Message: {
         sender: messageSender(prisma),

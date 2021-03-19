@@ -20,7 +20,7 @@ const processDefinition = (progressView: any, successView: any, errorView: any) 
         invoke: {
           src: async (context) => {
             return await IpfsNode.runWithIPFS(async ipfs => {
-              return await context.func(ipfs);
+              return await context.func(<any>ipfs);
             });
           },
           onDone: "success",

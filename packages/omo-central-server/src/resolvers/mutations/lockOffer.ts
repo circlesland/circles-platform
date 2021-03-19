@@ -1,10 +1,11 @@
 import {PrismaClient, Purchase} from "@prisma/client";
 import {MutationLockOfferArgs} from "omo-central-interfaces/dist/types";
 import {Context} from "../../context";
+import {EventBroker} from "omo-utils/dist/eventBroker";
 
 export const lockTime = 90 * 1000;
 
-export function lockOfferResolver(prisma:PrismaClient) {
+export function lockOfferResolver(prisma:PrismaClient, eventBroker:EventBroker) {
     return async (parent:any, args:MutationLockOfferArgs, context:Context) => {
         /*
         Check if the offer is already locked

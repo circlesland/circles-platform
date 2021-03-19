@@ -16,18 +16,19 @@ export function sendMessageResolver(prisma:PrismaClient, eventBroker:EventBroker
                 content: args.data.content
             }
         });
+
         let topic = eventBroker.tryGetTopic(args.data.toFissionName, "messages");
         if (topic) {
             topic.publish(message);
         }
 
         // Create the contact objects on both sides if not existing
-
         const senderProfile = await prisma.profile.findUnique({
             where: {
                 fissionName: fissionUsername
             }
         });
+
         if (!senderProfile) {
             throw new Error(`The sender profile with the name '${fissionUsername}' couldn't be found.`)
         }
@@ -37,6 +38,7 @@ export function sendMessageResolver(prisma:PrismaClient, eventBroker:EventBroker
                 fissionName: args.data.toFissionName
             }
         });
+
         if (!recipientProfile) {
             throw new Error(`The recipient profile with the name '${args.data.toFissionName}' couldn't be found.`)
         }
@@ -51,6 +53,7 @@ export function sendMessageResolver(prisma:PrismaClient, eventBroker:EventBroker
                 }
             }
         });
+
         if (existingSenderContact.length == 0) {
             await prisma.contact.create({
                 data: {
@@ -72,7 +75,6 @@ export function sendMessageResolver(prisma:PrismaClient, eventBroker:EventBroker
                 }
             });
         }
-
 
         const existingRecipientContact = await prisma.contact.findMany({
             where: {
