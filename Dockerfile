@@ -1,19 +1,24 @@
 FROM node:latest
-COPY . .
 
-#    "@prisma/client": "^2.18.0",
-#    "apollo-server": "^2.21.0",
-#    "graphql": "^15.5.0",
-#    "graphql-import": "^1.0.2",
-#    "omo-ucan": "0.1.212",
-#    "omo-circles": "1.0.0",
-#    "omo-central-interfaces": "1.0.0",
-#    "subscriptions-transport-ws": "^0.9.18",
-#    "omo-utils": "1.0.0",
-#    "ix": "^4.2.0"
-COPY ./packages/omo-central-server ./packages/omo-central-server
-COPY ./packages/omo-circles ./packages/omo-circles
-COPY ./packages/omo-central-interfaces ./packages/omo-central-interfaces
-COPY ./packages/omo-utils ./packages/omo-utils
+WORKDIR /usr/omo-central
 
-RUN ./build.sh
+COPY ./packages/omo-quirks /usr/omo-central/packages/omo-quirks
+COPY ./packages/omo-webnative /usr/omo-central/packages/omo-webnative
+COPY ./packages/omo-events /usr/omo-central/packages/omo-events
+COPY ./packages/omo-utils /usr/omo-central/packages/omo-utils
+COPY ./packages/omo-circles /usr/omo-central/packages/omo-circles
+COPY ./packages/omo-ucan /usr/omo-central/packages/omo-ucan
+COPY ./packages/omo-models /usr/omo-central/packages/omo-models
+COPY ./packages/omo-central-interfaces /usr/omo-central/packages/omo-central-interfaces
+COPY ./packages/omo-central /usr/omo-central/packages/omo-central
+COPY ./packages/omo-central-server /usr/omo-central/packages/omo-central-server
+COPY ./build_omo_central.sh /usr/omo-central/build_omo_central.sh
+COPY ./package.json /usr/omo-central/package.json
+COPY ./package-lock.json /usr/omo-central/package-lock.json
+COPY ./lerna.json /usr/omo-central/lerna.json
+
+RUN ls /usr/omo-central
+RUN /usr/omo-central/build_omo_central.sh
+
+WORKDIR /usr/omo-central/packages/omo-central-server/dist
+CMD ["node", "main.js"]
