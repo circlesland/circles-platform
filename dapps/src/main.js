@@ -18,7 +18,7 @@ dayjs.extend(relativeTime);
 const _o = Object.assign(Object.assign({}, o), { events: shellEvents.observable, publishEvent: event => shellEvents.publish(event), graphQLClient: null });
 function connectToApi() {
     return __awaiter(this, void 0, void 0, function* () {
-        const apiConnection = new ApiConnection("http://139.59.153.176:8989/graphql", () => __awaiter(this, void 0, void 0, function* () { return yield buildUcan(); }));
+        const apiConnection = new ApiConnection("http://localhost:8989/graphql", () => __awaiter(this, void 0, void 0, function* () { return yield buildUcan(); }));
         _o.graphQLClient = yield apiConnection.client.subscribeToResult();
         console.log("GraphQL client ready:", _o.graphQLClient);
     });
