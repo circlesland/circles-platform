@@ -1,4 +1,5 @@
 FROM node:latest
+LABEL org.opencontainers.image.source=https://github.com/circlesland/circles-platform
 
 WORKDIR /usr/omo-central
 
