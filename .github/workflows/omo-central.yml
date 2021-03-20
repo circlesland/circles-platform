@@ -11,3 +11,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag omo-central-server:$(date +%s)
+      - name: Publish the Docker image
+        env:
+          DOCKER_REGISTRY_USER: ${{secrests.DOCKER_REGISTRY_USER}}
+          DOCKER_REGISTRY_PASSWORD: ${{secrests.DOCKER_REGISTRY_PASSWORD}}
+        run: |
+          docker login https://docker.pkg.github.com -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+          docker push docker.pkg.github.com/circlesland/circles-platform/omo-central-server:$(date +%s)
