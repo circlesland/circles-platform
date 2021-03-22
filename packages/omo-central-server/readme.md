@@ -24,7 +24,7 @@ sed -i "${sedArgument}" schema_template.prisma
 npm i prisma
 
 # Deploy to your server using prisma cli
-npx --no-install prisma push --schema schema_template.prisma  --preview-feature
+npx --no-install prisma db push --schema schema_template.prisma  --preview-feature
 ```
 
 ### 2. Run the docker image
