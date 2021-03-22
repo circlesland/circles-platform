@@ -8,7 +8,7 @@ You will need a running postgresql-server on which you can create a new database
 
 ### 1. Deploy the database
 ```shell
-# Create a new direcotry as working space
+# Create a new directory as working space
 mkdir omo-central-server-db
 cd omo-central-server-db
 
@@ -71,16 +71,30 @@ certificate got renewed:
 ```shell
 echo "renew_hook = docker stop proxy && docker rm proxy && docker run -d --restart unless-stopped --name proxy -v /etc/letsencrypt/archive/[your-domain.com]:/tls proxy" >> /etc/letsencrypt/renewal/[your-domain].conf
 ```
-Then build and start the proxy (*working dir must be the repository root*).   
+Then start the proxy (*working dir must be the repository root*).   
 The nginx config can be found in 'generate_proxy_config.sh'. This script is executed on build and generates the nginx config file.
 ```shell
-# Build the container
-docker build . --file proxy.Dockerfile --build-arg DOMAIN=[your-domain.com] -t proxy
+# Download the script that generates the nginx config (or write one yourself)
+wget https://raw.githubusercontent.com/circlesland/circles-platform/dev/generate_proxy_config.sh
 
-# Run the container and include a volume with the certs
+# Make the script executable
+chmod +x ./generate_proxy_config.sh
+
+# Generate a nginx proxy config in the current directory.
+./generate_proxy_config.sh \
+  [your-domain.com] \
+  http://localhost:8989/graphql
+  
+# Copy the config to any location on your docker host (or leve it where it is)
+cp default.conf /home/omo-central/proxy/default.conf
+
+# Start nginx with the new config and the certificates as volume
 docker run -d \
   --restart unless-stopped \
   --name proxy \
-  -v /etc/letsencrypt/archive/[your-domain.com]:/tls \
-  proxy
+  -v /home/omo-central/proxy/default.conf:/etc/nginx/nginx.conf:ro \
+  -v /etc/letsencrypt/archive/[your-domain.com]:/tls:ro \
+  -p 443:443 \
+  nginx
+
 ```
