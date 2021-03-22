@@ -59,20 +59,15 @@ If you pull the image from a private repository consider adding the following vo
 ```
 
 ### [production] Use nginx proxy with let's encrypt cerificate
-Install certbot on the docker host:
+If you already ran the above steps then clean up first:
 ```shell
-# install certbot
-apt-get install certbot
-# generate a certificate for the domain
-certbot certonly --standalone --preferred-challenges http -d [your-domain.com]
+docker stop omo-central-server
+docker rm omo-central-server
+
+docker stop watchtower
+docker rm watchtower
 ```
-Certbot will renew the cerificate automatically however, we also need to restart the container whenever the 
-certificate got renewed:
-```shell
-echo "renew_hook = docker stop proxy && docker rm proxy && docker run -d --restart unless-stopped --name proxy -v /etc/letsencrypt/archive/[your-domain.com]:/tls proxy" >> /etc/letsencrypt/renewal/[your-domain].conf
-```
-Then start the proxy (*working dir must be the repository root*).   
-The nginx config can be found in 'generate_proxy_config.sh'. This script is executed on build and generates the nginx config file.
+Then generate the proxy configuration for your host:
 ```shell
 # Download the script that generates the nginx config (or write one yourself)
 wget https://raw.githubusercontent.com/circlesland/circles-platform/dev/generate_proxy_config.sh
@@ -83,18 +78,82 @@ chmod +x ./generate_proxy_config.sh
 # Generate a nginx proxy config in the current directory.
 ./generate_proxy_config.sh \
   [your-domain.com] \
-  http://localhost:8989/graphql
+  omo-central-server:8989/graphql
   
-# Copy the config to any location on your docker host (or leve it where it is)
+# Optional: Copy the config to any location on your docker host (or leve it where it is)
 cp default.conf /home/omo-central/proxy/default.conf
-
-# Start nginx with the new config and the certificates as volume
+```
+Install and run certbot on the docker host:
+```shell
+# install certbot
+apt-get install certbot
+# generate a certificate for the domain
+certbot certonly --standalone --preferred-challenges http -d [your-domain.com]
+```
+Then create a new docker network for 'omo-central-server' and 'proxy' ..
+```shell
+docker network create --driver bridge omo-central-server
+```
+.. and (re)start 'omo-central-service' in the new network.
+```shell
+docker run -d \
+	--restart unless-stopped \
+	--name omo-central-server \
+	--net omo-central-server \
+	-e AUTH_POSTGRES_USER='[db user]' \
+	-e AUTH_POSTGRES_PASSWORD='[db password]' \
+	-e AUTH_POSTGRES_PORT='[db port]' \
+	-e AUTH_POSTGRES_DB='[db name]' \
+	-e AUTH_POSTGRES_HOST='[db host]' \
+	docker.pkg.github.com/circlesland/circles-platform/omo-central-server
+	
+# If you want to use 'watchtower' to keep the container up to date then also run the following:
+# docker run -d \
+#   --name watchtower \
+#   -v /var/run/docker.sock:/var/run/docker.sock \
+#   -v /etc/timezone:/etc/timezone:ro \
+#   containrrr/watchtower \
+#   --include-restarting=true \
+#   --interval=60 \
+#   omo-central-server
+	
+```
+Finally, start the proxy:
+```shell
+# Start nginx with the previously generated config and the certificates as volume
 docker run -d \
   --restart unless-stopped \
   --name proxy \
+  -net omo-central-server \
+  -net bridge \
   -v /home/omo-central/proxy/default.conf:/etc/nginx/nginx.conf:ro \
   -v /etc/letsencrypt/archive/[your-domain.com]:/tls:ro \
   -p 443:443 \
   nginx
+```
+Certbot will renew the certificate automatically however we also need to restart the container whenever the
+certificate got renewed.  
+The following snippet creates a script that can be used with the renew-hook.
+```shell
+cat <<EOF > on_letsencrypt_renewal.sh
+docker stop omo-central-server
+docker rm omo-central-server
+docker run -d \
+	--restart unless-stopped \
+	--name omo-central-server \
+	--net omo-central-server \
+	-e AUTH_POSTGRES_USER='[db user]' \
+	-e AUTH_POSTGRES_PASSWORD='[db password]' \
+	-e AUTH_POSTGRES_PORT='[db port]' \
+	-e AUTH_POSTGRES_DB='[db name]' \
+	-e AUTH_POSTGRES_HOST='[db host]' \
+	docker.pkg.github.com/circlesland/circles-platform/omo-central-server
+EOF
 
+# make executable
+chmod +x on_letsencrypt_renewal.sh
+```
+Then add it to '/etc/letsencrypt/renewal/[your-domain].conf': 
+```shell
+echo "renew_hook = wherever/your/script/is/on_letsencrypt_renewal.sh" >> /etc/letsencrypt/renewal/[your-domain].conf
 ```

@@ -3,6 +3,7 @@ limit_req_zone $binary_remote_addr zone=zone1:10m rate=4r/s;
 EOF`
 
 TEMPLATE=`cat << EOF
+events {}
 http {
   $RATE_LIMITING
 
