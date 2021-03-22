@@ -15,7 +15,6 @@ jobs:
           DOCKER_REGISTRY_PASSWORD: ${{secrets.DOCKER_REGISTRY_PASSWORD}}
         run: |
           docker login https://docker.pkg.github.com -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-          timestamp=$(date +%s)
-          docker build . --file Dockerfile --tag omo-central-server:${timestamp}
-          docker image tag omo-central-server:${timestamp} docker.pkg.github.com/circlesland/circles-platform/omo-central-server:${timestamp}
-          docker push docker.pkg.github.com/circlesland/circles-platform/omo-central-server:${timestamp}
+          docker build . --file omo-central.Dockerfile --tag omo-central-server:latest
+          docker image tag omo-central-server:latest docker.pkg.github.com/circlesland/circles-platform/omo-central-server:latest
+          docker push docker.pkg.github.com/circlesland/circles-platform/omo-central-server:latest

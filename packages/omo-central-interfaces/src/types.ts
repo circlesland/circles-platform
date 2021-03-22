@@ -16,6 +16,7 @@ export type Scalars = {
 export type Server = {
   __typename?: 'Server';
   did: Scalars['String'];
+  version: Scalars['String'];
 };
 
 export type Profile = {
@@ -643,6 +644,7 @@ export type ResolversParentTypes = ResolversObject<{
 
 export type ServerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Server'] = ResolversParentTypes['Server']> = ResolversObject<{
   did?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  version?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

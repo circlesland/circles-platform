@@ -89,6 +89,7 @@ cd .. || exit
 echo "Building 'omo-central-interfaces' .."
 cd omo-central-interfaces || exit
 npx --no-install tsc || exit
+npm run generate
 cd .. || exit
 
 echo "Building 'omo-central-webnative' .."

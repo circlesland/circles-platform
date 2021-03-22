@@ -1,6 +1,7 @@
 type Server {
     # Omo's DID
     did:String!
+    version:String!
 }
 
 type Profile {
