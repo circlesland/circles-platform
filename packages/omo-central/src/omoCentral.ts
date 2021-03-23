@@ -44,7 +44,7 @@ import {
 import {AsyncBroadcast} from "omo-utils/dist/asyncBroadcast";
 import {api} from "omo-webnative/dist/common";
 
-export const omoCentralServerUrl = "http://localhost:8989/graphql"
+export const omoCentralServerUrl = "https://api.circles.fund/graphql"
 export const lobbyThemeCid = "QmPjh5wi3j9L7rJ8wYUAnFBbjT33EiNtzkeyepDjau5F2P";
 
 /**
