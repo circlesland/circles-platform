@@ -2,6 +2,30 @@
 Provides a user directory and marketplace api via a graphql endpoint.  
 See the [api schema](https://github.com/circlesland/circles-platform/blob/dev/packages/omo-central-interfaces/src/schema.graphql) for details.
 
+## TL;DR
+Deploy the database and then run the following command on a fresh debian-based host.
+The script will perform all the steps in this readme.  
+Argument $3 must be a domain name with an A-record that points to the IP of the host machine.
+```shell
+# $1: github username
+# $2: github access token with rights to access the image repository
+# $3: your (sub)domain
+# $4 db username
+# $5 db password
+# $6 db port
+# $7 db name
+# $8 db host
+./setup_omo_central_server.sh \
+    $1 \
+    $2 \
+    $3 \
+    $4 \
+    $5 \
+    $6 \
+    $7 \
+    $8
+```
+
 ## Run
 We build a docker container for development purposes that you can run locally.  
 You will need a running postgresql-server on which you can create a new database for the server.  
