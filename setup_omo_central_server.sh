@@ -20,6 +20,7 @@ mkdir .omo-central-server
 cd .omo-central-server || exit
 
 # Install docker.io and certbot
+apt-get update
 apt-get install -y docker.io certbot
 
 # Authenticate at github's image repository

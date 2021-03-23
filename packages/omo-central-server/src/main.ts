@@ -1,4 +1,5 @@
 import {ApolloServer} from "apollo-server";
+const { print } = require('graphql');
 
 // TODO: Migrate to GraphQL-tools: https://www.graphql-tools.com/docs/migration-from-import/
 import {importSchema} from "graphql-import";
@@ -15,6 +16,22 @@ const corsOrigins = [
     "https://circles.land"
 ];
 
+/*
+class BasicLogging {
+    requestDidStart(args:{queryString:any, parsedQuery:any, variables:any}) {
+        const {queryString, parsedQuery, variables} = args;
+        const query = queryString || print(parsedQuery);
+        console.log(query);
+        console.log(variables);
+    }
+
+    willSendResponse(args:{graphqlResponse:any}) {
+        console.log(JSON.stringify(args, null, 2));
+    }
+}
+ */
+
+
 export class Main
 {
     private readonly _server: ApolloServer;
@@ -28,6 +45,7 @@ export class Main
         console.log("cors origins: ", corsOrigins);
 
         this._server = new ApolloServer({
+            // extensions: [() => new BasicLogging()],
             context: Context.create,
             typeDefs: apiSchemaTypeDefs,
             resolvers: this._resolvers,
