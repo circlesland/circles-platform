@@ -9,6 +9,7 @@
 # $6 db port
 # $7 db name
 # $8 db host
+# $9 admin-c
 #
 # Other requirements:
 # ----------------------------
@@ -27,11 +28,6 @@ apt-get install -y docker.io certbot
 docker login https://docker.pkg.github.com \
   -u $1 \
   -p $2 || exit
-
-# Pull all images
-docker pull docker.pkg.github.com/circlesland/circles-platform/omo-central-server:1616368251
-docker pull containrrr/watchtower
-docker pull nginx
 
 # Download utility scripts
 wget https://raw.githubusercontent.com/circlesland/circles-platform/dev/generate_proxy_config.sh
@@ -69,6 +65,16 @@ docker run -d \
 
 # Generate a new certificate
 certbot certonly --standalone --preferred-challenges http -d $3
+
+certbot certonly \
+  --standalone \
+  --non-interactive \
+  --agree-tos \
+  --email $9 \
+  --domains $3 \
+#  --pre-hook 'service openvpnas stop' \
+#  --post-hook 'service openvpnas start'
+
 
 # Run the proxy
 currentWorkingDir=$(pwd)
