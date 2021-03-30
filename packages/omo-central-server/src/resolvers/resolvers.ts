@@ -31,20 +31,21 @@ import {purchasedItem} from "./edges/purchase/purchasedItem";
 import {activitiesResolver} from "./queries/activitities";
 import {purchasesResolver} from "./queries/purchases";
 import {Resolvers} from "omo-central-interfaces/dist/types";
-import {prisma} from "../prismaClient";
+import {prisma_ro} from "../prisma_ro";
+import {prisma_rw} from "../prisma_rw";
 
 const eventBroker = new EventBroker(); // TODO: Replace with IPFS PubSub?!
 
 export const resolvers: Resolvers = {
     Query: {
         server: serverResolver,
-        profiles: profilesResolver(prisma),
-        fissionRoot: fissionRootResolver(prisma),
-        offers: offersResolver(prisma),
-        activities: activitiesResolver(prisma),
-        contacts: contactsResolver(prisma),
-        conversation: conversationResolver(prisma),
-        purchases: purchasesResolver(prisma),
+        profiles: profilesResolver(prisma_ro),
+        fissionRoot: fissionRootResolver(prisma_ro),
+        offers: offersResolver(prisma_ro),
+        activities: activitiesResolver(prisma_ro),
+        contacts: contactsResolver(prisma_ro),
+        conversation: conversationResolver(prisma_ro),
+        purchases: purchasesResolver(prisma_ro),
         /*
         circlesWallets: async (parent, args, context) => {
             const wallets = await prisma.circlesWallet.findMany({
@@ -76,38 +77,38 @@ export const resolvers: Resolvers = {
          */
     },
     Mutation: {
-        lockOffer: lockOfferResolver(prisma, eventBroker),
-        provePayment: provePaymentResolver(prisma, eventBroker),
-        upsertProfile: upsertProfileResolver(prisma, eventBroker),
-        createOffer: createOfferResolver(prisma, eventBroker),
-        unlistOffer: unlistOfferResolver(prisma, eventBroker),
-        sendMessage: sendMessageResolver(prisma, eventBroker),
-        markMessageAsRead: markMessageAsReadResolver(prisma)
+        lockOffer: lockOfferResolver(prisma_rw, eventBroker),
+        provePayment: provePaymentResolver(prisma_rw, eventBroker),
+        upsertProfile: upsertProfileResolver(prisma_rw, eventBroker),
+        createOffer: createOfferResolver(prisma_rw, eventBroker),
+        unlistOffer: unlistOfferResolver(prisma_rw, eventBroker),
+        sendMessage: sendMessageResolver(prisma_rw, eventBroker),
+        markMessageAsRead: markMessageAsReadResolver(prisma_rw)
     },
     Subscription: {
         activities: activitiesSubscription(eventBroker)
     },
     Message: {
-        sender: messageSender(prisma),
-        recipient: messageRecipient(prisma)
+        sender: messageSender(prisma_ro),
+        recipient: messageRecipient(prisma_ro)
     },
     Profile: {
-        offers: profileOffers(prisma),
-        contacts: profileContacts(prisma),
-        purchases: profilePurchases(prisma),
-        activities: profileActivities(prisma)
+        offers: profileOffers(prisma_ro),
+        contacts: profileContacts(prisma_ro),
+        purchases: profilePurchases(prisma_ro),
+        activities: profileActivities(prisma_ro)
     },
     Contact: {
-        anchorProfile: contactAnchorProfile(prisma),
-        contactProfile: contactProfile(prisma),
+        anchorProfile: contactAnchorProfile(prisma_ro),
+        contactProfile: contactProfile(prisma_ro),
     },
     Offer: {
-        createdBy: offerCreatedBy(prisma),
-        pictures: offerPictures(prisma)
+        createdBy: offerCreatedBy(prisma_ro),
+        pictures: offerPictures(prisma_ro)
     },
     Purchase: {
-        purchasedFrom: purchasedFrom(prisma),
-        purchasedBy: purchasedBy(prisma),
-        purchasedItem: purchasedItem(prisma)
+        purchasedFrom: purchasedFrom(prisma_ro),
+        purchasedBy: purchasedBy(prisma_ro),
+        purchasedItem: purchasedItem(prisma_ro)
     }
 };

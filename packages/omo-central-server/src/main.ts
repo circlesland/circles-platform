@@ -6,6 +6,7 @@ import {importSchema} from "graphql-import";
 import {Context} from "./context";
 import {resolvers} from "./resolvers/resolvers";
 import {Resolvers} from "omo-central-interfaces/dist/types";
+import {Generate} from "omo-utils/dist/generate";
 
 const corsOrigins = [
     "http://localhost:5000",
@@ -52,6 +53,21 @@ export class Main
             cors: {
                 origin: corsOrigins,
                 credentials: true
+            },
+            formatError: (err) => {
+                const errorId = Generate.randomHexString(8);
+                console.error({
+                    timestamp: new Date().toJSON(),
+                    errorId: errorId,
+                    error: err
+                });
+                return {
+                    path: err.path,
+                    message: `An error occurred while processing your request.\n`
+                        + `If the error persists contact the admins at '${process.env.ADMIN_EMAIL}' `
+                        + `and include the following error id in your request:\n`
+                        + `${errorId}`
+                }
             }
         });
     }
@@ -61,7 +77,7 @@ export class Main
         await this._server.listen({
             port: parseInt("8989")
         }).then(o => {
-            console.log("listening at port 8989")
+            console.log(`Listening on http://0.0.0.0:${process.env.AUTH_PORT}`);
         });
     }
 }
