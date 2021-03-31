@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from "../../o-views/atoms/Button.svelte";
-  import {Button as ButtonMapping} from "./../interfaces/atoms";
+  import { Button as ButtonMapping } from "./../interfaces/atoms";
   import EtherEditor from "../atoms/editors/EtherEditor.svelte";
   import StringEditor from "../atoms/editors/StringEditor.svelte";
   import AddressEditor from "../atoms/editors/AddressEditor.svelte";
@@ -11,12 +11,12 @@
   import InviteCreditEditor from "../atoms/editors/InviteCreditEditor.svelte";
   import OEditor from "../atoms/editors/OEditor.svelte";
   import LocationEditor from "../atoms/editors/LocationEditor.svelte";
-  import {Process} from "omo-process/dist/interfaces/process";
-  import {Prompt} from "omo-process/dist/events/prompt";
-  import {ProcessArtifact} from "omo-process/dist/interfaces/processArtifact";
-  import {Continue} from "omo-process/dist/events/continue";
-  import {Sinker} from "../../../dapps/identity/events/process/ipc/sinker";
-  import {Bubble} from "../../../dapps/identity/events/process/ipc/bubble";
+  import { Process } from "omo-process/dist/interfaces/process";
+  import { Prompt } from "omo-process/dist/events/prompt";
+  import { ProcessArtifact } from "omo-process/dist/interfaces/processArtifact";
+  import { Continue } from "omo-process/dist/events/continue";
+  import { Sinker } from "../../../dapps/identity/events/process/ipc/sinker";
+  import { Bubble } from "../../../dapps/identity/events/process/ipc/bubble";
 
   export let process: Process;
   export let prompt: Prompt;
@@ -28,8 +28,7 @@
   let nextButton: ButtonMapping;
 
   $: {
-    if (prompt)
-    {
+    if (prompt) {
       processArtifacts = Object.keys(prompt.data).map(
         (key) => prompt.data[key]
       );
@@ -37,8 +36,7 @@
     }
   }
 
-  function setIsValid()
-  {
+  function setIsValid() {
     isValid =
       !processArtifacts ||
       processArtifacts.reduce((p, c) => p && (c.isValid ?? false), true);
@@ -54,16 +52,15 @@
     };
   }
 
-  function sendAnswer()
-  {
-    if (!isValid)
-    {
-      console.warn("The data in the current prompt is not valid. Cannot send the answer.")
+  function sendAnswer() {
+    if (!isValid) {
+      console.warn(
+        "The data in the current prompt is not valid. Cannot send the answer."
+      );
       return;
     }
 
-    processArtifacts.forEach((changedArtifact) =>
-    {
+    processArtifacts.forEach((changedArtifact) => {
       prompt.data[changedArtifact.key] = changedArtifact;
       prompt.data[changedArtifact.key].changed = true; // TODO: Set this property only if the value changed
     });
@@ -75,13 +72,13 @@
     });
 
     process.sendEvent(<Sinker>{
-      type:"process.ipc.sinker",
+      type: "process.ipc.sinker",
       levels: bubble?.levels ?? 0,
       backTrace: bubble.trace,
       wrappedEvent: {
         type: "process.continue",
-        data: prompt.data
-      }
+        data: prompt.data,
+      },
     });
   }
 
@@ -92,65 +89,80 @@
   <div class="w-full">
     <svelte:component
       this={prompt.banner.component}
-      data={prompt.banner.data} />
+      data={prompt.banner.data}
+    />
   </div>
 {/if}
 {#each processArtifacts as artifact}
   <div
-    class="w-full"
+    class=""
     on:keydown={(e) => {
-      if (e.key === 'Enter' && isValid) sendAnswer();
-    }}>
-    {#if artifact.type === 'ether'}
+      if (e.key === "Enter" && isValid) sendAnswer();
+    }}
+  >
+    {#if artifact.type === "ether"}
       <EtherEditor
         on:validated={() => setIsValid()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'string'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "string"}
       <StringEditor
         on:validated={() => setIsValid()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'o'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "o"}
       <OEditor on:validated={() => setIsValid()} processArtifact={artifact} />
-    {:else if artifact.type === 'location'}
-      <LocationEditor on:validated={() => setIsValid()} processArtifact={artifact} />
-    {:else if artifact.type === 'text'}
+    {:else if artifact.type === "location"}
+      <LocationEditor
+        on:validated={() => setIsValid()}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "text"}
       <TextEditor
         on:validated={() => setIsValid()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'keyphrase'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "keyphrase"}
       <KeyphraseEditor
         on:validated={() => setIsValid()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'choice'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "choice"}
       <ChoiceEditor
         on:validated={() => setIsValid()}
         on:submit={() => sendAnswer()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'ethereumAddress'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "ethereumAddress"}
       <AddressEditor
         on:validated={() => setIsValid()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'inviteCredits'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "inviteCredits"}
       <InviteCreditEditor
         on:validated={() => setIsValid()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'file'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "file"}
       <ImageEditor
         on:validated={() => setIsValid()}
-        processArtifact={artifact} />
-    {:else if artifact.type === 'secretString'}
+        processArtifact={artifact}
+      />
+    {:else if artifact.type === "secretString"}
       <input
         type="password"
         rounded-xl
         bind:value={artifact.value}
         placeholder={artifact.label}
-        class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded-xl text-primary" />
-    {:else if artifact.type === 'boolean'}
+        class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded-xl text-primary"
+      />
+    {:else if artifact.type === "boolean"}
       <input
         type="checkbox"
         bind:checked={artifact.value}
         placeholder={artifact.label}
-        class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded-xl text-primary" />
+        class="w-full p-2 mb-2 text-xl bg-transparent border border-gray-300 rounded-xl text-primary"
+      />
     {/if}
   </div>
 {/each}
